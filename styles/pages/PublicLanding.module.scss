@@ -1,0 +1,21 @@
+@use '../helper';
+@use '../color';
+
+.default {
+    @extend .container;
+    height: calc(90vh - 300px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 50px;
+
+    & h1, & h2, & span {
+        font-size: 3rem;
+        font-weight: 100;
+        color: white;
+    }
+
+    & span {
+        color: color.$tint;
+    }
+}

@@ -1,0 +1,30 @@
+@use '../../color';
+@use '../../helper';
+
+.default {
+    @extend .container;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    height: 60px;
+    width: 200px;
+}
+
+.links {
+    display: flex;
+    gap: 50px;
+
+    & a {
+        font-size: 1.1rem;
+        color: color.$light;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

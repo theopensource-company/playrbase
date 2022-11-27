@@ -6,7 +6,9 @@ import styles from '../../styles/components/Layout/Navbar.module.scss';
 
 export const Navbar = () => (
     <div className={styles.default}>
-        <Image src={LogoFull} alt="Logo" className={styles.logo} />
+        <Link href="/">
+            <Image src={LogoFull} alt="Logo" className={styles.logo} />
+        </Link>
         <div className={styles.links}>
             <Link href="/signin">
                 Signin

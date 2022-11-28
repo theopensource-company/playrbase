@@ -1,15 +1,22 @@
 import React from 'react';
 import { Button } from '../components/Button';
-import stylesPublic from '../styles/pages/GetStarted.module.scss';
+import { Input } from '../components/Input';
+import styles from '../styles/pages/GetStarted.module.scss';
 
 export default function GetStarted() {
   return (
-    <div className={stylesPublic.default}>
-      <div className="text">
-        <h1>Play with <span>ease</span></h1>
-        <h2>Create <span>joy</span> that <span>lasts</span></h2>
-        <h2>Time to ditch the sheets 📚</h2>
-      </div>
+    <div className={styles.default}>   
+            
+        <h1>Get started</h1>
+        
+        <Input type="name" placeholder='Name of organisation'/> 
+        
+        <Input type="email" placeholder='E-mail adres'/>    
+
+        <Button href='/'>
+            confirm my email
+        </Button>
+
     </div>
   )
 }

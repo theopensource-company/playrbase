@@ -7,7 +7,7 @@ export default function FourOhFour() {
   return <div className={stylesPublic.default}>
     <div className="text">
         <h1>Oh no, <span>404</span></h1>
-        <h2>This page could not be found🔍</h2>
+        <h2>This page could not be found 🔍</h2>
     </div>
     <div>
         <Button href='/'>

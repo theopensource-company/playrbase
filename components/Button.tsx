@@ -16,7 +16,7 @@ export const Button = ({
 }) => {
     const router = useRouter();
 
-    return (
+return (
         <button
             className={`${styles.default} ${className ?? ''}`}
             onClick={(e) => {

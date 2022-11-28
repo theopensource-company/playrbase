@@ -10,15 +10,9 @@ export const Navbar = () => (
             <Image src={LogoFull} alt="Logo" className={styles.logo} />
         </Link>
         <div className={styles.links}>
-            <Link href="/signin">
-                Signin
-            </Link>
-            <Link href="/partners">
-                Partners
-            </Link>
-            <Link href="/get-started">
-                Get started
-            </Link>
+            <Link href="/signin">Signin</Link>
+            <Link href="/partners">Partners</Link>
+            <Link href="/get-started">Get started</Link>
         </div>
     </div>
 );

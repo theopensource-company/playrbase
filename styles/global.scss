@@ -29,5 +29,6 @@ a {
 }
 
 .app-container {
+    overflow: auto;
     min-height: calc(100vh - 150px);
 }

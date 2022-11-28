@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import React from 'react';
 import { Button } from '../components/Button';
 import stylesPublic from '../styles/pages/404.module.scss';

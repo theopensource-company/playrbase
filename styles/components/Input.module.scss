@@ -1,0 +1,32 @@
+@use '../color';
+
+.default {
+    background: radial-gradient(313.33% 8495.14% at 72.38% 313.33%, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.08) 50%);
+    background-size: calc(100% + 400px) calc(100% + 200px);
+    color: color.$light;
+    border: none;
+    padding: 12px 22px;
+    font-size: 1.2rem;
+    outline: none;
+    transition: background-position .5s ease, opacity .2s ease;
+    border-radius: 10px;
+    opacity: 0.9;
+    -webkit-box-shadow: 0px 0px 5px -5px rgba(0,0,0,0.25);
+    -moz-box-shadow: 0px 0px 5px -5px rgba(0,0,0,0.25);
+    box-shadow: 0px 0px 5px -5px rgba(0,0,0,0.25);
+
+    &:hover:not(:disabled),
+    &:focus:not(:disabled) {
+        background-position: -400px;
+        opacity: 0.95;
+
+        -webkit-box-shadow: 0px 0px 25px -5px rgba(0,0,0,0.25);
+        -moz-box-shadow: 0px 0px 25px -5px rgba(0,0,0,0.25);
+        box-shadow: 0px 0px 25px -5px rgba(0,0,0,0.25);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}

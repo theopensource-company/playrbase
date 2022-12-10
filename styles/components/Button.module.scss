@@ -7,6 +7,7 @@
     padding: 12px 22px;
     font-size: 1.2rem;
     border: 3px solid color.$light;
+    border-radius: 5px;
 
     &:hover:not(:disabled) {
         background-color: transparent;
@@ -20,4 +21,28 @@
         color: color.$light;
         cursor: not-allowed;
     }
+}
+
+.colorLight {
+    background-color: color.$light;
+    border: 3px solid color.$light;
+    color: color.$dark;
+}
+
+.colorDark {
+    background-color: color.$dark;
+    border: 3px solid color.$dark;
+    color: color.$light;
+}
+
+.colorDarker {
+    background-color: color.$darker;
+    border: 3px solid color.$darker;
+    color: color.$light;
+}
+
+.colorTint {
+    background-color: color.$tint;
+    border: 3px solid color.$tint;
+    color: color.$light;
 }

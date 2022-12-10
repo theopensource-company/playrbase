@@ -12,7 +12,9 @@ export default function GetStarted() {
 
             <Input type="email" placeholder="E-mail adres" />
 
-            <Button href="/">confirm my email</Button>
+            <Button href="/" color="Tint">
+                confirm my email
+            </Button>
         </div>
     );
 }

@@ -24,36 +24,46 @@ DEFINE FIELD managers ON TABLE organisation VALUE <future> {
       event_manager: 200,
       event_viewer: 300,
     };
-    
-    return (
-      (managers) =>
-        managers.filter(
-          (manager) =>
-            !managers.find(
-              (m) =>
-                m.id == manager.id &&
-                hierarchy[manager.role] > hierarchy[m.role]
-              )
-        )
-    )(
-      [
-        ...(arguments[1][0] ?? [])
-          .map(
-            (manager) => ({
-              ...manager,
-              inherited: true,
-            })
-          ),
 
-        ...arguments[0]
-          .map(
-            (manager) => ({
-              ...manager,
-              role: this.manager_roles.find((r) => r.id == manager.id).role,
-            })
-          ),
-      ]
-    )
+    const unfiltered = [
+      ...((arguments[1][0])[0] ?? [])
+        .map(
+          (manager) => ({
+            ...manager,
+            inherited: true,
+          })
+        ),
+
+      ...arguments[0][0]
+        .map(
+          (manager) => ({
+            ...manager,
+            role: this.manager_roles.find((r) => r.id == manager.id).role,
+          })
+        ),
+    ];
+
+    const filtered = [];
+    unfiltered.forEach(manager => {
+      const inherited = !managers.find(
+        (m) =>
+          m.id == manager.id &&
+          manager.inherited
+        );
+
+      const passed = !managers.find(
+        (m) =>
+          m.id == manager.id &&
+          hierarchy[manager.role] > hierarchy[m.role]
+        ));
+
+      if (passed) filtered.push({
+        ...manager,
+        inherited
+      });
+    })
+
+    return filtered;
   }
 };
 

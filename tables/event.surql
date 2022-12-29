@@ -10,7 +10,7 @@ DEFINE FIELD organiser ON TABLE event TYPE string ASSERT $value = /^organisation
 DEFINE FIELD discoverable ON TABLE event TYPE bool ASSERT $value OR $before OR false;
 DEFINE FIELD published ON TABLE event TYPE bool ASSERT $value OR $before OR false;
 DEFINE FIELD tournament ON TABLE event TYPE string ASSERT $value = /^event:.*/ OR $value = NONE;
-DEFINE FIELD events ON TABLE event TYPE array VALUE <future> {(SELECT * FROM event WHERE tournament = $parent.id)};
+DEFINE FIELD events ON TABLE event TYPE array VALUE <future> {(SELECT * FROM event WHERE [tournament] CONTAINS $parent.id)};
 DEFINE FIELD created ON TABLE event TYPE datetime VALUE $before OR time::now();
 DEFINE FIELD updated ON TABLE event TYPE datetime VALUE time::now();
 

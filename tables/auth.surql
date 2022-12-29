@@ -1,3 +1,7 @@
 DEFINE SCOPE manager 
     SIGNIN ( SELECT * FROM manager WHERE email = $identifier AND crypto::argon2::compare(password, $password) )
 ;
+
+DEFINE SCOPE admin SESSION 1h
+    SIGNIN ( SELECT * FROM admin WHERE email = $identifier AND crypto::argon2::compare(password, $password) )
+;

@@ -28,15 +28,3 @@ DEFINE EVENT email ON TABLE manager WHEN $before.email != $after.email AND $befo
 DEFINE EVENT password ON TABLE manager WHEN $before.password != $after.password AND $before.password != NONE AND $after.id != NONE THEN ( 
   CREATE log SET event="manager_password_changed", field=$after.id
 );
-
-create manager:john content {
-  name: "John Doe",
-  email: 'john@email.tld',
-  password: crypto::argon2::generate("Password1!")
-};
-
-create manager:mary content {
-  name: "Mary Doe",
-  email: 'mary@email.tld',
-  password: crypto::argon2::generate("Password1!")
-};

@@ -16,54 +16,28 @@ DEFINE FIELD master_organisation ON TABLE organisation TYPE string ASSERT $value
 DEFINE FIELD managers ON TABLE organisation VALUE <future> {
   function(
     (SELECT id, name, email FROM manager WHERE $parent.manager_roles.*.id CONTAINS id), 
-    (SELECT managers FROM organisation WHERE [$parent.master_organisation] CONTAINS id)
+    (SELECT id, name, managers FROM organisation WHERE [$parent.master_organisation] CONTAINS id)
   ) {
-    const hierarchy = {
-      owner: 0,
-      administrator: 100,
-      event_manager: 200,
-      event_viewer: 300,
-    };
-
-    const unfiltered = [
-      ...((arguments[1][0])[0] ?? [])
+    return [
+      ...((arguments[1][0] ?? []).managers ?? [])
         .map(
           (manager) => ({
             ...manager,
-            inherited: true,
+            org: (manager.org ?? {
+              id: arguments[1][0].id,
+              name: arguments[1][0].name
+            }),
           })
         ),
 
-      ...arguments[0][0]
+      ...arguments[0]
         .map(
           (manager) => ({
             ...manager,
             role: this.manager_roles.find((r) => r.id == manager.id).role,
           })
         ),
-    ];
-
-    const filtered = [];
-    unfiltered.forEach(manager => {
-      const inherited = !managers.find(
-        (m) =>
-          m.id == manager.id &&
-          manager.inherited
-        );
-
-      const passed = !managers.find(
-        (m) =>
-          m.id == manager.id &&
-          hierarchy[manager.role] > hierarchy[m.role]
-        ));
-
-      if (passed) filtered.push({
-        ...manager,
-        inherited
-      });
-    })
-
-    return filtered;
+    ]
   }
 };
 

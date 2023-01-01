@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint . --ext ts --ext tsx --max-warnings 0"
+    "dev": "cross-env NEXT_PUBLIC_SURREAL_ENDPOINT=\"http://localhost:13001\" NEXT_PUBLIC_SURREAL_NAMESPACE=\"playrbase-deployment_local\" NEXT_PUBLIC_SURREAL_DATABASE=\"playrbase\" pnpm rawdev",
+    "rawdev": "concurrently --names \"playrbase\" --hide 1 \"pnpm run dev-next-server\" \"surreal start --user root --pass root --bind 0.0.0.0:13001 file:dev.db\"",
+    "dev-next-server": "cross-env NEXT_PUBLIC_ENV=\"dev\" next dev -p 13000",
+    "ts": "tsc --watch",
+    "lint": "eslint . --ext ts --ext tsx --max-warnings 0",
+    "deploy": "export NEXT_PUBLIC_DEPLOYMENT_STATUS=\"deployed\" SURREAL_NAMESPACE=playrbase-deployment_$CF_PAGES_BRANCH && export NEXT_PUBLIC_SURREAL_NAMESPACE=$SURREAL_NAMESPACE && node ../cli/predeploy.js && pnpm build",
+    "build": "next build && next export && next-sitemap && rm -rf out/dev"
   },
   "dependencies": {
     "@mui/material": "^5.11.2",
@@ -30,8 +33,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.7",
+    "@theopensource-company/surrealdb-cloudflare": "^1.0.4",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
+    "concurrently": "^7.6.0",
+    "cross-env": "^7.0.3",
     "eslint-config-next": "13.0.4",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-json": "^3.1.0",
@@ -41,6 +47,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "history": "^5.3.0",
+    "node-fetch": "^3.3.0",
     "prettier": "^2.8.0",
     "react-hook-form": "^7.41.2",
     "react-router": "^6.6.1",

@@ -13,13 +13,13 @@ REMOVE INDEX email ON TABLE admin;
 DEFINE INDEX email ON TABLE admin COLUMNS email UNIQUE;
 
 DEFINE EVENT name ON TABLE admin WHEN $before.name != $after.name AND $before.name != NONE AND $after.name != NONE THEN ( 
-  CREATE event SET from=$before.name, to=$after.name, event="admin_name_changed", field=$after.id
+  CREATE log SET from=$before.name, to=$after.name, event="admin_name_changed", field=$after.id
 );
 
 DEFINE EVENT email ON TABLE admin WHEN $before.email != $after.email AND $before.email != NONE AND $after.email != NONE THEN ( 
-  CREATE event SET from=$before.email, to=$after.email, event="admin_email_changed", field=$after.id
+  CREATE log SET from=$before.email, to=$after.email, event="admin_email_changed", field=$after.id
 );
 
 DEFINE EVENT password ON TABLE admin WHEN $before.password != $after.password AND $before.password != NONE AND $after.id != NONE THEN ( 
-  CREATE event SET event="admin_password_changed", field=$after.id
+  CREATE log SET event="admin_password_changed", field=$after.id
 );

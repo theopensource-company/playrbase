@@ -51,19 +51,19 @@ export const ShowAdmin = () => {
                     <DateField source="created" />
                     <DateField source="updated" />
                 </Tab>
-                <Tab label="events">
-                    <ShowAdminEvents />
+                <Tab label="logs">
+                    <ShowAdminLogs />
                 </Tab>
             </TabbedShowLayout>
         </Show>
     );
 };
 
-export const ShowAdminEvents = () => {
+export const ShowAdminLogs = () => {
     const ctx = useRecordContext();
     const [perPage, setPerPage] = useState<number>(10);
     const [page, setPage] = useState<number>(1);
-    const events = useGetManyReference('event', {
+    const logs = useGetManyReference('log', {
         target: 'field',
         id: ctx.id,
         pagination: { page, perPage },
@@ -83,7 +83,7 @@ export const ShowAdminEvents = () => {
     );
 
     return (
-        <ListContextProvider value={useList(events)}>
+        <ListContextProvider value={useList(logs)}>
             <Datagrid isRowSelectable={() => false} header={<Header />}>
                 <TextField source="id" />
                 <TextField source="event" />
@@ -96,7 +96,7 @@ export const ShowAdminEvents = () => {
                 setPerPage={setPerPage}
                 page={page}
                 setPage={setPage}
-                total={events.total}
+                total={logs.total}
             />
         </ListContextProvider>
     );

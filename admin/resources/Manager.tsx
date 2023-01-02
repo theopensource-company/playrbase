@@ -22,7 +22,7 @@ import {
 } from 'react-admin';
 import { TableHead, TableRow, TableCell } from '@mui/material';
 
-export const AdminList = () => (
+export const ManagerList = () => (
     <List sort={{ field: 'created', order: 'DESC' }}>
         <Datagrid rowClick="show">
             <TextField source="id" />
@@ -35,14 +35,14 @@ export const AdminList = () => (
     </List>
 );
 
-const AdminTitle = () => {
+const ManagerTitle = () => {
     const ctx = useRecordContext();
-    return <>{ctx ? `Admin: ${ctx.name}` : 'Loading'}</>;
+    return <>{ctx ? `Manager: ${ctx.name}` : 'Loading'}</>;
 };
 
-export const ShowAdmin = () => {
+export const ShowManager = () => {
     return (
-        <Show title={<AdminTitle />}>
+        <Show title={<ManagerTitle />}>
             <TabbedShowLayout>
                 <Tab label="details">
                     <TextField source="id" />
@@ -52,14 +52,14 @@ export const ShowAdmin = () => {
                     <DateField source="updated" />
                 </Tab>
                 <Tab label="logs">
-                    <ShowAdminLogs />
+                    <ShowManagerLogs />
                 </Tab>
             </TabbedShowLayout>
         </Show>
     );
 };
 
-export const ShowAdminLogs = () => {
+export const ShowManagerLogs = () => {
     const ctx = useRecordContext();
     const [perPage, setPerPage] = useState<number>(10);
     const [page, setPage] = useState<number>(1);
@@ -102,8 +102,8 @@ export const ShowAdminLogs = () => {
     );
 };
 
-export const EditAdmin = () => (
-    <Edit title={<AdminTitle />}>
+export const EditManager = () => (
+    <Edit title={<ManagerTitle />}>
         <SimpleForm>
             <TextInput disabled source="id" />
             <TextInput source="name" />
@@ -113,7 +113,7 @@ export const EditAdmin = () => (
     </Edit>
 );
 
-export const CreateAdmin = () => (
+export const CreateManager = () => (
     <Create>
         <SimpleForm>
             <TextInput source="name" />
@@ -123,12 +123,13 @@ export const CreateAdmin = () => (
     </Create>
 );
 
-export const AdminResource = (
+export const ManagerResource = (
     <Resource
-        name="admin"
-        list={AdminList}
-        edit={EditAdmin}
-        show={ShowAdmin}
-        create={CreateAdmin}
+        name="manager"
+        list={ManagerList}
+        edit={EditManager}
+        show={ShowManager}
+        create={CreateManager}
+        recordRepresentation={(record) => `${record.name} (${record.email})`}
     />
 );

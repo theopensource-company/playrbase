@@ -45,16 +45,32 @@ export const Fetcher = (): DataProvider => ({
         const { field, order } = params.sort;
         const start = (page - 1) * perPage;
         const limit = page * perPage - start;
+        const { q } = params.filter;
+        const queryFields = params.meta?.fields;
+        console.log(params);
+
         const query = `
             SELECT 
                 *, 
                 count((select id from ${resource})) as total 
             FROM ${resource} 
+            ${
+                q?.length > 0 && queryFields?.length > 0
+                    ? `WHERE ${[...queryFields]
+                          .map(
+                              (field) =>
+                                  `${field} ~ "${q.replaceAll('"', '\\"')}"`
+                          )
+                          .join(' OR ')}`
+                    : ''
+            }
             ORDER BY ${field} ${order} 
             LIMIT BY ${limit} 
             ${start > 0 ? `START AT ${start}` : ''}`;
 
-        return SurrealQueryAdmin(query).then((result) => {
+        console.log(query);
+
+        return SurrealQueryAdmin(query, { query: q }).then((result) => {
             if (result[0]?.result) {
                 let total = 0;
                 const data =

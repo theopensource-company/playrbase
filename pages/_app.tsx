@@ -7,7 +7,10 @@ import { InitializeSurreal } from '../hooks/Surreal';
 import { FeatureFlagContext, FeatureFlagProvider } from '../hooks/Environment';
 import { i18n } from '../locales';
 import { DevButton } from '../components/DevButton';
-import { TFeatureFlagOptions, TFeatureFlags } from '../constants/Types';
+import {
+    TFeatureFlagOptions,
+    TFeatureFlags,
+} from '../constants/Types/FeatureFlags.types';
 import { NextPage } from 'next';
 
 export default function App({ Component, pageProps }: AppProps) {

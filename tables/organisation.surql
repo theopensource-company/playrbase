@@ -7,7 +7,7 @@ DEFINE TABLE organisation SCHEMAFULL
 DEFINE FIELD name ON TABLE organisation TYPE string ASSERT $value != NONE;
 DEFINE FIELD description ON TABLE organisation TYPE string;
 DEFINE FIELD website ON TABLE organisation TYPE string;
-DEFINE FIELD email ON TABLE organistion TYPE string ASSERT is::email($value);
+DEFINE FIELD email ON TABLE organisation TYPE string ASSERT is::email($value);
 DEFINE FIELD manager_roles ON TABLE organisation TYPE array;
 DEFINE FIELD manager_roles.* ON TABLE organisation TYPE object ASSERT $value != NONE;
 DEFINE FIELD manager_roles.*.id ON TABLE organisation TYPE string ASSERT $value = /^manager:.*/;
@@ -41,7 +41,6 @@ DEFINE FIELD managers ON TABLE organisation VALUE <future> {
   }
 };
 
-DEFINE FIELD tournaments ON TABLE organisation VALUE <future> {(SELECT name, description, banner, category, organiser, created, updated FROM tournament WHERE organiser = $parent.id AND published = true)};
 DEFINE FIELD created ON TABLE organisation TYPE datetime VALUE $before OR time::now();
 DEFINE FIELD updated ON TABLE organisation TYPE datetime VALUE time::now();
 

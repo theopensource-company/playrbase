@@ -9,7 +9,7 @@ import {
     TFeatureFlagOptions,
     TFeatureFlags,
     FeatureFlagOptions,
-} from '../constants/Types';
+} from '../constants/Types/FeatureFlags.types';
 import { featureFlags } from '../lib/Environment';
 
 export const FeatureFlagContext = createContext<TFeatureFlags>(featureFlags);

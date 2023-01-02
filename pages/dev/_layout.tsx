@@ -21,6 +21,7 @@ export default function DevLayout({
             style={{
                 padding: '50px',
                 fontSize: '20px',
+                color: '#fff',
             }}
         >
             {home ? (
@@ -28,6 +29,7 @@ export default function DevLayout({
             ) : (
                 <Link href="/dev">back to devtools</Link>
             )}
+            <br />
             <br />
             {children}
         </div>

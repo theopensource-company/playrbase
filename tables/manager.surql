@@ -1,7 +1,7 @@
 DEFINE TABLE manager SCHEMAFULL 
   PERMISSIONS 
     FOR select, update, delete WHERE 
-         ($scope = 'manager' && id = $auth.id) 
+      ($scope = 'manager' && id = $auth.id)
       OR $scope = 'admin'
     FOR create WHERE $scope = 'admin'
 ;

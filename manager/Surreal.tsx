@@ -10,7 +10,7 @@ export const SurrealInstanceManager = new Surreal(SurrealEndpoint);
 
 export const SurrealInitManager = async () => {
     await SurrealInstanceManager.use(SurrealNamespace, SurrealDatabase);
-    const token = localStorage.getItem('kmgrsess');
+    const token = localStorage.getItem('pmgrsess');
     if (token) {
         console.log('Authenticating manager with existing token');
         try {
@@ -19,7 +19,7 @@ export const SurrealInitManager = async () => {
             console.error(
                 'Failed to authenticate manager with existing token, clearing it.'
             );
-            localStorage.removeItem('kmgrsess');
+            localStorage.removeItem('pmgrsess');
         }
     }
 };

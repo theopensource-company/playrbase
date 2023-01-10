@@ -3,26 +3,44 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint . --ext ts --ext tsx --max-warnings 0"
+    "dev": "cross-env NEXT_PUBLIC_SURREAL_ENDPOINT=\"http://localhost:13001\" NEXT_PUBLIC_SURREAL_NAMESPACE=\"playrbase-deployment_local\" NEXT_PUBLIC_SURREAL_DATABASE=\"playrbase\" pnpm rawdev",
+    "rawdev": "concurrently --names \"playrbase\" --hide 1 \"pnpm run dev-next-server\" \"surreal start --user root --pass root --bind 0.0.0.0:13001 file:dev.db\"",
+    "dev-next-server": "cross-env NEXT_PUBLIC_ENV=\"dev\" next dev -p 13000",
+    "ts": "tsc --watch",
+    "lint": "eslint . --ext ts --ext tsx --max-warnings 0",
+    "deploy": "export NEXT_PUBLIC_DEPLOYMENT_STATUS=\"deployed\" SURREAL_NAMESPACE=playrbase-deployment_$CF_PAGES_BRANCH && export NEXT_PUBLIC_SURREAL_NAMESPACE=$SURREAL_NAMESPACE && node ../cli/predeploy.js && pnpm build",
+    "build": "next build && next export && next-sitemap && rm -rf out/dev"
   },
   "dependencies": {
+    "@mui/material": "^5.11.2",
     "@svgr/webpack": "^6.5.1",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
     "eslint": "8.28.0",
+    "i18next": "^22.4.6",
+    "i18next-browser-languagedetector": "^7.0.1",
     "next": "13.0.4",
+    "ra-core": "^4.6.2",
+    "ra-input-rich-text": "^4.6.2",
     "react": "18.2.0",
+    "react-admin": "^4.6.2",
+    "react-admin-json-view": "^2.0.0",
     "react-dom": "18.2.0",
+    "react-i18next": "^12.1.1",
     "sass": "^1.56.1",
+    "surrealdb.js": "^0.5.0",
     "typescript": "4.9.3"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.7",
+    "@mui/icons-material": "^5.11.0",
+    "@theopensource-company/surrealdb-cloudflare": "^1.0.4",
+    "@tiptap/core": "2.0.0-beta.209",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
+    "concurrently": "^7.6.0",
+    "cross-env": "^7.0.3",
     "eslint-config-next": "13.0.4",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-json": "^3.1.0",
@@ -31,6 +49,22 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "prettier": "^2.8.0"
+    "history": "^5.3.0",
+    "node-fetch": "^3.3.0",
+    "prettier": "^2.8.0",
+    "ra-ui-materialui": "^4.6.2",
+    "react-hook-form": "^7.41.2",
+    "react-router": "^6.6.1",
+    "react-router-dom": "^6.6.1"
+  },
+  "peerDependencies": {
+    "@babel/core": "^7.20.7",
+    "@mui/icons-material": "^5.11.0",
+    "@tiptap/core": "2.0.0-beta.209",
+    "history": "^5.3.0",
+    "ra-ui-materialui": "^4.6.2",
+    "react-hook-form": "^7.41.2",
+    "react-router": "^6.6.1",
+    "react-router-dom": "^6.6.1"
   }
 }

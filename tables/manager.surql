@@ -1,24 +1,46 @@
+-- DEFINE TABLE manager SCHEMAFULL 
+--   PERMISSIONS 
+--     FOR select, update, delete WHERE 
+--       ($scope = 'manager' && id = $auth.id)
+--       OR ($scope = 'manager' && id != $auth.id && array::len(
+--         (SELECT id FROM organisation WHERE manager_roles[WHERE [$parent.id, $auth.id] CONTAINS id])
+--       ))
+--       OR $scope = 'admin'
+--     FOR create WHERE $scope = 'admin'
+-- ;
+
+DEFINE TABLE manager SCHEMAFULL 
+  PERMISSIONS 
+    FOR select, update, delete WHERE 
+      ($scope = 'manager' && id = $auth.id)
+      OR ($scope = 'manager' && array::len(
+        (SELECT id FROM organisation WHERE array::len(array::intersect(manager_roles.*.id, [$parent.id, $auth.id]) >= 2))
+      ))
+      OR $scope = 'admin'
+    FOR create WHERE $scope = 'admin'
+;
+
+// This returns only the record of the currently signed in manager
 DEFINE TABLE manager SCHEMAFULL 
   PERMISSIONS 
     FOR select, update, delete WHERE 
       ($scope = 'manager' && id = $auth.id)
       OR ($scope = 'manager' && id != $auth.id && array::len(
         (SELECT id FROM organisation WHERE manager_roles[WHERE [$parent.id, $auth.id] CONTAINS id])
-      ))
+      ) > 1)
       OR $scope = 'admin'
     FOR create WHERE $scope = 'admin'
 ;
 
--- DEFINE TABLE manager SCHEMAFULL 
---   PERMISSIONS 
---     FOR select, update, delete WHERE 
---       ($scope = 'manager' && id = $auth.id)
---       OR ($scope = 'manager' && id != $auth.id && array::len(
---         (SELECT id FROM organisation WHERE array::len(array::intersect(manager_roles.*.id, [$parent.id, $auth.id]) >= 2))
---       ))
---       OR $scope = 'admin'
---     FOR create WHERE $scope = 'admin'
--- ;
+// This returns all manager records (notice the $parent.id == NONE)
+DEFINE TABLE manager SCHEMAFULL 
+  PERMISSIONS 
+    FOR select, update, delete WHERE 
+      ($scope = 'manager' && id = $auth.id)
+      OR ($scope = 'manager' && $parent.id == NONE)
+      OR $scope = 'admin'
+    FOR create WHERE $scope = 'admin'
+;
 
 DEFINE FIELD name ON TABLE manager TYPE string ASSERT $value != NONE AND array::len(string::words($value)) > 1;
 DEFINE FIELD email ON TABLE manager TYPE string ASSERT is::email($value);

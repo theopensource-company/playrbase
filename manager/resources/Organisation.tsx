@@ -54,12 +54,12 @@ export const OrganisationList = () => (
             >
                 <TextField source="name" />
             </ReferenceField>
-            <FunctionField
+            {/* <FunctionField
                 label="Managers"
                 render={({ managers }: TOrganisationRecord) =>
                     FilterOrganisationManagers(managers).length
                 }
-            />
+            /> */}
             <DateField source="created" />
             <DateField source="updated" />
             <EditButton />

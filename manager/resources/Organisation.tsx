@@ -46,20 +46,12 @@ export const OrganisationList = () => (
             <TextField source="name" />
             <EmailField source="email" />
             <TextField source="website" />
-            <ReferenceField
-                source="master_organisation"
-                reference="organisation"
-                link="show"
-                label="Part of"
-            >
-                <TextField source="name" />
-            </ReferenceField>
-            {/* <FunctionField
+            <FunctionField
                 label="Managers"
-                render={({ managers }: TOrganisationRecord) =>
-                    FilterOrganisationManagers(managers).length
+                render={({ manager_roles }: TOrganisationRecord) =>
+                    manager_roles.length
                 }
-            /> */}
+            />
             <DateField source="created" />
             <DateField source="updated" />
             <EditButton />
@@ -154,29 +146,24 @@ export const ShowOrganisationManagers = () => {
         </TableHead>
     );
 
-    console.log(ctx.managers);
-
     return (
         <ListContextProvider
             value={useList({
-                data: FilterOrganisationManagers(ctx.managers),
+                data: ctx.manager_roles,
             })}
         >
             <Datagrid isRowSelectable={() => false} header={<Header />}>
-                <TextField source="name" />
-                <TextField source="email" />
+                <ReferenceField source="id" reference="manager" link={false}>
+                    <TextField source="name" />
+                </ReferenceField>
+                <ReferenceField source="id" reference="manager" link={false}>
+                    <TextField source="email" />
+                </ReferenceField>
                 <FunctionField
                     render={({ role }: { role: TOrganisationManagerRoles }) =>
                         OrganisationManagerRoles[role]
                     }
                 />
-                <ReferenceField
-                    source="org.id"
-                    reference="organisation"
-                    link="show"
-                >
-                    <TextField source="name" />
-                </ReferenceField>
                 <ReferenceField source="id" reference="manager" link="show">
                     <ShowButton />
                 </ReferenceField>
@@ -232,11 +219,6 @@ export const CreateOrganisation = () => (
                 <TextInput source="name" />
                 <TextInput source="email" type="email" />
                 <TextInput source="website" />
-                <ReferenceInput
-                    source="master_organisation"
-                    reference="organisation"
-                    label="Part of organisation"
-                />
                 <RichTextInput source="description" />
             </FormTab>
             <FormTab label="Managers">

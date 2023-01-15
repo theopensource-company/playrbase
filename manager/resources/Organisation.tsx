@@ -37,7 +37,6 @@ import {
     TOrganisationRecord,
 } from '../../constants/Types/Organisation.types';
 import { TLogRecord } from '../../constants/Types/Log.types';
-import { FilterOrganisationManagers } from '../../lib/Organisation';
 
 export const OrganisationList = () => (
     <List sort={{ field: 'created', order: 'DESC' }}>

@@ -24,6 +24,7 @@ export type TEventRecord = {
 
 export const EventCategories = {
     baseball: 'Baseball',
+    bla: 'Bla',
 };
 
 export type TEventCategories = keyof typeof EventCategories;

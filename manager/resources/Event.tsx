@@ -153,7 +153,11 @@ export const EditEvent = () => (
             <RichTextInput source="description" />
             <BooleanInput source="discoverable" />
             <BooleanInput source="published" />
-            <ReferenceInput source="tournament" reference="event" />
+            <ReferenceInput
+                source="tournament"
+                reference="event"
+                emptyValue=""
+            />
             <DateTimeInput source="start" />
             <DateTimeInput source="end" />
         </SimpleForm>
@@ -184,6 +188,7 @@ export const CreateEvent = () => (
                 source="tournament"
                 reference="event"
                 emptyText="Part of tournament"
+                emptyValue=""
             />
             <DateTimeInput source="start" />
             <DateTimeInput source="end" />

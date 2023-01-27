@@ -4,6 +4,8 @@ DEFINE TABLE organisation SCHEMAFULL
         FOR select WHERE $scope = 'admin' OR ($scope = 'manager' && manager_roles.*.id CONTAINS $auth.id)
         FOR update WHERE $scope = 'admin' OR ($scope = 'manager' && manager_roles[WHERE role="owner" OR role="adminstrator"].id CONTAINS $auth.id);
 
+DEFINE TABLE puborg AS SELECT name, description, website, email, created FROM organisation;
+
 DEFINE FIELD name ON TABLE organisation TYPE string ASSERT $value != NONE;
 DEFINE FIELD description ON TABLE organisation TYPE string;
 DEFINE FIELD website ON TABLE organisation TYPE string;
@@ -32,3 +34,14 @@ DEFINE EVENT website ON TABLE website WHEN $before.website != $after.website AND
 DEFINE EVENT email ON TABLE email WHEN $before.email != $after.email AND $before.email != NONE AND $after.email != NONE THEN ( 
   CREATE log SET from=$before.email, to=$after.email, event="organisation_email_changed", field=$after.id
 );
+
+----------------------------------------------
+----- Manager -> Manages -> Organisation -----
+----------------------------------------------
+
+DEFINE TABLE manages SCHEMAFULL;
+
+DEFINE FIELD in  TYPE string ASSERT $value = /^manager:.*/;
+DEFINE FIELD out TYPE string ASSERT $value = /^organisation:.*/;
+
+DEFINE INDEX relation ON TABLE manages COLUMNS in, out UNIQUE;

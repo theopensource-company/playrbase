@@ -57,6 +57,8 @@ const authProvider = {
         });
     },
     getIdentity: () => {
+        console.log("is it me you're looking for?");
+
         return ManagerUserDetails().then((res) => {
             if (!res) return Promise.reject('Not authenticated');
             return Promise.resolve({

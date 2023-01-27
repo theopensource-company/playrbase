@@ -1,19 +1,27 @@
 DEFINE TABLE event SCHEMAFULL
-    PERMISSIONS
-        FOR select WHERE $scope = 'admin' 
-          OR (discoverable = true && published = true)
-          OR (published = true && id = $event_id)
-        FOR create, update, delete WHERE $scope = 'admin'; 
+  PERMISSIONS
+    FOR select WHERE $scope = 'admin' 
+      OR (discoverable = true && published = true)
+      OR (published = true && id = $event_id)
+      OR ($scope = 'manager' && 
+        array::len((SELECT id FROM organisation WHERE id IN [$parent.organiser] AND manager_roles.*.id CONTAINS $auth.id)) > 0
+      )
+    FOR create, update, delete WHERE 
+      $scope = 'admin'
+      OR ($scope = 'manager' && 
+        array::len((SELECT id FROM organisation WHERE id IN [$parent.organiser] AND manager_roles[WHERE role = 'owner' OR role = 'administrator' OR role = 'event_manager'].id CONTAINS $auth.id)) > 0
+      );
 
 DEFINE FIELD name ON TABLE event TYPE string ASSERT $value != NONE;
 DEFINE FIELD description ON TABLE event TYPE string ASSERT $value != NONE;
 DEFINE FIELD banner ON TABLE event TYPE string;
-DEFINE FIELD category ON TABLE event TYPE string ASSERT $value = 'baseball' VALUE $before OR $value;
+DEFINE FIELD category ON TABLE event TYPE string ASSERT $value = 'baseball' OR $value = 'bla'
+  VALUE string::slice((select category from event where id = $parent.tournament), 2, -2) OR $before OR $value;
 DEFINE FIELD start ON TABLE event TYPE datetime;
 DEFINE FIELD end ON TABLE event TYPE datetime;
 DEFINE FIELD organiser ON TABLE event TYPE string ASSERT $value = /^organisation:.*/ VALUE $before OR $value;
-DEFINE FIELD discoverable ON TABLE event TYPE bool ASSERT $value OR $before OR false;
-DEFINE FIELD published ON TABLE event TYPE bool ASSERT $value OR $before OR false;
+DEFINE FIELD discoverable ON TABLE event TYPE bool ASSERT $value != NONE;
+DEFINE FIELD published ON TABLE event TYPE bool ASSERT $value != NONE;
 DEFINE FIELD tournament ON TABLE event TYPE string ASSERT $value = /^event:.*/ OR $value = NONE;
 
 DEFINE FIELD created ON TABLE event TYPE datetime VALUE $before OR time::now();

@@ -19,7 +19,8 @@ DEFINE FIELD category ON TABLE event TYPE string ASSERT $value = 'baseball' OR $
   VALUE string::slice((select category from event where id = $parent.tournament), 2, -2) OR $before OR $value;
 DEFINE FIELD start ON TABLE event TYPE datetime;
 DEFINE FIELD end ON TABLE event TYPE datetime;
-DEFINE FIELD organiser ON TABLE event TYPE string ASSERT $value = /^organisation:.*/ VALUE $before OR $value;
+DEFINE FIELD organiser ON TABLE event TYPE string ASSERT $value = /^organisation:.*/
+  VALUE $before OR $value OR string::slice((select organiser from event where id = $parent.tournament), 2, -2);
 DEFINE FIELD discoverable ON TABLE event TYPE bool ASSERT $value != NONE;
 DEFINE FIELD published ON TABLE event TYPE bool ASSERT $value != NONE;
 DEFINE FIELD tournament ON TABLE event TYPE string ASSERT $value = /^event:.*/ OR $value = NONE;

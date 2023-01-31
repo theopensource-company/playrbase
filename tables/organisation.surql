@@ -34,14 +34,3 @@ DEFINE EVENT website ON TABLE website WHEN $before.website != $after.website AND
 DEFINE EVENT email ON TABLE email WHEN $before.email != $after.email AND $before.email != NONE AND $after.email != NONE THEN ( 
   CREATE log SET from=$before.email, to=$after.email, event="organisation_email_changed", field=$after.id
 );
-
-----------------------------------------------
------ Manager -> Manages -> Organisation -----
-----------------------------------------------
-
-DEFINE TABLE manages SCHEMAFULL;
-
-DEFINE FIELD in  TYPE string ASSERT $value = /^manager:.*/;
-DEFINE FIELD out TYPE string ASSERT $value = /^organisation:.*/;
-
-DEFINE INDEX relation ON TABLE manages COLUMNS in, out UNIQUE;

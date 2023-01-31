@@ -10,6 +10,8 @@ specifiers:
   '@mui/icons-material': ^5.11.0
   '@mui/material': ^5.11.6
   '@svgr/webpack': ^6.5.1
+  '@tanstack/react-query': ^4.24.4
+  '@theopensource-company/awaited-surrealdb': ^0.5.1
   '@theopensource-company/surrealdb-cloudflare': ^1.0.4
   '@tiptap/core': 2.0.0-beta.209
   '@types/node': 18.11.9
@@ -52,6 +54,8 @@ specifiers:
 dependencies:
   '@mui/material': 5.11.6_2zx2umvpluuhvlq44va5bta2da
   '@svgr/webpack': 6.5.1
+  '@tanstack/react-query': 4.24.4_biqbaboplfbrettd7655fr4n2y
+  '@theopensource-company/awaited-surrealdb': 0.5.1
   '@types/node': 18.11.9
   '@types/react': 18.0.25
   '@types/react-dom': 18.0.9
@@ -2101,6 +2105,37 @@ packages:
     resolution: {integrity: sha512-rEUrBSGIoSFuYxwBYtlUFMlE2CwGhmW+w9355/5oduSw8e5h2+Tj4UrAGNNgP9915++wj5vkQo0UuOBqOAq4nw==}
     dependencies:
       tslib: 2.5.0
+    dev: false
+
+  /@tanstack/query-core/4.24.4:
+    resolution: {integrity: sha512-9dqjv9eeB6VHN7lD3cLo16ZAjfjCsdXetSAD5+VyKqLUvcKTL0CklGQRJu+bWzdrS69R6Ea4UZo8obHYZnG6aA==}
+    dev: false
+
+  /@tanstack/react-query/4.24.4_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-RpaS/3T/a3pHuZJbIAzAYRu+1nkp+/enr9hfRXDS/mojwx567UiMksoqW4wUFWlwIvWTXyhot2nbIipTKEg55Q==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@tanstack/query-core': 4.24.4
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
+    dev: false
+
+  /@theopensource-company/awaited-surrealdb/0.5.1:
+    resolution: {integrity: sha512-zpO9DI2vc3PbKTZH9kRDYimehB1anMBWhwY85C1UBH5HnH+RYhph75a6xGuCdIgJS3yyMopJ86MS6Bukt5Q1PQ==}
+    dependencies:
+      surrealdb.js: 0.5.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
     dev: false
 
   /@theopensource-company/surrealdb-cloudflare/1.0.4:

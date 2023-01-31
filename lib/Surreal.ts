@@ -1,65 +1,37 @@
-import Surreal, { Result } from 'surrealdb.js';
+import AwaitedSurreal from '@theopensource-company/awaited-surrealdb';
 
 export const SurrealEndpoint = `${
     process.env.NEXT_PUBLIC_SURREAL_ENDPOINT ?? 'https://euc1-1-db.kards.social'
 }/rpc`;
 export const SurrealNamespace =
-    process.env.NEXT_PUBLIC_SURREAL_NAMESPACE ?? 'theopensource-company';
+    process.env.NEXT_PUBLIC_SURREAL_NAMESPACE ?? 'playrbase';
 export const SurrealDatabase =
-    process.env.NEXT_PUBLIC_SURREAL_DATABASE ?? 'playrbase';
-export const SurrealInstance = new Surreal(SurrealEndpoint);
+    process.env.NEXT_PUBLIC_SURREAL_DATABASE ?? 'playrbase-deployment_unknown';
 
-export const SurrealInit = async () => {
-    await SurrealInstance.use(SurrealNamespace, SurrealDatabase);
-    const token = localStorage.getItem('kusrsess');
-    if (token) {
-        console.log('Authenticating user with existing token');
-        try {
-            await SurrealInstance.authenticate(token);
-        } catch (e) {
-            console.error(
-                'Failed to authenticate user with existing token, clearing it.'
-            );
-            localStorage.removeItem('kusrsess');
-        }
-    }
-};
+export const SurrealInstance = new AwaitedSurreal({
+    endpoint: SurrealEndpoint,
+    namespace: SurrealNamespace,
+    database: SurrealDatabase,
+});
 
-export const SurrealQuery = async <T = unknown>(
-    query: string,
-    vars?: Record<string, unknown>
-): Promise<Result<T[]>[]> => SurrealInstance.query<Result<T[]>[]>(query, vars);
+export function buildTableFilters<TRecord = unknown>(
+    mapper: (
+        property: keyof TRecord,
+        record: Partial<TRecord>
+    ) => Promise<string>
+) {
+    return async function (filters: Partial<TRecord>) {
+        if (Object.keys(filters ?? {}).length == 0) return '';
+        const result = (
+            await Promise.all(
+                (Object.keys(filters ?? {}) as (keyof TRecord)[]).map((p) =>
+                    mapper(p, filters)
+                )
+            )
+        )
+            .filter((a) => !!a)
+            .join(' AND ');
 
-export const SurrealSignin = async (auth: {
-    identifier: string;
-    password: string;
-}): Promise<boolean> =>
-    new Promise((resolve) => {
-        SurrealInstance.signin({
-            NS: SurrealNamespace,
-            DB: SurrealDatabase,
-            SC: 'user',
-            ...auth,
-        })
-            .then((res) => {
-                localStorage.setItem('kusrsess', res);
-                resolve(true);
-            })
-            .catch((error) => {
-                console.error(error);
-                resolve(false);
-            });
-    });
-
-export const SurrealSignout = async (): Promise<boolean> =>
-    new Promise((resolve) => {
-        SurrealInstance.invalidate()
-            .then(async () => {
-                localStorage.removeItem('kusrsess');
-                resolve(false);
-            })
-            .catch((error) => {
-                console.error(error);
-                resolve(true);
-            });
-    });
+        return `WHERE ${result}`;
+    };
+}

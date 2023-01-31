@@ -1,8 +1,15 @@
 import React from 'react';
 import { Button } from '../components/Button';
 import stylesPublic from '../styles/pages/PublicLanding.module.scss';
+import { useEvents } from '../lib/Queries/Event';
 
 export default function Home() {
+    const { data } = useEvents({
+        organiser: 'organisation:4ti2kk3jrekwbvvi2575',
+    });
+
+    console.log(data);
+
     return (
         <div className={stylesPublic.default}>
             <div className="text">

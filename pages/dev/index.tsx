@@ -13,8 +13,7 @@ export async function getStaticProps() {
 
     return {
         props: {
-            routes: fs
-                .readdirSync('pages/dev')
+            routes: (fs.readdirSync('pages/dev') ?? [])
                 .map((a) => a.split('.')[0])
                 .filter((a) => a !== 'index' && !a.startsWith('_'))
                 .sort((a, b) => a.localeCompare(b))
@@ -46,7 +45,7 @@ export default function Page({
 }) {
     return (
         <DevLayout home>
-            {Object.keys(routes).map((letter) => {
+            {Object.keys(routes ?? {}).map((letter) => {
                 return (
                     <div key={letter}>
                         <h2>{letter.toUpperCase()}</h2>

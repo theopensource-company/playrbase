@@ -1,6 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import { TPlayerRecord } from '../../constants/Types/Player.types';
-import { SurrealDatabase, SurrealInstance, SurrealNamespace } from '../../lib/Surreal';
+import {
+    SurrealDatabase,
+    SurrealInstance,
+    SurrealNamespace,
+} from '../../lib/Surreal';
 
 export const useSignin = () =>
     useMutation({

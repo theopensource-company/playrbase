@@ -5,7 +5,7 @@ import { Navbar } from '../components/layout/navbar';
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
-        <div className='base'>
+        <div className="base">
             <Navbar />
             <div className="app-container">
                 <Component {...pageProps} />

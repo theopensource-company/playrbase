@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '../components/Button';
 import stylesPublic from '../styles/pages/PublicLanding.module.scss';
-import { useEvents } from '../lib/Queries/Event';
+import { useEvents } from '../hooks/Queries/Event';
 
 export default function Home() {
     const { data } = useEvents({

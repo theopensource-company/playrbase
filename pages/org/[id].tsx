@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useEvents } from '../../lib/Queries/Event';
-import { useOrganisation } from '../../lib/Queries/Organisation';
+import { useEvents } from '../../hooks/Queries/Event';
+import { useOrganisation } from '../../hooks/Queries/Organisation';
 
 export default function Org() {
     const { query } = useRouter();

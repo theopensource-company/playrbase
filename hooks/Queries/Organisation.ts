@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { SurrealInstance, buildTableFilters } from '../../lib/Surreal';
 import { TOrganisationRecord } from '../../constants/Types/Organisation.types';
+import { buildTableFilters, SurrealInstance } from '../../lib/Surreal';
 
 export function processOrganisationRecord({
     created,

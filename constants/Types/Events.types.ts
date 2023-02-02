@@ -1,4 +1,4 @@
-import { TOrganisationRecord, TOrganisationID } from './Organisation.types';
+import { TOrganisationID, TOrganisationRecord } from './Organisation.types';
 
 export type TEventID = `event:${string}`;
 export type TEventRecord = {

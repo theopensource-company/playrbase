@@ -1,9 +1,9 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import Surreal, { Result } from 'surrealdb.js';
 import {
+    SurrealDatabase,
     SurrealEndpoint,
     SurrealNamespace,
-    SurrealDatabase,
 } from '../lib/Surreal';
 
 export const SurrealInstanceManager = new Surreal(SurrealEndpoint);

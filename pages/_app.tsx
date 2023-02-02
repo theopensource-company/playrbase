@@ -1,17 +1,18 @@
-import React from 'react';
-import '../styles/global.scss';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { NextPage } from 'next';
 import type { AppProps } from 'next/app';
-import { Navbar } from '../components/layout/navbar';
+import React from 'react';
 import { I18nextProvider } from 'react-i18next';
-import { FeatureFlagContext, FeatureFlagProvider } from '../hooks/Environment';
-import { i18n } from '../locales';
 import { DevButton } from '../components/DevButton';
+import { Navbar } from '../components/layout/navbar';
 import {
     TFeatureFlagOptions,
     TFeatureFlags,
 } from '../constants/Types/FeatureFlags.types';
-import { NextPage } from 'next';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { FeatureFlagContext, FeatureFlagProvider } from '../hooks/Environment';
+import { i18n } from '../locales';
+import '../styles/global.scss';
+import '../styles/tailwind.css';
 
 const queryClient = new QueryClient();
 

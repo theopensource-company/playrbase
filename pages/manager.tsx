@@ -1,5 +1,5 @@
-import React from 'react';
 import dynamic from 'next/dynamic';
+import React from 'react';
 import { InitializeSurrealManager } from '../manager/Surreal';
 const App = dynamic(() => import('../manager/App'), { ssr: false });
 

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { SurrealInstance, buildTableFilters } from '../../lib/Surreal';
 import { TEventRecord } from '../../constants/Types/Events.types';
+import { buildTableFilters, SurrealInstance } from '../../lib/Surreal';
 
 export function processEventRecord({
     created,

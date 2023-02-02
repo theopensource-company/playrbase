@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '../components/Button';
+import LinkButton from '../components/form/LinkButton';
 import stylesPublic from '../styles/pages/404.module.scss';
 
 export default function FourOhFour() {
@@ -12,7 +12,7 @@ export default function FourOhFour() {
                 <h2>This page could not be found 🔍</h2>
             </div>
             <div>
-                <Button href="/">Go back to the home page</Button>
+                <LinkButton href="/">Go back to the home page</LinkButton>
             </div>
         </div>
     );

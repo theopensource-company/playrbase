@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Input } from '../components/Input';
 import { EventModule } from '../components/modules/EventModule';
 import styles from '../styles/pages/Playground.module.scss';

@@ -1,26 +1,26 @@
+import { TableCell, TableHead, TableRow } from '@mui/material';
 import React, { useState } from 'react';
 import {
-    List,
+    Create,
     Datagrid,
-    TextField,
-    EmailField,
-    Resource,
     DateField,
     Edit,
-    SimpleForm,
-    TextInput,
-    Show,
-    TabbedShowLayout,
-    Tab,
-    useRecordContext,
-    Create,
+    EditButton,
+    EmailField,
+    List,
     ListContextProvider,
+    Pagination,
+    Resource,
+    Show,
+    SimpleForm,
+    Tab,
+    TabbedShowLayout,
+    TextField,
+    TextInput,
     useGetManyReference,
     useList,
-    Pagination,
-    EditButton,
+    useRecordContext,
 } from 'react-admin';
-import { TableHead, TableRow, TableCell } from '@mui/material';
 
 export const ManagerList = () => (
     <List sort={{ field: 'created', order: 'DESC' }}>

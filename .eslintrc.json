@@ -5,9 +5,7 @@
     "prettier/prettier": [
       "error",
       {
-        "endOfLine": "auto",
-        "extends": [".prettierrc"],
-        "plugins": ["prettier-plugin-tailwindcss"]
+        "extends": [".prettierrc"]
       }
     ],
 		"unused-imports/no-unused-imports": "error",

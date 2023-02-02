@@ -1,9 +1,9 @@
-import * as React from 'react';
-import Fetcher from './Fetcher';
+import React from 'react';
 import { Admin } from 'react-admin';
 import authProvider from './Auth';
-import { OrganisationResource } from './resources/Organisation';
+import Fetcher from './Fetcher';
 import { EventResource } from './resources/Event';
+import { OrganisationResource } from './resources/Organisation';
 
 const App = () => (
     <Admin dataProvider={Fetcher()} authProvider={authProvider}>

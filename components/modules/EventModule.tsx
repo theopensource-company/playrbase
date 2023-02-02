@@ -1,7 +1,7 @@
+import Image from 'next/image';
 import React from 'react';
 import { Event } from '../../shared/types/EventTypes';
 import styles from '../../styles/components/Modules/Event.module.scss';
-import Image from 'next/image';
 
 export const EventModule = ({
     event,

@@ -6,7 +6,9 @@
     padding: 0px;
     margin: 0px;
     font-size: 1rem;
-    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 html {
@@ -33,7 +35,7 @@ body {
 }
 
 a {
-    color: color.$tint;
+    color: inherit;
 }
 
 .app-container {

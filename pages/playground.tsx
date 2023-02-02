@@ -16,11 +16,13 @@ export default function StorybookAlternative() {
                 <Input name='attendeeCount' value={attendeeCount} type='number' onChange={(e) => setAttendeeCount(e.target.value as unknown as number)} />
             </div>
             <div className={styles.result}>
-                <EventModule event={{
-                    url: 'test',
-                    title: title,
-                    attendeeCount: attendeeCount
-                }} />
+                <div className={styles.column}>
+                    <EventModule event={{
+                        url: 'test',
+                        title: title,
+                        attendeeCount: attendeeCount
+                    }} />
+                </div>
             </div>
         </div>
     );

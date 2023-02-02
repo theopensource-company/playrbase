@@ -1,0 +1,67 @@
+@use '../../color';
+
+.default {
+    display: flex;
+    flex-direction: column;
+
+    background-color: #fff;
+    border: 1px solid #ccc;
+    color: #{color.$dark};
+
+    border-radius: 5px;
+
+    @media (prefers-color-scheme: dark) {
+        background-color: #333;
+        border: 1px solid #222;
+        color: #{color.$light};
+    }
+}
+
+.top {
+    max-height: 0em;
+}
+
+.variant-large .top {
+    max-height: 6em;
+}
+
+.bottom {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 1em 1.5em;
+    gap: 1.5em;
+
+    .logoFrame {
+        width: 5em;
+        height: 5em;
+        background-color: #ccc;
+        border-radius: 1em;
+        overflow: hidden;
+        position: relative;
+
+        img {
+            object-fit: cover;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            background-color: #222;
+        }
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap: .5em;
+
+        .title {
+            font-size: 2em;
+            line-height: 1em;
+        }
+    
+        .attendees {
+            font-size: 1em;
+            line-height: 1em;
+        }
+    }
+}

@@ -1,0 +1,14 @@
+.default {
+    display: flex;
+    flex-direction: row;
+    background-color: #777;
+    height: fit-content;
+}
+
+.variables {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    max-width: max-content;
+    padding: 2em;
+}

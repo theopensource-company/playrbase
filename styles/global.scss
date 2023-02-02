@@ -24,10 +24,19 @@ body {
     min-height: 100vh;
 }
 
+.base {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
 a {
     color: color.$tint;
 }
 
 .app-container {
-    min-height: calc(100vh - 150px);
+    display: flex;
+    flex: 1;
 }

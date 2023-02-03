@@ -45,30 +45,32 @@ export default function Page({
 }) {
     return (
         <DevLayout home>
-            {Object.keys(routes ?? {}).map((letter) => {
-                return (
-                    <div key={letter}>
-                        <h2>{letter.toUpperCase()}</h2>
-                        <ul>
-                            {routes[letter].map((r) => (
-                                <li key={r}>
-                                    <Link
-                                        href={`/dev/${r}`}
-                                        style={{
-                                            fontSize: '18px',
-                                        }}
-                                    >
-                                        {r[0].toUpperCase()}
-                                        {r.slice(1).replace('-', ' ')}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-
-                        <br />
-                    </div>
-                );
-            })}
+            <div className="flex flex-col gap-12">
+                {Object.keys(routes ?? {}).map((letter) => {
+                    return (
+                        <div key={letter}>
+                            <h2 className="text-2xl font-bold">
+                                {letter.toUpperCase()}
+                            </h2>
+                            <ul>
+                                {routes[letter].map((r) => (
+                                    <li key={r}>
+                                        <Link
+                                            href={`/dev/${r}`}
+                                            style={{
+                                                fontSize: '18px',
+                                            }}
+                                        >
+                                            {r[0].toUpperCase()}
+                                            {r.slice(1).replace('-', ' ')}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    );
+                })}
+            </div>
         </DevLayout>
     );
 }

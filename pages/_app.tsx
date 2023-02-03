@@ -11,32 +11,31 @@ import {
 } from '../constants/Types/FeatureFlags.types';
 import { FeatureFlagContext, FeatureFlagProvider } from '../hooks/Environment';
 import { i18n } from '../locales';
-import '../styles/global.scss';
 import '../styles/tailwind.css';
 
 const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
-        <I18nextProvider i18n={i18n}>
-            <QueryClientProvider client={queryClient}>
-                <FeatureFlagProvider>
-                    <FeatureFlagContext.Consumer>
-                        {(fflags) => (
-                            <div className="base">
-                                <DevButton />
-                                {willShowNavbar({ Component, fflags }) && (
-                                    <Navbar />
-                                )}
-                                <div className="app-container">
+        <div className="flex min-h-screen flex-col bg-noise font-poppins">
+            <I18nextProvider i18n={i18n}>
+                <QueryClientProvider client={queryClient}>
+                    <FeatureFlagProvider>
+                        <FeatureFlagContext.Consumer>
+                            {(fflags) => (
+                                <>
+                                    <DevButton />
+                                    {willShowNavbar({ Component, fflags }) && (
+                                        <Navbar />
+                                    )}
                                     <Component {...pageProps} />
-                                </div>
-                            </div>
-                        )}
-                    </FeatureFlagContext.Consumer>
-                </FeatureFlagProvider>
-            </QueryClientProvider>
-        </I18nextProvider>
+                                </>
+                            )}
+                        </FeatureFlagContext.Consumer>
+                    </FeatureFlagProvider>
+                </QueryClientProvider>
+            </I18nextProvider>
+        </div>
     );
 }
 

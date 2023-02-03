@@ -1,4 +1,6 @@
 import React, { createRef, useCallback, useState } from 'react';
+import Button from '../../components/form/Button';
+import Input from '../../components/form/Input';
 import { SurrealInstance } from '../../lib/Surreal';
 import DevLayout from './_layout';
 
@@ -29,40 +31,27 @@ export default function Page() {
     return (
         <DevLayout>
             <p>Queries are ran as the currently signed in user.</p>
-            <input
+            <Input
                 placeholder="query"
                 ref={inputRef}
                 onKeyDown={(e) => {
                     if (e.code == 'Enter') run();
                 }}
                 style={{
-                    padding: '10px',
-                    width: '400px',
-                    fontSize: '20px',
+                    minWidth: '500px',
+                    marginTop: '24px',
                 }}
             />
-            <button
+            <Button
                 onClick={run}
                 style={{
-                    padding: '10px',
-                    width: '80px',
                     marginLeft: '20px',
-                    fontSize: '20px',
                 }}
             >
                 run
-            </button>
+            </Button>
 
-            <p
-                style={{
-                    whiteSpace: 'pre',
-                    fontFamily: "'Courier New', monospace",
-                    background: '#333',
-                    marginTop: '30px',
-                    padding: '40px 30px',
-                    maxWidth: '1000px',
-                }}
-            >
+            <p className="mt-8 whitespace-pre rounded-lg bg-zinc-700 py-12 px-8 font-mono">
                 {JSON.stringify(result, null, 2)}
             </p>
         </DevLayout>

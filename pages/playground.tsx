@@ -1,41 +1,72 @@
 import React, { useState } from 'react';
-import { Input } from '../components/Input';
+import Input from '../components/form/Input';
+import Container from '../components/helper/Container';
 import { EventModule } from '../components/modules/EventModule';
-import styles from '../styles/pages/Playground.module.scss';
+import { TEventRecord } from '../constants/Types/Events.types';
 
 export default function StorybookAlternative() {
-    const [title, setTitle] = useState('Test Event');
+    const [name, setName] = useState('Test Event');
     const [attendeeCount, setAttendeeCount] = useState(0);
 
     return (
-        <div className={styles.default}>
-            <div className={styles.variables}>
+        <Container className="flex flex-grow gap-12 pb-24">
+            <div className="flex flex-col items-center justify-center gap-6 rounded-lg bg-zinc-800 p-8">
+                <h3 className="w-full text-lg font-semibold text-white">
+                    Module options
+                </h3>
                 <Input
-                    name="title"
-                    value={title}
+                    name="name"
+                    value={name}
                     type="text"
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => setName(e.target.value)}
                 />
                 <Input
                     name="attendeeCount"
                     value={attendeeCount}
                     type="number"
+                    disabled
                     onChange={(e) =>
                         setAttendeeCount(e.target.value as unknown as number)
                     }
                 />
             </div>
-            <div className={styles.result}>
-                <div className={styles.column}>
-                    <EventModule
-                        event={{
-                            url: 'test',
-                            title: title,
-                            attendeeCount: attendeeCount,
-                        }}
-                    />
-                </div>
+            <div className="grid w-full grid-rows-6 gap-4 xl:grid-cols-2">
+                <EventModule
+                    event={
+                        {
+                            name: name,
+                        } as TEventRecord
+                    }
+                />
+                <EventModule
+                    event={
+                        {
+                            name: name,
+                        } as TEventRecord
+                    }
+                />
+                <EventModule
+                    event={
+                        {
+                            name: name,
+                        } as TEventRecord
+                    }
+                />
+                <EventModule
+                    event={
+                        {
+                            name: name,
+                        } as TEventRecord
+                    }
+                />
+                <EventModule
+                    event={
+                        {
+                            name: name,
+                        } as TEventRecord
+                    }
+                />
             </div>
-        </div>
+        </Container>
     );
 }

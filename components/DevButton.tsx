@@ -17,7 +17,7 @@ export function DevButton() {
             {showDevTools &&
                 !router.pathname.startsWith('/dev') &&
                 !router.pathname.startsWith('/admin') && (
-                    <div className="fixed right-0 m-6 flex gap-4 rounded bg-red-700 px-4 py-2.5 text-white">
+                    <div className="fixed right-0 flex gap-4 rounded-bl bg-red-700 px-4 py-2.5 text-white">
                         <Link href="/dev">Devtools</Link>
                         <span>-</span>
                         <a

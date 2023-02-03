@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '../components/form/Button';
+import Container from '../components/helper/Container';
 import { useEvents } from '../hooks/Queries/Event';
-import stylesPublic from '../styles/pages/PublicLanding.module.scss';
 
 export default function Home() {
     const { data } = useEvents({
@@ -11,19 +11,20 @@ export default function Home() {
     console.log(data);
 
     return (
-        <div className={stylesPublic.default}>
-            <div className="text">
+        <Container className="flex flex-grow flex-col justify-center gap-10 pb-48 text-5xl text-white">
+            <div className="flex flex-col gap-7">
                 <h1>
-                    Play with <span>ease</span>
+                    Play with <span className="text-blue-500">ease</span>
                 </h1>
                 <h2>
-                    Create <span>joy</span> that <span>lasts</span>
+                    Create <span className="text-blue-500">joy</span> that{' '}
+                    <span className="text-blue-500">lasts</span>
                 </h2>
                 <h2>Time to ditch the sheets 📚</h2>
             </div>
             <div>
                 <Button disabled>Releasing soon</Button>
             </div>
-        </div>
+        </Container>
     );
 }

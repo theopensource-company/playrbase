@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
+import Container from '../../components/helper/Container';
 
 export function getStaticProps() {
     return {
@@ -17,21 +18,25 @@ export default function DevLayout({
     home?: boolean;
 }) {
     return (
-        <div
-            style={{
-                padding: '50px',
-                fontSize: '20px',
-                color: '#fff',
-            }}
-        >
+        <Container className="py-8 text-white">
             {home ? (
-                <Link href="/">back to home</Link>
+                <Link
+                    href="/"
+                    className="text-xl font-semibold hover:underline"
+                >
+                    back to home
+                </Link>
             ) : (
-                <Link href="/dev">back to devtools</Link>
+                <Link
+                    href="/dev"
+                    className="text-xl font-semibold hover:underline"
+                >
+                    back to devtools
+                </Link>
             )}
             <br />
             <br />
             {children}
-        </div>
+        </Container>
     );
 }

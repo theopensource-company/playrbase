@@ -1,8 +1,8 @@
 DEFINE TABLE organisation SCHEMAFULL
     PERMISSIONS
         FOR create, delete WHERE $scope = 'admin'
-        FOR select WHERE $scope = 'admin' OR ($scope = 'manager' && manager_roles.*.id CONTAINS $auth.id)
-        FOR update WHERE $scope = 'admin' OR ($scope = 'manager' && manager_roles[WHERE role="owner" OR role="adminstrator"].id CONTAINS $auth.id);
+        FOR select WHERE $scope = 'admin' OR ($scope = 'manager' && managers.*.id CONTAINS $auth.id)
+        FOR update WHERE $scope = 'admin' OR ($scope = 'manager' && managers[WHERE role="owner" OR role="adminstrator"].id CONTAINS $auth.id);
 
 DEFINE TABLE puborg AS SELECT name, description, website, email, created FROM organisation;
 
@@ -16,6 +16,7 @@ DEFINE FIELD manager_roles.*.id ON TABLE organisation TYPE string ASSERT $value 
 DEFINE FIELD manager_roles.*.role ON TABLE organisation TYPE string 
   ASSERT $value = 'owner' OR $value = 'administrator' OR $value = 'event_manager' OR $value = 'event_viewer';
 
+DEFINE FIELD master_organisation ON TABLE organisation TYPE string ASSERT $value = /^organisation:.*/ OR $value = NONE;
 DEFINE FIELD managers ON TABLE organisation VALUE <future> {
   function(
     (SELECT managers FROM organisation WHERE [$parent.master_organisation] CONTAINS id)
@@ -44,7 +45,7 @@ DEFINE FIELD managers ON TABLE organisation VALUE <future> {
           .map(
             (manager) => ({
               ...manager,
-              inherited_from: this.master_organisation
+              inherited_from: manager.inherited_from ?? this.master_organisation
             })
           )
       ]

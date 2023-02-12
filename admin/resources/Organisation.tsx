@@ -45,11 +45,17 @@ export const OrganisationList = () => (
             <TextField source="name" />
             <EmailField source="email" />
             <TextField source="website" />
+            <ReferenceField
+                source="master_organisation"
+                reference="organisation"
+                link="show"
+                label="Part of"
+            >
+                <TextField source="name" />
+            </ReferenceField>
             <FunctionField
                 label="Managers"
-                render={({ manager_roles }: TOrganisationRecord) =>
-                    manager_roles.length
-                }
+                render={({ managers }: TOrganisationRecord) => managers.length}
             />
             <DateField source="created" />
             <DateField source="updated" />
@@ -132,6 +138,7 @@ export const ShowOrganisationLogs = () => {
 
 export const ShowOrganisationManagers = () => {
     const ctx = useRecordContext<TOrganisationRecord>();
+    const hasInheritedManagers = !!ctx.managers.find((m) => !!m.inherited_from);
     const Header = () => (
         <TableHead>
             <TableRow>
@@ -139,6 +146,9 @@ export const ShowOrganisationManagers = () => {
                 <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Role</TableCell>
+                {hasInheritedManagers && (
+                    <TableCell>From organisation</TableCell>
+                )}
                 <TableCell>Actions</TableCell>
             </TableRow>
         </TableHead>
@@ -147,7 +157,7 @@ export const ShowOrganisationManagers = () => {
     return (
         <ListContextProvider
             value={useList({
-                data: ctx.manager_roles,
+                data: ctx.managers,
             })}
         >
             <Datagrid isRowSelectable={() => false} header={<Header />}>
@@ -162,6 +172,15 @@ export const ShowOrganisationManagers = () => {
                         OrganisationManagerRoles[role]
                     }
                 />
+                {hasInheritedManagers && (
+                    <ReferenceField
+                        source="inherited_from"
+                        reference="organisation"
+                        link="show"
+                    >
+                        <TextField source="name" />
+                    </ReferenceField>
+                )}
                 <ReferenceField source="id" reference="manager" link="show">
                     <ShowButton />
                 </ReferenceField>
@@ -217,6 +236,11 @@ export const CreateOrganisation = () => (
                 <TextInput source="name" />
                 <TextInput source="email" type="email" />
                 <TextInput source="website" />
+                <ReferenceInput
+                    source="master_organisation"
+                    reference="organisation"
+                    label="Part of organisation"
+                />
                 <RichTextInput source="description" />
             </FormTab>
             <FormTab label="Managers">

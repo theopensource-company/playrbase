@@ -1,5 +1,5 @@
 import { TEmail, TWebsite } from './Common.types';
-import { TManagerID, TManagerRecord } from './Manager.types';
+import { TManagerID } from './Manager.types';
 
 export type TOrganisationID = `organisation:${string}`;
 export type TOrganisationRecord = {
@@ -9,16 +9,17 @@ export type TOrganisationRecord = {
     website: TWebsite;
     email: TEmail;
     master_organisation: TOrganisationID;
-    manager_roles: {
-        id: TManagerID;
-        role: TOrganisationManagerRoles;
-    }[];
-    managers: (Pick<TManagerRecord, 'id' | 'name' | 'email'> & {
-        org?: Pick<TOrganisationRecord, 'id' | 'name'>;
-        role: TOrganisationManagerRoles;
+    manager_roles: TOrganisationManagerRole[];
+    managers: (TOrganisationManagerRole & {
+        inherited_from?: TOrganisationID;
     })[];
     created: Date;
     updated: Date;
+};
+
+export type TOrganisationManagerRole = {
+    id: TManagerID;
+    role: TOrganisationManagerRoles;
 };
 
 export const OrganisationManagerRoles = {

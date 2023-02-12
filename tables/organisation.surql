@@ -16,6 +16,42 @@ DEFINE FIELD manager_roles.*.id ON TABLE organisation TYPE string ASSERT $value 
 DEFINE FIELD manager_roles.*.role ON TABLE organisation TYPE string 
   ASSERT $value = 'owner' OR $value = 'administrator' OR $value = 'event_manager' OR $value = 'event_viewer';
 
+DEFINE FIELD managers ON TABLE organisation VALUE <future> {
+  function(
+    (SELECT managers FROM organisation WHERE [$parent.master_organisation] CONTAINS id)
+  ) {
+    const hierarchy = {
+      owner: 0,
+      administrator: 100,
+      event_manager: 200,
+      event_viewer: 300,
+    };
+
+    return (
+      (managers) =>
+        managers.filter(
+          (manager) =>
+            !managers.find(
+              (m) =>
+                m.id == manager.id &&
+                hierarchy[manager.role] > hierarchy[m.role]
+              )
+        )
+    )(
+      [
+        ...this.manager_roles,
+        ...(arguments[0][0] ?? [])
+          .map(
+            (manager) => ({
+              ...manager,
+              inherited_from: this.master_organisation
+            })
+          )
+      ]
+    )
+  }
+};
+
 DEFINE FIELD created ON TABLE organisation TYPE datetime VALUE $before OR time::now();
 DEFINE FIELD updated ON TABLE organisation TYPE datetime VALUE time::now();
 

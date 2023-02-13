@@ -18,7 +18,7 @@ const LinkButton = forwardRef(
             color?: Exclude<ButtonColor, 'disabled'>;
             size?: ButtonSize;
             disabled?: boolean;
-            icon?: ButtonIcon;
+            icon?: ReactNode;
         },
         ref: ForwardedRef<HTMLAnchorElement>
     ) => {

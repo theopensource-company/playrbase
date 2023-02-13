@@ -16,7 +16,7 @@ specifiers:
   '@tiptap/core': 2.0.0-beta.209
   '@types/node': 18.11.9
   '@types/react': 18.0.25
-  '@types/react-dom': 18.0.9
+  '@types/react-dom': 18.0.10
   '@typescript-eslint/eslint-plugin': ^5.49.0
   '@typescript-eslint/parser': ^5.49.0
   autoprefixer: ^10.4.13
@@ -63,7 +63,7 @@ dependencies:
   '@theopensource-company/awaited-surrealdb': 0.5.1
   '@types/node': 18.11.9
   '@types/react': 18.0.25
-  '@types/react-dom': 18.0.9
+  '@types/react-dom': 18.0.10
   class-variance-authority: 0.4.0_typescript@4.9.3
   eslint: 8.28.0
   i18next: 22.4.9
@@ -2517,8 +2517,8 @@ packages:
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
 
-  /@types/react-dom/18.0.9:
-    resolution: {integrity: sha512-qnVvHxASt/H7i+XG1U1xMiY5t+IHcPGUK7TDMDzom08xa7e86eCeKOiLZezwCKVxJn6NEiiy2ekgX8aQssjIKg==}
+  /@types/react-dom/18.0.10:
+    resolution: {integrity: sha512-E42GW/JA4Qv15wQdqJq8DL4JhNpB3prJgjgapN3qJT9K2zO5IIAQh4VXvCEDupoqAwnz0cY4RlXeC/ajX5SFHg==}
     dependencies:
       '@types/react': 18.0.25
     dev: false

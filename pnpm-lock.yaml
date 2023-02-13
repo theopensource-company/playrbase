@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@babel/core': ^7.20.12
+  '@heroicons/react': ^2.0.15
   '@mui/icons-material': ^5.11.0
   '@mui/material': ^5.11.8
   '@svgr/webpack': ^6.5.1
@@ -52,6 +53,7 @@ specifiers:
   typescript: 4.9.3
 
 dependencies:
+  '@heroicons/react': 2.0.15_react@18.2.0
   '@mui/material': 5.11.8_2zx2umvpluuhvlq44va5bta2da
   '@svgr/webpack': 6.5.1
   '@tanstack/react-query': 4.24.6_biqbaboplfbrettd7655fr4n2y
@@ -1491,6 +1493,14 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+
+  /@heroicons/react/2.0.15_react@18.2.0:
+    resolution: {integrity: sha512-CZ2dGWgWG3/z5LEoD5D3MEr1syn45JM/OB2aDpw531Ryecgkz2V7TWQ808P0lva7zP003PVW6WlwbofsYyga3A==}
+    peerDependencies:
+      react: '>= 16'
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /@humanwhocodes/config-array/0.11.8:
     resolution: {integrity: sha512-UybHIJzJnR5Qc/MsD9Kr+RpO2h+/P1GhOwdiLPXK5TWk5sgTdu88bTD9UP+CKbPPh5Rni1u0GjAdYQLemG8g+g==}

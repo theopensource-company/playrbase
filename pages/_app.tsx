@@ -17,7 +17,7 @@ const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
-        <div className="flex min-h-screen flex-col bg-noise font-poppins">
+        <div className="flex min-h-screen flex-col bg-noise font-poppins text-white">
             <I18nextProvider i18n={i18n}>
                 <QueryClientProvider client={queryClient}>
                     <FeatureFlagProvider>

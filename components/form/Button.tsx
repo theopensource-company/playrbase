@@ -5,13 +5,15 @@ import React, {
     ForwardedRef,
     forwardRef,
 } from 'react';
+import { ButtonIcon } from '../helper/ButtonIcon';
 
-export const buttonStyle = cva(['text-white'], {
+export const buttonStyle = cva(['text-white', 'gap-4'], {
     variants: {
         color: {
             blue: ['bg-blue-600'],
             red: ['bg-red-600'],
             black: ['bg-black'],
+            muted: ['bg-gray-800'],
             disabled: ['bg-gray-700', 'text-gray-400', 'cursor-not-allowed'],
         },
         size: {
@@ -41,6 +43,8 @@ const Button = forwardRef(
             color,
             size,
             disabled,
+            children,
+            icon,
             ...props
         }: DetailedHTMLProps<
             ButtonHTMLAttributes<HTMLButtonElement>,
@@ -48,6 +52,7 @@ const Button = forwardRef(
         > & {
             color?: Exclude<ButtonColor, 'disabled'>;
             size?: ButtonSize;
+            icon?: ButtonIcon;
         },
         ref: ForwardedRef<HTMLButtonElement>
     ) => {
@@ -60,7 +65,10 @@ const Button = forwardRef(
                 {...props}
                 disabled={disabled}
                 ref={ref}
-            />
+            >
+                <ButtonIcon icon={icon} size={size} />
+                {children}
+            </button>
         );
     }
 );

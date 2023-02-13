@@ -24,7 +24,7 @@ specifiers:
   concurrently: ^7.6.0
   cross-env: ^7.0.3
   eslint: 8.28.0
-  eslint-config-next: 13.0.4
+  eslint-config-next: 13.1.6
   eslint-config-prettier: ^8.6.0
   eslint-plugin-json: ^3.1.0
   eslint-plugin-only-error: ^1.0.2
@@ -91,7 +91,7 @@ devDependencies:
   autoprefixer: 10.4.13_postcss@8.4.21
   concurrently: 7.6.0
   cross-env: 7.0.3
-  eslint-config-next: 13.0.4_hsf322ms6xhhd4b5ne6lb74y4a
+  eslint-config-next: 13.1.6_hsf322ms6xhhd4b5ne6lb74y4a
   eslint-config-prettier: 8.6.0_eslint@8.28.0
   eslint-plugin-json: 3.1.0
   eslint-plugin-only-error: 1.0.2
@@ -1794,8 +1794,8 @@ packages:
     resolution: {integrity: sha512-N5Z3bdxBzoxrC5bwykDFITzdWuwDteOdZ+7nxixY+I1XpRX8/iQYbw2wuXMdqdfBGm2NNUpAqg8YF2e4oAC2UQ==}
     dev: false
 
-  /@next/eslint-plugin-next/13.0.4:
-    resolution: {integrity: sha512-jZ4urKT+aO9QHm3ttihrIQscQISDSKK8isAom750+EySn9o3LCSkTdPGBtvBqY7Yku+NqhfQempR5J58DqTaVg==}
+  /@next/eslint-plugin-next/13.1.6:
+    resolution: {integrity: sha512-o7cauUYsXjzSJkay8wKjpKJf2uLzlggCsGUkPu3lP09Pv97jYlekTC20KJrjQKmSv5DXV0R/uks2ZXhqjNkqAw==}
     dependencies:
       glob: 7.1.7
     dev: true
@@ -3448,8 +3448,8 @@ packages:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
 
-  /eslint-config-next/13.0.4_hsf322ms6xhhd4b5ne6lb74y4a:
-    resolution: {integrity: sha512-moEC7BW2TK7JKq3QfnaauqRjWzVcEf71gp5DbClpFPHM6QXE0u0uVvSTiHlmOgtCe1vyWAO+AhF87ZITd8mIDw==}
+  /eslint-config-next/13.1.6_hsf322ms6xhhd4b5ne6lb74y4a:
+    resolution: {integrity: sha512-0cg7h5wztg/SoLAlxljZ0ZPUQ7i6QKqRiP4M2+MgTZtxWwNKb2JSwNc18nJ6/kXBI6xYvPraTbQSIhAuVw6czw==}
     peerDependencies:
       eslint: ^7.23.0 || ^8.0.0
       typescript: '>=3.3.1'
@@ -3457,7 +3457,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@next/eslint-plugin-next': 13.0.4
+      '@next/eslint-plugin-next': 13.1.6
       '@rushstack/eslint-patch': 1.2.0
       '@typescript-eslint/parser': 5.49.0_hsf322ms6xhhd4b5ne6lb74y4a
       eslint: 8.28.0

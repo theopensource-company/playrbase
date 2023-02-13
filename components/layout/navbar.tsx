@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link, { LinkProps } from 'next/link';
-import React, { ReactNode } from 'react';
+import React, { AnchorHTMLAttributes, ReactNode } from 'react';
 import { Terminal } from 'react-feather';
 import LogoFull from '../../assets/LogoFull.svg';
 import LinkButton from '../form/LinkButton';
@@ -10,10 +10,11 @@ export const NavbarLink = ({
     children,
     className,
     ...props
-}: LinkProps & {
-    children: ReactNode;
-    className?: string;
-}) => (
+}: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> &
+    LinkProps & {
+        children: ReactNode;
+        className?: string;
+    }) => (
     <Link
         className={`text-lg text-white hover:underline ${className ?? ''}`}
         {...props}
@@ -31,7 +32,12 @@ export const Navbar = () => (
             {/* <NavbarLink href="/signin">Signin</NavbarLink>
             <NavbarLink href="/partners">Partners</NavbarLink>
             <NavbarLink href="/get-started">Get started</NavbarLink> */}
-            <LinkButton href="/manager" color="muted" icon={<Terminal />}>
+            <LinkButton
+                href="/manager"
+                color="muted"
+                target="_blank"
+                icon={<Terminal />}
+            >
                 Open console
             </LinkButton>
         </div>

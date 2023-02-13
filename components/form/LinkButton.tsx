@@ -1,5 +1,10 @@
 import Link, { LinkProps } from 'next/link';
-import React, { ForwardedRef, forwardRef, ReactNode } from 'react';
+import React, {
+    AnchorHTMLAttributes,
+    ForwardedRef,
+    forwardRef,
+    ReactNode,
+} from 'react';
 import { ButtonIcon } from '../helper/ButtonIcon';
 import { ButtonColor, ButtonSize, buttonStyle } from './Button';
 
@@ -12,14 +17,15 @@ const LinkButton = forwardRef(
             children,
             icon,
             ...props
-        }: LinkProps & {
-            children?: ReactNode;
-            className?: string;
-            color?: Exclude<ButtonColor, 'disabled'>;
-            size?: ButtonSize;
-            disabled?: boolean;
-            icon?: ReactNode;
-        },
+        }: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> &
+            LinkProps & {
+                children?: ReactNode;
+                className?: string;
+                color?: Exclude<ButtonColor, 'disabled'>;
+                size?: ButtonSize;
+                disabled?: boolean;
+                icon?: ReactNode;
+            },
         ref: ForwardedRef<HTMLAnchorElement>
     ) => {
         return (

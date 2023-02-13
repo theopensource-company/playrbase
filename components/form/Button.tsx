@@ -4,26 +4,36 @@ import React, {
     DetailedHTMLProps,
     ForwardedRef,
     forwardRef,
+    ReactNode,
 } from 'react';
+import { ButtonIcon } from '../helper/ButtonIcon';
 
-export const buttonStyle = cva(['text-white'], {
-    variants: {
-        color: {
-            blue: ['bg-blue-600'],
-            red: ['bg-red-600'],
-            black: ['bg-black'],
-            disabled: ['bg-gray-700', 'text-gray-400', 'cursor-not-allowed'],
+export const buttonStyle = cva(
+    ['text-white', 'flex', 'items-center', 'gap-4'],
+    {
+        variants: {
+            color: {
+                blue: ['bg-blue-600'],
+                red: ['bg-red-600'],
+                black: ['bg-black'],
+                muted: ['bg-gray-800'],
+                disabled: [
+                    'bg-gray-700',
+                    'text-gray-500',
+                    'cursor-not-allowed',
+                ],
+            },
+            size: {
+                small: ['px-4', 'py-2', 'rounded-md'],
+                normal: ['px-6', 'py-2.5', 'rounded-md', 'text-lg'],
+            },
         },
-        size: {
-            small: ['px-4', 'py-2', 'rounded-md'],
-            normal: ['px-6', 'py-2.5', 'rounded-md', 'text-lg'],
+        defaultVariants: {
+            color: 'blue',
+            size: 'normal',
         },
-    },
-    defaultVariants: {
-        color: 'blue',
-        size: 'normal',
-    },
-});
+    }
+);
 
 export type ButtonColor = Exclude<
     Exclude<Parameters<typeof buttonStyle>[0], undefined>['color'],
@@ -41,6 +51,8 @@ const Button = forwardRef(
             color,
             size,
             disabled,
+            children,
+            icon,
             ...props
         }: DetailedHTMLProps<
             ButtonHTMLAttributes<HTMLButtonElement>,
@@ -48,6 +60,7 @@ const Button = forwardRef(
         > & {
             color?: Exclude<ButtonColor, 'disabled'>;
             size?: ButtonSize;
+            icon?: ReactNode;
         },
         ref: ForwardedRef<HTMLButtonElement>
     ) => {
@@ -60,7 +73,10 @@ const Button = forwardRef(
                 {...props}
                 disabled={disabled}
                 ref={ref}
-            />
+            >
+                <ButtonIcon icon={icon} size={size} />
+                {children}
+            </button>
         );
     }
 );

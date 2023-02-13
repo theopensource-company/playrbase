@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
 import React from 'react';
+import Container from '../../components/helper/Container';
 import { useEvents } from '../../hooks/Queries/Event';
-import { useOrganisation } from '../../hooks/Queries/Organisation';
+import { usePublicOrganisation } from '../../hooks/Queries/PublicOrganisation';
 
 export default function Org() {
     const { query } = useRouter();
@@ -21,10 +22,10 @@ export default function Org() {
     });
 
     const { data: organisation, isLoading: isOrganisationLoading } =
-        useOrganisation(`organisation:${orgRawID}`);
+        usePublicOrganisation(`puborg:${orgRawID}`);
 
     return (
-        <>
+        <Container>
             {!orgRawID || (!isOrganisationLoading && !organisation) ? (
                 <h1>Organisation not found</h1>
             ) : areEventsLoading || isOrganisationLoading ? (
@@ -37,6 +38,6 @@ export default function Org() {
                     ))}
                 </>
             )}
-        </>
+        </Container>
     );
 }

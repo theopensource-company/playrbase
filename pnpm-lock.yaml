@@ -43,6 +43,7 @@ specifiers:
   react-admin: ^4.7.6
   react-admin-json-view: ^2.0.0
   react-dom: 18.2.0
+  react-feather: ^2.0.10
   react-hook-form: ^7.43.1
   react-i18next: ^12.1.5
   react-router: ^6.8.1
@@ -71,6 +72,7 @@ dependencies:
   react-admin: 4.7.6_ipdfgttstujsr3pjjqnczauija
   react-admin-json-view: 2.0.0_ouw45va6gj3m3sn7norvlnm2tq
   react-dom: 18.2.0_react@18.2.0
+  react-feather: 2.0.10_react@18.2.0
   react-i18next: 12.1.5_iakk3dtjhjpukdoa4oua5khgci
   surrealdb.js: 0.5.0
   tailwindcss: 3.2.6_postcss@8.4.21
@@ -5466,6 +5468,15 @@ packages:
     dependencies:
       '@babel/runtime': 7.20.13
       react: 18.2.0
+
+  /react-feather/2.0.10_react@18.2.0:
+    resolution: {integrity: sha512-BLhukwJ+Z92Nmdcs+EMw6dy1Z/VLiJTzEQACDUEnWMClhYnFykJCGWQx+NmwP/qQHGX/5CzQ+TGi8ofg2+HzVQ==}
+    peerDependencies:
+      react: '>=16.8.6'
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
 
   /react-hook-form/7.43.1_react@18.2.0:
     resolution: {integrity: sha512-+s3+s8LLytRMriwwuSqeLStVjRXFGxgjjx2jED7Z+wz1J/88vpxieRQGvJVvzrzVxshZ0BRuocFERb779m2kNg==}

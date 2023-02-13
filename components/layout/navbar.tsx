@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link, { LinkProps } from 'next/link';
 import React, { ReactNode } from 'react';
+import { Terminal } from 'react-feather';
 import LogoFull from '../../assets/LogoFull.svg';
 import LinkButton from '../form/LinkButton';
 import Container from '../helper/Container';
@@ -30,12 +31,7 @@ export const Navbar = () => (
             {/* <NavbarLink href="/signin">Signin</NavbarLink>
             <NavbarLink href="/partners">Partners</NavbarLink>
             <NavbarLink href="/get-started">Get started</NavbarLink> */}
-            <LinkButton
-                href="/manager"
-                color="muted"
-                size="small"
-                icon="BuildingOffice2Icon"
-            >
+            <LinkButton href="/manager" color="muted" icon={<Terminal />}>
                 Open console
             </LinkButton>
         </div>

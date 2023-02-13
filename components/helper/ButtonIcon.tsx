@@ -1,10 +1,8 @@
-import * as HeroIcon from '@heroicons/react/24/solid';
 import { cva } from 'class-variance-authority';
 import React, { ReactNode } from 'react';
-import { THeroIcon } from '../../constants/Types/Common.types';
 import { ButtonSize } from '../form/Button';
 
-export const buttonIconStyle = cva([], {
+export const buttonIconStyle = cva(['flex', 'items-center', 'justify-center'], {
     variants: {
         size: {
             small: ['w-4', 'h-4'],
@@ -16,25 +14,13 @@ export const buttonIconStyle = cva([], {
     },
 });
 
-export type ButtonIcon = ReactNode | THeroIcon;
-
 export function ButtonIcon({
     size,
     icon,
 }: {
     size?: ButtonSize;
-    icon?: ButtonIcon;
+    icon?: ReactNode;
 }) {
     if (!icon) return null;
-    console.log(HeroIcon);
-
-    icon =
-        (icon && typeof icon == 'string' && HeroIcon && icon in HeroIcon
-            ? HeroIcon[icon as keyof typeof HeroIcon]({
-                  className: buttonIconStyle({
-                      size,
-                  }),
-              })
-            : icon) ?? null;
-    return <div className="flex items-center justify-center">{icon}</div>;
+    return <div className={buttonIconStyle({ size })}>{icon}</div>;
 }

@@ -1,6 +1,9 @@
 # https://github.com/dependabot/dependabot-core/issues/1736
 name: Dependabot
-on: pull_request_target
+on: 
+  push:
+    branches:
+      - dependabot/npm_and_yarn/*
 permissions: read-all
 jobs:
   update-lockfile:

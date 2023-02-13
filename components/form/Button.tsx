@@ -19,7 +19,7 @@ export const buttonStyle = cva(
                 muted: ['bg-gray-800'],
                 disabled: [
                     'bg-gray-700',
-                    'text-gray-400',
+                    'text-gray-500',
                     'cursor-not-allowed',
                 ],
             },

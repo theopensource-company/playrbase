@@ -16,7 +16,7 @@
     "@svgr/webpack": "^6.5.1",
     "@tanstack/react-query": "^4.24.6",
     "@theopensource-company/awaited-surrealdb": "^0.5.1",
-    "@types/node": "18.11.9",
+    "@types/node": "18.15.11",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
     "class-variance-authority": "^0.4.0",

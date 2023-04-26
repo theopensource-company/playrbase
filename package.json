@@ -18,7 +18,7 @@
     "@theopensource-company/awaited-surrealdb": "^0.5.1",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
-    "@types/react-dom": "18.0.9",
+    "@types/react-dom": "18.2.1",
     "class-variance-authority": "^0.4.0",
     "eslint": "8.28.0",
     "i18next": "^22.4.9",

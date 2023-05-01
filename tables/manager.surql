@@ -6,7 +6,7 @@ DEFINE TABLE manager SCHEMAFULL
             (
                 $scope = 'manager' && 
                 id != $auth.id &&
-                (SELECT VALUE id FROM organisation WHERE [$parent.id, $auth.id] ALLINSIDE managers.*.id)[0]
+                (SELECT VALUE id FROM organisation WHERE [$parent.id, $auth.id] ALLINSIDE manager_roles.*.id)[0]
             )
         FOR create WHERE $scope = 'admin'
 ;

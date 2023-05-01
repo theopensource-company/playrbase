@@ -15,8 +15,8 @@ export async function getStaticProps() {
     await migrateDatabase(
         {
             SURREAL_HOST: 'http://127.0.0.1:13001',
-            SURREAL_NAMESPACE: 'playrbase-deployment_local',
-            SURREAL_DATABASE: 'playrbase',
+            SURREAL_NAMESPACE: 'playrbase',
+            SURREAL_DATABASE: 'playrbase-deployment_local',
             SURREAL_USERNAME: 'root',
             SURREAL_PASSWORD: 'root',
             PLAYRBASE_DEFAULT_ADMIN: JSON.stringify({

@@ -9,11 +9,6 @@ DEFINE TABLE organisation SCHEMAFULL
           ($scope = 'manager' && managers[WHERE role IN ["owner", "adminstrator"]].id CONTAINS $auth.id);
 
 DEFINE TABLE puborg AS SELECT name, description, website, email, created FROM organisation;
-DEFINE TABLE organisation_managers AS SELECT id, managers FROM organisation 
-    PERMISSIONS 
-        FOR select WHERE 
-          $scope = 'admin' OR 
-          ($scope = 'manager' && managers.*.id CONTAINS $auth.id);
 
 DEFINE FIELD name                 ON organisation TYPE string;
 DEFINE FIELD description          ON organisation TYPE option<string>;

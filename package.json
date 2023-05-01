@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently --names \"playrbs\" --hide 1 \"pnpm dev-next\" \"pnpm dev-surreal\"",
+    "dev": "concurrently --names \"playrbs,surreal\" --hide 1 \"pnpm dev-next\" \"pnpm dev-surreal\"",
     "debug": "concurrently --names \"playrbs,surreal\" \"pnpm dev-next\" \"pnpm dev-surreal\"",
+    "dbonly": "concurrently --names \"playrbs,surreal\" --hide 0 \"pnpm dev-next\" \"pnpm dev-surreal\"",
     "dev-next": "cross-env NODE_ENV=\"development\" next dev -p 13000",
-    "dev-surreal": "surreal start --user root --pass root --bind 0.0.0.0:13001 file:dev.db",
+    "dev-surreal": "surreal start --log debug --user root --pass root --bind 0.0.0.0:13001 file:dev.db",
     "ts": "tsc --watch",
     "lint": "eslint . --ext ts --ext tsx --max-warnings 0",
     "deploy": "cross-env NODE_ENV=\"production\" SURREAL_NAMESPACE=playrbase-deployment_$CF_PAGES_BRANCH && export NEXT_PUBLIC_SURREAL_NAMESPACE=$SURREAL_NAMESPACE && node ../cli/predeploy.js && pnpm build",

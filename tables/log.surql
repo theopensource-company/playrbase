@@ -1,11 +1,18 @@
 DEFINE TABLE log SCHEMALESS
     PERMISSIONS
-        FOR select WHERE id = $auth.id OR $scope = 'admin'
+        FOR select WHERE record = $auth.id OR $scope = 'admin'
         FOR update, delete, create NONE;
 
-DEFINE FIELD created ON log TYPE datetime VALUE $before OR time::now();
-DEFINE FIELD from ON TABLE log;
-DEFINE FIELD to ON TABLE log;
-DEFINE FIELD details ON TABLE log TYPE object VALUE $value OR $before OR {};
-DEFINE FIELD event ON TABLE log TYPE string ASSERT $value != NONE AND $value = /^[a-zA-Z](?:[-_.]?[a-zA-Z0-9])+$/;
-DEFINE FIELD field ON TABLE log TYPE string ASSERT $value != NONE AND $value = /.+:.+/;
+DEFINE FIELD record                 ON log          TYPE record;
+DEFINE FIELD event                  ON log          TYPE string
+    ASSERT $value IN ['CREATE', 'UPDATE', 'DELETE'];
+
+DEFINE FIELD change                 ON log          TYPE option<object>;
+DEFINE FIELD change.field           ON log          TYPE string;
+DEFINE FIELD change.value           ON log          TYPE option<object>;
+DEFINE FIELD change.value.before    ON log          TYPE string; 
+DEFINE FIELD change.value.after     ON log          TYPE string;
+
+DEFINE FIELD details                ON log FLEXIBLE TYPE option<object>;
+DEFINE FIELD created                ON log          TYPE datetime 
+    VALUE $before OR time::now();

@@ -31,21 +31,21 @@ DEFINE INDEX email      ON TABLE manager COLUMNS email UNIQUE;
 ////////////////////////////
 
 
-DEFINE EVENT log_create ON organisation WHEN $event == "CREATE" THEN {
+DEFINE EVENT log_create ON manager WHEN $event == "CREATE" THEN {
     CREATE log CONTENT {
         record: $after.id,
         event: $event
     };
 };
 
-DEFINE EVENT log_create ON organisation WHEN $event == "DELETE" THEN {
+DEFINE EVENT log_create ON manager WHEN $event == "DELETE" THEN {
     CREATE log CONTENT {
         record: $before.id,
         event: $event
     };
 };
 
-DEFINE EVENT log_update ON organisation WHEN $event == "UPDATE" THEN {
+DEFINE EVENT log_update ON manager WHEN $event == "UPDATE" THEN {
     IF $before.name != $after.name THEN
         CREATE log CONTENT {
             record: $after.id,

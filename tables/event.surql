@@ -3,20 +3,22 @@ DEFINE TABLE event SCHEMAFULL
     FOR select WHERE $scope = 'admin' 
       OR (discoverable = true && published = true)
       OR (published = true && id = $event_id)
-      OR ($scope = 'manager' && 
-        array::len((SELECT id FROM organisation WHERE id IN [$parent.organiser] AND manager_roles.*.id CONTAINS $auth.id)) > 0
+      OR (
+        $scope = 'manager' && 
+        (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND manager_roles.*.id CONTAINS $auth.id)[0]
       )
     FOR create, update, delete WHERE 
       $scope = 'admin'
-      OR ($scope = 'manager' && 
-        array::len((SELECT id FROM organisation WHERE id IN [$parent.organiser] AND manager_roles[WHERE role = 'owner' OR role = 'administrator' OR role = 'event_manager'].id CONTAINS $auth.id)) > 0
+      OR (
+        $scope = 'manager' && 
+        (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND manager_roles[WHERE role IN ['owner', 'administrator', 'event_manager']].id CONTAINS $auth.id)[0]
       );
 
 DEFINE FIELD name         ON event TYPE string;
 DEFINE FIELD description  ON event TYPE string;
 DEFINE FIELD banner       ON event TYPE option<string>;
 DEFINE FIELD category     ON event TYPE string 
-  ASSERT $value IN ['baseball'];
+  ASSERT $value IN ['baseball']
   VALUE (SELECT VALUE category FROM event WHERE id = $parent.tournament)[0] OR $before OR $value;
 
 DEFINE FIELD start        ON event TYPE option<datetime>;
@@ -37,21 +39,21 @@ DEFINE FIELD updated      ON event TYPE datetime VALUE time::now();
 ////////////////////////////
 
 
-DEFINE EVENT log_create ON organisation WHEN $event == "CREATE" THEN {
+DEFINE EVENT log_create ON event WHEN $event == "CREATE" THEN {
     CREATE log CONTENT {
         record: $after.id,
         event: $event
     };
 };
 
-DEFINE EVENT log_create ON organisation WHEN $event == "DELETE" THEN {
+DEFINE EVENT log_create ON event WHEN $event == "DELETE" THEN {
     CREATE log CONTENT {
         record: $before.id,
         event: $event
     };
 };
 
-DEFINE EVENT log_update ON organisation WHEN $event == "UPDATE" THEN {
+DEFINE EVENT log_update ON event WHEN $event == "UPDATE" THEN {
     IF $before.name != $after.name THEN
         CREATE log CONTENT {
             record: $after.id,

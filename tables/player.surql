@@ -32,21 +32,21 @@ DEFINE INDEX email              ON player COLUMNS email UNIQUE;
 ////////////////////////////
 
 
-DEFINE EVENT log_create ON organisation WHEN $event == "CREATE" THEN {
+DEFINE EVENT log_create ON player WHEN $event == "CREATE" THEN {
     CREATE log CONTENT {
         record: $after.id,
         event: $event
     };
 };
 
-DEFINE EVENT log_create ON organisation WHEN $event == "DELETE" THEN {
+DEFINE EVENT log_create ON player WHEN $event == "DELETE" THEN {
     CREATE log CONTENT {
         record: $before.id,
         event: $event
     };
 };
 
-DEFINE EVENT log_update ON organisation WHEN $event == "UPDATE" THEN {
+DEFINE EVENT log_update ON player WHEN $event == "UPDATE" THEN {
     IF $before.name != $after.name THEN
         CREATE log CONTENT {
             record: $after.id,

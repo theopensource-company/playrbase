@@ -1,12 +1,15 @@
 DEFINE TABLE organisation SCHEMAFULL
     PERMISSIONS
-        FOR create, delete WHERE $scope = 'admin'
+        FOR create WHERE $scope IN ['admin', 'manager']
         FOR select WHERE 
           $scope = 'admin' OR 
-          ($scope = 'manager' && manager_roles.*.id CONTAINS $auth.id)
+          ($scope = 'manager' && managers.*.id CONTAINS $auth.id)
         FOR update WHERE 
           $scope = 'admin' OR 
-          ($scope = 'manager' && manager_roles[WHERE role IN ["owner", "adminstrator"]].id CONTAINS $auth.id);
+          ($scope = 'manager' && managers[WHERE role IN ["owner", "adminstrator"]].id CONTAINS $auth.id);
+        FOR delete WHERE 
+          $scope = 'admin' OR 
+          ($scope = 'manager' && managers[WHERE role IN ["owner", "adminstrator"] AND org != NONE].id CONTAINS $auth.id);
 
 DEFINE TABLE puborg AS SELECT name, description, website, email, created FROM organisation;
 
@@ -16,20 +19,37 @@ DEFINE FIELD website              ON organisation TYPE option<string>;
 DEFINE FIELD email                ON organisation TYPE string           
     ASSERT is::email($value);
 
-DEFINE FIELD manager_roles        ON organisation TYPE array;
+DEFINE FIELD manager_roles        ON organisation TYPE array
+    PERMISSIONS
+        FOR update WHERE
+            $scope = 'admin' OR 
+            ($scope = 'manager' && managers[WHERE role IN ["owner"] OR (role IN ["administrator"] AND org != NONE)].id CONTAINS $auth.id);
 DEFINE FIELD manager_roles.*      ON organisation TYPE object;
 DEFINE FIELD manager_roles.*.id   ON organisation TYPE record<manager>;
 DEFINE FIELD manager_roles.*.role ON organisation TYPE string 
     ASSERT $value IN ['owner', 'administrator', 'event_manager', 'event_viewer'];
 
--- DEFINE FIELD part_of              ON organisation TYPE option<record<organisation>>;
--- DEFINE FIELD managers             ON organisation
---     VALUE <future> {
---         LET $inherited = (SELECT VALUE managers FROM type::thing(part_of))[0] ?? [];
---         LET $combined  = array::concat(manager_roles ?? [], $inherited ?? []);
---         SELECT * FROM function($combined) { console.log(arguments[0]); };
---         RETURN $combined;
---     };
+DEFINE FIELD part_of              ON organisation TYPE option<record<organisation>>
+    VALUE
+        IF $scope = 'admin' OR not($scope) THEN
+            $value
+        ELSE IF (SELECT VALUE id FROM organisation WHERE id = $value AND managers[WHERE role IN ["owner", "adminstrator"] AND org = NONE].id CONTAINS $auth.id)[0] THEN
+            $value
+        ELSE 
+            false
+        END
+    PERMISSIONS
+        FOR update WHERE
+            $scope = 'admin';
+
+DEFINE FIELD managers             ON organisation
+    VALUE <future> {
+        LET $part_of = type::thing(part_of);
+        LET $inherited_raw = (SELECT VALUE managers FROM $part_of)[0] ?? [];
+        LET $inherited = SELECT *, (org OR $part_of) AS org FROM $inherited_raw;
+        LET $combined  = array::concat(manager_roles ?? [], $inherited ?? []);
+        RETURN $combined;
+    };
 
 DEFINE FIELD created              ON organisation TYPE datetime VALUE $before OR time::now();
 DEFINE FIELD updated              ON organisation TYPE datetime VALUE time::now();

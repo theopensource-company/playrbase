@@ -1,4 +1,4 @@
-import { TOrganisationID, TOrganisationRecord } from './Organisation.types';
+import { TOrganisationID } from './Organisation.types';
 
 export type TEventID = `event:${string}`;
 export type TEventRecord = {
@@ -10,10 +10,6 @@ export type TEventRecord = {
     start?: Date;
     end?: Date;
     organiser: TOrganisationID;
-    organiser_details: Pick<
-        TOrganisationRecord,
-        'name' | 'description' | 'email' | 'website'
-    > | null;
     discoverable: boolean;
     published: boolean;
     tournament?: TEventID;

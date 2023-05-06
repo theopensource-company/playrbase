@@ -5,13 +5,13 @@ DEFINE TABLE event SCHEMAFULL
       OR (published = true && id = $event_id)
       OR (
         $scope = 'manager' && 
-        (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND manager_roles.*.id CONTAINS $auth.id)[0]
+        (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers.*.id CONTAINS $auth.id)[0]
       )
     FOR create, update, delete WHERE 
       $scope = 'admin'
       OR (
         $scope = 'manager' && 
-        (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND manager_roles[WHERE role IN ['owner', 'administrator', 'event_manager']].id CONTAINS $auth.id)[0]
+        (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers[WHERE role IN ['owner', 'administrator', 'event_manager']].id CONTAINS $auth.id)[0]
       );
 
 DEFINE FIELD name         ON event TYPE string;

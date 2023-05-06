@@ -6,6 +6,7 @@ import {
     Create,
     Datagrid,
     DateField,
+    DeleteWithConfirmButton,
     Edit,
     EditButton,
     EmailField,
@@ -27,6 +28,7 @@ import {
     TabbedShowLayout,
     TextField,
     TextInput,
+    TopToolbar,
     useGetManyReference,
     useList,
     useRecordContext,
@@ -37,6 +39,7 @@ import {
     TOrganisationManagerRoles,
     TOrganisationRecord,
 } from '../../constants/Types/Organisation.types';
+import { FilterOrganisationManagers } from '../../lib/Organisation';
 
 export const OrganisationList = () => (
     <List sort={{ field: 'created', order: 'DESC' }}>
@@ -47,10 +50,17 @@ export const OrganisationList = () => (
             <TextField source="website" />
             <FunctionField
                 label="Managers"
-                render={({ manager_roles }: TOrganisationRecord) =>
-                    manager_roles.length
+                render={({ managers }: TOrganisationRecord) =>
+                    FilterOrganisationManagers(managers).length
                 }
             />
+            <ReferenceField
+                source="part_of"
+                reference="organisation"
+                link="show"
+            >
+                <TextField source="name" />
+            </ReferenceField>
             <DateField source="created" />
             <DateField source="updated" />
             <EditButton />
@@ -65,7 +75,10 @@ const OrganisationTitle = () => {
 
 export const ShowOrganisation = () => {
     return (
-        <Show title={<OrganisationTitle />}>
+        <Show
+            title={<OrganisationTitle />}
+            actions={<ShowOrganisationActions />}
+        >
             <TabbedShowLayout>
                 <Tab label="details">
                     <TextField source="id" />
@@ -73,6 +86,17 @@ export const ShowOrganisation = () => {
                     <RichTextField source="description" />
                     <TextField source="website" />
                     <EmailField source="email" />
+                    <ReferenceField
+                        source="part_of"
+                        reference="organisation"
+                        emptyText="Root organisation"
+                        link="show"
+                    >
+                        <TextField
+                            source="name"
+                            emptyText="Unknown organisation"
+                        />
+                    </ReferenceField>
                     <DateField source="created" />
                     <DateField source="updated" />
                 </Tab>
@@ -86,6 +110,13 @@ export const ShowOrganisation = () => {
         </Show>
     );
 };
+
+export const ShowOrganisationActions = () => (
+    <TopToolbar>
+        <EditButton />
+        <DeleteWithConfirmButton />
+    </TopToolbar>
+);
 
 export const ShowOrganisationLogs = () => {
     const ctx = useRecordContext();
@@ -138,6 +169,7 @@ export const ShowOrganisationManagers = () => {
                 <TableCell />
                 <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
+                <TableCell>From organisation</TableCell>
                 <TableCell>Role</TableCell>
                 <TableCell>Actions</TableCell>
             </TableRow>
@@ -147,7 +179,7 @@ export const ShowOrganisationManagers = () => {
     return (
         <ListContextProvider
             value={useList({
-                data: ctx.manager_roles,
+                data: FilterOrganisationManagers(ctx.managers),
             })}
         >
             <Datagrid isRowSelectable={() => false} header={<Header />}>
@@ -156,6 +188,13 @@ export const ShowOrganisationManagers = () => {
                 </ReferenceField>
                 <ReferenceField source="id" reference="manager" link={false}>
                     <TextField source="email" />
+                </ReferenceField>
+                <ReferenceField
+                    source="org"
+                    reference="organisation"
+                    link="show"
+                >
+                    <TextField source="name" emptyText="Unknown organisation" />
                 </ReferenceField>
                 <FunctionField
                     render={({ role }: { role: TOrganisationManagerRoles }) =>
@@ -214,9 +253,19 @@ export const CreateOrganisation = () => (
     <Create>
         <TabbedForm>
             <FormTab label="Basic">
-                <TextInput source="name" />
-                <TextInput source="email" type="email" />
-                <TextInput source="website" />
+                <TextInput source="name" isRequired={true} />
+                <TextInput source="email" type="email" isRequired={true} />
+                <TextInput source="website" isRequired={true} />
+                <ReferenceInput
+                    source="part_of"
+                    reference="organisation"
+                    isRequired={true}
+                    queryOptions={{
+                        meta: {
+                            fields: ['id', 'name', 'email'],
+                        },
+                    }}
+                />
                 <RichTextInput source="description" />
             </FormTab>
             <FormTab label="Managers">

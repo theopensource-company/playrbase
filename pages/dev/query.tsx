@@ -51,7 +51,7 @@ export default function Page() {
                 run
             </Button>
 
-            <p className="mt-8 whitespace-pre rounded-lg bg-zinc-700 py-12 px-8 font-mono">
+            <p className="mt-8 whitespace-pre rounded-lg bg-zinc-700 px-8 py-12 font-mono">
                 {JSON.stringify(result, null, 2)}
             </p>
         </DevLayout>

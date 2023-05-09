@@ -1,14 +1,10 @@
 import dynamic from 'next/dynamic';
 import React from 'react';
-import { InitializeSurrealAdmin } from '../admin/Surreal';
+import '../admin/Surreal';
 const App = dynamic(() => import('../admin/App'), { ssr: false });
 
 const AdminPage = () => {
-    return (
-        <InitializeSurrealAdmin>
-            <App />
-        </InitializeSurrealAdmin>
-    );
+    return <App />;
 };
 
 AdminPage.hideNavbar = true;

@@ -1,10 +1,10 @@
 import { UserIdentity } from 'ra-core';
 import { TManagerRecord } from '../constants/Types/Manager.types';
 import { SurrealDatabase, SurrealNamespace } from '../lib/Surreal';
-import { SurrealInstanceManager, SurrealQueryManager } from './Surreal';
+import { SurrealInstanceManager as surreal } from './Surreal';
 
 export const ManagerUserDetails = async (): Promise<TManagerRecord | null> => {
-    const result = await SurrealQueryManager<TManagerRecord>(
+    const result = await surreal.query<[TManagerRecord[]]>(
         'SELECT * FROM manager WHERE id = $auth.id'
     );
     const preParse =
@@ -19,13 +19,14 @@ export const ManagerUserDetails = async (): Promise<TManagerRecord | null> => {
 
 const authProvider = {
     login: ({ username, password }: { username: string; password: string }) => {
-        return SurrealInstanceManager.signin({
-            NS: SurrealNamespace,
-            DB: SurrealDatabase,
-            SC: 'manager',
-            identifier: username,
-            password,
-        })
+        return surreal
+            .signin({
+                NS: SurrealNamespace,
+                DB: SurrealDatabase,
+                SC: 'manager',
+                identifier: username,
+                password,
+            })
             .then((res) => {
                 localStorage.setItem('pmgrsess', res);
                 return Promise.resolve();

@@ -24,7 +24,7 @@ export const buildOrganisationFilters = buildTableFilters<TOrganisationRecord>(
 );
 
 export const useOrganisations = (
-    filters: Partial<Pick<TOrganisationRecord, 'master_organisation'>> = {}
+    filters: Partial<Pick<TOrganisationRecord, 'part_of'>> = {}
 ) =>
     useQuery({
         queryKey: ['events', filters],

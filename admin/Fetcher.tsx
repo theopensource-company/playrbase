@@ -7,7 +7,8 @@ import {
     UpdateManyResult,
     UpdateResult,
 } from 'ra-core';
-import { SurrealQueryAdmin } from './Surreal';
+import { RawQueryResult } from 'surrealdb.js/types/types';
+import { SurrealInstanceAdmin as surreal } from './Surreal';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function SelectFilterBuilder(filters: any) {
@@ -70,32 +71,34 @@ export const Fetcher = (): DataProvider => ({
 
         console.log(query);
 
-        return SurrealQueryAdmin(query, { query: q }).then((result) => {
-            if (result[0]?.result) {
-                let total = 0;
-                const data =
-                    result &&
-                    result[0].result &&
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    result[0].result.map((user: any) => {
-                        total = user.total;
-                        delete user.total;
-                        return user;
-                    });
+        return surreal
+            .query<[RawQueryResult[]]>(query, { query: q })
+            .then((result) => {
+                if (result[0]?.result) {
+                    let total = 0;
+                    const data =
+                        result &&
+                        result[0].result &&
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        result[0].result.map((user: any) => {
+                            total = user.total;
+                            delete user.total;
+                            return user;
+                        });
 
-                return {
-                    data,
-                    total,
-                };
-            } else {
-                throw new Error('An issue occured while fetching data');
-            }
-        });
+                    return {
+                        data,
+                        total,
+                    };
+                } else {
+                    throw new Error('An issue occured while fetching data');
+                }
+            });
     },
 
     getOne: (resource, params) => {
         const query = `SELECT * FROM ${resource} WHERE id="${params.id}"`;
-        return SurrealQueryAdmin(query).then((result) => {
+        return surreal.query<[RawQueryResult[]]>(query).then((result) => {
             if (result[0]?.result) {
                 return {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -111,11 +114,11 @@ export const Fetcher = (): DataProvider => ({
         const query = `SELECT * FROM ${resource} WHERE ${JSON.stringify(
             params.ids
         )} CONTAINS id`;
-        return SurrealQueryAdmin(query).then((result) => {
+        return surreal.query<[RawQueryResult[]]>(query).then((result) => {
             if (result[0]?.result) {
                 return {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    data: (result[0]?.result as any) ?? {},
+                    data: (result[0]?.result as any) ?? [],
                 };
             } else {
                 throw new Error('An issue occured while fetching data');
@@ -138,7 +141,7 @@ export const Fetcher = (): DataProvider => ({
             start > 0 ? `START AT ${start}` : ''
         }`;
 
-        return SurrealQueryAdmin(query).then((result) => {
+        return surreal.query<[RawQueryResult[]]>(query).then((result) => {
             if (result[0]?.result) {
                 let total = 0;
                 const data =
@@ -166,7 +169,7 @@ export const Fetcher = (): DataProvider => ({
             params.data as RaRecord
         ).join(', ')}`;
 
-        return SurrealQueryAdmin(query).then((result) => {
+        return surreal.query<[RawQueryResult[]]>(query).then((result) => {
             if (result[0]?.result) {
                 return Promise.resolve({
                     data: result[0]?.result[0],
@@ -183,20 +186,26 @@ export const Fetcher = (): DataProvider => ({
             params.data as RaRecord
         ).join(', ')} WHERE ${JSON.stringify(params.ids)} CONTAINS id`;
 
-        return SurrealQueryAdmin<{
-            id?: string;
-        }>(query).then((result) => {
-            if (result[0]?.result) {
-                return Promise.resolve({
-                    data: result[0]?.result
-                        .map((rec) => rec.id)
-                        .filter((a) => !!a),
-                } as UpdateManyResult);
-            } else {
-                console.error(result);
-                throw new Error('An issue occured while updating data');
-            }
-        });
+        return surreal
+            .query<
+                [
+                    (RawQueryResult & {
+                        id?: string;
+                    })[]
+                ]
+            >(query)
+            .then((result) => {
+                if (result[0]?.result) {
+                    return Promise.resolve({
+                        data: result[0]?.result
+                            .map((rec) => rec.id)
+                            .filter((a) => !!a),
+                    } as UpdateManyResult);
+                } else {
+                    console.error(result);
+                    throw new Error('An issue occured while updating data');
+                }
+            });
     },
 
     create: (resource, params) => {
@@ -204,7 +213,7 @@ export const Fetcher = (): DataProvider => ({
             params.data as RaRecord
         ).join(', ')}`;
 
-        return SurrealQueryAdmin(query).then((result) => {
+        return surreal.query<[RawQueryResult[]]>(query).then((result) => {
             if (result[0]?.result) {
                 return Promise.resolve({
                     data: result[0]?.result[0],
@@ -219,7 +228,7 @@ export const Fetcher = (): DataProvider => ({
     delete: (_resource, params) => {
         const query = `DELETE ${params.id}`;
 
-        return SurrealQueryAdmin(query).then((result) => {
+        return surreal.query<[RawQueryResult[]]>(query).then((result) => {
             if (result[0]?.result) {
                 return Promise.resolve({
                     data: result[0]?.result[0],
@@ -236,20 +245,26 @@ export const Fetcher = (): DataProvider => ({
             params.ids
         )} CONTAINS id`;
 
-        return SurrealQueryAdmin<{
-            id?: string;
-        }>(query).then((result) => {
-            if (result[0]?.result) {
-                return Promise.resolve({
-                    data: result[0]?.result
-                        .map((rec) => rec.id)
-                        .filter((a) => !!a),
-                } as DeleteManyResult);
-            } else {
-                console.error(result);
-                throw new Error('An issue occured while updating data');
-            }
-        });
+        return surreal
+            .query<
+                [
+                    (RawQueryResult & {
+                        id?: string;
+                    })[]
+                ]
+            >(query)
+            .then((result) => {
+                if (result[0]?.result) {
+                    return Promise.resolve({
+                        data: result[0]?.result
+                            .map((rec) => rec.id)
+                            .filter((a) => !!a),
+                    } as DeleteManyResult);
+                } else {
+                    console.error(result);
+                    throw new Error('An issue occured while updating data');
+                }
+            });
     },
 });
 

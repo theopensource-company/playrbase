@@ -11,13 +11,30 @@ DEFINE TABLE organisation SCHEMAFULL
           $scope = 'admin' OR 
           ($scope = 'manager' && managers[WHERE role IN ["owner", "adminstrator"] AND org != NONE].id CONTAINS $auth.id);
 
-DEFINE TABLE puborg AS SELECT name, description, website, email, created FROM organisation;
+DEFINE TABLE puborg AS SELECT name, description, website, email, created, url FROM organisation;
 
 DEFINE FIELD name                 ON organisation TYPE string;
 DEFINE FIELD description          ON organisation TYPE option<string>;
 DEFINE FIELD website              ON organisation TYPE option<string>;
 DEFINE FIELD email                ON organisation TYPE string           
     ASSERT is::email($value);
+DEFINE FIELD url                  ON organisation TYPE string
+    VALUE 
+        IF not($value) THEN
+            RETURN meta::id(id);
+        ELSE IF $scope = 'admin' OR not($scope) THEN
+            RETURN $value;
+        ELSE IF tier IN ["business", "enterprise"] THEN
+            RETURN $value;
+        ELSE
+            RETURN meta::id(id);
+        END;
+DEFINE FIELD tier                 ON organisation TYPE string
+    ASSERT $value IN ["free", "basic", "business", "enterprise"]
+    PERMISSIONS 
+        FOR create, update WHERE
+            $scope = 'admin'
+    VALUE $value OR $before OR "free";
 
 DEFINE FIELD manager_roles        ON organisation TYPE array
     PERMISSIONS

@@ -1,6 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { TOrganisationRecord } from '../../constants/Types/Organisation.types';
-import { buildTableFilters, SurrealInstance } from '../../lib/Surreal';
+import {
+    buildTableFilters,
+    SurrealInstance as surreal,
+} from '../../lib/Surreal';
 
 export function processOrganisationRecord({
     created,
@@ -29,13 +32,12 @@ export const useOrganisations = (
     useQuery({
         queryKey: ['events', filters],
         queryFn: async () => {
-            const result =
-                await SurrealInstance.opiniatedQuery<TOrganisationRecord>(
-                    `SELECT * FROM organisation ${await buildOrganisationFilters(
-                        filters
-                    )} ORDER BY created ASC`,
+            const result = await surreal.query<[TOrganisationRecord[]]>(
+                `SELECT * FROM organisation ${await buildOrganisationFilters(
                     filters
-                );
+                )} ORDER BY created ASC`,
+                filters
+            );
 
             if (!result?.[0]?.result) return null;
             return result[0].result.map(processOrganisationRecord);
@@ -46,11 +48,10 @@ export const useOrganisation = (id: TOrganisationRecord['id']) =>
     useQuery({
         queryKey: ['events', id],
         queryFn: async () => {
-            const result =
-                await SurrealInstance.opiniatedQuery<TOrganisationRecord>(
-                    `SELECT * FROM organisation WHERE id = $id`,
-                    { id }
-                );
+            const result = await surreal.query<[TOrganisationRecord[]]>(
+                `SELECT * FROM organisation WHERE id = $id`,
+                { id }
+            );
 
             if (!result?.[0]?.result?.[0]) return null;
             return processOrganisationRecord(result[0].result[0]);

@@ -38,8 +38,10 @@ import {
 import { TLogRecord } from '../../constants/Types/Log.types';
 import {
     OrganisationManagerRoles,
+    OrganisationTiers,
     TOrganisationManagerRoles,
     TOrganisationRecord,
+    TOrganisationTier,
 } from '../../constants/Types/Organisation.types';
 import { FilterOrganisationManagers } from '../../lib/Organisation';
 
@@ -50,6 +52,13 @@ export const OrganisationList = () => (
             <TextField source="name" />
             <EmailField source="email" />
             <UrlField source="website" />
+            <FunctionField
+                title="Tier"
+                render={({ tier }: { tier: TOrganisationTier }) =>
+                    OrganisationTiers[tier]
+                }
+            />
+            <TextField source="url" />
             <FunctionField
                 label="Managers"
                 render={({ managers }: TOrganisationRecord) =>
@@ -88,6 +97,13 @@ export const ShowOrganisation = () => {
                     <RichTextField source="description" />
                     <UrlField source="website" />
                     <EmailField source="email" />
+                    <FunctionField
+                        title="Tier"
+                        render={({ tier }: { tier: TOrganisationTier }) =>
+                            OrganisationTiers[tier]
+                        }
+                    />
+                    <TextField source="url" />
                     <ReferenceField
                         source="part_of"
                         reference="organisation"
@@ -243,6 +259,15 @@ export const EditOrganisation = () => (
                 <TextInput disabled source="id" />
                 <TextInput source="name" />
                 <TextInput source="email" type="email" />
+                <TextInput source="url" />
+                <SelectInput
+                    title="Tier"
+                    source="tier"
+                    choices={Object.keys(OrganisationTiers).map((id) => ({
+                        id,
+                        name: OrganisationTiers[id as TOrganisationTier],
+                    }))}
+                />
             </FormTab>
             <FormTab label="Managers">
                 <ManageOrganisationManagers />
@@ -258,6 +283,15 @@ export const CreateOrganisation = () => (
                 <TextInput source="name" isRequired={true} />
                 <TextInput source="email" type="email" isRequired={true} />
                 <TextInput source="website" isRequired={true} />
+                <TextInput source="url" />
+                <SelectInput
+                    title="Tier"
+                    source="tier"
+                    choices={Object.keys(OrganisationTiers).map((id) => ({
+                        id,
+                        name: OrganisationTiers[id as TOrganisationTier],
+                    }))}
+                />
                 <ReferenceInput
                     source="part_of"
                     reference="organisation"

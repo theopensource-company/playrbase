@@ -8,6 +8,8 @@ export type TOrganisationRecord = {
     description: string;
     website: TWebsite;
     email: TEmail;
+    url: string;
+    tier: TOrganisationTier;
     part_of: TOrganisationID;
     manager_roles: {
         id: TManagerID;
@@ -43,3 +45,12 @@ export const OrganisationManagerRolesHierarchy = Object.keys(
     }),
     {} as TOrganisationManagerRolesHierarchy
 );
+
+export const OrganisationTiers = {
+    free: 'Free',
+    basic: 'Basic',
+    business: 'Business',
+    enterprise: 'Enterprise',
+};
+
+export type TOrganisationTier = keyof typeof OrganisationTiers;

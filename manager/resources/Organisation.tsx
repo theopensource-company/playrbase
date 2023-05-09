@@ -13,6 +13,7 @@ import {
     EmailField,
     FormTab,
     FunctionField,
+    Labeled,
     List,
     ListContextProvider,
     Pagination,
@@ -24,6 +25,7 @@ import {
     Show,
     ShowButton,
     SimpleFormIterator,
+    SimpleShowLayout,
     Tab,
     TabbedForm,
     TabbedShowLayout,
@@ -38,8 +40,10 @@ import {
 import { TLogRecord } from '../../constants/Types/Log.types';
 import {
     OrganisationManagerRoles,
+    OrganisationTiers,
     TOrganisationManagerRoles,
     TOrganisationRecord,
+    TOrganisationTier,
 } from '../../constants/Types/Organisation.types';
 import { FilterOrganisationManagers } from '../../lib/Organisation';
 
@@ -50,6 +54,13 @@ export const OrganisationList = () => (
             <TextField source="name" />
             <EmailField source="email" />
             <UrlField source="website" />
+            <FunctionField
+                title="Tier"
+                render={({ tier }: { tier: TOrganisationTier }) =>
+                    OrganisationTiers[tier]
+                }
+            />
+            <TextField source="url" />
             <FunctionField
                 label="Managers"
                 render={({ managers }: TOrganisationRecord) =>
@@ -83,24 +94,7 @@ export const ShowOrganisation = () => {
         >
             <TabbedShowLayout>
                 <Tab label="details">
-                    <TextField source="id" />
-                    <TextField source="name" />
-                    <RichTextField source="description" />
-                    <UrlField source="website" />
-                    <EmailField source="email" />
-                    <ReferenceField
-                        source="part_of"
-                        reference="organisation"
-                        emptyText="Root organisation"
-                        link="show"
-                    >
-                        <TextField
-                            source="name"
-                            emptyText="Unknown organisation"
-                        />
-                    </ReferenceField>
-                    <DateField source="created" />
-                    <DateField source="updated" />
+                    <ShowOrganisationDetails />
                 </Tab>
                 <Tab label="logs">
                     <ShowOrganisationLogs />
@@ -110,6 +104,43 @@ export const ShowOrganisation = () => {
                 </Tab>
             </TabbedShowLayout>
         </Show>
+    );
+};
+
+export const ShowOrganisationDetails = () => {
+    const record = useRecordContext();
+
+    return (
+        <SimpleShowLayout>
+            <TextField source="id" />
+            <TextField source="name" />
+            {record?.description && <RichTextField source="description" />}
+            <UrlField source="website" />
+            <EmailField source="email" />
+            <Labeled label="Tier">
+                <FunctionField
+                    title="Tier"
+                    render={({ tier }: { tier: TOrganisationTier }) =>
+                        OrganisationTiers[tier]
+                    }
+                />
+            </Labeled>
+            <TextField source="url" />
+            <ReferenceField
+                source="part_of"
+                reference="organisation"
+                emptyText={
+                    record?.part_of
+                        ? 'Unknown organisation'
+                        : 'Root organisation'
+                }
+                link="show"
+            >
+                <TextField source="name" emptyText="Unknown organisation" />
+            </ReferenceField>
+            <DateField source="created" />
+            <DateField source="updated" />
+        </SimpleShowLayout>
     );
 };
 
@@ -243,6 +274,7 @@ export const EditOrganisation = () => (
                 <TextInput disabled source="id" />
                 <TextInput source="name" />
                 <TextInput source="email" type="email" />
+                <TextInput source="url" />
             </FormTab>
             <FormTab label="Managers">
                 <ManageOrganisationManagers />
@@ -258,6 +290,7 @@ export const CreateOrganisation = () => (
                 <TextInput source="name" isRequired={true} />
                 <TextInput source="email" type="email" isRequired={true} />
                 <TextInput source="website" isRequired={true} />
+                <TextInput source="url" />
                 <ReferenceInput
                     source="part_of"
                     reference="organisation"

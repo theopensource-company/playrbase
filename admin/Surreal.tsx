@@ -9,16 +9,19 @@ import {
 export const SurrealInstanceAdmin = new Surreal(SurrealEndpoint, {
     prepare: async (surreal) => {
         await surreal.use(SurrealNamespace, SurrealDatabase);
-        const token = localStorage.getItem('kadmsess');
-        if (token) {
-            console.log('Authenticating admin with existing token');
-            try {
-                await surreal.authenticate(token);
-            } catch (e) {
-                console.error(
-                    'Failed to authenticate admin with existing token, clearing it.'
-                );
-                localStorage.removeItem('kadmsess');
+
+        if (typeof window !== 'undefined') {
+            const token = localStorage.getItem('kadmsess');
+            if (token) {
+                console.log('Authenticating admin with existing token');
+                try {
+                    await surreal.authenticate(token);
+                } catch (e) {
+                    console.error(
+                        'Failed to authenticate admin with existing token, clearing it.'
+                    );
+                    localStorage.removeItem('kadmsess');
+                }
             }
         }
     },

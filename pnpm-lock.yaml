@@ -10,9 +10,6 @@ dependencies:
   '@tanstack/react-query':
     specifier: ^4.29.5
     version: 4.29.5(react-dom@18.2.0)(react@18.2.0)
-  '@theopensource-company/awaited-surrealdb':
-    specifier: ^0.5.1
-    version: 0.5.1
   '@types/node':
     specifier: 20.1.1
     version: 20.1.1
@@ -2145,15 +2142,6 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       use-sync-external-store: 1.2.0(react@18.2.0)
-    dev: false
-
-  /@theopensource-company/awaited-surrealdb@0.5.1:
-    resolution: {integrity: sha512-zpO9DI2vc3PbKTZH9kRDYimehB1anMBWhwY85C1UBH5HnH+RYhph75a6xGuCdIgJS3yyMopJ86MS6Bukt5Q1PQ==}
-    dependencies:
-      surrealdb.js: 0.5.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
     dev: false
 
   /@theopensource-company/surrealdb-cloudflare@1.0.4:
@@ -6085,16 +6073,6 @@ packages:
   /supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
-
-  /surrealdb.js@0.5.0:
-    resolution: {integrity: sha512-CpDfCwVnG3ahr2/kUf3i9RgDtLuEzQeU5Zxuhtud5Ijq9abXzkAhS/gcvtSQ9qyZiqSQcp4u7IK3yjnd1OkqKQ==}
-    dependencies:
-      isomorphic-ws: 5.0.0(ws@8.13.0)
-      ws: 8.13.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: false
 
   /surrealdb.js@0.7.1(ws@8.13.0):
     resolution: {integrity: sha512-N9X1rDRqmwY+iRlDbPrNmth6Mi6m0lx3Dc+EsV3bBqTeRVJgIzoKm2TuiR61OFViANUPLxpzI2lNwAzNjn2FAg==}

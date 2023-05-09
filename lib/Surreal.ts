@@ -1,4 +1,4 @@
-import AwaitedSurreal from '@theopensource-company/awaited-surrealdb';
+import { Surreal } from 'surrealdb.js';
 
 export const SurrealEndpoint = `${
     process.env.NEXT_PUBLIC_SURREAL_ENDPOINT ?? 'https://euc1-1-db.kards.social'
@@ -8,10 +8,10 @@ export const SurrealNamespace =
 export const SurrealDatabase =
     process.env.NEXT_PUBLIC_SURREAL_DATABASE ?? 'playrbase-deployment_unknown';
 
-export const SurrealInstance = new AwaitedSurreal({
-    endpoint: SurrealEndpoint,
-    namespace: SurrealNamespace,
-    database: SurrealDatabase,
+export const SurrealInstance = new Surreal(SurrealEndpoint, {
+    prepare: async (surreal) => {
+        await surreal.use(SurrealNamespace, SurrealDatabase);
+    },
 });
 
 export function buildTableFilters<TRecord = unknown>(
@@ -34,4 +34,11 @@ export function buildTableFilters<TRecord = unknown>(
 
         return `WHERE ${result}`;
     };
+}
+
+export function isNoneValue<TRecord = unknown>(
+    property: keyof TRecord,
+    record: Partial<TRecord>
+) {
+    return property in record && typeof record[property] === 'undefined';
 }

@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import Container from '../../components/helper/Container';
+import { EventModule } from '../../components/modules/EventModule';
 import { useEvents } from '../../hooks/Queries/Event';
 import { usePublicOrganisation } from '../../hooks/Queries/PublicOrganisation';
 
@@ -18,24 +19,26 @@ export default function Org() {
 
     const { data: events, isLoading: areEventsLoading } = useEvents({
         organiser: `organisation:${orgRawID}`,
-        tournament: undefined,
+        root_for_org: true,
     });
 
     const { data: organisation, isLoading: isOrganisationLoading } =
         usePublicOrganisation(`puborg:${orgRawID}`);
 
     return (
-        <Container>
+        <Container className="flex flex-col gap-8">
             {!orgRawID || (!isOrganisationLoading && !organisation) ? (
-                <h1>Organisation not found</h1>
+                <h1 className="text-3xl">Organisation not found</h1>
             ) : areEventsLoading || isOrganisationLoading ? (
-                <h1>Events are loading</h1>
+                <h1 className="text-3xl">Events are loading</h1>
             ) : (
                 <>
-                    <h1>Events hosted by {organisation?.name}</h1>
-                    {events?.map((event) => (
-                        <p key={event.id}>{event.name}</p>
-                    ))}
+                    <h1 className="text-3xl">{organisation?.name}</h1>
+                    <div className="grid w-full grid-rows-6 gap-4 xl:grid-cols-2">
+                        {events?.map((event) => (
+                            <EventModule key={event.id} event={event} />
+                        ))}
+                    </div>
                 </>
             )}
         </Container>

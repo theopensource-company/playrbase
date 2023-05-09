@@ -10,6 +10,7 @@ export type TEventRecord = {
     start?: Date;
     end?: Date;
     organiser: TOrganisationID;
+    root_for_org: boolean;
     discoverable: boolean;
     published: boolean;
     tournament?: TEventID;

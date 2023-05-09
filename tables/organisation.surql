@@ -29,11 +29,17 @@ DEFINE FIELD manager_roles.*.id   ON organisation TYPE record<manager>;
 DEFINE FIELD manager_roles.*.role ON organisation TYPE string 
     ASSERT $value IN ['owner', 'administrator', 'event_manager', 'event_viewer'];
 
+// ABOUT RECURSIVE NESTING OF ORGANISATIONS
+// Tested it, utter limit is 16 levels of recursion which is overkill for this scenario :)
+// There is no usecase for this, nobody will reach this limit
+// If they do, they break their own management interface.
+// It will still work fine for admins because they don't have a subquery in the permission clause :)
+
 DEFINE FIELD part_of              ON organisation TYPE option<record<organisation>>
     VALUE
         IF $scope = 'admin' OR not($scope) THEN
             $value
-        ELSE IF (SELECT VALUE id FROM organisation WHERE id = $value AND managers[WHERE role IN ["owner", "adminstrator"] AND org = NONE].id CONTAINS $auth.id)[0] THEN
+        ELSE IF (SELECT VALUE id FROM $value WHERE managers[WHERE role IN ["owner", "adminstrator"]].id CONTAINS $auth.id)[0] THEN
             $value
         ELSE 
             false

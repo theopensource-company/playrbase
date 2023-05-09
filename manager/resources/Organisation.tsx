@@ -1,3 +1,4 @@
+import { Business } from '@mui/icons-material';
 import { TableCell, TableHead, TableRow } from '@mui/material';
 import { RichTextInput } from 'ra-input-rich-text';
 import React, { useState } from 'react';
@@ -41,7 +42,6 @@ import {
     TOrganisationRecord,
 } from '../../constants/Types/Organisation.types';
 import { FilterOrganisationManagers } from '../../lib/Organisation';
-import { Business } from '@mui/icons-material';
 
 export const OrganisationList = () => (
     <List sort={{ field: 'created', order: 'DESC' }}>

@@ -18,7 +18,7 @@ export const FeatureFlagProvider = ({ children }: { children: ReactNode }) => {
     const [state, setState] = useState<TFeatureFlags>(featureFlags);
 
     useEffect(() => {
-        const stored = JSON.parse(localStorage.getItem('kfflags') ?? '{}');
+        const stored = JSON.parse(localStorage.getItem('pfflags') ?? '{}');
         const parsed = Object.keys(stored).reduce<TFeatureFlags>(
             (prev, curr) => ({
                 ...prev,

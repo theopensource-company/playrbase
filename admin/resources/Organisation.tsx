@@ -1,3 +1,4 @@
+import { Business } from '@mui/icons-material';
 import { TableCell, TableHead, TableRow } from '@mui/material';
 import { RichTextInput } from 'ra-input-rich-text';
 import React, { useState } from 'react';
@@ -29,6 +30,7 @@ import {
     TextField,
     TextInput,
     TopToolbar,
+    UrlField,
     useGetManyReference,
     useList,
     useRecordContext,
@@ -47,7 +49,7 @@ export const OrganisationList = () => (
             <TextField source="id" />
             <TextField source="name" />
             <EmailField source="email" />
-            <TextField source="website" />
+            <UrlField source="website" />
             <FunctionField
                 label="Managers"
                 render={({ managers }: TOrganisationRecord) =>
@@ -84,7 +86,7 @@ export const ShowOrganisation = () => {
                     <TextField source="id" />
                     <TextField source="name" />
                     <RichTextField source="description" />
-                    <TextField source="website" />
+                    <UrlField source="website" />
                     <EmailField source="email" />
                     <ReferenceField
                         source="part_of"
@@ -265,6 +267,9 @@ export const CreateOrganisation = () => (
                             fields: ['id', 'name', 'email'],
                         },
                     }}
+                    filter={{
+                        part_of: undefined,
+                    }}
                 />
                 <RichTextInput source="description" />
             </FormTab>
@@ -278,6 +283,7 @@ export const CreateOrganisation = () => (
 export const OrganisationResource = (
     <Resource
         name="organisation"
+        icon={Business}
         list={OrganisationList}
         edit={EditOrganisation}
         show={ShowOrganisation}

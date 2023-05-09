@@ -1,18 +1,17 @@
 import { TAnyID } from './Common.types';
 
 export type TLogID = `log:${string}`;
-export type TLogRecord<TIDType = TAnyID> = {
+export type TLogRecord<TIDType = TAnyID, TValueType = unknown> = {
     id: TLogID;
-    from?: string;
-    to?: string;
-    details: object;
-    event: TLogEvent;
-    field: TIDType;
+    record: TIDType;
+    event: 'CREATE' | 'UPDATE' | 'DELETE';
+    change?: {
+        field: string;
+        value?: {
+            before: TValueType;
+            after: TValueType;
+        };
+    };
+    details?: Record<string, unknown>;
+    created: Date;
 };
-
-export type TLogEvent =
-    | string
-    | `${string}_${string}`
-    | `${string}_${string}_${string}`
-    | `${string}_${string}_${string}_${string}`;
-// Usually not more than 4 segments, can be expanded as needed.

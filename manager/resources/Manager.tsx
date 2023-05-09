@@ -1,3 +1,4 @@
+import { SupervisedUserCircleRounded } from '@mui/icons-material';
 import React from 'react';
 import {
     DateField,
@@ -31,6 +32,7 @@ export const ShowManager = () => {
 export const ManagerResource = (
     <Resource
         name="manager"
+        icon={SupervisedUserCircleRounded}
         show={ShowManager}
         recordRepresentation={(record) => `${record.name} (${record.email})`}
     />

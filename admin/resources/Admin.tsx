@@ -1,3 +1,4 @@
+import { ManageAccountsRounded } from '@mui/icons-material';
 import { TableCell, TableHead, TableRow } from '@mui/material';
 import React, { useState } from 'react';
 import {
@@ -126,6 +127,7 @@ export const CreateAdmin = () => (
 export const AdminResource = (
     <Resource
         name="admin"
+        icon={ManageAccountsRounded}
         list={AdminList}
         edit={EditAdmin}
         show={ShowAdmin}

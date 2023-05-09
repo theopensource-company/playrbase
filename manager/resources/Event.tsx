@@ -1,3 +1,4 @@
+import { Event as EventIcon } from '@mui/icons-material';
 import { TableCell, TableHead, TableRow } from '@mui/material';
 import { RichTextInput } from 'ra-input-rich-text';
 import React, { ReactNode, useState } from 'react';
@@ -269,6 +270,7 @@ export const CreateEvent = () => (
 export const EventResource = (
     <Resource
         name="event"
+        icon={EventIcon}
         list={EventList}
         edit={EditEvent}
         show={ShowEvent}

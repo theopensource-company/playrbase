@@ -29,6 +29,7 @@ import {
     TextField,
     TextInput,
     TopToolbar,
+    UrlField,
     useGetManyReference,
     useList,
     useRecordContext,
@@ -40,6 +41,7 @@ import {
     TOrganisationRecord,
 } from '../../constants/Types/Organisation.types';
 import { FilterOrganisationManagers } from '../../lib/Organisation';
+import { Business } from '@mui/icons-material';
 
 export const OrganisationList = () => (
     <List sort={{ field: 'created', order: 'DESC' }}>
@@ -47,7 +49,7 @@ export const OrganisationList = () => (
             <TextField source="id" />
             <TextField source="name" />
             <EmailField source="email" />
-            <TextField source="website" />
+            <UrlField source="website" />
             <FunctionField
                 label="Managers"
                 render={({ managers }: TOrganisationRecord) =>
@@ -84,7 +86,7 @@ export const ShowOrganisation = () => {
                     <TextField source="id" />
                     <TextField source="name" />
                     <RichTextField source="description" />
-                    <TextField source="website" />
+                    <UrlField source="website" />
                     <EmailField source="email" />
                     <ReferenceField
                         source="part_of"
@@ -278,6 +280,7 @@ export const CreateOrganisation = () => (
 export const OrganisationResource = (
     <Resource
         name="organisation"
+        icon={Business}
         list={OrganisationList}
         edit={EditOrganisation}
         show={ShowOrganisation}

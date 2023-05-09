@@ -1,3 +1,4 @@
+import { SettingsApplicationsRounded } from '@mui/icons-material';
 import React from 'react';
 import {
     Datagrid,
@@ -38,6 +39,7 @@ export const EditEnvironment = () => (
 export const EnvironmentResource = (
     <Resource
         name="environment"
+        icon={SettingsApplicationsRounded}
         list={EnvironmentList}
         edit={EditEnvironment}
         options={{ label: 'Environment keys' }}

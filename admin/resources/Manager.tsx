@@ -1,3 +1,4 @@
+import { SupervisedUserCircleRounded } from '@mui/icons-material';
 import { TableCell, TableHead, TableRow } from '@mui/material';
 import React, { useState } from 'react';
 import {
@@ -126,6 +127,7 @@ export const CreateManager = () => (
 export const ManagerResource = (
     <Resource
         name="manager"
+        icon={SupervisedUserCircleRounded}
         list={ManagerList}
         edit={EditManager}
         show={ShowManager}

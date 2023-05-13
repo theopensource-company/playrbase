@@ -1,5 +1,7 @@
 import { migrateDatabase, MigrationEnvironment } from './_migratetool.mjs';
 
+console.log(JSON.stringify(process.env, null, 2));
+
 if (
     !process.env.SURREAL_HOST ||
     !process.env.SURREAL_USERNAME ||

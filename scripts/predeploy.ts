@@ -1,4 +1,4 @@
-import { migrateDatabase, MigrationEnvironment } from './_migratetool.mts';
+import { migrateDatabase, MigrationEnvironment } from './_migratetool.ts';
 
 console.log(JSON.stringify(process.env, null, 2));
 

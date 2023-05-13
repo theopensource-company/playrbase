@@ -16,7 +16,7 @@
     "incremental": true,
     "allowImportingTsExtensions": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "scripts/_migratetool.mts", "scripts/predeploy.mts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "scripts/_migratetool.ts", "scripts/predeploy.ts"],
   "exclude": ["node_modules"],
   "ts-node": {
     "esm": true

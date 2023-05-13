@@ -2,6 +2,7 @@
   "name": "playrbase",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "concurrently --names \"playrbs,surreal\" --hide 1 \"pnpm dev-next\" \"pnpm dev-surreal\"",
     "debug": "concurrently --names \"playrbs,surreal\" \"pnpm dev-next\" \"pnpm dev-surreal\"",

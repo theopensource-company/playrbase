@@ -6,7 +6,7 @@ DEFINE TABLE organisation SCHEMAFULL
           ($scope = 'manager' && managers.*.id CONTAINS $auth.id)
         FOR update WHERE 
           $scope = 'admin' OR 
-          ($scope = 'manager' && managers[WHERE role IN ["owner", "adminstrator"]].id CONTAINS $auth.id);
+          ($scope = 'manager' && managers[WHERE role IN ["owner", "adminstrator"]].id CONTAINS $auth.id)
         FOR delete WHERE 
           $scope = 'admin' OR 
           ($scope = 'manager' && managers[WHERE role IN ["owner", "adminstrator"] AND org != NONE].id CONTAINS $auth.id);

@@ -5,7 +5,15 @@ import { EventModule } from '../../components/modules/EventModule';
 import { useEvents } from '../../hooks/Queries/Event';
 import { usePublicOrganisation } from '../../hooks/Queries/PublicOrganisation';
 
-export default function Org() {
+export async function getServerSideProps() {
+    return {
+        props: {
+            something: 123,
+        },
+    };
+}
+
+export default function Org({ something }: { something: number }) {
     const { query } = useRouter();
     const orgRawID = (
         query?.id
@@ -39,6 +47,7 @@ export default function Org() {
                             <EventModule key={event.id} event={event} />
                         ))}
                     </div>
+                    <p>{something}</p>
                 </>
             )}
         </Container>

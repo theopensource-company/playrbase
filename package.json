@@ -10,7 +10,7 @@
     "dev-surreal": "surreal start --log debug --user root --pass root --bind 0.0.0.0:13001 file:dev.db",
     "ts": "tsc --watch",
     "lint": "eslint . --ext ts --ext tsx --max-warnings 0",
-    "deploy": "cross-env NODE_ENV=\"production\" SURREAL_DATABASE=playrbase-deployment_$VERCEL_GIT_COMMIT_REF && export NEXT_PUBLIC_SURREAL_DATABASE=$SURREAL_DATABASE && ts-node ./scripts/predeploy.mts && pnpm build",
+    "deploy": "export NODE_ENV=\"production\" SURREAL_DATABASE=playrbase-deployment_$VERCEL_GIT_COMMIT_REF && export NEXT_PUBLIC_SURREAL_DATABASE=$SURREAL_DATABASE && ts-node ./scripts/predeploy.mts && pnpm build",
     "build": "next build && next export && rm -rf out/dev"
   },
   "dependencies": {

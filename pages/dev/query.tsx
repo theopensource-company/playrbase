@@ -18,11 +18,9 @@ export default function Page() {
 
     const run = useCallback(() => {
         if (inputRef.current && inputRef.current.value.length > 0) {
-            SurrealInstance.opiniatedQuery(inputRef.current.value).then(
-                (res) => {
-                    setResult(res);
-                }
-            );
+            SurrealInstance.query(inputRef.current.value).then((res) => {
+                setResult(res);
+            });
         } else {
             alert('No query');
         }

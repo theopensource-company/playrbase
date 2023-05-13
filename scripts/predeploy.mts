@@ -2,6 +2,9 @@ import { migrateDatabase, MigrationEnvironment } from './_migratetool.mjs';
 
 console.log(JSON.stringify(process.env, null, 2));
 
+if (process.env.VERCEL_GIT_COMMIT_REF)
+    process.env.SURREAL_DATABASE = `playrbase-deployment_${process.env.VERCEL_GIT_COMMIT_REF}`;
+
 if (
     !process.env.SURREAL_HOST ||
     !process.env.SURREAL_USERNAME ||

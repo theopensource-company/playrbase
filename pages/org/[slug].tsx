@@ -1,10 +1,11 @@
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import React from 'react';
 import Container from '../../components/helper/Container';
 import { EventModule } from '../../components/modules/EventModule';
-import { TOrganisationID } from '../../constants/Types/Organisation.types';
-import { useEvents } from '../../hooks/Queries/Event';
-import { usePublicOrganisation } from '../../hooks/Queries/PublicOrganisation';
+import { TEventRecord } from '../../constants/Types/Events.types';
+import { TPublicOrganisationRecord } from '../../constants/Types/PublicOrganisation.types';
+import { SurrealInstance as surreal } from '../../lib/Surreal';
 
 export default function Org() {
     const { query } = useRouter();
@@ -14,23 +15,15 @@ export default function Org() {
             : query.slug
         : undefined;
 
-    const { data: organisation, isLoading: isOrganisationLoading } =
-        usePublicOrganisation({ slug });
-
-    const { data: events, isLoading: areEventsLoading } = useEvents({
-        organiser: organisation
-            ? (['organisation', ...organisation.id.split(':').slice(1)].join(
-                  ':'
-              ) as TOrganisationID)
-            : undefined,
-        root_for_org: true,
-    });
+    const { data, isLoading } = useData(slug);
+    const organisation = data?.[0] ?? null;
+    const events = data?.[1] ?? [];
 
     return (
         <Container className="flex flex-col gap-8">
-            {!slug || (!isOrganisationLoading && !organisation) ? (
+            {!slug || (!isLoading && !organisation) ? (
                 <h1 className="text-3xl">Organisation not found</h1>
-            ) : areEventsLoading || isOrganisationLoading ? (
+            ) : isLoading ? (
                 <h1 className="text-3xl">Events are loading</h1>
             ) : (
                 <>
@@ -44,4 +37,26 @@ export default function Org() {
             )}
         </Container>
     );
+}
+
+function useData(slug?: string) {
+    return useQuery({
+        queryKey: ['custom', 'org/[slug]', slug],
+        queryFn: async () => {
+            const result = await surreal.query<
+                [[TPublicOrganisationRecord | null, TEventRecord[]]]
+            >(
+                /* surrealql */ `
+                    BEGIN;
+                    LET $org = (SELECT * FROM puborg WHERE slug = $slug)[0];
+                    LET $events = SELECT * FROM event WHERE organiser = type::thing('organisation', meta::id($org.id)) AND root_for_org = true;
+                    RETURN [$org, $events];
+                    COMMIT;
+                `,
+                { slug }
+            );
+
+            return result[0]?.result;
+        },
+    });
 }

@@ -30,7 +30,7 @@ DEFINE FIELD discoverable ON event TYPE bool;
 DEFINE FIELD published    ON event TYPE bool;
 DEFINE FIELD tournament   ON event TYPE option<record<event>>;
 DEFINE FIELD root_for_org ON event 
-    VALUE (SELECT VALUE organiser FROM $parent.tournament)[0] == organiser;
+    VALUE not(tournament) OR (SELECT VALUE organiser FROM $parent.tournament)[0] != organiser;
 
 DEFINE FIELD created      ON event TYPE datetime VALUE $before OR time::now();
 DEFINE FIELD updated      ON event TYPE datetime VALUE time::now();

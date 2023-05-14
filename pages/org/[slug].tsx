@@ -2,40 +2,33 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import Container from '../../components/helper/Container';
 import { EventModule } from '../../components/modules/EventModule';
+import { TOrganisationID } from '../../constants/Types/Organisation.types';
 import { useEvents } from '../../hooks/Queries/Event';
 import { usePublicOrganisation } from '../../hooks/Queries/PublicOrganisation';
 
-export async function getServerSideProps() {
-    return {
-        props: {
-            something: 123,
-        },
-    };
-}
-
-export default function Org({ something }: { something: number }) {
+export default function Org() {
     const { query } = useRouter();
-    const orgRawID = (
-        query?.id
-            ? typeof query?.id == 'object'
-                ? query.id[0]
-                : query.id
-            : undefined
-    )
-        ?.split(':')
-        ?.pop();
+    const slug = query?.slug
+        ? typeof query?.slug == 'object'
+            ? query.slug[0]
+            : query.slug
+        : undefined;
+
+    const { data: organisation, isLoading: isOrganisationLoading } =
+        usePublicOrganisation({ slug });
 
     const { data: events, isLoading: areEventsLoading } = useEvents({
-        organiser: `organisation:${orgRawID}`,
+        organiser: organisation
+            ? (['organisation', ...organisation.id.split(':').slice(1)].join(
+                  ':'
+              ) as TOrganisationID)
+            : undefined,
         root_for_org: true,
     });
 
-    const { data: organisation, isLoading: isOrganisationLoading } =
-        usePublicOrganisation(`puborg:${orgRawID}`);
-
     return (
         <Container className="flex flex-col gap-8">
-            {!orgRawID || (!isOrganisationLoading && !organisation) ? (
+            {!slug || (!isOrganisationLoading && !organisation) ? (
                 <h1 className="text-3xl">Organisation not found</h1>
             ) : areEventsLoading || isOrganisationLoading ? (
                 <h1 className="text-3xl">Events are loading</h1>
@@ -47,7 +40,6 @@ export default function Org({ something }: { something: number }) {
                             <EventModule key={event.id} event={event} />
                         ))}
                     </div>
-                    <p>{something}</p>
                 </>
             )}
         </Container>

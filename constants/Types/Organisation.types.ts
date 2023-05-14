@@ -8,7 +8,7 @@ export type TOrganisationRecord = {
     description: string;
     website: TWebsite;
     email: TEmail;
-    url: string;
+    slug: string;
     tier: TOrganisationTier;
     part_of: TOrganisationID;
     manager_roles: {

@@ -11,14 +11,14 @@ DEFINE TABLE organisation SCHEMAFULL
           $scope = 'admin' OR 
           ($scope = 'manager' && managers[WHERE role IN ["owner", "adminstrator"] AND org != NONE].id CONTAINS $auth.id);
 
-DEFINE TABLE puborg AS SELECT name, description, website, email, created, url FROM organisation;
+DEFINE TABLE puborg AS SELECT name, description, website, email, created, slug FROM organisation;
 
 DEFINE FIELD name                 ON organisation TYPE string;
 DEFINE FIELD description          ON organisation TYPE option<string>;
 DEFINE FIELD website              ON organisation TYPE option<string>;
 DEFINE FIELD email                ON organisation TYPE string           
     ASSERT is::email($value);
-DEFINE FIELD url                  ON organisation TYPE string
+DEFINE FIELD slug                  ON organisation TYPE string
     VALUE 
         IF not($value) THEN
             RETURN meta::id(id);

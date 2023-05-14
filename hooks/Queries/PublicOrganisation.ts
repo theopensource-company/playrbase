@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { TPublicOrganisationRecord } from '../../constants/Types/PublicOrganisation.types';
 import {
     buildTableFilters,
+    isNoneValue,
     SurrealInstance as surreal,
 } from '../../lib/Surreal';
 
@@ -15,11 +16,14 @@ export function processPublicOrganisationRecord({
     };
 }
 
-export const buildOrganisationFilters =
-    buildTableFilters<TPublicOrganisationRecord>(async (property) => {
+export const buildPublicOrganisationFilters =
+    buildTableFilters<TPublicOrganisationRecord>(async (property, filters) => {
+        const computeValue = () =>
+            isNoneValue(property, filters) ? 'NONE' : `$filters.${property}`;
+
         switch (property) {
             default:
-                return `${property} = $${property}`;
+                return `${property} = ${computeValue()}`;
         }
     });
 
@@ -36,13 +40,18 @@ export const usePublicOrganisations = () =>
         },
     });
 
-export const usePublicOrganisation = (id: TPublicOrganisationRecord['id']) =>
+export const usePublicOrganisation = (filters: {
+    id?: TPublicOrganisationRecord['id'];
+    slug?: TPublicOrganisationRecord['slug'];
+}) =>
     useQuery({
-        queryKey: ['events', id],
+        queryKey: ['events', filters],
         queryFn: async () => {
             const result = await surreal.query<[TPublicOrganisationRecord[]]>(
-                `SELECT * FROM puborg WHERE id = $id`,
-                { id }
+                `SELECT * FROM puborg ${await buildPublicOrganisationFilters(
+                    filters
+                )}`,
+                { filters }
             );
 
             if (!result?.[0]?.result?.[0]) return null;

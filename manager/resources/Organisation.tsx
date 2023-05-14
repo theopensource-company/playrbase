@@ -60,7 +60,7 @@ export const OrganisationList = () => (
                     OrganisationTiers[tier]
                 }
             />
-            <TextField source="url" />
+            <TextField source="slug" />
             <FunctionField
                 label="Managers"
                 render={({ managers }: TOrganisationRecord) =>
@@ -125,7 +125,7 @@ export const ShowOrganisationDetails = () => {
                     }
                 />
             </Labeled>
-            <TextField source="url" />
+            <TextField source="slug" />
             <ReferenceField
                 source="part_of"
                 reference="organisation"
@@ -274,7 +274,7 @@ export const EditOrganisation = () => (
                 <TextInput disabled source="id" />
                 <TextInput source="name" />
                 <TextInput source="email" type="email" />
-                <TextInput source="url" />
+                <TextInput source="slug" />
             </FormTab>
             <FormTab label="Managers">
                 <ManageOrganisationManagers />
@@ -290,7 +290,7 @@ export const CreateOrganisation = () => (
                 <TextInput source="name" isRequired={true} />
                 <TextInput source="email" type="email" isRequired={true} />
                 <TextInput source="website" isRequired={true} />
-                <TextInput source="url" />
+                <TextInput source="slug" />
                 <ReferenceInput
                     source="part_of"
                     reference="organisation"

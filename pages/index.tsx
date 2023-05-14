@@ -1,15 +1,8 @@
 import React from 'react';
 import Button from '../components/form/Button';
 import Container from '../components/helper/Container';
-import { useEvents } from '../hooks/Queries/Event';
 
 export default function Home() {
-    const { data } = useEvents({
-        organiser: 'organisation:4ti2kk3jrekwbvvi2575',
-    });
-
-    console.log(data);
-
     return (
         <Container className="flex flex-grow flex-col justify-center gap-10 pb-48 text-5xl text-white">
             <div className="flex flex-col gap-7">

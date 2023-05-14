@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app';
 import React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { DevButton } from '../components/DevButton';
+import { Seo } from '../components/layout/Seo';
 import { Navbar } from '../components/layout/navbar';
 import {
     TFeatureFlagOptions,
@@ -28,7 +29,9 @@ export default function App({ Component, pageProps }: AppProps) {
                                     {willShowNavbar({ Component, fflags }) && (
                                         <Navbar />
                                     )}
-                                    <Component {...pageProps} />
+                                    <Seo>
+                                        <Component {...pageProps} />
+                                    </Seo>
                                 </>
                             )}
                         </FeatureFlagContext.Consumer>

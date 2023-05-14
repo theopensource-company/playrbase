@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import React from 'react';
 import Container from '../../components/helper/Container';
+import { Seo } from '../../components/layout/Seo';
 import { EventModule } from '../../components/modules/EventModule';
 import { TEventRecord } from '../../constants/Types/Events.types';
 import { TPublicOrganisationRecord } from '../../constants/Types/PublicOrganisation.types';
@@ -13,20 +14,25 @@ type Props = {
 
 export default function Org({ organisation, events }: Props) {
     return (
-        <Container className="flex flex-col gap-8">
-            {!organisation ? (
-                <h1 className="text-3xl">Organisation not found</h1>
-            ) : (
-                <>
-                    <h1 className="text-3xl">{organisation?.name}</h1>
-                    <div className="grid w-full grid-rows-6 gap-4 xl:grid-cols-2">
-                        {events?.map((event) => (
-                            <EventModule key={event.id} event={event} />
-                        ))}
-                    </div>
-                </>
-            )}
-        </Container>
+        <Seo
+            title={organisation?.name ?? 'Organisation not found'}
+            description={organisation?.description}
+        >
+            <Container className="flex flex-col gap-8">
+                {!organisation ? (
+                    <h1 className="text-3xl">Organisation not found</h1>
+                ) : (
+                    <>
+                        <h1 className="text-3xl">{organisation?.name}</h1>
+                        <div className="grid w-full grid-rows-6 gap-4 xl:grid-cols-2">
+                            {events?.map((event) => (
+                                <EventModule key={event.id} event={event} />
+                            ))}
+                        </div>
+                    </>
+                )}
+            </Container>
+        </Seo>
     );
 }
 

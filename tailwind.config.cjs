@@ -7,7 +7,7 @@ module.exports = {
     theme: {
         extend: {
             backgroundImage: {
-                noise: 'url(/noise.png), radial-gradient(80% 150% at 0% 0%, #222222 0%, #111111 100%);',
+                noise: 'url(/noise.svg), radial-gradient(80% 150% at 0% 0%, #222222 0%, #111111 100%);',
             },
             fontFamily: {
                 poppins: ['Poppins', 'sans-serif'],

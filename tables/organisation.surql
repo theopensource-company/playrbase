@@ -20,8 +20,10 @@ DEFINE FIELD email                ON organisation TYPE string
     ASSERT is::email($value);
 DEFINE FIELD slug                  ON organisation TYPE string
     VALUE 
-        IF not($value) THEN
+        IF $value == NONE THEN
             RETURN meta::id(id);
+        ELSE IF not($value) THEN
+            RETURN $before ?? meta::id(id);
         ELSE IF $scope = 'admin' OR not($scope) THEN
             RETURN $value;
         ELSE IF tier IN ["business", "enterprise"] THEN
@@ -55,11 +57,11 @@ DEFINE FIELD manager_roles.*.role ON organisation TYPE string
 DEFINE FIELD part_of              ON organisation TYPE option<record<organisation>>
     VALUE
         IF $scope = 'admin' OR not($scope) THEN
-            $value
+            $value ?? $before
         ELSE IF (SELECT VALUE id FROM $value WHERE managers[WHERE role IN ["owner", "adminstrator"]].id CONTAINS $auth.id)[0] THEN
-            $value
+            $value ?? $before
         ELSE 
-            false
+            $before
         END
     PERMISSIONS
         FOR update WHERE

@@ -9,7 +9,7 @@ import React, {
 import { ButtonIcon } from '../helper/ButtonIcon';
 
 export const buttonStyle = cva(
-    ['text-white', 'flex', 'items-center', 'gap-4'],
+    ['text-white', 'inline-flex', 'items-center', 'gap-4'],
     {
         variants: {
             color: {

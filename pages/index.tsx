@@ -1,6 +1,8 @@
 import React from 'react';
 import Button from '../components/form/Button';
+import LinkButton from '../components/form/LinkButton';
 import Container from '../components/helper/Container';
+import { featureFlags } from '../lib/Environment';
 
 export default function Home() {
     return (
@@ -16,7 +18,11 @@ export default function Home() {
                 <h2>Time to ditch the sheets 📚</h2>
             </div>
             <div>
-                <Button disabled>Releasing soon</Button>
+                {featureFlags.preLaunchPage ? (
+                    <Button disabled>Releasing soon</Button>
+                ) : (
+                    <LinkButton href="/get-started">Get started</LinkButton>
+                )}
             </div>
         </Container>
     );

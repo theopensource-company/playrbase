@@ -20,6 +20,16 @@ DEFINE FIELD properties.height  ON player TYPE option<number>;
 DEFINE FIELD properties.gender  ON player TYPE option<string> 
   ASSERT $value IN ['male', 'female', 'other', NONE];
 
+DEFINE FIELD profile_picture    ON player TYPE string
+    VALUE 
+        IF not($scope) OR $scope = 'admin' THEN
+            RETURN $input;
+        ELSE IF $input == 'remove' THEN
+            RETURN NONE;
+        ELSE
+            RETURN $before OR NULL;
+        END;
+        
 DEFINE FIELD birthdate          ON player TYPE datetime;
 DEFINE FIELD created            ON player TYPE datetime VALUE $before OR time::now();
 DEFINE FIELD updated            ON player TYPE datetime VALUE time::now();

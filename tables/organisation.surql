@@ -18,7 +18,25 @@ DEFINE FIELD description          ON organisation TYPE option<string>;
 DEFINE FIELD website              ON organisation TYPE option<string>;
 DEFINE FIELD email                ON organisation TYPE string           
     ASSERT is::email($value);
-DEFINE FIELD slug                  ON organisation TYPE string
+DEFINE FIELD logo                 ON organisation TYPE string
+    VALUE 
+        IF not($scope) OR $scope = 'admin' THEN
+            RETURN $input;
+        ELSE IF $input == 'remove' THEN
+            RETURN NONE;
+        ELSE
+            RETURN $before OR NULL;
+        END;
+DEFINE FIELD banner               ON organisation TYPE string
+    VALUE 
+        IF not($scope) OR $scope = 'admin' THEN
+            RETURN $input;
+        ELSE IF $input == 'remove' THEN
+            RETURN NONE;
+        ELSE
+            RETURN $before OR NULL;
+        END;
+DEFINE FIELD slug                 ON organisation TYPE string
     VALUE 
         IF $value == NONE THEN
             RETURN meta::id(id);

@@ -27,7 +27,7 @@
     "aws-sdk": "^2.1386.0",
     "aws4fetch": "^1.0.17",
     "class-variance-authority": "^0.6.0",
-    "eslint": "8.40.0",
+    "eslint": "8.42.0",
     "formidable": "^2.1.1",
     "i18next": "^22.4.15",
     "i18next-browser-languagedetector": "^7.0.1",

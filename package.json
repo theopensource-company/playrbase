@@ -31,7 +31,7 @@
     "formidable": "^2.1.1",
     "i18next": "^22.4.15",
     "i18next-browser-languagedetector": "^7.0.1",
-    "next": "13.4.1",
+    "next": "13.4.4",
     "prettier-plugin-organize-imports": "^3.2.2",
     "ra-core": "^4.10.2",
     "ra-input-rich-text": "^4.10.2",

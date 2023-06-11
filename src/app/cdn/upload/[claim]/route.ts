@@ -3,12 +3,6 @@ import { NextResponse } from 'next/server';
 // import sharp from 'sharp';
 // import { Surreal } from 'surrealdb.js';
 
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
-
 // const sizes = {
 //     profile_picture: 512,
 //     logo: 1024,

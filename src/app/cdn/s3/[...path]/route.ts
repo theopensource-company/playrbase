@@ -1,10 +1,6 @@
 import { AwsClient } from 'aws4fetch';
 
-export const config = {
-    runtime: 'edge',
-};
-
-export default async function GET(
+export async function GET(
     req: Request,
     { params: { path } }: { params: { path: string } }
 ) {

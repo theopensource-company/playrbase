@@ -9,7 +9,7 @@ import { NextResponse } from 'next/server';
 //     banner: 2048,
 // };
 
-export default async function POST() {
+export async function PUT() {
     // req: Request,
     // { params: { claim: claim_token } }: { params: { claim: string } }
     return NextResponse.json(

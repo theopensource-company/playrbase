@@ -25,6 +25,9 @@ import { DevTools } from './DevTools/index.tsx';
 
 export const Navbar = () => {
     const devTools =
+        // Enabled in prod/preview with:
+        // localStorage.setItem('devTools', 'enabled')
+        // Then reload page
         featureFlags.devTools || localStorage.getItem('devTools') == 'enabled';
 
     return (

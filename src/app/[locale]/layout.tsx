@@ -66,7 +66,6 @@ export default async function RootLayout({
                             enableSystem
                         >
                             <div className="flex min-h-screen flex-col">
-                                {/* <DevButton /> */}
                                 <Navbar />
                                 {children}
                             </div>

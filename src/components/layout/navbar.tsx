@@ -17,21 +17,38 @@ import { useLocale, useTranslations } from 'next-intl';
 import { usePathname } from 'next-intl/client';
 import Link from 'next-intl/link';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import LogoFull from '../../assets/LogoFull.svg';
 import Container from './Container.tsx';
 import { DevTools } from './DevTools/index.tsx';
 
 export const Navbar = () => {
+    const [scrolled, setScrolled] = useState(false);
     const devTools =
         // Enabled in prod/preview with:
         // localStorage.setItem('devTools', 'enabled')
         // Then reload page
         featureFlags.devTools || localStorage.getItem('devTools') == 'enabled';
 
+    useEffect(() => {
+        const handler = () => {
+            setScrolled(
+                (window.pageYOffset || document.documentElement.scrollTop) > 0
+            );
+        };
+
+        window.addEventListener('scroll', handler);
+        return () => window.removeEventListener('scroll', handler);
+    });
+
     return (
-        <Container className="flex h-36 items-center justify-between">
+        <Container
+            className={cn(
+                'fixed flex items-center justify-between backdrop-blur-lg transition-height',
+                scrolled ? 'h-24' : 'h-36'
+            )}
+        >
             <Link href="/">
                 <Image src={LogoFull} alt="Logo" className="h-12 w-min" />
             </Link>

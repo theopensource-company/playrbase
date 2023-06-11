@@ -1,0 +1,56 @@
+{
+  "devtools": {
+    "environment": {
+      "title": "Environment",
+      "table": {
+        "feature-flags": {
+          "title": "Feature flags",
+          "caption": {
+            "environment": "Environment",
+            "deployed": "Deployed",
+            "preview": "Preview",
+            "yes": "yes",
+            "no": "no"
+          },
+          "column": {
+            "flag": "Vlag",
+            "type": "Type",
+            "value": "Waarde"
+          }
+        },
+        "surrealdb-connection": {
+          "title": "SurrealDB verbinding",
+          "caption": {
+            "status": "Connectie",
+            "connected": "verbonden",
+            "disconnected": "verbroken",
+            "reconnecting": "herverbinden"
+          },
+          "column": {
+            "property": "Item",
+            "value": "Waarde"
+          },
+          "row": {
+            "endpoint": "Endpoint",
+            "namespace": "Namespace",
+            "database": "Database"
+          }
+        }
+      }
+    },
+    "query": {
+      "title": "Query",
+      "button": "Voer uit!",
+      "input-placeholder": "Voer hier de opdracht in",
+      "warning": "<b>Waarschuwing!</b> Jouw opdrachten worden direct tegen de database uitgevoerd! Je kunt erg gemakkelijk je eigen account hiermee beschadigen!",
+      "alert": {
+        "no-query": "Er is geen opdracht ingevoerd!"
+      }
+    },
+    "migrate-database": {
+      "button": "Voer migraties uit",
+      "title": "Migreer Database",
+      "warning": "<b>Waarschuwing!</b> Dit gereedschap is enkel bedoeld voor tijdens ontwikkeling!"
+    }
+  }
+}

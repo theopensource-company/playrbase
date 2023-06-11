@@ -1,0 +1,21 @@
+{
+  "home": {
+    "headline": {
+      "0": "Play with <tint>ease</tint>",
+      "1": "Create <tint>joy</tint> that <tint>lasts</tint>",
+      "2": "Time to ditch the sheets 📚"
+    },
+    "button": {
+      "releasing-soon": "Releasing soon",
+      "get-started": "Get started"
+    }
+  },
+  "console": {
+    "index": {
+      "title": "Continue as",
+      "button": "Continue",
+      "player": "Player",
+      "manager": "Manager"
+    }
+  }
+}

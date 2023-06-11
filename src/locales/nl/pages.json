@@ -1,0 +1,21 @@
+{
+  "home": {
+    "headline": {
+      "0": "Speel met <tint>gemak</tint>",
+      "1": "Creëer <tint>blijvend plezier</tint>",
+      "2": "Time to ditch the sheets 📚"
+    },
+    "button": {
+      "releasing-soon": "Binnenkort beschikbaar",
+      "get-started": "Begin nu"
+    }
+  },
+  "console": {
+    "index": {
+      "title": "Doorgaan als",
+      "button": "Doorgaan",
+      "player": "Speler",
+      "manager": "Beheerder"
+    }
+  }
+}

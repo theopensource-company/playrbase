@@ -1,0 +1,56 @@
+{
+  "devtools": {
+    "environment": {
+      "title": "Environment",
+      "table": {
+        "feature-flags": {
+          "title": "Feature flags",
+          "caption": {
+            "environment": "Environment",
+            "deployed": "Deployed",
+            "preview": "Preview",
+            "yes": "yes",
+            "no": "no"
+          },
+          "column": {
+            "flag": "Flag",
+            "type": "Type",
+            "value": "Value"
+          }
+        },
+        "surrealdb-connection": {
+          "title": "SurrealDB connection",
+          "caption": {
+            "status": "Status",
+            "connected": "connected",
+            "disconnected": "disconnected",
+            "reconnecting": "reconnecting"
+          },
+          "column": {
+            "property": "Property",
+            "value": "Value"
+          },
+          "row": {
+            "endpoint": "Endpoint",
+            "namespace": "Namespace",
+            "database": "Database"
+          }
+        }
+      }
+    },
+    "query": {
+      "title": "Query",
+      "warning": "<b>Warning!</b> Your queries are ran directly against the database! You can very easily damage your own account!",
+      "input-placeholder": "Enter your query here",
+      "button": "Execute!",
+      "alert": {
+        "no-query": "No query was entered!"
+      }
+    },
+    "migrate-database": {
+      "title": "Migrate Database",
+      "warning": "<b>Warning!</b> This is a tool for development instances only!",
+      "button": "Execute migrations"
+    }
+  }
+}

@@ -15,8 +15,8 @@ export default function Home() {
     );
 
     return (
-        <Container className="flex flex-grow flex-col justify-center gap-10 text-5xl font-bold">
-            <div className="flex flex-col gap-7">
+        <Container className="flex flex-grow flex-col justify-center gap-10">
+            <div className="flex flex-col gap-7 text-4xl font-bold sm:text-5xl">
                 <h1>{t.rich('headline.0', { tint })}</h1>
                 <h2>{t.rich('headline.1', { tint })}</h2>
                 <h2>{t.rich('headline.2', { tint })}</h2>

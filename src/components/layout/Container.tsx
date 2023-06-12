@@ -9,7 +9,10 @@ export default function Container({
 }) {
     return (
         <div
-            className={['mx-auto w-full max-w-screen-2xl px-24', className]
+            className={[
+                'mx-auto w-full max-w-screen-2xl px-8 sm:px-24',
+                className,
+            ]
                 .filter((a) => !!a)
                 .join(' ')}
         >

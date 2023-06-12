@@ -12,7 +12,7 @@ import {
 import { featureFlags } from '@/config/Environment.ts';
 import { cn } from '@/lib/utils.ts';
 import { Language, languages } from '@/locales/languages.ts';
-import { Languages } from 'lucide-react';
+import { AlignRight, ChevronRightSquare, Languages } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname } from 'next-intl/client';
 import Link from 'next-intl/link';
@@ -20,6 +20,8 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import LogoFull from '../../assets/LogoFull.svg';
+import { Button } from '../ui/button.tsx';
+import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet.tsx';
 import Container from './Container.tsx';
 import { DevTools } from './DevTools/index.tsx';
 
@@ -50,35 +52,73 @@ export const Navbar = () => {
             )}
         >
             <Link href="/">
-                <Image src={LogoFull} alt="Logo" className="h-12 w-min" />
+                <Image
+                    src={LogoFull}
+                    alt="Logo"
+                    className="h-10 w-min sm:h-12"
+                />
             </Link>
             <div className="flex gap-4">
-                <NavigationMenu>
-                    <NavigationMenuList className="gap-4">
-                        <NavigationMenuItem>
-                            <Link href="/console" legacyBehavior passHref>
-                                <NavigationMenuLink
-                                    className={navigationMenuTriggerStyle()}
-                                >
-                                    Console
-                                </NavigationMenuLink>
-                            </Link>
-                        </NavigationMenuItem>
-                        {featureFlags.switchLanguage && (
-                            <NavigationMenuItem>
-                                <NavigationMenuTrigger>
-                                    <Languages size={20} />
-                                </NavigationMenuTrigger>
-                                <NavigationMenuContent>
-                                    <LanguageOptions />
-                                </NavigationMenuContent>
-                            </NavigationMenuItem>
-                        )}
-                        {devTools && <DevTools />}
-                    </NavigationMenuList>
-                </NavigationMenu>
+                <div className="hidden md:block">
+                    <Links devTools={devTools} />
+                </div>
+                <div className="block md:hidden">
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <Button variant="outline">
+                                <AlignRight size="24" />
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent size="full">
+                            <div className="p-4">
+                                <Link href="/">
+                                    <Image
+                                        src={LogoFull}
+                                        alt="Logo"
+                                        className="h-10 w-min sm:h-12"
+                                    />
+                                </Link>
+                                <Links devTools={devTools} />
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+                </div>
             </div>
         </Container>
+    );
+};
+
+const Links = ({ devTools }: { devTools: boolean }) => {
+    return (
+        <NavigationMenu className="max-sm:justify-start max-sm:pt-8">
+            <NavigationMenuList className="flex flex-col items-start gap-4 space-x-0 md:flex-row md:items-center">
+                <NavigationMenuItem>
+                    <Link href="/console" legacyBehavior passHref>
+                        <NavigationMenuLink
+                            className={cn(
+                                navigationMenuTriggerStyle(),
+                                'max-sm:bg-muted'
+                            )}
+                        >
+                            <ChevronRightSquare className="mr-2 md:hidden" />
+                            Console
+                        </NavigationMenuLink>
+                    </Link>
+                </NavigationMenuItem>
+                {featureFlags.switchLanguage && (
+                    <NavigationMenuItem>
+                        <NavigationMenuTrigger className="max-sm:bg-muted">
+                            <Languages size={20} />
+                            <span className="ml-2 md:hidden">Language</span>
+                        </NavigationMenuTrigger>
+                        <NavigationMenuContent>
+                            <LanguageOptions />
+                        </NavigationMenuContent>
+                    </NavigationMenuItem>
+                )}
+                {devTools && <DevTools />}
+            </NavigationMenuList>
+        </NavigationMenu>
     );
 };
 

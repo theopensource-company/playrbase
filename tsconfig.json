@@ -24,6 +24,9 @@
       "@/*": [
         "./src/*"
       ],
+      "@api/*": [
+        "./src/app/api/*"
+      ],
       "@ui/*": [
         "./src/components/ui/*"
       ],

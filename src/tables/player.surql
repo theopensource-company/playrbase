@@ -8,12 +8,6 @@ DEFINE TABLE player SCHEMAFULL
 
 DEFINE FIELD name               ON player TYPE string ASSERT array::len(string::words($value)) > 1;
 DEFINE FIELD email              ON player TYPE string ASSERT is::email($value);
-DEFINE FIELD password           ON player TYPE string
-  PERMISSIONS 
-    FOR select NONE 
-    FOR update WHERE 
-      $scope = 'admin' OR 
-      array::len((SELECT * FROM player WHERE id = $auth.id AND crypto::argon2::compare(password, $oldpassword))) > 0;
 
 DEFINE FIELD properties         ON player TYPE object VALUE $value OR $before OR {};
 DEFINE FIELD properties.height  ON player TYPE option<number>;

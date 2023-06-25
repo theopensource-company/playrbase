@@ -18,7 +18,8 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { ChevronsUpDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { ChevronsUpDown, Info, Loader2, XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next-intl/link';
 import React, { createRef, useCallback, useState } from 'react';
@@ -28,12 +29,43 @@ type scope = 'player' | 'manager' | 'admin';
 export default function Signin() {
     const t = useTranslations('pages.account.signin');
     const [scope, setScope] = useState<scope>('player');
+    const [status, setStatus] = useState<{
+        error?: boolean;
+        message?: string;
+        loading?: boolean;
+    }>({});
     const emailRef = createRef<HTMLInputElement>();
 
-    const submitEmail = useCallback(() => {
-        const email = emailRef.current?.value;
-        if (!email) return alert('no email set');
-        alert(`Scope: ${scope}. Email: ${email}`);
+    const submitEmail = useCallback(async () => {
+        const identifier = emailRef.current?.value;
+        if (!identifier) {
+            setStatus({ message: 'Please enter your email', error: true });
+            return;
+        }
+
+        setStatus({ message: 'Loading', loading: true });
+
+        const raw = await fetch('/api/auth/magic-link', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ identifier, scope }),
+        });
+
+        const res = await raw.json().catch((_e) => ({
+            success: false,
+            error: 'unexpected_server_error',
+        }));
+
+        if (res.success) {
+            setStatus({ message: 'Check your mailbox and spambox' });
+        } else {
+            setStatus({
+                message: `An error occurred: ${res.error}`,
+                error: true,
+            });
+        }
     }, [emailRef, scope]);
 
     return (
@@ -81,6 +113,28 @@ export default function Signin() {
                             placeholder={t('input.email.placeholder')}
                             ref={emailRef}
                         />
+                        <div className="h-4 pt-2">
+                            {status.message && (
+                                <p
+                                    className={cn(
+                                        'flex items-center gap-1.5 pl-1 text-sm text-muted-foreground',
+                                        status.error && 'text-red-700'
+                                    )}
+                                >
+                                    {status.loading ? (
+                                        <Loader2
+                                            size={16}
+                                            className="animate-spin"
+                                        />
+                                    ) : status.error ? (
+                                        <XCircle size={16} />
+                                    ) : (
+                                        <Info size={16} />
+                                    )}
+                                    {status.message}
+                                </p>
+                            )}
+                        </div>
                     </CardContent>
                     <CardFooter>
                         <Button onClick={submitEmail}>

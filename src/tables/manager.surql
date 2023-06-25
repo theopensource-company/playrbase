@@ -13,12 +13,6 @@ DEFINE TABLE manager SCHEMAFULL
 
 DEFINE FIELD name       ON TABLE manager TYPE string    ASSERT array::len(string::words($value)) > 1;
 DEFINE FIELD email      ON TABLE manager TYPE string    ASSERT is::email($value);
-DEFINE FIELD password   ON TABLE manager TYPE string
-  PERMISSIONS 
-    FOR select NONE 
-    FOR update WHERE 
-      $scope = 'admin' OR 
-      array::len((SELECT * FROM manager WHERE id = $auth.id AND crypto::argon2::compare(password, $oldpassword))) > 0;
 
 DEFINE FIELD created    ON TABLE manager TYPE datetime  VALUE $before OR time::now();
 DEFINE FIELD updated    ON TABLE manager TYPE datetime  VALUE time::now();

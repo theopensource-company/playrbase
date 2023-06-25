@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import React from 'react';
 import { Dialog } from '../../ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
+import Devtools_Emails from './emails';
 import Devtools_Environment from './environment';
 import Devtools_MigrateDatabase from './migrate-database';
 import Devtools_Query from './query';
@@ -33,6 +34,7 @@ export function DevTools() {
                             <TabsTrigger value="query">
                                 {t('query.title')}
                             </TabsTrigger>
+                            <TabsTrigger value="emails">Emails</TabsTrigger>
                             <TabsTrigger
                                 value="migrate-database"
                                 disabled={!featureFlags.migrateDatabase}
@@ -45,6 +47,9 @@ export function DevTools() {
                         </TabsContent>
                         <TabsContent value="query">
                             <Devtools_Query />
+                        </TabsContent>
+                        <TabsContent value="emails">
+                            <Devtools_Emails />
                         </TabsContent>
                         <TabsContent value="migrate-database">
                             <Devtools_MigrateDatabase />

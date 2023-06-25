@@ -6,7 +6,7 @@ import React, { ReactNode } from 'react';
 
 export default function Devtools_MigrateDatabase() {
     const migrate = () =>
-        fetch('http://localhost:13004/migrate-database', { mode: 'no-cors' });
+        fetch('/api/devkit/migrate-database', { mode: 'no-cors' });
     const t = useTranslations('components.devtools.migrate-database');
 
     return (

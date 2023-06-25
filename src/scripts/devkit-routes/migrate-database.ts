@@ -18,7 +18,7 @@ export const MigrateDatabaseRoute = (app: Express) => {
             },
             false,
             true,
-            process.cwd()
+            process.cwd() + '/src'
         );
 
         res.json({

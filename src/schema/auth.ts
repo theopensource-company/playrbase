@@ -1,5 +1,5 @@
-import { record } from '@/lib/zod';
 import { z } from 'zod';
+import { record } from '../lib/zod.ts';
 
 const scopes = /* surrealql */ `
     DEFINE SCOPE admin;
@@ -7,7 +7,9 @@ const scopes = /* surrealql */ `
     DEFINE SCOPE player;
 `;
 
-const token_secret = z.string().parse(process.env.SURREAL_TOKEN_SECRET);
+const token_secret = JSON.stringify(
+    z.string().parse(process.env.SURREAL_TOKEN_SECRET)
+);
 const tokens = /* surrealql */ `
     DEFINE TOKEN admin   ON SCOPE admin   TYPE HS512 VALUE ${token_secret};
     DEFINE TOKEN manager ON SCOPE manager TYPE HS512 VALUE ${token_secret};

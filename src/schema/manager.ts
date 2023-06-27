@@ -1,5 +1,5 @@
-import { fullname, record } from '@/lib/zod';
 import { z } from 'zod';
+import { fullname, record } from '../lib/zod.ts';
 
 const manager = /* surrealql */ `
     DEFINE TABLE manager SCHEMAFULL 

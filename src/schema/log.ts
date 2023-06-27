@@ -1,5 +1,5 @@
-import { record } from '@/lib/zod';
 import { z } from 'zod';
+import { record } from '../lib/zod.ts';
 
 const log = /* surrealql */ `
     DEFINE TABLE log SCHEMALESS

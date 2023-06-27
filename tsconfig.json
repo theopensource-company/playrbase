@@ -52,6 +52,7 @@
     "node_modules"
   ],
   "ts-node": {
-    "esm": true
+    "esm": true,
+    "require": ["dotenv/config"]
   }
 }

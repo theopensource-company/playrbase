@@ -7,17 +7,16 @@ const scopes = /* surrealql */ `
     DEFINE SCOPE player;
 `;
 
-export const token_secret = JSON.stringify(
-    z
-        .string({
-            invalid_type_error: 'The `SURREAL_TOKEN_SECRET` envvar is missing',
-        })
-        .parse(process.env.SURREAL_TOKEN_SECRET)
-);
+export const token_secret = z
+    .string({
+        invalid_type_error: 'The `SURREAL_TOKEN_SECRET` envvar is missing',
+    })
+    .parse(process.env.SURREAL_TOKEN_SECRET);
+export const escaped_token_secret = JSON.stringify(token_secret);
 const tokens = /* surrealql */ `
-    DEFINE TOKEN admin   ON SCOPE admin   TYPE HS512 VALUE ${token_secret};
-    DEFINE TOKEN manager ON SCOPE manager TYPE HS512 VALUE ${token_secret};
-    DEFINE TOKEN player  ON SCOPE player  TYPE HS512 VALUE ${token_secret};
+    DEFINE TOKEN admin   ON SCOPE admin   TYPE HS512 VALUE ${escaped_token_secret};
+    DEFINE TOKEN manager ON SCOPE manager TYPE HS512 VALUE ${escaped_token_secret};
+    DEFINE TOKEN player  ON SCOPE player  TYPE HS512 VALUE ${escaped_token_secret};
 `;
 
 const auth_challenge = /* surrealql */ `

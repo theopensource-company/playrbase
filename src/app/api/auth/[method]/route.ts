@@ -1,5 +1,6 @@
 import { Email } from '@/constants/Types/Email.types';
 import AuthMagicLinkEmail from '@/emails/auth-magic-link';
+import { token_secret } from '@/schema/auth';
 import { surreal } from '@api/surreal';
 import { render } from '@react-email/components';
 import jwt from 'jsonwebtoken';
@@ -203,7 +204,7 @@ function generateToken({ SC, TK, ID }: { SC: string; TK: string; ID: string }) {
             iss: 'playrbase.app',
             exp: Math.floor(Date.now() / 1000) + maxAge,
         },
-        'secret',
+        token_secret,
         {
             algorithm: 'HS512',
         }
@@ -216,8 +217,7 @@ function generateToken({ SC, TK, ID }: { SC: string; TK: string; ID: string }) {
 
 function isTokenValid({ token }: { token: string }) {
     try {
-        console.log(token);
-        jwt.verify(token, 'secret', {
+        jwt.verify(token, token_secret, {
             issuer: 'playrbase.app',
             algorithms: ['HS512'],
         });

@@ -7,8 +7,12 @@ const scopes = /* surrealql */ `
     DEFINE SCOPE player;
 `;
 
-const token_secret = JSON.stringify(
-    z.string().parse(process.env.SURREAL_TOKEN_SECRET)
+export const token_secret = JSON.stringify(
+    z
+        .string({
+            invalid_type_error: 'The `SURREAL_TOKEN_SECRET` envvar is missing',
+        })
+        .parse(process.env.SURREAL_TOKEN_SECRET)
 );
 const tokens = /* surrealql */ `
     DEFINE TOKEN admin   ON SCOPE admin   TYPE HS512 VALUE ${token_secret};

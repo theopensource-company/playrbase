@@ -22,9 +22,11 @@ export const featureFlagSchema = {
     },
     migrateDatabase: {
         options: [false, true] as const,
+        readonly: true,
     },
     localEmail: {
         options: [false, true] as const,
+        readonly: true,
     },
 } satisfies FeatureFlagSchema;
 

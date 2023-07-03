@@ -24,6 +24,9 @@
       "@/*": [
         "./src/*"
       ],
+      "@api/*": [
+        "./src/app/api/*"
+      ],
       "@ui/*": [
         "./src/components/ui/*"
       ],
@@ -49,6 +52,7 @@
     "node_modules"
   ],
   "ts-node": {
-    "esm": true
+    "esm": true,
+    "require": ["dotenv/config"]
   }
 }

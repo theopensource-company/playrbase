@@ -17,5 +17,27 @@
       "player": "Player",
       "manager": "Manager"
     }
+  },
+  "account": {
+    "signin": {
+      "title": "Sign in",
+      "tagline": "to PlayrBase console",
+      "scope": {
+        "player": "Player",
+        "manager": "Manager",
+        "admin": "Platform"
+      },
+      "input": {
+        "email": {
+          "placeholder": "Email address"
+        }
+      },
+      "button": {
+        "continue": "Continue"
+      },
+      "link": {
+        "create-account": "Create an account"
+      }
+    }
   }
 }

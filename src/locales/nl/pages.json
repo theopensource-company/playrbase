@@ -17,5 +17,27 @@
       "player": "Speler",
       "manager": "Beheerder"
     }
+  },
+  "account": {
+    "signin": {
+      "button": {
+        "continue": "Doorgaan"
+      },
+      "input": {
+        "email": {
+          "placeholder": "E-mailadres"
+        }
+      },
+      "link": {
+        "create-account": "Maak een account"
+      },
+      "scope": {
+        "admin": "Platform",
+        "manager": "Beheerder",
+        "player": "Speler"
+      },
+      "tagline": "op PlayrBase console",
+      "title": "Inloggen"
+    }
   }
 }

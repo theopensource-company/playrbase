@@ -1,4 +1,5 @@
 // import { AwsClient } from 'aws4fetch';
+// import { surreal } from '@api/surreal';
 import { NextResponse } from 'next/server';
 // import sharp from 'sharp';
 // import { Surreal } from 'surrealdb.js';
@@ -22,23 +23,6 @@ export async function PUT() {
     //     secretAccessKey: process.env.S3_KEY_SECRET ?? '',
     //     service: 's3',
     // });
-
-    // const surreal = new Surreal(
-    //     process.env.NEXT_PUBLIC_SURREAL_ENDPOINT ?? '',
-    //     {
-    //         prepare: async (surreal) => {
-    //             await surreal.use(
-    //                 process.env.NEXT_PUBLIC_SURREAL_NAMESPACE ?? '',
-    //                 process.env.NEXT_PUBLIC_SURREAL_DATABASE ?? ''
-    //             );
-
-    //             await surreal.signin({
-    //                 user: process.env.SURREAL_USER ?? '',
-    //                 pass: process.env.SURREAL_PASS ?? '',
-    //             });
-    //         },
-    //     }
-    // );
 
     // const claim = await surreal.query<[[ImageClaim]]>(
     //     `SELECT * FROM claim WHERE claim_token = $claim_token`,

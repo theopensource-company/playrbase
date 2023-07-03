@@ -72,7 +72,7 @@ export async function POST(
         const body = Email.parse({
             from: 'noreply@playrbase.app',
             to: email,
-            subject: 'Playrbase signin link',
+            subject: 'PlayrBase signin link',
             text: render(AuthMagicLinkEmail({ challenge, identifier: email }), {
                 plainText: true,
             }),

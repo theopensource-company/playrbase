@@ -34,7 +34,7 @@ export const AuthMagicLinkEmail = ({
     return (
         <Html lang="en" dir="ltr">
             <Head>
-                <title>Your signin link for Playrbase</title>
+                <title>Your signin link for PlayrBase</title>
                 <Font
                     fontFamily="Inter"
                     fallbackFontFamily="Arial"
@@ -46,24 +46,24 @@ export const AuthMagicLinkEmail = ({
                     fontStyle="normal"
                 />
             </Head>
-            <Preview>Your signin link for Playrbase</Preview>
+            <Preview>Your signin link for PlayrBase</Preview>
             <Body style={main}>
                 <Container style={container}>
                     <Img
                         src={`${baseUrl}/LogoFull.svg`}
                         height="50"
-                        alt="Playrbase"
+                        alt="PlayrBase"
                         style={logo}
                     />
                     <Heading style={heading}>
-                        Your Playrbase signin link
+                        Your PlayrBase signin link
                     </Heading>
                     <Text style={paragraph}>
                         The following link will be valid for 30 minutes.
                     </Text>
                     <Section style={buttonContainer}>
                         <Button pY={11} pX={23} style={button} href={url}>
-                            Continue to Playrbase
+                            Continue to PlayrBase
                         </Button>
                     </Section>
                     <Hr style={line} />

@@ -20,8 +20,8 @@
   },
   "account": {
     "signin": {
-      "title": "Signin",
-      "tagline": "to Playrbase console",
+      "title": "Sign in",
+      "tagline": "to PlayrBase console",
       "scope": {
         "player": "Player",
         "manager": "Manager",

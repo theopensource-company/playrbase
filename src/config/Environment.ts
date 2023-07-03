@@ -23,6 +23,9 @@ export const featureFlagSchema = {
     migrateDatabase: {
         options: [false, true] as const,
     },
+    localEmail: {
+        options: [false, true] as const,
+    },
 } satisfies FeatureFlagSchema;
 
 /////////////////////////////////////
@@ -36,6 +39,7 @@ export const featureFlagDefaults = {
     dev: {
         devTools: true,
         migrateDatabase: true,
+        localEmail: true,
     },
     preview: {},
 } satisfies FeatureFlagDefaults;

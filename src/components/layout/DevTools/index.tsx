@@ -34,7 +34,12 @@ export function DevTools() {
                             <TabsTrigger value="query">
                                 {t('query.title')}
                             </TabsTrigger>
-                            <TabsTrigger value="emails">Emails</TabsTrigger>
+                            <TabsTrigger
+                                value="emails"
+                                disabled={!featureFlags.localEmail}
+                            >
+                                Emails
+                            </TabsTrigger>
                             <TabsTrigger
                                 value="migrate-database"
                                 disabled={!featureFlags.migrateDatabase}

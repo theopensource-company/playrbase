@@ -19,30 +19,63 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronsUpDown, Info, Loader2, XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next-intl/link';
-import React, { createRef, useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 type scope = 'player' | 'manager' | 'admin';
 
+const Schema = z.object({
+    identifier: z.string().email({ message: 'Enter a valid email address!' }),
+});
+
+type Schema = z.infer<typeof Schema>;
+
 export default function Signin() {
+    const defaultScope =
+        (typeof window !== 'undefined' &&
+            (localStorage.getItem('signin.default-scope') as scope)) ||
+        'player';
+
     const t = useTranslations('pages.account.signin');
-    const [scope, setScope] = useState<scope>('player');
+    const [scope, setScope] = useState<scope>(defaultScope);
     const [status, setStatus] = useState<{
         error?: boolean;
         message?: string;
         loading?: boolean;
     }>({});
-    const emailRef = createRef<HTMLInputElement>();
 
-    const submitEmail = useCallback(async () => {
-        const identifier = emailRef.current?.value;
-        if (!identifier) {
-            setStatus({ message: 'Please enter your email', error: true });
-            return;
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<Schema>({
+        resolver: zodResolver(Schema),
+    });
+
+    // Dirty solution, will fix later :)
+    useEffect(() => {
+        const set = (message: string) => {
+            if (!status.error && status.message !== message) {
+                setStatus({
+                    error: true,
+                    message,
+                });
+            }
+        };
+
+        if (errors.root?.message) {
+            set(errors.root.message);
+        } else if (errors.identifier?.message) {
+            set(errors.identifier.message);
         }
+    }, [errors, status, setStatus]);
 
+    const handler = handleSubmit(async ({ identifier }) => {
         setStatus({ message: 'Loading', loading: true });
 
         const raw = await fetch('/api/auth/magic-link', {
@@ -66,11 +99,14 @@ export default function Signin() {
                 error: true,
             });
         }
-    }, [emailRef, scope]);
+    });
 
     return (
         <Container className="flex flex-grow flex-col items-center justify-center">
-            <div className="flex flex-col items-center gap-8">
+            <form
+                className="flex flex-col items-center gap-8"
+                onSubmit={handler}
+            >
                 <Card className="flex flex-col gap-4">
                     <CardHeader className="flex flex-row justify-between gap-24">
                         <div>
@@ -111,7 +147,7 @@ export default function Signin() {
                     <CardContent>
                         <Input
                             placeholder={t('input.email.placeholder')}
-                            ref={emailRef}
+                            {...register('identifier')}
                         />
                         <div className="h-4 pt-2">
                             {status.message && (
@@ -137,9 +173,7 @@ export default function Signin() {
                         </div>
                     </CardContent>
                     <CardFooter>
-                        <Button onClick={submitEmail}>
-                            {t('button.continue')}
-                        </Button>
+                        <Button type="submit">{t('button.continue')}</Button>
                     </CardFooter>
                 </Card>
                 <Link
@@ -148,7 +182,7 @@ export default function Signin() {
                 >
                     {t('link.create-account')}
                 </Link>
-            </div>
+            </form>
         </Container>
     );
 }

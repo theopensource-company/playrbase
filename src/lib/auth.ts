@@ -9,17 +9,22 @@ import { create } from 'zustand';
 type AnyUser = TAdminRecord | TManagerRecord | TPlayerRecord;
 
 export type AuthStore = {
-    user?: AnyUser;
+    user?: AnyUser & { scope: string };
     loading: boolean;
-    setUser: (user: AnyUser) => void;
+    setUser: (user: AnyUser & { scope: string }) => void;
     refreshUser: () => void;
 };
 
 export const useAuth = create<AuthStore>((set) => {
     function updateAuth() {
         surreal
-            .info<AnyUser>()
-            .then((user) => set(() => ({ user, loading: false })));
+            .query<[(AnyUser & { scope: string })[]]>(
+                /* surrealql */ `SELECT *, scope = meta::tb(id) FROM $auth`
+            )
+            .then((res) => {
+                const user = res?.[0]?.result?.[0];
+                if (user) set(() => ({ user: user, loading: false }));
+            });
     }
 
     setInterval(updateAuth, 60000);

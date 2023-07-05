@@ -18,6 +18,15 @@
       "manager": "Manager"
     }
   },
+  "dashboard": {
+    "accounts": {
+      "player": "Player",
+      "organisations": "Organisations",
+      "actions": {
+        "add-org": "Add organisation"
+      }
+    }
+  },
   "account": {
     "signin": {
       "title": "Sign in",

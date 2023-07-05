@@ -6,7 +6,7 @@ import { TPlayerRecord } from '@/constants/Types/Player.types';
 import { SurrealInstance as surreal } from '@/lib/Surreal';
 import { create } from 'zustand';
 
-type AnyUser = TAdminRecord | TManagerRecord | TPlayerRecord;
+export type AnyUser = TAdminRecord | TManagerRecord | TPlayerRecord;
 
 export type AuthStore = {
     user?: AnyUser & { scope: string };

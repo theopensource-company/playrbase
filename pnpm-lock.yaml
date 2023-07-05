@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@hookform/resolvers':
     specifier: ^3.1.1
@@ -145,8 +149,8 @@ devDependencies:
     specifier: ^7.22.5
     version: 7.22.5
   '@mui/icons-material':
-    specifier: ^5.11.16
-    version: 5.11.16(@mui/material@5.13.6)(@types/react@18.2.14)(react@18.2.0)
+    specifier: ^5.13.7
+    version: 5.13.7(@mui/material@5.13.6)(@types/react@18.2.14)(react@18.2.0)
   '@theopensource-company/surrealdb-cloudflare':
     specifier: ^1.0.4
     version: 1.0.4
@@ -221,7 +225,7 @@ devDependencies:
     version: 0.3.0(prettier-plugin-organize-imports@3.2.2)(prettier@2.8.8)
   ra-ui-materialui:
     specifier: ^4.12.0
-    version: 4.12.0(@mui/icons-material@5.11.16)(@mui/material@5.13.6)(ra-core@4.12.0)(react-dom@18.2.0)(react-hook-form@7.45.1)(react-router-dom@6.14.1)(react-router@6.14.1)(react@18.2.0)
+    version: 4.12.0(@mui/icons-material@5.13.7)(@mui/material@5.13.6)(ra-core@4.12.0)(react-dom@18.2.0)(react-hook-form@7.45.1)(react-router-dom@6.14.1)(react-router@6.14.1)(react@18.2.0)
   react-hook-form:
     specifier: ^7.45.1
     version: 7.45.1(react@18.2.0)
@@ -2072,8 +2076,8 @@ packages:
   /@mui/core-downloads-tracker@5.13.4:
     resolution: {integrity: sha512-yFrMWcrlI0TqRN5jpb6Ma9iI7sGTHpytdzzL33oskFHNQ8UgrtPas33Y1K7sWAMwCrr1qbWDrOHLAQG4tAzuSw==}
 
-  /@mui/icons-material@5.11.16(@mui/material@5.13.6)(@types/react@18.2.14)(react@18.2.0):
-    resolution: {integrity: sha512-oKkx9z9Kwg40NtcIajF9uOXhxiyTZrrm9nmIJ4UjkU2IdHpd4QVLbCc/5hZN/y0C6qzi2Zlxyr9TGddQx2vx2A==}
+  /@mui/icons-material@5.13.7(@mui/material@5.13.6)(@types/react@18.2.14)(react@18.2.0):
+    resolution: {integrity: sha512-zoVtkb9jYVUGfI7CobOdDBEAlpg3XESiO6cWqSDGwEma69+CBDIAwGpnO5truvQDJHBGSAfzFj3nObwxjkyA7Q==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@mui/material': ^5.0.0
@@ -7767,7 +7771,7 @@ packages:
       - react-native
     dev: true
 
-  /ra-ui-materialui@4.12.0(@mui/icons-material@5.11.16)(@mui/material@5.13.6)(ra-core@4.12.0)(react-dom@18.2.0)(react-hook-form@7.45.1)(react-router-dom@6.14.1)(react-router@6.14.1)(react@18.2.0):
+  /ra-ui-materialui@4.12.0(@mui/icons-material@5.13.7)(@mui/material@5.13.6)(ra-core@4.12.0)(react-dom@18.2.0)(react-hook-form@7.45.1)(react-router-dom@6.14.1)(react-router@6.14.1)(react@18.2.0):
     resolution: {integrity: sha512-s9iPU2Xfx+KiveHLBgWb9yX/KvZ3Cf3qk65rHW65DHu+9MDJHPcWwpDgNMeF0Z/kde/W0BVnNNsxM1OvZeHYbw==}
     peerDependencies:
       '@mui/icons-material': ^5.0.1
@@ -7779,7 +7783,7 @@ packages:
       react-router: ^6.1.0
       react-router-dom: ^6.1.0
     dependencies:
-      '@mui/icons-material': 5.11.16(@mui/material@5.13.6)(@types/react@18.2.14)(react@18.2.0)
+      '@mui/icons-material': 5.13.7(@mui/material@5.13.6)(@types/react@18.2.14)(react@18.2.0)
       '@mui/material': 5.13.6(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0)
       autosuggest-highlight: 3.3.4
       clsx: 1.2.1

@@ -55,7 +55,7 @@
     "react-country-flag": "^3.1.0",
     "react-dom": "18.2.0",
     "react-email": "^1.9.4",
-    "shadcn-ui": "^0.2.3",
+    "shadcn-ui": "^0.3.0",
     "sharp": "^0.32.1",
     "surrealdb.js": "^0.8.2",
     "swr": "^2.2.0",

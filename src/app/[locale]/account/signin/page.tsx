@@ -27,7 +27,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-type scope = 'player' | 'manager' | 'admin';
+type scope = 'user' | 'admin';
 
 const Schema = z.object({
     identifier: z.string().email({ message: 'Enter a valid email address!' }),
@@ -39,7 +39,7 @@ export default function Signin() {
     const defaultScope =
         (typeof window !== 'undefined' &&
             (localStorage.getItem('signin.default-scope') as scope)) ||
-        'player';
+        'user';
 
     const t = useTranslations('pages.account.signin');
     const [scope, setScope] = useState<scope>(defaultScope);
@@ -131,11 +131,8 @@ export default function Signin() {
                                     value={scope}
                                     onValueChange={(s) => setScope(s as scope)}
                                 >
-                                    <DropdownMenuRadioItem value="player">
-                                        {t('scope.player')}
-                                    </DropdownMenuRadioItem>
-                                    <DropdownMenuRadioItem value="manager">
-                                        {t('scope.manager')}
+                                    <DropdownMenuRadioItem value="user">
+                                        {t('scope.user')}
                                     </DropdownMenuRadioItem>
                                     <DropdownMenuRadioItem value="admin">
                                         {t('scope.admin')}

@@ -9,17 +9,12 @@ import { z } from 'zod';
 
 const sessionLength = {
     admin: 60 * 60 * 2,
-    manager: 60 * 60 * 24,
-    player: 60 * 60 * 24,
+    user: 60 * 60 * 24,
 };
 
 const Body = z.object({
     identifier: z.string(),
-    scope: z.union([
-        z.literal('admin'),
-        z.literal('manager'),
-        z.literal('player'),
-    ]),
+    scope: z.union([z.literal('admin'), z.literal('user')]),
 });
 
 const MagicLinkVerification = z.object({

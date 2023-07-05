@@ -8,13 +8,13 @@ const event = /* surrealql */ `
                 OR (discoverable = true && published = true)
                 OR (published = true && id = $event_id)
                 OR (
-                    $scope = 'manager' && 
+                    $scope = 'user' && 
                     (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers.*.id CONTAINS $auth.id)[0]
                 )
             FOR create, update, delete WHERE 
                 $scope = 'admin'
                 OR (
-                    $scope = 'manager' && 
+                    $scope = 'user' && 
                     (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers[WHERE role IN ['owner', 'administrator', 'event_manager']].id CONTAINS $auth.id)[0]
                 );
 

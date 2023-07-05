@@ -14,7 +14,7 @@
     "index": {
       "title": "Doorgaan als",
       "button": "Doorgaan",
-      "player": "Speler",
+      "user": "Gebruiker",
       "manager": "Beheerder"
     }
   },
@@ -33,8 +33,7 @@
       },
       "scope": {
         "admin": "Platform",
-        "manager": "Beheerder",
-        "player": "Speler"
+        "user": "Gebruiker"
       },
       "tagline": "op PlayrBase console",
       "title": "Inloggen"

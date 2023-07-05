@@ -14,7 +14,7 @@
     "index": {
       "title": "Continue as",
       "button": "Continue",
-      "player": "Player",
+      "user": "User",
       "manager": "Manager"
     }
   },
@@ -23,8 +23,7 @@
       "title": "Sign in",
       "tagline": "to PlayrBase console",
       "scope": {
-        "player": "Player",
-        "manager": "Manager",
+        "user": "User",
         "admin": "Platform"
       },
       "input": {

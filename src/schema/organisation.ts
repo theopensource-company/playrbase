@@ -4,16 +4,16 @@ import { record } from '../lib/zod.ts';
 const organisation = /* surrealql */ `
     DEFINE TABLE organisation SCHEMAFULL
         PERMISSIONS
-            FOR create WHERE $scope IN ['admin', 'manager']
+            FOR create WHERE $scope IN ['admin', 'user']
             FOR select WHERE 
                 $scope = 'admin' OR 
-                ($scope = 'manager' && managers.*.id CONTAINS $auth.id)
+                ($scope = 'user' && managers.*.id CONTAINS $auth.id)
             FOR update WHERE 
                 $scope = 'admin' OR 
-                ($scope = 'manager' && managers[WHERE role IN ["owner", "adminstrator"]].id CONTAINS $auth.id)
+                ($scope = 'user' && managers[WHERE role IN ["owner", "adminstrator"]].id CONTAINS $auth.id)
             FOR delete WHERE 
                 $scope = 'admin' OR 
-                ($scope = 'manager' && managers[WHERE role IN ["owner", "adminstrator"] AND org != NONE].id CONTAINS $auth.id);
+                ($scope = 'user' && managers[WHERE role IN ["owner", "adminstrator"] AND org != NONE].id CONTAINS $auth.id);
 
     DEFINE TABLE puborg AS SELECT name, description, website, email, created, slug FROM organisation;
 
@@ -64,9 +64,9 @@ const organisation = /* surrealql */ `
         PERMISSIONS
             FOR update WHERE
                 $scope = 'admin' OR 
-                ($scope = 'manager' && managers[WHERE role IN ["owner"] OR (role IN ["administrator"] AND org != NONE)].id CONTAINS $auth.id);
+                ($scope = 'user' && managers[WHERE role IN ["owner"] OR (role IN ["administrator"] AND org != NONE)].id CONTAINS $auth.id);
     DEFINE FIELD manager_roles.*      ON organisation TYPE object;
-    DEFINE FIELD manager_roles.*.id   ON organisation TYPE record<manager>;
+    DEFINE FIELD manager_roles.*.id   ON organisation TYPE record<user>;
     DEFINE FIELD manager_roles.*.role ON organisation TYPE string 
         ASSERT $value IN ['owner', 'administrator', 'event_manager', 'event_viewer'];
 
@@ -119,7 +119,7 @@ export const Organisation = z.object({
     ]),
     manager_roles: z.array(
         z.object({
-            id: record('manager'),
+            id: record('user'),
             role: z.union([
                 z.literal('owner'),
                 z.literal('administrator'),

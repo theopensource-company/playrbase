@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@hookform/resolvers':
     specifier: ^3.1.1
@@ -89,8 +93,8 @@ dependencies:
     specifier: 13.4.8
     version: 13.4.8(@babel/core@7.22.5)(react-dom@18.2.0)(react@18.2.0)
   next-intl:
-    specifier: 2.15.0-beta.5
-    version: 2.15.0-beta.5(next@13.4.8)(react@18.2.0)
+    specifier: 2.19.0
+    version: 2.19.0(next@13.4.8)(react@18.2.0)
   next-themes:
     specifier: ^0.2.1
     version: 0.2.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
@@ -6806,8 +6810,8 @@ packages:
     resolution: {integrity: sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==}
     engines: {node: '>= 0.6'}
 
-  /next-intl@2.15.0-beta.5(next@13.4.8)(react@18.2.0):
-    resolution: {integrity: sha512-E6k/+ta9/RVNhQJnHLY+WZbDyygp4mICsqrMCsRyMfuOm9h+uonNmrM8Blc0PiX0plAF6oKc9OtH90/eVaPRYA==}
+  /next-intl@2.19.0(next@13.4.8)(react@18.2.0):
+    resolution: {integrity: sha512-vK/3Lk1A2zPVl+D6n/cft+MsD6nsZO5/F4l+pHXSXrNQIjdClvGMKouM3xK/u5n75E4mmHQevVdyJQ1a7zWICw==}
     engines: {node: '>=10'}
     peerDependencies:
       next: ^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0
@@ -6817,8 +6821,7 @@ packages:
       negotiator: 0.6.3
       next: 13.4.8(@babel/core@7.22.5)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
-      server-only: 0.0.1
-      use-intl: 2.17.0(react@18.2.0)
+      use-intl: 2.19.0(react@18.2.0)
     dev: false
 
   /next-themes@0.2.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0):
@@ -8315,10 +8318,6 @@ packages:
       - supports-color
     dev: true
 
-  /server-only@0.0.1:
-    resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
-    dev: false
-
   /setimmediate@1.0.5:
     resolution: {integrity: sha512-MATJdZp8sLqDl/68LfQmbP8zKPLQNV6BIZoIgrscFDQ+RsvK/BxeDQOgyxKKoh0y/8h3BqVFnCqQ/gd+reiIXA==}
     dev: false
@@ -9137,8 +9136,8 @@ packages:
       tslib: 2.6.0
     dev: false
 
-  /use-intl@2.17.0(react@18.2.0):
-    resolution: {integrity: sha512-vnLZeWyAZU2BoTQ6DeXfOBy5gxU/Fz6SSid0wJneDjlmCeT8BaVeHzzN+4Qj6mM9p8AH5I1zwjzU9rPYkmznIw==}
+  /use-intl@2.19.0(react@18.2.0):
+    resolution: {integrity: sha512-ox3CibkJ/nhAorujY6gwS+jO/dCxn8zzo7Pf5D+OIKQZpBUpQATe2ldlqv9lgc4/PBiKDVUQI/GCG0TBkno3vA==}
     engines: {node: '>=10'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0

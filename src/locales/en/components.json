@@ -35,6 +35,26 @@
             "namespace": "Namespace",
             "database": "Database"
           }
+        },
+        "authentication": {
+          "title": "Authentication",
+          "caption": {
+            "authenticated": "Authenticated",
+            "yes": "yes",
+            "no": "no"
+          },
+          "column": {
+            "property": "Property",
+            "value": "Value"
+          },
+          "row": {
+            "id": "ID",
+            "name": "Name",
+            "email": "Email",
+            "scope": "Scope",
+            "created": "Created",
+            "updated": "Updated"
+          }
         }
       }
     },
@@ -51,6 +71,25 @@
       "title": "Migrate Database",
       "warning": "<b>Warning!</b> This is a tool for development instances only!",
       "button": "Execute migrations"
+    },
+    "emails": {
+      "title": "Emails",
+      "table": {
+        "emails": {
+          "caption": {
+            "total": "Total sent"
+          },
+          "column": {
+            "sent": "Sent",
+            "subject": "Subject",
+            "recipient": "Recipient",
+            "actions": "Actions"
+          },
+          "actions": {
+            "view": "View"
+          }
+        }
+      }
     }
   }
 }

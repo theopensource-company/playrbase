@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import {
     Table,
     TableBody,
+    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
@@ -12,7 +13,7 @@ import {
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Email } from '@/constants/Types/Email.types';
-// import { useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import useSWR from 'swr';
 
@@ -25,7 +26,7 @@ export default function Devtools_Emails() {
         };
     };
     const { data } = useSWR('devkit:/email/list', list);
-    // const t = useTranslations('components.devtools.emails');
+    const t = useTranslations('components.devtools.emails');
 
     const emails = Object.entries(data?.emails ?? {})
         .map(([key, { sent, ...rest }]) => ({
@@ -35,18 +36,25 @@ export default function Devtools_Emails() {
         }))
         .sort((a, b) => b.sent.getTime() - a.sent.getTime());
 
-    console.log(emails);
-
     return (
         <div className="flex flex-col gap-8">
-            <h1 className="items-center text-4xl font-bold">Emails</h1>
+            <h1 className="items-center text-4xl font-bold">{t('title')}</h1>
             <Table>
+                <TableCaption>
+                    <b>{t('table.emails.caption.total')}:</b> {emails.length}
+                </TableCaption>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Sent</TableHead>
-                        <TableHead>Subject</TableHead>
-                        <TableHead>Recipient</TableHead>
-                        <TableHead>Actions</TableHead>
+                        <TableHead>{t('table.emails.column.sent')}</TableHead>
+                        <TableHead>
+                            {t('table.emails.column.subject')}
+                        </TableHead>
+                        <TableHead>
+                            {t('table.emails.column.recipient')}
+                        </TableHead>
+                        <TableHead>
+                            {t('table.emails.column.actions')}
+                        </TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -58,7 +66,9 @@ export default function Devtools_Emails() {
                             <TableCell>
                                 <Dialog>
                                     <DialogTrigger asChild>
-                                        <Button>View</Button>
+                                        <Button>
+                                            {t('table.emails.actions.view')}
+                                        </Button>
                                     </DialogTrigger>
                                     <DialogContent
                                         className="h-[700px] max-h-[90%] w-[800px]"

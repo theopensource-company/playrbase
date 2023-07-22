@@ -43,6 +43,7 @@
     "aws4fetch": "^1.0.17",
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
+    "dayjs": "^1.11.9",
     "eslint": "8.44.0",
     "formidable": "^3.5.0",
     "jsonwebtoken": "^9.0.0",

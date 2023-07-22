@@ -7,7 +7,7 @@ const log = /* surrealql */ `
             FOR select WHERE record = $auth.id OR $scope = 'admin'
             FOR update, delete, create NONE;
 
-    DEFINE FIELD record                 ON log          TYPE record;
+    DEFINE FIELD record                 ON log          TYPE option<record>;
     DEFINE FIELD event                  ON log          TYPE string
         ASSERT $value IN ['CREATE', 'UPDATE', 'DELETE'];
 

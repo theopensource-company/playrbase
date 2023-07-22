@@ -25,13 +25,19 @@
         "./src/*"
       ],
       "@api/*": [
-        "./src/app/api/*"
+        "src/app/(api)/*"
       ],
       "@ui/*": [
         "./src/components/ui/*"
       ],
       "@layout/*": [
         "./src/components/layout/*"
+      ],
+      "@schema/*": [
+        "./src/schema/*"
+      ],
+      "@email/*": [
+        "./src/emails/*"
       ],
     },
     "plugins": [

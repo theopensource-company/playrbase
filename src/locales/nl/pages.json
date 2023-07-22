@@ -28,15 +28,27 @@
           "placeholder": "E-mailadres"
         }
       },
-      "link": {
-        "create-account": "Maak een account"
-      },
       "scope": {
         "admin": "Platform",
         "user": "Gebruiker"
       },
       "tagline": "op PlayrBase console",
       "title": "Inloggen"
+    },
+    "create-profile": {
+      "button": {
+        "continue": "Doorgaan"
+      },
+      "input": {
+        "name": {
+          "placeholder": "Voor- en achternaam"
+        },
+        "email": {
+          "placeholder": "E-mailadres"
+        }
+      },
+      "tagline": "om inschrijving te voltooien",
+      "title": "Profiel aanmaken"
     }
   }
 }

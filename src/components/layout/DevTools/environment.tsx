@@ -20,11 +20,17 @@ import {
     SurrealInstance,
     SurrealNamespace,
 } from '@/lib/Surreal';
+import { useAuth } from '@/lib/auth';
+import dayjs from 'dayjs';
+import calendar from 'dayjs/plugin/calendar';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 
+dayjs.extend(calendar);
+
 export default function Devtools_Environment() {
     const t = useTranslations('components.devtools.environment');
+    const user = useAuth(({ user }) => user);
 
     return (
         <div className="flex flex-col gap-16">
@@ -153,6 +159,79 @@ export default function Devtools_Environment() {
                                     )}
                                 </TableCell>
                                 <TableCell>{SurrealDatabase}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+
+                    <h2 className="mb-4 text-2xl font-bold">
+                        {t('table.authentication.title')}
+                    </h2>
+                    <Table>
+                        <TableCaption>
+                            <b>
+                                {t(
+                                    'table.authentication.caption.authenticated'
+                                )}
+                                :
+                            </b>{' '}
+                            {t(
+                                `table.authentication.caption.${
+                                    user ? 'yes' : 'no'
+                                }`
+                            )}
+                        </TableCaption>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>
+                                    {t('table.authentication.column.property')}
+                                </TableHead>
+                                <TableHead>
+                                    {t('table.authentication.column.value')}
+                                </TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>
+                                    {t('table.authentication.row.id')}
+                                </TableCell>
+                                <TableCell>{user?.id}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    {t('table.authentication.row.name')}
+                                </TableCell>
+                                <TableCell>{user?.name}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    {t('table.authentication.row.email')}
+                                </TableCell>
+                                <TableCell>{user?.email}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    {t('table.authentication.row.scope')}
+                                </TableCell>
+                                <TableCell>{user?.scope}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    {t('table.authentication.row.created')}
+                                </TableCell>
+                                <TableCell>
+                                    {user?.created &&
+                                        dayjs(user.created).calendar()}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    {t('table.authentication.row.updated')}
+                                </TableCell>
+                                <TableCell>
+                                    {user?.updated &&
+                                        dayjs(user.updated).calendar()}
+                                </TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>

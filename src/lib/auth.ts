@@ -19,11 +19,15 @@ export const useAuth = create<AuthStore>((set) => {
     function updateAuth() {
         surreal
             .query<[(AnyUser & { scope: string })[]]>(
-                /* surrealql */ `SELECT *, scope = meta::tb(id) FROM $auth`
+                /* surrealql */ `SELECT *, meta::tb(id) as scope FROM user WHERE id = $auth.id`
             )
             .then((res) => {
                 const user = res?.[0]?.result?.[0];
-                if (user) set(() => ({ user: user, loading: false }));
+                if (res?.[0]?.status === 'OK' && user) {
+                    set(() => ({ user, loading: false }));
+                } else {
+                    set(() => ({ loading: false }));
+                }
             });
     }
 

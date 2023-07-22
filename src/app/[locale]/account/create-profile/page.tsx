@@ -10,38 +10,33 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { SurrealInstance as surreal } from '@/lib/Surreal';
+import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
+import { fullname } from '@/lib/zod';
+import { MagicLinkVerification } from '@api/config/shared_schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ChevronsUpDown, Info, Loader2, XCircle } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { Info, Loader2, XCircle } from 'lucide-react';
+import { useLocalizedRouter, useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-type scope = 'user' | 'admin';
-
 const Schema = z.object({
-    identifier: z.string().email({ message: 'Enter a valid email address!' }),
+    name: fullname(),
 });
 
 type Schema = z.infer<typeof Schema>;
 
-export default function Signin() {
-    const defaultScope =
-        (typeof window !== 'undefined' &&
-            (localStorage.getItem('signin.default-scope') as scope)) ||
-        'user';
+export default function CreateProfile() {
+    const router = useLocalizedRouter();
+    const search = Object.fromEntries(useSearchParams().entries());
+    const { identifier, challenge } = MagicLinkVerification.parse(search);
+    const refreshUser = useAuth((s) => s.refreshUser);
 
-    const t = useTranslations('pages.account.signin');
-    const [scope, setScope] = useState<scope>(defaultScope);
+    const t = useTranslations('pages.account.create-profile');
     const [status, setStatus] = useState<{
         error?: boolean;
         message?: string;
@@ -69,20 +64,20 @@ export default function Signin() {
 
         if (errors.root?.message) {
             set(errors.root.message);
-        } else if (errors.identifier?.message) {
-            set(errors.identifier.message);
+        } else if (errors.name?.message) {
+            set(errors.name.message);
         }
     }, [errors, status, setStatus]);
 
-    const handler = handleSubmit(async ({ identifier }) => {
+    const handler = handleSubmit(async ({ name }) => {
         setStatus({ message: 'Loading', loading: true });
 
         const raw = await fetch('/api/auth/magic-link', {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ identifier, scope }),
+            body: JSON.stringify({ name, identifier, challenge }),
         });
 
         const res = await raw.json().catch((_e) => ({
@@ -91,7 +86,18 @@ export default function Signin() {
         }));
 
         if (res.success) {
-            setStatus({ message: 'Check your mailbox and spambox' });
+            await surreal
+                .authenticate(res.token)
+                .then(() => {
+                    refreshUser();
+                    router.push('/console');
+                })
+                .catch((e) => {
+                    setStatus({
+                        message: `An error occurred: ${e.error}`,
+                        error: true,
+                    });
+                });
         } else {
             setStatus({
                 message: `An error occurred: ${res.error}`,
@@ -106,46 +112,24 @@ export default function Signin() {
                 className="flex flex-col items-center gap-8"
                 onSubmit={handler}
             >
-                <Card className="flex flex-col gap-4">
-                    <CardHeader className="flex flex-row justify-between gap-24">
-                        <div>
-                            <CardTitle className="text-3xl font-bold">
-                                {t('title')}
-                            </CardTitle>
-                            <CardDescription>{t('tagline')}</CardDescription>
-                        </div>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    className="capitalize"
-                                    role="combobox"
-                                >
-                                    {t(`scope.${scope}`)}
-                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56">
-                                <DropdownMenuRadioGroup
-                                    value={scope}
-                                    onValueChange={(s) => setScope(s as scope)}
-                                >
-                                    <DropdownMenuRadioItem value="user">
-                                        {t('scope.user')}
-                                    </DropdownMenuRadioItem>
-                                    <DropdownMenuRadioItem value="admin">
-                                        {t('scope.admin')}
-                                    </DropdownMenuRadioItem>
-                                </DropdownMenuRadioGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                <Card className="flex flex-col gap-3">
+                    <CardHeader className="w-96 max-w-full">
+                        <CardTitle className="text-3xl font-bold">
+                            {t('title')}
+                        </CardTitle>
+                        <CardDescription>{t('tagline')}</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="flex flex-col gap-2 pt-1">
+                        <Input
+                            placeholder={t('input.name.placeholder')}
+                            {...register('name')}
+                        />
                         <Input
                             placeholder={t('input.email.placeholder')}
-                            {...register('identifier')}
+                            defaultValue={identifier}
+                            disabled
                         />
-                        <div className="h-4 pt-2">
+                        <div className="h-4">
                             {status.message && (
                                 <p
                                     className={cn(

@@ -35,6 +35,26 @@
             "namespace": "Namespace",
             "database": "Database"
           }
+        },
+        "authentication": {
+          "title": "Authenticatie",
+          "caption": {
+            "authenticated": "Ingelogd",
+            "yes": "ja",
+            "no": "nee"
+          },
+          "column": {
+            "property": "Item",
+            "value": "Waarde"
+          },
+          "row": {
+            "id": "ID",
+            "name": "Naam",
+            "email": "E-mail",
+            "scope": "Scope",
+            "created": "Gemaakt",
+            "updated": "Geupdate"
+          }
         }
       }
     },
@@ -51,6 +71,25 @@
       "button": "Voer migraties uit",
       "title": "Migreer Database",
       "warning": "<b>Waarschuwing!</b> Dit gereedschap is enkel bedoeld voor tijdens ontwikkeling!"
+    },
+    "emails": {
+      "title": "E-mails",
+      "table": {
+        "emails": {
+          "caption": {
+            "total": "Totaal verzonden"
+          },
+          "column": {
+            "sent": "Verzonden",
+            "subject": "Onderwerp",
+            "recipient": "Ontvanger",
+            "actions": "Acties"
+          },
+          "actions": {
+            "view": "Bekijken"
+          }
+        }
+      }
     }
   }
 }

@@ -19,9 +19,13 @@ const tokens = /* surrealql */ `
 
 const auth_challenge = /* surrealql */ `
     DEFINE TABLE auth_challenge SCHEMAFULL;
+    DEFINE PARAM $auth_methods VALUE ['magic-link'];
 
-    DEFINE FIELD subject    ON auth_challenge TYPE record<admin | user>;
-    DEFINE FIELD method     ON auth_challenge TYPE string ASSERT $value IN ['magic-link']; 
+    DEFINE FIELD subject    ON auth_challenge TYPE string | record<admin | user> 
+        ASSERT
+            is::email(<string> $value) 
+            OR type::thing($value).id;
+    DEFINE FIELD method     ON auth_challenge TYPE string ASSERT $value IN $auth_methods; 
     DEFINE FIELD challenge  ON auth_challenge VALUE $before OR rand::string(40, 60);
     DEFINE FIELD created    ON auth_challenge VALUE $before OR time::now();
 `;

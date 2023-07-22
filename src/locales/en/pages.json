@@ -33,9 +33,21 @@
       },
       "button": {
         "continue": "Continue"
+      }
+    },
+    "create-profile": {
+      "title": "Create profile",
+      "tagline": "to complete sign up",
+      "input": {
+        "name": {
+          "placeholder": "Full name"
+        },
+        "email": {
+          "placeholder": "Email address"
+        }
       },
-      "link": {
-        "create-account": "Create an account"
+      "button": {
+        "continue": "Continue"
       }
     }
   }

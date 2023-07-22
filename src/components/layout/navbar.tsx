@@ -27,11 +27,16 @@ import { DevTools } from './DevTools/index.tsx';
 
 export const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
-    const devTools =
-        // Enabled in prod/preview with:
-        // localStorage.setItem('devTools', 'enabled')
-        // Then reload page
-        featureFlags.devTools || localStorage.getItem('devTools') == 'enabled';
+
+    // Enabled in prod/preview with:
+    // localStorage.setItem('devTools', 'enabled')
+    // Then reload page
+    const [devTools, setDevTools] = useState(featureFlags.devTools);
+    useEffect(() => {
+        if (localStorage.getItem('devTools') == 'enabled') {
+            setDevTools(true);
+        }
+    }, [setDevTools]);
 
     useEffect(() => {
         const handler = () => {
@@ -42,7 +47,7 @@ export const Navbar = () => {
 
         window.addEventListener('scroll', handler);
         return () => window.removeEventListener('scroll', handler);
-    });
+    }, [setScrolled]);
 
     return (
         <Container

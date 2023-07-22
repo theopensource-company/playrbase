@@ -12,6 +12,7 @@ import { importLocale } from '@/locales';
 import { Language } from '@/locales/languages';
 import { NextIntlClientProvider, useLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
+import { Hydrate } from './hydrate';
 
 export const metadata: Metadata = {
     title: {
@@ -51,7 +52,7 @@ export default async function RootLayout({
 
     return (
         <>
-            <html lang={locale} suppressHydrationWarning>
+            <html lang={locale} className='dark' suppressHydrationWarning>
                 <head />
                 <body
                     className={cn(
@@ -60,16 +61,11 @@ export default async function RootLayout({
                     )}
                 >
                     <NextIntlClientProvider locale={locale} messages={messages}>
-                        <ThemeProvider
-                            attribute="class"
-                            defaultTheme="system"
-                            enableSystem
-                        >
-                            <div className="flex min-h-screen flex-col">
-                                <Navbar />
-                                {children}
-                            </div>
-                        </ThemeProvider>
+                        <div className="flex min-h-screen flex-col">
+                            <Hydrate />
+                            <Navbar />
+                            {children}
+                        </div>
                     </NextIntlClientProvider>
                 </body>
             </html>

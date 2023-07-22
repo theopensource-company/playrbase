@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from "@/lib/auth";
-import { useEffect } from "react";
+import { useAuth } from '@/lib/auth';
+import { useEffect } from 'react';
 
 export function Hydrate() {
     const refreshUser = useAuth(({ refreshUser }) => refreshUser);
@@ -10,7 +10,7 @@ export function Hydrate() {
         setInterval(refreshUser, 60000);
         window.addEventListener('focus', refreshUser, false);
         refreshUser();
-    }, []);
+    }, [refreshUser]);
 
     return null;
-};
+}

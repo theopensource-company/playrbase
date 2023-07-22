@@ -4,7 +4,6 @@ import React from 'react';
 
 // import { DevButton } from '@/components/DevButton';
 import { Navbar } from '@/components/layout/navbar';
-import { ThemeProvider } from '@/components/theme-provider';
 import { siteConfig } from '@/config/site';
 import { fontSans } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
@@ -43,6 +42,7 @@ export default async function RootLayout({
     params,
 }: RootLayoutProps) {
     let messages = {};
+    /* eslint-disable-next-line */
     const locale = useLocale();
     if (params.locale !== locale) {
         notFound();
@@ -52,7 +52,7 @@ export default async function RootLayout({
 
     return (
         <>
-            <html lang={locale} className='dark' suppressHydrationWarning>
+            <html lang={locale} className="dark" suppressHydrationWarning>
                 <head />
                 <body
                     className={cn(

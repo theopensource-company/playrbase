@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export function record<
     Table extends string = string,
-    Id extends string = string
+    Id extends string = string,
 >(table?: Table, id?: Id) {
     const group = (val?: Table | Id) =>
         !val

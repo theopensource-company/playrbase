@@ -36,7 +36,7 @@ export async function POST(
             null | {
                 challenge: string;
                 email: string;
-            }
+            },
         ]
     >(
         /* surrealql */ `
@@ -153,7 +153,7 @@ export async function GET(
                               SC: string;
                               ID: string;
                           }
-                    )
+                    ),
                 ]
             >(
                 /* surrealql */ `
@@ -232,7 +232,7 @@ export async function PUT(
                     null | {
                         SC: string;
                         ID: string;
-                    }
+                    },
                 ]
             >(
                 /* surrealql */ `

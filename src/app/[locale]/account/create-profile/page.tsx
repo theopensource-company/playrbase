@@ -15,10 +15,11 @@ import { SurrealInstance as surreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 import { fullname } from '@/lib/zod';
-import { MagicLinkVerification } from '@api/config/shared_schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
+import jwt from 'jsonwebtoken';
 import { Info, Loader2, XCircle } from 'lucide-react';
-import { useLocalizedRouter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
+import { useLocalizedRouter } from 'next-intl/client';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -32,9 +33,9 @@ type Schema = z.infer<typeof Schema>;
 
 export default function CreateProfile() {
     const router = useLocalizedRouter();
-    const search = Object.fromEntries(useSearchParams().entries());
-    const { identifier, challenge } = MagicLinkVerification.parse(search);
+    const token = z.string().parse(useSearchParams().get('token'));
     const refreshUser = useAuth((s) => s.refreshUser);
+    const decoded = jwt.decode(token);
 
     const t = useTranslations('pages.account.create-profile');
     const [status, setStatus] = useState<{
@@ -77,7 +78,7 @@ export default function CreateProfile() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name, identifier, challenge }),
+            body: JSON.stringify({ name, token }),
         });
 
         const res = await raw.json().catch((_e) => ({
@@ -126,7 +127,10 @@ export default function CreateProfile() {
                         />
                         <Input
                             placeholder={t('input.email.placeholder')}
-                            defaultValue={identifier}
+                            defaultValue={
+                                (typeof decoded == 'object' && decoded?.sub) ||
+                                ''
+                            }
                             disabled
                         />
                         <div className="h-4">

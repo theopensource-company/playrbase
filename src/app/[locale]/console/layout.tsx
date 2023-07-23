@@ -5,14 +5,20 @@ import Container from '@/components/layout/Container';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next-intl/client';
 import React, { ReactNode, useEffect, useState } from 'react';
 
 export default function ConsoleLayout({ children }: { children: ReactNode }) {
+    const router = useRouter();
     const [scrolled, setScrolled] = useState(false);
     const { loading, user } = useAuth(({ loading, user }) => ({
         loading,
         user,
     }));
+
+    useEffect(() => {
+        if (!loading && !user) router.push('/account/signin');
+    }, [user, loading, router]);
 
     useEffect(() => {
         const handler = () => {

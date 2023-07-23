@@ -1,3 +1,5 @@
+'use client';
+
 import { Surreal } from 'surrealdb.js';
 
 export const SurrealEndpoint = `${
@@ -11,17 +13,19 @@ export const SurrealDatabase =
 export const SurrealInstance = new Surreal(SurrealEndpoint, {
     prepare: async (surreal) => {
         await surreal.use({ ns: SurrealNamespace, db: SurrealDatabase });
-        const token = await fetch('/api/auth/token')
-            .then((res) => res.json())
-            .then((res) => {
-                if (res.success) return res.token as string;
-                console.error(`Failed to retrieve token: ${res.error}`);
-            });
+        if (typeof window !== 'undefined') {
+            const token = await fetch('/api/auth/token')
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res.success) return res.token as string;
+                    console.error(`Failed to retrieve token: ${res.error}`);
+                });
 
-        try {
-            if (token) await surreal.authenticate(token);
-        } catch (e) {
-            console.error(`Failed to authenticate with token: ${e}`);
+            try {
+                if (token) await surreal.authenticate(token);
+            } catch (e) {
+                console.error(`Failed to authenticate with token: ${e}`);
+            }
         }
     },
 });

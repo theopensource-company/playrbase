@@ -31,6 +31,7 @@ import { Button } from '../ui/button.tsx';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet.tsx';
 import Container from './Container.tsx';
 import { DevTools } from './DevTools/index.tsx';
+import { Skeleton } from '../ui/skeleton.tsx';
 
 export const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -101,13 +102,18 @@ export const Navbar = () => {
 };
 
 const Links = ({ devTools }: { devTools: boolean }) => {
-    const user = useAuth(({ user }) => user);
+    const { loading, user } = useAuth(({ loading, user }) => ({
+        loading,
+        user,
+    }));
 
     return (
         <NavigationMenu className="max-sm:justify-start max-sm:pt-8">
             <NavigationMenuList className="flex flex-col items-start gap-4 space-x-0 md:flex-row md:items-center">
                 <NavigationMenuItem>
-                    {user ? (
+                    {loading ? (
+                        <Skeleton className="h-10 w-24" />
+                    ) : user ? (
                         <>
                             <NavigationMenuTrigger>
                                 <ChevronRightSquare className="mr-2 md:hidden" />

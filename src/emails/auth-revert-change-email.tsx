@@ -15,22 +15,24 @@ import {
 } from '@react-email/components';
 import * as React from 'react';
 
-interface AuthMagicLinkEmailProps {
+interface AuthRevertChangeEmailEmailProps {
     token: string;
+    new_email: string;
 }
 
 const baseUrl = process.env.PLAYRBASE_ENV_ORIGIN ?? 'http://localhost:13000';
 
-export const AuthMagicLinkEmail = ({
+export const AuthRevertChangeEmailEmail = ({
     token = 'this-is-a-demo-token',
-}: AuthMagicLinkEmailProps) => {
+    new_email = 'john@doe',
+}: AuthRevertChangeEmailEmailProps) => {
     const url = new URL(
-        baseUrl + `/api/auth/magic-link?` + new URLSearchParams({ token })
+        baseUrl + `/api/auth/change-email?` + new URLSearchParams({ token })
     ).toString();
     return (
         <Html lang="en" dir="ltr">
             <Head>
-                <title>Your sign in link for PlayrBase</title>
+                <title>The Email for your Playrbase account was changed</title>
                 <Font
                     fontFamily="Inter"
                     fallbackFontFamily="Arial"
@@ -42,7 +44,7 @@ export const AuthMagicLinkEmail = ({
                     fontStyle="normal"
                 />
             </Head>
-            <Preview>Your sign in link for PlayrBase</Preview>
+            <Preview>The Email for your Playrbase account was changed</Preview>
             <Body style={main}>
                 <Container style={container}>
                     <Img
@@ -51,15 +53,15 @@ export const AuthMagicLinkEmail = ({
                         alt="PlayrBase"
                         style={logo}
                     />
-                    <Heading style={heading}>
-                        Your PlayrBase sign in link
-                    </Heading>
+                    <Heading style={heading}>Changed Playrbase Email</Heading>
                     <Text style={paragraph}>
-                        The following link will be valid for 30 minutes.
+                        If you did not change your Email to {new_email}, then
+                        please use the following link within 48 hours to revert
+                        the change and contact us for further assistance.
                     </Text>
                     <Section style={buttonContainer}>
                         <Button pY={11} pX={23} style={button} href={url}>
-                            Continue to PlayrBase
+                            Revert changed Email
                         </Button>
                     </Section>
                     <Hr style={line} />
@@ -78,7 +80,7 @@ export const AuthMagicLinkEmail = ({
     );
 };
 
-export default AuthMagicLinkEmail;
+export default AuthRevertChangeEmailEmail;
 
 // Styles
 

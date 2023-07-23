@@ -19,10 +19,12 @@ export function Avatar({
     loading,
     size,
     profile = unknownProfile,
+    renderBadge = true,
 }: {
     profile?: Profile;
     loading?: boolean;
     size?: 'small' | 'normal' | 'big';
+    renderBadge?: boolean;
 }) {
     const avatarFallback = avatarFallbackByName(profile.name);
     const avatarSize = {
@@ -45,7 +47,7 @@ export function Avatar({
                 />
                 <AvatarFallback>{avatarFallback}</AvatarFallback>
             </RenderAvatar>
-            {profile.type == 'admin' && (
+            {renderBadge && profile.type == 'admin' && (
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>

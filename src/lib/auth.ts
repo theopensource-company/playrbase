@@ -48,7 +48,7 @@ export const useAuth = create<AuthStore>((set) => {
             }));
 
             await Promise.all([
-                fetch('/api/auth/signout'),
+                fetch('/api/auth/token', { method: 'DELETE' }),
                 surreal.invalidate(),
             ]);
 

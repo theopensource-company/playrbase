@@ -10,9 +10,15 @@ import {
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu.tsx';
 import { featureFlags } from '@/config/Environment.ts';
+import { useAuth } from '@/lib/auth.ts';
 import { cn } from '@/lib/utils.ts';
 import { Language, languages } from '@/locales/languages.ts';
-import { AlignRight, ChevronRightSquare, Languages } from 'lucide-react';
+import {
+    AlignRight,
+    ChevronRightSquare,
+    Languages,
+    LogOut,
+} from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname } from 'next-intl/client';
 import Link from 'next-intl/link';
@@ -20,6 +26,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import LogoFull from '../../assets/LogoFull.svg';
+import { Profile } from '../cards/profile.tsx';
 import { Button } from '../ui/button.tsx';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet.tsx';
 import Container from './Container.tsx';
@@ -74,7 +81,7 @@ export const Navbar = () => {
                                 <AlignRight size="24" />
                             </Button>
                         </SheetTrigger>
-                        <SheetContent size="full">
+                        <SheetContent>
                             <div className="p-4">
                                 <Link href="/">
                                     <Image
@@ -94,21 +101,35 @@ export const Navbar = () => {
 };
 
 const Links = ({ devTools }: { devTools: boolean }) => {
+    const user = useAuth(({ user }) => user);
+
     return (
         <NavigationMenu className="max-sm:justify-start max-sm:pt-8">
             <NavigationMenuList className="flex flex-col items-start gap-4 space-x-0 md:flex-row md:items-center">
                 <NavigationMenuItem>
-                    <Link href="/console" legacyBehavior passHref>
-                        <NavigationMenuLink
-                            className={cn(
-                                navigationMenuTriggerStyle(),
-                                'max-sm:bg-muted'
-                            )}
-                        >
-                            <ChevronRightSquare className="mr-2 md:hidden" />
-                            Console
-                        </NavigationMenuLink>
-                    </Link>
+                    {user ? (
+                        <>
+                            <NavigationMenuTrigger>
+                                <ChevronRightSquare className="mr-2 md:hidden" />
+                                {user.name.split(' ')[0]}
+                            </NavigationMenuTrigger>
+                            <NavigationMenuContent>
+                                <AccountOptions />
+                            </NavigationMenuContent>
+                        </>
+                    ) : (
+                        <Link href="/console" legacyBehavior passHref>
+                            <NavigationMenuLink
+                                className={cn(
+                                    navigationMenuTriggerStyle(),
+                                    'max-sm:bg-muted'
+                                )}
+                            >
+                                <ChevronRightSquare className="mr-2 md:hidden" />
+                                Account
+                            </NavigationMenuLink>
+                        </Link>
+                    )}
                 </NavigationMenuItem>
                 {featureFlags.switchLanguage && (
                     <NavigationMenuItem>
@@ -124,6 +145,45 @@ const Links = ({ devTools }: { devTools: boolean }) => {
                 {devTools && <DevTools />}
             </NavigationMenuList>
         </NavigationMenu>
+    );
+};
+
+const AccountOptions = () => {
+    const { user, loading, signout } = useAuth(
+        ({ user, loading, signout }) => ({
+            user,
+            loading,
+            signout,
+        })
+    );
+
+    return (
+        user && (
+            <ul className="grid gap-6 p-6">
+                <NavigationMenuItem>
+                    <Link href="/console" legacyBehavior passHref>
+                        <NavigationMenuLink
+                            className={cn(
+                                navigationMenuTriggerStyle(),
+                                'h-18 max-sm:bg-muted'
+                            )}
+                        >
+                            <Profile
+                                profile={user}
+                                loading={loading}
+                                size="small"
+                            />
+                        </NavigationMenuLink>
+                    </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem asChild>
+                    <Button variant="destructive" onClick={signout}>
+                        <LogOut className="mr-2" size={18} />
+                        Signout
+                    </Button>
+                </NavigationMenuItem>
+            </ul>
+        )
     );
 };
 

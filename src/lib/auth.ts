@@ -1,25 +1,31 @@
 'use client';
 
-import { TAdminRecord } from '@/constants/Types/Admin.types';
-import { TManagerRecord } from '@/constants/Types/Manager.types';
-import { TPlayerRecord } from '@/constants/Types/Player.types';
 import { SurrealInstance as surreal } from '@/lib/Surreal';
+import { Admin } from '@/schema/admin';
+import { User } from '@/schema/user';
 import { create } from 'zustand';
 
-type AnyUser = TAdminRecord | TManagerRecord | TPlayerRecord;
+type AnyUser = User | Admin;
 
 export type AuthStore = {
     user?: AnyUser & { scope: string };
     loading: boolean;
     setUser: (user: AnyUser & { scope: string }) => void;
     refreshUser: () => void;
+    signout: () => void;
 };
 
 export const useAuth = create<AuthStore>((set) => {
     function updateAuth() {
         surreal
             .query<[(AnyUser & { scope: string })[]]>(
-                /* surrealql */ `SELECT *, meta::tb(id) as scope FROM user WHERE id = $auth.id`
+                /* surrealql */ `
+                    IF $auth THEN 
+                        SELECT *, meta::tb(id) AS scope FROM $auth
+                    ELSE
+                        RETURN []
+                    END;
+                `
             )
             .then((res) => {
                 const user = res?.[0]?.result?.[0];
@@ -35,5 +41,21 @@ export const useAuth = create<AuthStore>((set) => {
         loading: true,
         setUser: (user) => set(() => ({ user, loading: false })),
         refreshUser: () => updateAuth(),
+        signout: async () => {
+            set(() => ({
+                user: undefined,
+                loading: true,
+            }));
+
+            await Promise.all([
+                fetch('/api/auth/signout'),
+                surreal.invalidate(),
+            ]);
+
+            set(() => ({
+                user: undefined,
+                loading: false,
+            }));
+        },
     };
 });

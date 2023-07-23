@@ -8,6 +8,7 @@ const admin = /* surrealql */ `
 
     DEFINE FIELD name     ON TABLE admin TYPE string    ASSERT array::len(string::words($value)) > 1;
     DEFINE FIELD email    ON TABLE admin TYPE string    ASSERT is::email($value);
+    DEFINE FIELD type     ON TABLE admin VALUE meta::tb(id);
 
     DEFINE FIELD created  ON TABLE admin TYPE datetime  VALUE $before OR time::now();
     DEFINE FIELD updated  ON TABLE admin TYPE datetime  VALUE time::now();
@@ -19,6 +20,7 @@ export const Admin = z.object({
     id: record('admin'),
     name: fullname(),
     email: z.string().email(),
+    type: z.literal('admin'),
     created: z.coerce.date(),
     updated: z.coerce.date(),
 });

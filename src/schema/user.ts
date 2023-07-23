@@ -17,6 +17,7 @@ const user = /* surrealql */ `
 
     DEFINE FIELD name               ON user TYPE string ASSERT array::len(string::words($value)) > 1;
     DEFINE FIELD email              ON user TYPE string ASSERT is::email($value);
+    DEFINE FIELD type               ON user VALUE meta::tb(id);
 
     DEFINE FIELD profile_picture    ON user TYPE option<string>
         VALUE 
@@ -38,6 +39,7 @@ export const User = z.object({
     id: record('user'),
     name: fullname(),
     email: z.string().email(),
+    type: z.literal('user'),
     profile_picture: z.string().optional(),
     created: z.coerce.date(),
     updated: z.coerce.date(),

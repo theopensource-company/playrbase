@@ -22,6 +22,8 @@ const organisation = /* surrealql */ `
     DEFINE FIELD website              ON organisation TYPE option<string>;
     DEFINE FIELD email                ON organisation TYPE string           
         ASSERT is::email($value);
+    DEFINE FIELD type                 ON organisation VALUE meta::tb(id);
+
     DEFINE FIELD logo                 ON organisation TYPE string
         VALUE 
             IF not($scope) OR $scope = 'admin' THEN
@@ -108,6 +110,7 @@ export const Organisation = z.object({
     description: z.string().optional(),
     website: z.string().url().optional(),
     email: z.string().email(),
+    type: z.literal('organisation'),
     logo: z.string().optional(),
     banner: z.string().optional(),
     slug: z.string(),

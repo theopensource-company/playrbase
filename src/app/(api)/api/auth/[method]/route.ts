@@ -104,9 +104,22 @@ export async function GET(
     req: NextRequest,
     { params }: { params: { method: string } }
 ) {
-    const method = z.union([Method, z.literal('token')]).parse(params.method);
+    const method = z
+        .union([Method, z.literal('token'), z.literal('signout')])
+        .parse(params.method);
 
-    if (method == 'token') {
+    if (method == 'signout') {
+        return NextResponse.json(
+            {
+                success: true,
+            },
+            {
+                headers: {
+                    'Set-Cookie': 'playrbase-token=; MaxAge=0;',
+                },
+            }
+        );
+    } else if (method == 'token') {
         const token = req.cookies.get('playrbase-token')?.value;
         if (!token) {
             return NextResponse.json(

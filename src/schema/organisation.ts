@@ -24,10 +24,10 @@ const organisation = /* surrealql */ `
         ASSERT is::email($value);
     DEFINE FIELD type                 ON organisation VALUE meta::tb(id);
 
-    DEFINE FIELD logo                 ON organisation TYPE string
+    DEFINE FIELD logo                 ON organisation TYPE option<string>
         PERMISSIONS
             FOR update WHERE $scope = 'admin';
-    DEFINE FIELD banner               ON organisation TYPE string
+    DEFINE FIELD banner               ON organisation TYPE option<string>
         PERMISSIONS
             FOR update WHERE $scope = 'admin';
     DEFINE FIELD slug                 ON organisation TYPE string

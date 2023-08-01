@@ -99,9 +99,9 @@ export async function DELETE(req: NextRequest) {
             { status: 403 }
         );
 
-    const formData = await req.formData();
+    const body = await req.json();
     const intent = (() => {
-        const unvalidated = formData.get('intent');
+        const unvalidated = body.intent;
         const parsed = Intent.safeParse(unvalidated);
         if (parsed.success) return parsed.data;
     })();
@@ -115,7 +115,7 @@ export async function DELETE(req: NextRequest) {
     const target = token.ID;
 
     await surreal.merge(target, {
-        [intent]: undefined,
+        [intent]: null,
     });
 
     return NextResponse.json({

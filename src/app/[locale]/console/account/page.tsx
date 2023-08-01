@@ -2,6 +2,7 @@
 
 import { Avatar } from '@/components/cards/avatar';
 import { Profile } from '@/components/cards/profile';
+import UploadImage from '@/components/logic/UploadImage';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -56,7 +57,11 @@ export default function Account() {
                                 />
                             </TableCell>
                             <TableCell align="right">
-                                <Skeleton className="h-10 w-20" />
+                                <UploadImage
+                                    intent="profile_picture"
+                                    title="Change profile picture"
+                                    description="Drop a new image to change your profile picture"
+                                />
                             </TableCell>
                         </TableRow>
                         <TableRow>
@@ -82,7 +87,7 @@ export default function Account() {
                                 )}
                             </TableCell>
                             <TableCell align="right">
-                                <EditEmail />{' '}
+                                <EditEmail />
                             </TableCell>
                         </TableRow>
                     </TableBody>

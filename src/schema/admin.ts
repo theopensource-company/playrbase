@@ -10,7 +10,7 @@ const admin = /* surrealql */ `
     DEFINE FIELD email              ON TABLE admin TYPE string    ASSERT is::email($value);
     DEFINE FIELD type               ON TABLE admin VALUE meta::tb(id);
 
-    DEFINE FIELD profile_picture    ON user TYPE option<string>
+    DEFINE FIELD profile_picture    ON admin TYPE option<string>
         PERMISSIONS
             FOR update WHERE $scope = 'admin';
 

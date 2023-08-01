@@ -1,13 +1,13 @@
-import { Organisation } from '@/schema/organisation';
+import { User } from '@/schema/user';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import {
     buildTableFilters,
     isNoneValue,
     SurrealInstance as surreal,
-} from '../../lib/Surreal';
+} from '../Surreal';
 
-export const buildOrganisationFilters = buildTableFilters<Organisation>(
+export const buildUserFilters = buildTableFilters<User>(
     async (property, filters) => {
         const computeValue = () =>
             isNoneValue(property, filters) ? 'NONE' : `$filters.${property}`;
@@ -19,39 +19,32 @@ export const buildOrganisationFilters = buildTableFilters<Organisation>(
     }
 );
 
-export const useOrganisations = (
-    filters: Partial<Pick<Organisation, 'part_of'>> = {}
-) =>
+export const useUsers = (filters: Partial<Pick<User, 'name' | 'email'>> = {}) =>
     useQuery({
         queryKey: ['events', filters],
         queryFn: async () => {
-            const result = await surreal.query<[Organisation[]]>(
-                `SELECT * FROM organisation ${await buildOrganisationFilters(
+            const result = await surreal.query<[User[]]>(
+                `SELECT * FROM user ${await buildUserFilters(
                     filters
                 )} ORDER BY created ASC`,
                 { filters }
             );
 
             if (!result?.[0]?.result) return null;
-            return z.array(Organisation).parse(result[0].result);
+            return z.array(User).parse(result[0].result);
         },
     });
 
-export const useOrganisation = (filters: {
-    id?: Organisation['id'];
-    slug?: Organisation['slug'];
-}) =>
+export const useUser = (filters: { id?: User['id']; email?: User['email'] }) =>
     useQuery({
         queryKey: ['events', filters],
         queryFn: async () => {
-            const result = await surreal.query<[Organisation[]]>(
-                `SELECT * FROM organisation ${await buildOrganisationFilters(
-                    filters
-                )}`,
+            const result = await surreal.query<[User[]]>(
+                `SELECT * FROM user ${await buildUserFilters(filters)}`,
                 { filters }
             );
 
             if (!result?.[0]?.result?.[0]) return null;
-            return Organisation.parse(result[0].result[0]);
+            return User.parse(result[0].result[0]);
         },
     });

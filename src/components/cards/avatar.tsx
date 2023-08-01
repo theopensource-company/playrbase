@@ -36,8 +36,8 @@ export function Avatar({
     return loading ? (
         <Skeleton className={cn('rounded-full', avatarSize)} />
     ) : (
-        <div className="relative">
-            <RenderAvatar className={cn('rounded-full shadow-md', avatarSize)}>
+        <div className={cn('relative', avatarSize)}>
+            <RenderAvatar className="h-full w-full rounded-full shadow-md">
                 <AvatarImage
                     src={
                         'profile_picture' in profile
@@ -82,5 +82,5 @@ function avatarFallbackByName(name: string) {
     const split = name.toUpperCase().split(' ');
     return split.length > 1
         ? [split.at(0)?.at(0), split.at(-1)?.at(0)].join('')
-        : split.slice(0, 2);
+        : split[0].slice(0, 2) ?? '??';
 }

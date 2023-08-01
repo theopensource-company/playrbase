@@ -24,6 +24,7 @@ export const Admin = z.object({
     id: record('admin'),
     name: fullname(),
     email: z.string().email(),
+    profile_picture: z.string().optional(),
     type: z.literal('admin'),
     created: z.coerce.date(),
     updated: z.coerce.date(),

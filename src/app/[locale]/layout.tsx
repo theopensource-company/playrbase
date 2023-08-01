@@ -12,6 +12,7 @@ import { Language } from '@/locales/languages';
 import { NextIntlClientProvider, useLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { Hydrate } from './hydrate';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
     title: {
@@ -60,13 +61,18 @@ export default async function RootLayout({
                         fontSans.variable
                     )}
                 >
-                    <NextIntlClientProvider locale={locale} messages={messages}>
-                        <div className="flex min-h-screen flex-col">
-                            <Hydrate />
-                            <Navbar />
-                            {children}
-                        </div>
-                    </NextIntlClientProvider>
+                    <Providers>
+                        <NextIntlClientProvider
+                            locale={locale}
+                            messages={messages}
+                        >
+                            <div className="flex min-h-screen flex-col">
+                                <Hydrate />
+                                <Navbar />
+                                {children}
+                            </div>
+                        </NextIntlClientProvider>
+                    </Providers>
                 </body>
             </html>
         </>

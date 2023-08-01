@@ -20,14 +20,8 @@ const user = /* surrealql */ `
     DEFINE FIELD type               ON user VALUE meta::tb(id);
 
     DEFINE FIELD profile_picture    ON user TYPE option<string>
-        VALUE 
-            IF not($scope) OR $scope = 'admin' THEN
-                RETURN $input;
-            ELSE IF $input == 'remove' THEN
-                RETURN NONE;
-            ELSE
-                RETURN $before OR NULL;
-            END;
+        PERMISSIONS
+            FOR update WHERE $scope = 'admin';
             
     DEFINE FIELD created            ON user TYPE datetime VALUE $before OR time::now();
     DEFINE FIELD updated            ON user TYPE datetime VALUE time::now();

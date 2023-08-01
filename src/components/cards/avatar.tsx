@@ -40,8 +40,8 @@ export function Avatar({
             <RenderAvatar className={cn('rounded-full shadow-md', avatarSize)}>
                 <AvatarImage
                     src={
-                        'image' in profile
-                            ? (profile.image as string)
+                        'profile_picture' in profile
+                            ? (profile.profile_picture as string)
                             : undefined
                     }
                 />

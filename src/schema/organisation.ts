@@ -25,23 +25,11 @@ const organisation = /* surrealql */ `
     DEFINE FIELD type                 ON organisation VALUE meta::tb(id);
 
     DEFINE FIELD logo                 ON organisation TYPE string
-        VALUE 
-            IF not($scope) OR $scope = 'admin' THEN
-                RETURN $input;
-            ELSE IF $input == 'remove' THEN
-                RETURN NONE;
-            ELSE
-                RETURN $before OR NULL;
-            END;
+        PERMISSIONS
+            FOR update WHERE $scope = 'admin';
     DEFINE FIELD banner               ON organisation TYPE string
-        VALUE 
-            IF not($scope) OR $scope = 'admin' THEN
-                RETURN $input;
-            ELSE IF $input == 'remove' THEN
-                RETURN NONE;
-            ELSE
-                RETURN $before OR NULL;
-            END;
+        PERMISSIONS
+            FOR update WHERE $scope = 'admin';
     DEFINE FIELD slug                 ON organisation TYPE string
         VALUE 
             IF $value == NONE THEN

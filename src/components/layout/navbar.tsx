@@ -29,9 +29,9 @@ import LogoFull from '../../assets/LogoFull.svg';
 import { Profile } from '../cards/profile.tsx';
 import { Button } from '../ui/button.tsx';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet.tsx';
+import { Skeleton } from '../ui/skeleton.tsx';
 import Container from './Container.tsx';
 import { DevTools } from './DevTools/index.tsx';
-import { Skeleton } from '../ui/skeleton.tsx';
 
 export const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);

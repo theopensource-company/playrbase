@@ -10,7 +10,7 @@
     "dev-next": "cross-env NODE_ENV=\"development\" next dev -p 13000",
     "dev-surreal": "surreal start --log debug --user root --pass root --bind 0.0.0.0:13001 file:dev.db",
     "dev-s3": "minio server --address=\":13002\" --console-address=\":13003\" ./dev.s3",
-    "dev-s3-create-bucket": "sleep 2 && mc alias set local http://127.0.0.1:13002 minioadmin minioadmin && mc admin info local && mc mb local/playrbase-public",
+    "dev-s3-create-bucket": "sleep 2 && mc alias set local http://127.0.0.1:13002 minioadmin minioadmin && mc admin info local && mc mb --region default local/playrbase-public",
     "dev-devkit": "ts-node ./src/scripts/devkit.ts dotenv_config_path=./.env.local",
     "dev-email": "email dev --dir ./src/emails --port 13005",
     "ts": "tsc --watch",
@@ -19,6 +19,7 @@
     "build": "next build && rm -rf out/dev"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.382.0",
     "@hookform/resolvers": "^3.1.1",
     "@mui/material": "^5.14.1",
     "@radix-ui/react-avatar": "^1.0.3",
@@ -43,7 +44,6 @@
     "@types/react-dom": "18.2.7",
     "@types/react-modal": "^3.16.0",
     "aws-sdk": "^2.1420.0",
-    "aws4fetch": "^1.0.17",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "dayjs": "^1.11.9",

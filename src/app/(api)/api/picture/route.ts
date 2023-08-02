@@ -1,6 +1,7 @@
+import { s3 } from '@api/lib/s3';
 import { surreal } from '@api/lib/surreal';
 import { extractUserTokenFromRequest } from '@api/lib/token';
-import { AwsClient } from 'aws4fetch';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { Blob, File } from 'buffer';
 import { NextRequest, NextResponse } from 'next/server';
 import sharp from 'sharp';
@@ -20,12 +21,6 @@ export async function PUT(req: NextRequest) {
             { success: false, error: 'not_authenticated' },
             { status: 403 }
         );
-
-    const aws = new AwsClient({
-        accessKeyId: process.env.S3_KEY_ID ?? '',
-        secretAccessKey: process.env.S3_KEY_SECRET ?? '',
-        service: 's3',
-    });
 
     const formData = await req.formData();
     const intent = (() => {
@@ -58,23 +53,23 @@ export async function PUT(req: NextRequest) {
         .slice(0, 50)
         .replaceAll('/', '_');
 
-    const base = process.env.S3_BUCKET;
     const key = `${hash}.webp`;
-    const s3res = await aws.fetch(`${base}/${key}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'image/webp',
-            'Content-Length': Buffer.byteLength(compressed).toString(),
-        },
-        body: compressed,
-    });
+    const s3res = await s3
+        .send(
+            new PutObjectCommand({
+                Key: key,
+                Body: compressed,
+                Bucket: process.env.S3_BUCKET,
+            })
+        )
+        .catch(() => false);
 
     const public_url = new URL(
         `/cdn/s3/${key}`,
         new URL(req.headers.get('referer') ?? '').origin
     );
 
-    if (s3res.status === 200) {
+    if (s3res) {
         await surreal.merge(target, {
             [intent]: public_url,
         });

@@ -36,14 +36,14 @@ export default function Devtools_Query() {
             <div className="flex flex-col items-center gap-8">
                 <Textarea
                     rows={15}
-                    className="whitespace-pre rounded-xl p-8 font-mono"
+                    className="whitespace-pre rounded-xl border-muted-foreground p-8 font-mono text-muted-foreground"
                     placeholder={t('input-placeholder')}
                     ref={inputRef}
                 />
                 <Button onClick={run}>{t('button')}</Button>
                 <Textarea
                     rows={15}
-                    className="whitespace-pre rounded-xl p-8 font-mono"
+                    className="whitespace-pre rounded-xl border-muted-foreground p-8 font-mono text-muted-foreground"
                     disabled
                     value={JSON.stringify(result, null, 2)}
                 />

@@ -75,24 +75,24 @@ export default function Devtools_Emails() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {isLoading
+                    {true
                         ? new Array(5).fill(0).map((_, i) => (
                               <TableRow key={i}>
                                   <TableCell>
                                       <div className="flex gap-3">
-                                          <Skeleton className="h-4 w-8" />
-                                          <Skeleton className="h-4 w-8" />
-                                          <Skeleton className="h-4 w-14" />
+                                          <Skeleton className="h-4 w-8 bg-muted-foreground" />
+                                          <Skeleton className="h-4 w-8 bg-muted-foreground" />
+                                          <Skeleton className="h-4 w-14 bg-muted-foreground" />
                                       </div>
                                   </TableCell>
                                   <TableCell>
-                                      <Skeleton className="h-4 w-36" />
+                                      <Skeleton className="h-4 w-36 bg-muted-foreground" />
                                   </TableCell>
                                   <TableCell>
-                                      <Skeleton className="h-4 w-32" />
+                                      <Skeleton className="h-4 w-32 bg-muted-foreground" />
                                   </TableCell>
                                   <TableCell>
-                                      <Skeleton className="h-10 w-24" />
+                                      <Skeleton className="h-10 w-24 bg-muted-foreground" />
                                   </TableCell>
                               </TableRow>
                           ))

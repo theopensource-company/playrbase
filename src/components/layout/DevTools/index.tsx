@@ -24,23 +24,31 @@ export function DevTools() {
                 <Wrench />
                 <span className="ml-2 md:hidden">Devtools</span>
             </DialogTrigger>
-            <DialogContent className="fixed left-0 top-0 h-screen w-screen border-none bg-primary-foreground">
+            <DialogContent className="fixed left-0 top-0 mt-[2.5vh] h-[95vh] w-full rounded-xl border-none bg-muted">
                 <div className="p-12">
                     <Tabs defaultValue="environment" className="w-full">
-                        <TabsList className="mb-4">
-                            <TabsTrigger value="environment">
+                        <TabsList className="mb-4 bg-primary-foreground">
+                            <TabsTrigger
+                                className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
+                                value="environment"
+                            >
                                 {t('environment.title')}
                             </TabsTrigger>
-                            <TabsTrigger value="query">
+                            <TabsTrigger
+                                className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
+                                value="query"
+                            >
                                 {t('query.title')}
                             </TabsTrigger>
                             <TabsTrigger
+                                className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
                                 value="emails"
                                 disabled={!featureFlags.localEmail}
                             >
                                 Emails
                             </TabsTrigger>
                             <TabsTrigger
+                                className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
                                 value="migrate-database"
                                 disabled={!featureFlags.migrateDatabase}
                             >
@@ -63,7 +71,7 @@ export function DevTools() {
                 </div>
                 <DialogClose
                     aria-label="Close"
-                    className="fixed right-0 top-0 mr-8 mt-8"
+                    className="fixed right-0 top-0 mr-12 mt-[5.3rem]"
                 >
                     <Button size="sm">
                         <X />

@@ -5,7 +5,7 @@ import Container from '@/components/layout/Container';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
-import { Building, UserCog, Users } from 'lucide-react';
+import { Building, Loader2, UserCog, Users } from 'lucide-react';
 import { Link } from 'next-intl';
 import { useRouter } from 'next-intl/client';
 import React, { ReactNode, useEffect, useState } from 'react';
@@ -33,7 +33,11 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
         return () => window.removeEventListener('scroll', handler);
     }, [setScrolled]);
 
-    return (
+    return loading || user?.scope !== 'admin' ? (
+        <Container className="flex w-full flex-grow items-center justify-center">
+            <Loader2 size={50} className="animate-spin" />
+        </Container>
+    ) : (
         <Container
             className={cn(
                 'flex flex-grow gap-16',

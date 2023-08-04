@@ -1,5 +1,5 @@
 import { Organisation } from '@/schema/organisation';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import {
     buildTableFilters,
@@ -23,7 +23,7 @@ export const useOrganisations = (
     filters: Partial<Pick<Organisation, 'part_of'>> = {}
 ) =>
     useQuery({
-        queryKey: ['events', filters],
+        queryKey: ['organisations', filters],
         queryFn: async () => {
             const result = await surreal.query<[Organisation[]]>(
                 `SELECT * FROM organisation ${await buildOrganisationFilters(
@@ -42,7 +42,7 @@ export const useOrganisation = (filters: {
     slug?: Organisation['slug'];
 }) =>
     useQuery({
-        queryKey: ['events', filters],
+        queryKey: ['organisation', filters],
         queryFn: async () => {
             const result = await surreal.query<[Organisation[]]>(
                 `SELECT * FROM organisation ${await buildOrganisationFilters(
@@ -53,5 +53,35 @@ export const useOrganisation = (filters: {
 
             if (!result?.[0]?.result?.[0]) return null;
             return Organisation.parse(result[0].result[0]);
+        },
+    });
+
+export const useUpdateOrganisation = (id: Organisation['id']) =>
+    useMutation({
+        mutationKey: ['organisation', id],
+        mutationFn: async (
+            changes: Partial<
+                Pick<
+                    Organisation,
+                    | 'name'
+                    | 'description'
+                    | 'website'
+                    | 'email'
+                    | 'logo'
+                    | 'banner'
+                    | 'slug'
+                    | 'tier'
+                    | 'manager_roles'
+                    | 'part_of'
+                >
+            >
+        ) => {
+            const result = await surreal.merge<Organisation, typeof changes>(
+                id,
+                changes
+            );
+
+            if (!result?.[0]) return null;
+            return Organisation.parse(result[0]);
         },
     });

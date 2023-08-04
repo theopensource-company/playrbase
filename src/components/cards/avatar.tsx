@@ -20,23 +20,38 @@ export function Avatar({
     size,
     profile = unknownProfile,
     renderBadge = true,
+    className,
 }: {
     profile?: Profile;
     loading?: boolean;
-    size?: 'small' | 'normal' | 'big';
+    size?: 'small' | 'normal' | 'big' | 'huge';
     renderBadge?: boolean;
+    className?: string;
 }) {
     const avatarFallback = avatarFallbackByName(profile.name);
     const avatarSize = {
         small: 'h-10 w-10 text-lg',
         normal: 'h-12 w-12 text-xl',
         big: 'h-14 w-14 text-2xl',
+        huge: 'h-20 w-20 text-4xl',
     }[size ?? 'normal'];
 
     return loading ? (
-        <Skeleton className={cn('rounded-full', avatarSize)} />
+        <Skeleton
+            className={cn(
+                'aspect-square rounded-full bg-muted',
+                avatarSize,
+                className
+            )}
+        />
     ) : (
-        <div className={cn('relative', avatarSize)}>
+        <div
+            className={cn(
+                'relative aspect-square rounded-full bg-muted',
+                avatarSize,
+                className
+            )}
+        >
             <RenderAvatar className="h-full w-full rounded-full shadow-md">
                 <AvatarImage
                     src={
@@ -45,7 +60,9 @@ export function Avatar({
                             : undefined
                     }
                 />
-                <AvatarFallback>{avatarFallback}</AvatarFallback>
+                <AvatarFallback className="bg-transparent">
+                    {avatarFallback}
+                </AvatarFallback>
             </RenderAvatar>
             {renderBadge && profile.type == 'admin' && (
                 <TooltipProvider>

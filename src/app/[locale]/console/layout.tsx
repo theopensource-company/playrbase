@@ -6,8 +6,8 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 import { Building, Loader2, UserCog, Users } from 'lucide-react';
-import { Link } from 'next-intl';
 import { useRouter } from 'next-intl/client';
+import Link from 'next-intl/link';
 import React, { ReactNode, useEffect, useState } from 'react';
 
 export default function ConsoleLayout({ children }: { children: ReactNode }) {
@@ -33,7 +33,7 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
         return () => window.removeEventListener('scroll', handler);
     }, [setScrolled]);
 
-    return loading || user?.scope !== 'admin' ? (
+    return loading ? (
         <Container className="flex w-full flex-grow items-center justify-center">
             <Loader2 size={50} className="animate-spin" />
         </Container>

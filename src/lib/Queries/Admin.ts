@@ -1,5 +1,5 @@
 import { Admin } from '@/schema/admin';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import {
     buildTableFilters,
@@ -23,8 +23,8 @@ export const useAdmins = (
     filters: Partial<Pick<Admin, 'name' | 'email'>> = {}
 ) =>
     useQuery({
-        queryKey: ['events', filters],
-        queryFn: async () => {
+        queryKey: ['admins', filters],
+        queryFn: async (): Promise<Admin[]> => {
             const result = await surreal.query<[Admin[]]>(
                 `SELECT * FROM admin ${await buildAdminFilters(
                     filters
@@ -32,7 +32,8 @@ export const useAdmins = (
                 { filters }
             );
 
-            if (!result?.[0]?.result) return null;
+            if (result?.[0]?.detail) throw new Error(result[0].detail);
+            if (!result?.[0]?.result) return [];
             return z.array(Admin).parse(result[0].result);
         },
     });
@@ -42,14 +43,48 @@ export const useAdmin = (filters: {
     email?: Admin['email'];
 }) =>
     useQuery({
-        queryKey: ['events', filters],
+        queryKey: ['admin', filters],
         queryFn: async () => {
             const result = await surreal.query<[Admin[]]>(
                 `SELECT * FROM admin ${await buildAdminFilters(filters)}`,
                 { filters }
             );
 
+            if (result?.[0]?.detail) throw new Error(result[0].detail);
             if (!result?.[0]?.result?.[0]) return null;
             return Admin.parse(result[0].result[0]);
+        },
+    });
+
+export const useUpdateAdmin = (id: Admin['id']) =>
+    useMutation({
+        mutationKey: ['admin', id],
+        mutationFn: async (
+            changes: Partial<Pick<Admin, 'name' | 'email' | 'profile_picture'>>
+        ) => {
+            const result = await surreal.merge<Admin, typeof changes>(
+                id,
+                changes
+            );
+
+            if (!result?.[0]) throw new Error('Could not update admin');
+            return Admin.parse(result[0]);
+        },
+    });
+
+export const useCreateAdmin = () =>
+    useMutation({
+        mutationKey: ['admin'],
+        mutationFn: async (
+            changes: Pick<Admin, 'name' | 'email'> &
+                Partial<Pick<Admin, 'profile_picture'>>
+        ) => {
+            const result = await surreal.create<Admin, typeof changes>(
+                'admin',
+                changes
+            );
+
+            if (!result?.[0]) throw new Error('Could not create admin');
+            return Admin.parse(result[0]);
         },
     });

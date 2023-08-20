@@ -71,7 +71,7 @@ export function Avatar({
                             <div
                                 className={cn(
                                     'absolute -bottom-1 -right-1 aspect-square rounded-full bg-background transition-colors group-hover:bg-accent',
-                                    size == 'big'
+                                    ['big', 'huge'].includes(size as string)
                                         ? 'w-[45%] p-1.5'
                                         : 'w-1/2 p-1'
                                 )}

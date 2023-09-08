@@ -36,7 +36,7 @@
     "@types/node": "20.4.3",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
-    "aws-sdk": "^2.1420.0",
+    "aws-sdk": "^2.1453.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "dayjs": "^1.11.9",

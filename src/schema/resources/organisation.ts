@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { record } from '../lib/zod.ts';
+import { record } from '../../lib/zod.ts';
 
 const organisation = /* surrealql */ `
     DEFINE TABLE organisation SCHEMAFULL
@@ -15,13 +15,11 @@ const organisation = /* surrealql */ `
                 $scope = 'admin' OR 
                 ($scope = 'user' && managers[WHERE role IN ["owner", "adminstrator"] AND org != NONE].id CONTAINS $auth.id);
 
-    DEFINE TABLE puborg AS SELECT name, description, website, email, created, slug FROM organisation;
-
     DEFINE FIELD name                 ON organisation TYPE string;
     DEFINE FIELD description          ON organisation TYPE option<string>;
     DEFINE FIELD website              ON organisation TYPE option<string>;
     DEFINE FIELD email                ON organisation TYPE string           
-        ASSERT is::email($value);
+        ASSERT string::is::email($value);
     DEFINE FIELD type                 ON organisation VALUE meta::tb(id);
 
     DEFINE FIELD logo                 ON organisation TYPE option<string>
@@ -42,13 +40,15 @@ const organisation = /* surrealql */ `
                 RETURN $value;
             ELSE
                 RETURN meta::id(id);
-            END;
+            END
+        DEFAULT meta::id(id);
+
     DEFINE FIELD tier                 ON organisation TYPE string
         ASSERT $value IN ["free", "basic", "business", "enterprise"]
+        DEFAULT "free"
         PERMISSIONS 
             FOR create, update WHERE
-                $scope = 'admin'
-        VALUE $value OR $before OR "free";
+                $scope = 'admin';
 
     DEFINE FIELD manager_roles        ON organisation TYPE array
         PERMISSIONS
@@ -88,8 +88,8 @@ const organisation = /* surrealql */ `
             RETURN $combined;
         };
 
-    DEFINE FIELD created              ON organisation TYPE datetime VALUE $before OR time::now();
-    DEFINE FIELD updated              ON organisation TYPE datetime VALUE time::now();
+    DEFINE FIELD created              ON organisation TYPE datetime VALUE $before OR time::now()    DEFAULT time::now();
+    DEFINE FIELD updated              ON organisation TYPE datetime VALUE time::now()               DEFAULT time::now();
 `;
 
 export const Organisation = z.object({

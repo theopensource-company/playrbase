@@ -1,8 +1,8 @@
 'use client';
 
 import { SurrealInstance as surreal } from '@/lib/Surreal';
-import { Admin } from '@/schema/admin';
-import { User } from '@/schema/user';
+import { Admin } from '@/schema/resources/admin';
+import { User } from '@/schema/resources/user';
 import { create } from 'zustand';
 
 type AnyUser = User | Admin;

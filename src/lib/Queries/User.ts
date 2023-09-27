@@ -1,4 +1,4 @@
-import { User } from '@/schema/user';
+import { User } from '@/schema/resources/user';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import {

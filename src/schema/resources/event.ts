@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { record } from '../lib/zod.ts';
+import { record } from '../../lib/zod.ts';
 
 const event = /* surrealql */ `
     DEFINE TABLE event SCHEMAFULL
@@ -18,26 +18,32 @@ const event = /* surrealql */ `
                     (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers[WHERE role IN ['owner', 'administrator', 'event_manager']].id CONTAINS $auth.id)[0]
                 );
 
-    DEFINE FIELD name         ON event TYPE string;
-    DEFINE FIELD description  ON event TYPE string;
-    DEFINE FIELD banner       ON event TYPE option<string>;
-    DEFINE FIELD category     ON event TYPE string 
+    DEFINE FIELD name                       ON event TYPE string;
+    DEFINE FIELD description                ON event TYPE string;
+    DEFINE FIELD banner                     ON event TYPE option<string>;
+    DEFINE FIELD category                   ON event TYPE string 
         ASSERT $value IN ['baseball']
         VALUE (SELECT VALUE category FROM event WHERE id = $parent.tournament)[0] OR $before OR $value;
 
-    DEFINE FIELD start        ON event TYPE option<datetime>;
-    DEFINE FIELD end          ON event TYPE option<datetime>;
-    DEFINE FIELD organiser    ON event TYPE record<organisation>
+    DEFINE FIELD start                      ON event TYPE option<datetime>;
+    DEFINE FIELD end                        ON event TYPE option<datetime>;
+    DEFINE FIELD organiser                  ON event TYPE record<organisation>
         VALUE $before OR $value OR (SELECT VALUE organiser FROM event WHERE id = $parent.tournament)[0];
 
-    DEFINE FIELD discoverable ON event TYPE bool;
-    DEFINE FIELD published    ON event TYPE bool;
-    DEFINE FIELD tournament   ON event TYPE option<record<event>>;
-    DEFINE FIELD root_for_org ON event 
-        VALUE not(tournament) OR (SELECT VALUE organiser FROM $parent.tournament)[0] != organiser;
+    DEFINE FIELD discoverable               ON event TYPE bool DEFAULT true;
+    DEFINE FIELD published                  ON event TYPE bool DEFAULT false;
+    DEFINE FIELD tournament                 ON event TYPE option<record<event>>;
+    DEFINE FIELD root_for_org               ON event 
+        VALUE !tournament OR (SELECT VALUE organiser FROM ONLY $parent.tournament) != organiser;
 
-    DEFINE FIELD created      ON event TYPE datetime VALUE $before OR time::now();
-    DEFINE FIELD updated      ON event TYPE datetime VALUE time::now();
+    DEFINE FIELD options                    ON event TYPE object DEFAULT {};
+    DEFINE FIELD options.min_pool_size      ON event TYPE option<number>;
+    DEFINE FIELD options.max_pool_size      ON event TYPE option<number>;
+    DEFINE FIELD options.min_age            ON event TYPE option<number>;
+    DEFINE FIELD options.max_age            ON event TYPE option<number>;
+
+    DEFINE FIELD created                    ON event TYPE datetime VALUE $before OR time::now() DEFAULT time::now();
+    DEFINE FIELD updated                    ON event TYPE datetime VALUE time::now()            DEFAULT time::now();
 `;
 
 export const Event = z.object({

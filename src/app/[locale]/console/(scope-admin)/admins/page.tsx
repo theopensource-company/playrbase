@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/tooltip';
 import { useAdmins, useUpdateAdmin } from '@/lib/Queries/Admin';
 import { fullname } from '@/lib/zod';
-import { Admin } from '@/schema/admin';
+import { Admin } from '@/schema/resources/admin';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';

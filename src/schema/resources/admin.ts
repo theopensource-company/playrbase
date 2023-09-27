@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { fullname, record } from '../lib/zod.ts';
+import { fullname, record } from '../../lib/zod.ts';
 
 const admin = /* surrealql */ `
     DEFINE TABLE admin SCHEMAFULL
@@ -7,15 +7,15 @@ const admin = /* surrealql */ `
             FOR select, update, delete, create WHERE $scope = 'admin';
 
     DEFINE FIELD name               ON TABLE admin TYPE string    ASSERT array::len(string::words($value)) > 1;
-    DEFINE FIELD email              ON TABLE admin TYPE string    ASSERT is::email($value);
+    DEFINE FIELD email              ON TABLE admin TYPE string    ASSERT string::is::email($value);
     DEFINE FIELD type               ON TABLE admin VALUE meta::tb(id);
 
     DEFINE FIELD profile_picture    ON admin TYPE option<string>
         PERMISSIONS
             FOR update WHERE $scope = 'admin';
 
-    DEFINE FIELD created            ON TABLE admin TYPE datetime  VALUE $before OR time::now();
-    DEFINE FIELD updated            ON TABLE admin TYPE datetime  VALUE time::now();
+    DEFINE FIELD created            ON TABLE admin TYPE datetime  VALUE $before OR time::now()  DEFAULT time::now();
+    DEFINE FIELD updated            ON TABLE admin TYPE datetime  VALUE time::now()             DEFAULT time::now();
 
     DEFINE INDEX email ON TABLE admin COLUMNS email UNIQUE;
 `;

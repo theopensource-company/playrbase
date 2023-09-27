@@ -1,4 +1,4 @@
-import { token_secret } from '@/schema/auth';
+import { token_secret } from '@/schema/resources/auth';
 import jwt from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
 import { sessionLength } from '../config/auth';

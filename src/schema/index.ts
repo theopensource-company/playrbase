@@ -1,7 +1,7 @@
-export { default as admin } from './admin.ts';
-export { default as auth } from './auth.ts';
-export { default as event } from './event.ts';
-export { default as image_claim } from './image_claim.ts';
-export { default as log } from './log.ts';
-export { default as organisation } from './organisation.ts';
-export { default as user } from './user.ts';
+export { default as admin } from './resources/admin.ts';
+export { default as auth } from './resources/auth.ts';
+export { default as event } from './resources/event.ts';
+export { default as log } from './resources/log.ts';
+export { default as organisation } from './resources/organisation.ts';
+export { default as puborg } from './resources/puborg.ts';
+export { default as user } from './resources/user.ts';

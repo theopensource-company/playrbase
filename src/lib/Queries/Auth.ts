@@ -1,5 +1,5 @@
+import { User } from '@/schema/resources/user';
 import { useMutation } from '@tanstack/react-query';
-import { TPlayerRecord } from '../../constants/Types/Player.types';
 import {
     SurrealDatabase,
     SurrealInstance,
@@ -9,7 +9,7 @@ import {
 export const useSignin = () =>
     useMutation({
         mutationFn: async (
-            auth: Pick<TPlayerRecord, 'email'> & {
+            auth: Pick<User, 'email'> & {
                 password: string;
             }
         ) => {

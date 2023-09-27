@@ -31,7 +31,7 @@ import {
     useOrganisations,
     useUpdateOrganisation,
 } from '@/lib/Queries/Organisation';
-import { Organisation } from '@/schema/organisation';
+import { Organisation } from '@/schema/resources/organisation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';

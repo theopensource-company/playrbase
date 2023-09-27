@@ -1,4 +1,7 @@
-import { unknownProfile, type Profile as TProfile } from '@/schema/profile';
+import {
+    unknownProfile,
+    type Profile as TProfile,
+} from '@/schema/resources/profile';
 import React from 'react';
 import { Skeleton } from '../ui/skeleton';
 import { Avatar } from './avatar';

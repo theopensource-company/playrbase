@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { Profile, unknownProfile } from '@/schema/profile';
+import { Profile, unknownProfile } from '@/schema/resources/profile';
 import Image from 'next/image';
 import React from 'react';
 import {

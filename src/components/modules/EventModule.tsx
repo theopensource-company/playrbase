@@ -1,8 +1,8 @@
+import { Event } from '@/schema/resources/event';
 import Image from 'next/image';
 import React from 'react';
-import { TEventRecord } from '../../constants/Types/Events.types';
 
-export const EventModule = ({ event }: { event: TEventRecord }) => {
+export const EventModule = ({ event }: { event: Event }) => {
     return (
         <div className="flex w-full flex-col rounded-lg bg-zinc-700 text-white shadow-xl">
             <div className="hidden">

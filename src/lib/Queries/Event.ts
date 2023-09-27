@@ -1,5 +1,5 @@
+import { Event } from '@/schema/resources/event';
 import { useQuery } from '@tanstack/react-query';
-import { TEventRecord } from '../../constants/Types/Events.types';
 import {
     buildTableFilters,
     isNoneValue,
@@ -12,7 +12,7 @@ export function processEventRecord({
     start,
     end,
     ...rest
-}: TEventRecord) {
+}: Event) {
     return {
         ...rest,
         created: new Date(created),
@@ -22,7 +22,7 @@ export function processEventRecord({
     };
 }
 
-export const buildEventFilters = buildTableFilters<TEventRecord>(
+export const buildEventFilters = buildTableFilters<Event>(
     async (property, filters) => {
         const computeValue = () =>
             isNoneValue(property, filters) ? 'NONE' : `$filters.${property}`;
@@ -36,13 +36,13 @@ export const buildEventFilters = buildTableFilters<TEventRecord>(
 
 export const useEvents = (
     filters: Partial<
-        Pick<TEventRecord, 'organiser' | 'tournament' | 'root_for_org'>
+        Pick<Event, 'organiser' | 'tournament' | 'root_for_org'>
     > = {}
 ) =>
     useQuery({
         queryKey: ['events', filters],
         queryFn: async () => {
-            const result = await surreal.query<[TEventRecord[]]>(
+            const result = await surreal.query<[Event[]]>(
                 `SELECT * FROM event ${await buildEventFilters(
                     filters
                 )} ORDER BY created ASC`,

@@ -1,4 +1,4 @@
-import { Admin } from '@/schema/admin';
+import { Admin } from '@/schema/resources/admin';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import {

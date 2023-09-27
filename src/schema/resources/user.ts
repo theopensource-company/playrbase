@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { fullname, record } from '../lib/zod.ts';
+import { fullname, record } from '../../lib/zod.ts';
 
 const user = /* surrealql */ `
     DEFINE TABLE user SCHEMAFULL 
@@ -16,15 +16,15 @@ const user = /* surrealql */ `
     ;
 
     DEFINE FIELD name               ON user TYPE string ASSERT array::len(string::words($value)) > 1;
-    DEFINE FIELD email              ON user TYPE string ASSERT is::email($value);
+    DEFINE FIELD email              ON user TYPE string ASSERT string::is::email($value);
     DEFINE FIELD type               ON user VALUE meta::tb(id);
 
     DEFINE FIELD profile_picture    ON user TYPE option<string>
         PERMISSIONS
             FOR update WHERE $scope = 'admin';
             
-    DEFINE FIELD created            ON user TYPE datetime VALUE $before OR time::now();
-    DEFINE FIELD updated            ON user TYPE datetime VALUE time::now();
+    DEFINE FIELD created            ON user TYPE datetime VALUE $before OR time::now()  DEFAULT time::now();
+    DEFINE FIELD updated            ON user TYPE datetime VALUE time::now()             DEFAULT time::now();
 
     DEFINE INDEX email              ON user COLUMNS email UNIQUE;
 `;

@@ -26,8 +26,8 @@ import {
 import { SurrealInstance as surreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
 import { fullname } from '@/lib/zod';
-import { Admin } from '@/schema/admin';
-import { User } from '@/schema/user';
+import { Admin } from '@/schema/resources/admin';
+import { User } from '@/schema/resources/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';

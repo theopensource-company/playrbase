@@ -2,12 +2,12 @@ import {
     extractUserTokenFromRequest,
     generateUserToken,
 } from '@/app/(api)/lib/token';
-import { Email } from '@/constants/Types/Email.types';
 import AuthChangeEmailEmail from '@/emails/auth-change-email';
 import AuthRevertChangeEmailEmail from '@/emails/auth-revert-change-email';
-import { Admin } from '@/schema/admin';
-import { token_secret } from '@/schema/auth';
-import { User } from '@/schema/user';
+import { Email } from '@/schema/miscellaneous/email';
+import { Admin } from '@/schema/resources/admin';
+import { token_secret } from '@/schema/resources/auth';
+import { User } from '@/schema/resources/user';
 import { surreal } from '@api/lib/surreal';
 import { render } from '@react-email/components';
 import jwt from 'jsonwebtoken';

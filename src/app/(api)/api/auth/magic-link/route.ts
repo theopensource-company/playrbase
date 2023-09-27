@@ -1,10 +1,10 @@
 import { generateUserToken } from '@/app/(api)/lib/token';
-import { Email } from '@/constants/Types/Email.types';
 import AuthMagicLinkEmail from '@/emails/auth-magic-link';
 import { fullname } from '@/lib/zod';
-import { Admin } from '@/schema/admin';
-import { token_secret } from '@/schema/auth';
-import { User } from '@/schema/user';
+import { Email } from '@/schema/miscellaneous/email';
+import { Admin } from '@/schema/resources/admin';
+import { token_secret } from '@/schema/resources/auth';
+import { User } from '@/schema/resources/user';
 import { surreal } from '@api/lib/surreal';
 import { render } from '@react-email/components';
 import jwt from 'jsonwebtoken';

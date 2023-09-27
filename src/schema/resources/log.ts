@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { record } from '../lib/zod.ts';
+import { record } from '../../lib/zod.ts';
 
 const log = /* surrealql */ `
     DEFINE TABLE log SCHEMALESS
@@ -19,7 +19,8 @@ const log = /* surrealql */ `
 
     DEFINE FIELD details                ON log FLEXIBLE TYPE option<object>;
     DEFINE FIELD created                ON log          TYPE datetime 
-        VALUE $before OR time::now();
+        VALUE $before OR time::now()
+        DEFAULT time::now();
 `;
 
 export const Log = z.object({

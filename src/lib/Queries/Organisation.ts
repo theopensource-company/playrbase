@@ -1,4 +1,4 @@
-import { Organisation } from '@/schema/organisation';
+import { Organisation } from '@/schema/resources/organisation';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import {

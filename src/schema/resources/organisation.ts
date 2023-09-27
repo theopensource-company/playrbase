@@ -50,16 +50,6 @@ const organisation = /* surrealql */ `
             FOR create, update WHERE
                 $scope = 'admin';
 
-    DEFINE FIELD manager_roles        ON organisation TYPE array
-        PERMISSIONS
-            FOR update WHERE
-                $scope = 'admin' OR 
-                ($scope = 'user' && managers[WHERE role IN ["owner"] OR (role IN ["administrator"] AND org != NONE)].id CONTAINS $auth.id);
-    DEFINE FIELD manager_roles.*      ON organisation TYPE object;
-    DEFINE FIELD manager_roles.*.id   ON organisation TYPE record<user>;
-    DEFINE FIELD manager_roles.*.role ON organisation TYPE string 
-        ASSERT $value IN ['owner', 'administrator', 'event_manager', 'event_viewer'];
-
     -- ABOUT RECURSIVE NESTING OF ORGANISATIONS
     -- Tested it, utter limit is 16 levels of recursion which is overkill for this scenario :)
     -- There is no usecase for this, nobody will reach this limit
@@ -81,11 +71,19 @@ const organisation = /* surrealql */ `
 
     DEFINE FIELD managers             ON organisation
         VALUE <future> {
+            -- Find all confirmed managers of this org
+            LET $local = SELECT VALUE <-manages[?confirmed] FROM ONLY $parent.id;
+            -- Grab the role and user ID
+            LET $local = SELECT role, in AS user FROM $local;
+
             LET $part_of = type::thing(part_of);
-            LET $inherited_raw = (SELECT VALUE managers FROM $part_of)[0] ?? [];
-            LET $inherited = SELECT *, (org OR $part_of) AS org FROM $inherited_raw;
-            LET $combined  = array::concat(manager_roles ?? [], $inherited ?? []);
-            RETURN $combined;
+            -- Select all managers from the org we are a part of, if any
+            LET $inherited = (SELECT VALUE managers FROM ONLY $part_of) ?? [];
+            -- Add an org field describing from which org these members are inherited, if not already inherited before
+            LET $inherited = SELECT *, type::thing('puborg', org OR $part_of) AS org FROM $inherited;
+
+            -- Return the combined result
+            RETURN array::concat($local, $inherited);
         };
 
     DEFINE FIELD created              ON organisation TYPE datetime VALUE $before OR time::now()    DEFAULT time::now();
@@ -108,28 +106,17 @@ export const Organisation = z.object({
         z.literal('business'),
         z.literal('enterprise'),
     ]),
-    manager_roles: z.array(
-        z.object({
-            id: record('user'),
-            role: z.union([
-                z.literal('owner'),
-                z.literal('administrator'),
-                z.literal('event_manager'),
-                z.literal('event_viewer'),
-            ]),
-        })
-    ),
     part_of: record('organisation').optional(),
     managers: z.array(
         z.object({
-            id: record('manager'),
+            user: record('manager'),
             role: z.union([
                 z.literal('owner'),
                 z.literal('administrator'),
                 z.literal('event_manager'),
                 z.literal('event_viewer'),
             ]),
-            org: record('organisation').optional(),
+            org: record('puborg').optional(),
         })
     ),
     created: z.coerce.date(),

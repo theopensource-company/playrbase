@@ -1,3 +1,4 @@
+export { default as manages } from './relations/manages.ts';
 export { default as admin } from './resources/admin.ts';
 export { default as auth } from './resources/auth.ts';
 export { default as event } from './resources/event.ts';

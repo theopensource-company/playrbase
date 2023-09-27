@@ -18,7 +18,7 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Email } from '@/constants/Types/Email.types';
+import { Email } from '@/schema/miscellaneous/email';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';

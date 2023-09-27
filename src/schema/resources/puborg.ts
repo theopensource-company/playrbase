@@ -1,6 +1,6 @@
-import { record } from '@/lib/zod';
 import { z } from 'zod';
-import { Organisation } from './organisation';
+import { record } from '../../lib/zod.ts';
+import { Organisation } from './organisation.ts';
 
 const puborg = /* surrealql */ `
     DEFINE TABLE puborg AS SELECT name, description, website, email, created, slug FROM organisation;

@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import { Email } from '../../constants/Types/Email.types.ts';
+import { Email } from '../../schema/miscellaneous/email.ts';
 
 export const EmailRoutes = (app: Express) => {
     const emails: Record<string, Email & { sent: Date }> = {};

@@ -68,7 +68,7 @@ const organisation = /* surrealql */ `
             -- Select all managers from the org we are a part of, if any
             LET $inherited = (SELECT VALUE managers FROM ONLY $part_of) ?? [];
             -- Add an org field describing from which org these members are inherited, if not already inherited before
-            LET $inherited = SELECT *, type::thing('puborg', org OR $part_of) AS org FROM $inherited;
+            LET $inherited = SELECT *, org OR $part_of AS org FROM $inherited;
 
             -- Return the combined result
             RETURN array::concat($local, $inherited);
@@ -112,7 +112,7 @@ export const Organisation = z.object({
                 z.literal('event_manager'),
                 z.literal('event_viewer'),
             ]),
-            org: record('puborg').optional(),
+            org: record('organisation').optional(),
         })
     ),
     created: z.coerce.date(),

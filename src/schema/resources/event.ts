@@ -9,13 +9,13 @@ const event = /* surrealql */ `
                 OR (published = true && id = $event_id)
                 OR (
                     $scope = 'user' && 
-                    (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers.*.id CONTAINS $auth.id)[0]
+                    (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers.*.user CONTAINS $auth.id)[0]
                 )
             FOR create, update, delete WHERE 
                 $scope = 'admin'
                 OR (
                     $scope = 'user' && 
-                    (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers[WHERE role IN ['owner', 'administrator', 'event_manager']].id CONTAINS $auth.id)[0]
+                    (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers[WHERE role IN ['owner', 'administrator', 'event_manager']].user CONTAINS $auth.id)[0]
                 );
 
     DEFINE FIELD name                       ON event TYPE string;
@@ -41,6 +41,7 @@ const event = /* surrealql */ `
     DEFINE FIELD options.max_pool_size      ON event TYPE option<number>;
     DEFINE FIELD options.min_age            ON event TYPE option<number>;
     DEFINE FIELD options.max_age            ON event TYPE option<number>;
+    DEFINE FIELD options.manual_approval    ON event TYPE option<bool>;
 
     DEFINE FIELD created                    ON event TYPE datetime VALUE $before OR time::now() DEFAULT time::now();
     DEFINE FIELD updated                    ON event TYPE datetime VALUE time::now()            DEFAULT time::now();
@@ -61,6 +62,14 @@ export const Event = z.object({
     published: z.boolean(),
     tournament: record('event').optional(),
     root_for_org: z.boolean(),
+
+    options: z.object({
+        min_pool_size: z.number().optional(),
+        max_pool_size: z.number().optional(),
+        min_age: z.number().optional(),
+        max_age: z.number().optional(),
+        manual_approval: z.boolean().optional(),
+    }),
 
     created: z.coerce.date(),
     updated: z.coerce.date(),
@@ -90,72 +99,21 @@ const event_delete = /* surrealql */ `
 
 const event_update = /* surrealql */ `
     DEFINE EVENT event_update ON event WHEN $event == "UPDATE" THEN {
-        IF $before.name != $after.name THEN
-            CREATE log CONTENT {
-                record: $after.id,
-                event: $event,
-                change: {
-                    field: "name",
-                    value: { before: $before.name, after: $after.name }
-                }
-            }
-        END;
-
-        IF $before.description != $after.description THEN
-            CREATE log CONTENT {
-                record: $after.id,
-                event: $event,
-                change: {
-                    field: "description",
-                    value: { before: $before.description, after: $after.description }
-                }
-            }
-        END;
-
-        IF $before.published != $after.published THEN
-            CREATE log CONTENT {
-                record: $after.id,
-                event: $event,
-                change: {
-                    field: "published",
-                    value: { before: $before.published, after: $after.published }
-                }
-            }
-        END;
-
-        IF $before.discoverable != $after.discoverable THEN
-            CREATE log CONTENT {
-                record: $after.id,
-                event: $event,
-                change: {
-                    field: "discoverable",
-                    value: { before: $before.discoverable, after: $after.discoverable }
-                }
-            }
-        END;
-
-        IF $before.start != $after.start THEN
-            CREATE log CONTENT {
-                record: $after.id,
-                event: $event,
-                change: {
-                    field: "start",
-                    value: { before: $before.start, after: $after.start }
-                }
-            }
-        END;
-
-        IF $before.end != $after.end THEN
-            CREATE log CONTENT {
-                record: $after.id,
-                event: $event,
-                change: {
-                    field: "end",
-                    value: { before: $before.end, after: $after.end }
-                }
-            }
-        END;
+        LET $fields = ["name", "description", "published", "discoverable", "start", "end"];
+        fn::log::generate::update::batch($before, $after, $fields, false);
     };
 `;
 
-export default [event, event_create, event_delete, event_update].join('\n\n');
+const removal_cleanup = /* surrealql */ `
+    DEFINE EVENT removal_cleanup ON event WHEN $event = "DELETE" THEN {
+        DELETE $before<-attends;
+    };
+`;
+
+export default [
+    event,
+    event_create,
+    event_delete,
+    event_update,
+    removal_cleanup,
+].join('\n\n');

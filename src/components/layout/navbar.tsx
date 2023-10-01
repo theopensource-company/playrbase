@@ -60,7 +60,7 @@ export const Navbar = () => {
     return (
         <Container
             className={cn(
-                'fixed left-0 right-0 flex items-center justify-between backdrop-blur-lg transition-height',
+                'fixed left-0 right-0 z-10 flex items-center justify-between backdrop-blur-lg transition-height',
                 scrolled ? 'h-24' : 'h-36'
             )}
         >

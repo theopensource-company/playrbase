@@ -4,51 +4,42 @@ import { record } from '../../lib/zod.ts';
 const organisation = /* surrealql */ `
     DEFINE TABLE organisation SCHEMAFULL
         PERMISSIONS
-            FOR create WHERE $scope IN ['admin', 'user']
-            FOR select WHERE 
-                $scope = 'admin' OR 
-                ($scope = 'user' && managers.*.id CONTAINS $auth.id)
+            FOR select FULL
+            FOR create WHERE $scope = 'user'
             FOR update WHERE 
-                $scope = 'admin' OR 
-                ($scope = 'user' && managers[WHERE role IN ["owner", "adminstrator"]].id CONTAINS $auth.id)
+                $scope = 'user' && managers[WHERE role IN ["owner", "adminstrator"]].user CONTAINS $auth.id
             FOR delete WHERE 
-                $scope = 'admin' OR 
-                ($scope = 'user' && managers[WHERE role IN ["owner", "adminstrator"] AND org != NONE].id CONTAINS $auth.id);
+                $scope = 'user' && managers[WHERE role IN ["owner", "adminstrator"] AND org != NONE].user CONTAINS $auth.id;
 
-    DEFINE FIELD name                 ON organisation TYPE string;
-    DEFINE FIELD description          ON organisation TYPE option<string>;
-    DEFINE FIELD website              ON organisation TYPE option<string>;
-    DEFINE FIELD email                ON organisation TYPE string           
+    DEFINE FIELD name               ON organisation TYPE string;
+    DEFINE FIELD description        ON organisation TYPE option<string>;
+    DEFINE FIELD website            ON organisation TYPE option<string>;
+    DEFINE FIELD email              ON organisation TYPE string           
         ASSERT string::is::email($value);
-    DEFINE FIELD type                 ON organisation VALUE meta::tb(id);
+    DEFINE FIELD type               ON organisation VALUE meta::tb(id);
 
-    DEFINE FIELD logo                 ON organisation TYPE option<string>
+    DEFINE FIELD logo               ON organisation TYPE option<string>
         PERMISSIONS
             FOR update WHERE $scope = 'admin';
-    DEFINE FIELD banner               ON organisation TYPE option<string>
+    DEFINE FIELD banner             ON organisation TYPE option<string>
         PERMISSIONS
             FOR update WHERE $scope = 'admin';
-    DEFINE FIELD slug                 ON organisation TYPE string
+    DEFINE FIELD slug               ON organisation TYPE string
         VALUE 
-            IF $value == NONE THEN
-                RETURN meta::id(id);
-            ELSE IF not($value) THEN
-                RETURN $before ?? meta::id(id);
-            ELSE IF $scope = 'admin' OR not($scope) THEN
+            IF tier IN ["business", "enterprise"] {
                 RETURN $value;
-            ELSE IF tier IN ["business", "enterprise"] THEN
-                RETURN $value;
-            ELSE
+            } ELSE {
                 RETURN meta::id(id);
-            END
+            }
         DEFAULT meta::id(id);
 
-    DEFINE FIELD tier                 ON organisation TYPE string
+    DEFINE FIELD tier               ON organisation TYPE string
         ASSERT $value IN ["free", "basic", "business", "enterprise"]
         DEFAULT "free"
+        VALUE IF $scope { $before OR 'free' } ELSE { $value }
         PERMISSIONS 
-            FOR create, update WHERE
-                $scope = 'admin';
+            FOR select WHERE $scope = 'user' && managers.*.user CONTAINS $auth.id
+            FOR update NONE;
 
     -- ABOUT RECURSIVE NESTING OF ORGANISATIONS
     -- Tested it, utter limit is 16 levels of recursion which is overkill for this scenario :)
@@ -56,25 +47,22 @@ const organisation = /* surrealql */ `
     -- If they do, they break their own management interface.
     -- It will still work fine for admins because they don't have a subquery in the permission clause :)
 
-    DEFINE FIELD part_of              ON organisation TYPE option<record<organisation>>
+    DEFINE FIELD part_of            ON organisation TYPE option<record<organisation>>
         VALUE
-            IF $scope = 'admin' OR not($scope) THEN
-                $value ?? $before
-            ELSE IF (SELECT VALUE id FROM $value WHERE managers[WHERE role IN ["owner", "adminstrator"]].id CONTAINS $auth.id)[0] THEN
-                $value ?? $before
+            IF $value && (SELECT VALUE id FROM $value WHERE managers[WHERE role IN ["owner", "adminstrator"]].user CONTAINS $auth.id)[0] THEN
+                $value
             ELSE 
-                $before
+                NONE
             END
         PERMISSIONS
-            FOR update WHERE
-                $scope = 'admin';
+            FOR update NONE;
 
-    DEFINE FIELD managers             ON organisation
+    DEFINE FIELD managers           ON organisation
         VALUE <future> {
             -- Find all confirmed managers of this org
-            LET $local = SELECT VALUE <-manages[?confirmed] FROM ONLY $parent.id;
+            LET $local = SELECT <-manages[?confirmed] AS managers FROM ONLY $parent.id;
             -- Grab the role and user ID
-            LET $local = SELECT role, in AS user FROM $local;
+            LET $local = SELECT role, in AS user FROM $local.managers;
 
             LET $part_of = type::thing(part_of);
             -- Select all managers from the org we are a part of, if any
@@ -85,9 +73,17 @@ const organisation = /* surrealql */ `
             -- Return the combined result
             RETURN array::concat($local, $inherited);
         };
+    
+    DEFINE FIELD created_by         ON organisation TYPE record<user>
+        DEFAULT $auth.id
+        VALUE $before OR $auth.id
+        PERMISSIONS FOR select NONE;
 
-    DEFINE FIELD created              ON organisation TYPE datetime VALUE $before OR time::now()    DEFAULT time::now();
-    DEFINE FIELD updated              ON organisation TYPE datetime VALUE time::now()               DEFAULT time::now();
+    DEFINE FIELD created            ON organisation TYPE datetime VALUE $before OR time::now()    DEFAULT time::now();
+    DEFINE FIELD updated            ON organisation TYPE datetime VALUE time::now()               DEFAULT time::now()
+        PERMISSIONS FOR select NONE;
+
+    DEFINE INDEX unique_slug        ON organisation FIELDS slug UNIQUE;
 `;
 
 export const Organisation = z.object({
@@ -127,6 +123,12 @@ export type Organisation = z.infer<typeof Organisation>;
 
 /* Events */
 
+const relate_creator = /* surrealql */ `
+    DEFINE EVENT relate_creator ON organisation WHEN $event = "CREATE" THEN {
+        RELATE ($value.created_by)->manages->($value.id) SET confirmed = true, role = 'owner';
+    };
+`;
+
 const organisation_create = /* surrealql */ `
     DEFINE EVENT organisation_create ON organisation WHEN $event == "CREATE" THEN {
         CREATE log CONTENT {
@@ -147,55 +149,22 @@ const organisation_delete = /* surrealql */ `
 
 const organisation_update = /* surrealql */ `
     DEFINE EVENT organisation_update ON organisation WHEN $event == "UPDATE" THEN {
-        IF $before.name != $after.name THEN
-            CREATE log CONTENT {
-                record: $after.id,
-                event: $event,
-                change: {
-                    field: "name",
-                    value: { before: $before.name, after: $after.name }
-                }
-            }
-        END;
+        LET $fields = ["name", "description", "website", "email"];
+        fn::log::generate::update::batch($before, $after, $fields, false);
+    };
+`;
 
-        IF $before.description != $after.description THEN
-            CREATE log CONTENT {
-                record: $after.id,
-                event: $event,
-                change: {
-                    field: "description",
-                    value: { before: $before.description, after: $after.description }
-                }
-            }
-        END;
-
-        IF $before.website != $after.website THEN
-            CREATE log CONTENT {
-                record: $after.id,
-                event: $event,
-                change: {
-                    field: "website",
-                    value: { before: $before.website, after: $after.website }
-                }
-            }
-        END;
-
-        IF $before.email != $after.email THEN
-            CREATE log CONTENT {
-                record: $after.id,
-                event: $event,
-                change: {
-                    field: "email",
-                    value: { before: $before.email, after: $after.email }
-                }
-            }
-        END;
+const removal_cleanup = /* surrealql */ `
+    DEFINE EVENT removal_cleanup ON organisation WHEN $event = "DELETE" THEN {
+        DELETE $before<-manages;
     };
 `;
 
 export default [
     organisation,
+    relate_creator,
     organisation_create,
     organisation_delete,
     organisation_update,
+    removal_cleanup,
 ].join('\n\n');

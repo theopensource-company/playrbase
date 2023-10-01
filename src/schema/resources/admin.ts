@@ -54,27 +54,8 @@ const admin_delete = /* surrealql */ `
 
 const admin_update = /* surrealql */ `
     DEFINE EVENT admin_update ON admin WHEN $event == "UPDATE" THEN {
-        IF $before.name != $after.name THEN
-            CREATE log CONTENT {
-                record: $after.id,
-                event: $event,
-                change: {
-                    field: "name",
-                    value: { before: $before.name, after: $after.name }
-                }
-            }
-        END;
-
-        IF $before.email != $after.email THEN
-            CREATE log CONTENT {
-                record: $after.id,
-                event: $event,
-                change: {
-                    field: "email",
-                    value: { before: $before.email, after: $after.email }
-                }
-            }
-        END;
+        LET $fields = ["name", "email"];
+        fn::log::generate::update::batch($before, $after, $fields, false);
     };
 `;
 

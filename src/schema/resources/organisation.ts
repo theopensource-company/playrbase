@@ -129,28 +129,10 @@ const relate_creator = /* surrealql */ `
     };
 `;
 
-const organisation_create = /* surrealql */ `
-    DEFINE EVENT organisation_create ON organisation WHEN $event == "CREATE" THEN {
-        CREATE log CONTENT {
-            record: $after.id,
-            event: $event
-        };
-    };
-`;
-
-const organisation_delete = /* surrealql */ `
-    DEFINE EVENT organisation_delete ON organisation WHEN $event == "DELETE" THEN {
-        CREATE log CONTENT {
-            record: $before.id,
-            event: $event
-        };
-    };
-`;
-
-const organisation_update = /* surrealql */ `
-    DEFINE EVENT organisation_update ON organisation WHEN $event == "UPDATE" THEN {
+const log = /* surrealql */ `
+    DEFINE EVENT log ON organisation THEN {
         LET $fields = ["name", "description", "website", "email"];
-        fn::log::generate::update::batch($before, $after, $fields, false);
+        fn::log::generate::any::batch($before, $after, $fields, false);
     };
 `;
 
@@ -160,11 +142,6 @@ const removal_cleanup = /* surrealql */ `
     };
 `;
 
-export default [
-    organisation,
-    relate_creator,
-    organisation_create,
-    organisation_delete,
-    organisation_update,
-    removal_cleanup,
-].join('\n\n');
+export default [organisation, relate_creator, log, removal_cleanup].join(
+    '\n\n'
+);

@@ -29,10 +29,17 @@ const relate_creator = /* surrealql */ `
     };
 `;
 
+const log = /* surrealql */ `
+    DEFINE EVENT log ON team THEN {
+        LET $fields = ["name", "description", "players"];
+        fn::log::generate::any::batch($before, $after, $fields, false);
+    };
+`;
+
 const removal_cleanup = /* surrealql */ `
     DEFINE EVENT removal_cleanup ON team WHEN $event = "DELETE" THEN {
         DELETE $before<-plays_in, $before->attends;
     };
 `;
 
-export default [team, relate_creator, removal_cleanup].join('\n\n');
+export default [team, relate_creator, log, removal_cleanup].join('\n\n');

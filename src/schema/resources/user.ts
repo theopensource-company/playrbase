@@ -51,28 +51,10 @@ export type User = z.infer<typeof User>;
 
 /* Events */
 
-const user_create = /* surrealql */ `
-    DEFINE EVENT user_create ON user WHEN $event == "CREATE" THEN {
-        CREATE log CONTENT {
-            record: $after.id,
-            event: $event
-        };
-    };
-`;
-
-const user_delete = /* surrealql */ `
-    DEFINE EVENT user_delete ON user WHEN $event == "DELETE" THEN {
-        CREATE log CONTENT {
-            record: $before.id,
-            event: $event
-        };
-    };
-`;
-
-const user_update = /* surrealql */ `
-    DEFINE EVENT user_update ON user WHEN $event == "UPDATE" THEN {
+const log = /* surrealql */ `
+    DEFINE EVENT log ON user THEN {
         LET $fields = ["name", "email", "profile_picture"];
-        fn::log::generate::update::batch($before, $after, $fields, false);
+        fn::log::generate::any::batch($before, $after, $fields, false);
     };
 `;
 
@@ -82,10 +64,4 @@ const removal_cleanup = /* surrealql */ `
     };
 `;
 
-export default [
-    user,
-    user_create,
-    user_delete,
-    user_update,
-    removal_cleanup,
-].join('\n\n');
+export default [user, log, removal_cleanup].join('\n\n');

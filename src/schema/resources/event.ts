@@ -79,28 +79,10 @@ export type Event = z.infer<typeof Event>;
 
 /* Events */
 
-const event_create = /* surrealql */ `
-    DEFINE EVENT event_create ON event WHEN $event == "CREATE" THEN {
-        CREATE log CONTENT {
-            record: $after.id,
-            event: $event
-        };
-    };
-`;
-
-const event_delete = /* surrealql */ `
-    DEFINE EVENT event_delete ON event WHEN $event == "DELETE" THEN {
-        CREATE log CONTENT {
-            record: $before.id,
-            event: $event
-        };
-    };
-`;
-
-const event_update = /* surrealql */ `
-    DEFINE EVENT event_update ON event WHEN $event == "UPDATE" THEN {
-        LET $fields = ["name", "description", "published", "discoverable", "start", "end"];
-        fn::log::generate::update::batch($before, $after, $fields, false);
+const log = /* surrealql */ `
+    DEFINE EVENT log ON event THEN {
+        LET $fields = ["name", "description", "published", "discoverable", "start", "end", "options"];
+        fn::log::generate::any::batch($before, $after, $fields, false);
     };
 `;
 
@@ -110,10 +92,4 @@ const removal_cleanup = /* surrealql */ `
     };
 `;
 
-export default [
-    event,
-    event_create,
-    event_delete,
-    event_update,
-    removal_cleanup,
-].join('\n\n');
+export default [event, log, removal_cleanup].join('\n\n');

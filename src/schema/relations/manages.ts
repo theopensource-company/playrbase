@@ -30,4 +30,11 @@ const manages = /* surrealql */ `
     DEFINE INDEX unique_relation ON manages COLUMNS in, out UNIQUE;
 `;
 
-export default manages;
+const log = /* surrealql */ `
+    DEFINE EVENT log ON manages THEN {
+        LET $fields = ["confirmed", "public", "role"];
+        fn::log::generate::any::batch($before, $after, $fields, false);
+    };
+`;
+
+export default [manages, log].join('\n\n');

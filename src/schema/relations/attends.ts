@@ -36,6 +36,13 @@ const attends = /* surrealql */ `
     DEFINE INDEX unique_players ON attends COLUMNS players.* UNIQUE;
 `;
 
+const log = /* surrealql */ `
+    DEFINE EVENT log ON attends THEN {
+        LET $fields = ["confirmed", "players"];
+        fn::log::generate::any::batch($before, $after, $fields, false);
+    };
+`;
+
 const players_validation = /* surrealql */ `
     DEFINE EVENT players_validation ON attends WHEN $event IN ['CREATE', 'UPDATE'] THEN {
         LET $min_pool_size = $value.out.options.min_pool_size;
@@ -61,4 +68,4 @@ const players_validation = /* surrealql */ `
     };
 `;
 
-export default [attends, players_validation].join('\n\n');
+export default [attends, log, players_validation].join('\n\n');

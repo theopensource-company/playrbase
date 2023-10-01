@@ -34,29 +34,11 @@ export type Admin = z.infer<typeof Admin>;
 
 /* Events */
 
-const admin_create = /* surrealql */ `
-    DEFINE EVENT admin_create ON admin WHEN $event == "CREATE" THEN {
-        CREATE log CONTENT {
-            record: $after.id,
-            event: $event
-        };
-    };
-`;
-
-const admin_delete = /* surrealql */ `
-    DEFINE EVENT admin_delete ON admin WHEN $event == "DELETE" THEN {
-        CREATE log CONTENT {
-            record: $before.id,
-            event: $event
-        };
-    };
-`;
-
-const admin_update = /* surrealql */ `
-    DEFINE EVENT admin_update ON admin WHEN $event == "UPDATE" THEN {
+const log = /* surrealql */ `
+    DEFINE EVENT log ON admin THEN {
         LET $fields = ["name", "email"];
-        fn::log::generate::update::batch($before, $after, $fields, false);
+        fn::log::generate::any::batch($before, $after, $fields, false);
     };
 `;
 
-export default [admin, admin_create, admin_delete, admin_update].join('\n\n');
+export default [admin, log].join('\n\n');

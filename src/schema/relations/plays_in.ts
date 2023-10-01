@@ -25,10 +25,19 @@ const plays_in = /* surrealql */ `
     DEFINE INDEX unique_relation ON plays_in COLUMNS in, out UNIQUE;
 `;
 
+const log = /* surrealql */ `
+    DEFINE EVENT log ON plays_in THEN {
+        LET $fields = ["confirmed"];
+        fn::log::generate::any::batch($before, $after, $fields, false);
+    };
+`;
+
 const verify_registrations_after_deletion = /* surrealql */ `
     DEFINE EVENT verify_registrations_after_deletion ON plays_in WHEN $event = "DELETE" THEN {
         UPDATE ($before.out->attends || []);
     }
 `;
 
-export default [plays_in, verify_registrations_after_deletion].join('\n\n');
+export default [plays_in, log, verify_registrations_after_deletion].join(
+    '\n\n'
+);

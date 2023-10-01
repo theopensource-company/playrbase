@@ -2,8 +2,6 @@ import { Metadata } from 'next';
 
 import React from 'react';
 
-// import { DevButton } from '@/components/DevButton';
-import { Navbar } from '@/components/layout/navbar';
 import { siteConfig } from '@/config/site';
 import { fontSans } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
@@ -68,7 +66,6 @@ export default async function RootLayout({
                         >
                             <div className="flex min-h-screen flex-col">
                                 <Hydrate />
-                                <Navbar />
                                 {children}
                             </div>
                         </NextIntlClientProvider>

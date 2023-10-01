@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { record } from '../../lib/zod.ts';
+
 const team = /* surrealql */ `
     DEFINE TABLE team SCHEMAFULL
         PERMISSIONS
@@ -14,6 +17,14 @@ const team = /* surrealql */ `
             RETURN SELECT VALUE players.*.in FROM ONLY $players;
         };
 
+    DEFINE FIELD logo           ON team TYPE option<string>
+        PERMISSIONS
+            FOR update WHERE $scope = 'admin';
+    DEFINE FIELD banner         ON team TYPE option<string>
+        PERMISSIONS
+            FOR update WHERE $scope = 'admin';
+
+    DEFINE FIELD type           ON team VALUE meta::tb(id) DEFAULT meta::tb(id);
     DEFINE FIELD created_by     ON team TYPE record<user>
         DEFAULT $auth.id
         VALUE $before OR $auth.id
@@ -22,6 +33,20 @@ const team = /* surrealql */ `
     DEFINE FIELD created        ON team TYPE datetime VALUE $before OR time::now()    DEFAULT time::now();
     DEFINE FIELD updated        ON team TYPE datetime VALUE time::now()               DEFAULT time::now();
 `;
+
+export const Team = z.object({
+    id: record('team'),
+    name: z.string(),
+    description: z.string().optional(),
+    players: z.array(record('user')),
+    logo: z.string().optional(),
+    banner: z.string().optional(),
+    type: z.literal('team'),
+    created: z.coerce.date(),
+    updated: z.coerce.date(),
+});
+
+export type Team = z.infer<typeof Team>;
 
 const relate_creator = /* surrealql */ `
     DEFINE EVENT relate_creator ON team WHEN $event = "CREATE" THEN {
@@ -32,7 +57,7 @@ const relate_creator = /* surrealql */ `
 const log = /* surrealql */ `
     DEFINE EVENT log ON team THEN {
         LET $fields = ["name", "description", "players"];
-        fn::log::generate::any::batch($before, $after, $fields, false);
+        fn::log::generate::any::batch($event, $before, $after, $fields, false);
     };
 `;
 

@@ -19,7 +19,7 @@ const user = /* surrealql */ `
                     OR (SELECT VALUE id FROM team WHERE [$parent.id, $auth.id] ALLINSIDE players.*)[0]
                 );
 
-    DEFINE FIELD type               ON user VALUE meta::tb(id);
+    DEFINE FIELD type               ON user VALUE meta::tb(id) DEFAULT meta::tb(id);
 
     DEFINE FIELD profile_picture    ON user TYPE option<string>
         PERMISSIONS
@@ -54,7 +54,7 @@ export type User = z.infer<typeof User>;
 const log = /* surrealql */ `
     DEFINE EVENT log ON user THEN {
         LET $fields = ["name", "email", "profile_picture"];
-        fn::log::generate::any::batch($before, $after, $fields, false);
+        fn::log::generate::any::batch($event, $before, $after, $fields, false);
     };
 `;
 

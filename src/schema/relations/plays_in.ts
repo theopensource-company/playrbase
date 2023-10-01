@@ -28,7 +28,7 @@ const plays_in = /* surrealql */ `
 const log = /* surrealql */ `
     DEFINE EVENT log ON plays_in THEN {
         LET $fields = ["confirmed"];
-        fn::log::generate::any::batch($before, $after, $fields, false);
+        fn::log::generate::any::batch($event, $before, $after, $fields, false);
     };
 `;
 

@@ -28,7 +28,7 @@ export function Profile({
                     <h2 className="font-bold text-foreground">
                         {profile.name}
                     </h2>
-                    {profile.email && (
+                    {'email' in profile && profile.email && (
                         <p className="text-xs text-muted-foreground">
                             {profile.email}
                         </p>

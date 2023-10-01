@@ -33,7 +33,7 @@ const manages = /* surrealql */ `
 const log = /* surrealql */ `
     DEFINE EVENT log ON manages THEN {
         LET $fields = ["confirmed", "public", "role"];
-        fn::log::generate::any::batch($before, $after, $fields, false);
+        fn::log::generate::any::batch($event, $before, $after, $fields, false);
     };
 `;
 

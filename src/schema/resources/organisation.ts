@@ -16,7 +16,7 @@ const organisation = /* surrealql */ `
     DEFINE FIELD website            ON organisation TYPE option<string>;
     DEFINE FIELD email              ON organisation TYPE string           
         ASSERT string::is::email($value);
-    DEFINE FIELD type               ON organisation VALUE meta::tb(id);
+    DEFINE FIELD type               ON organisation VALUE meta::tb(id) DEFAULT meta::tb(id);
 
     DEFINE FIELD logo               ON organisation TYPE option<string>
         PERMISSIONS
@@ -105,7 +105,7 @@ export const Organisation = z.object({
     part_of: record('organisation').optional(),
     managers: z.array(
         z.object({
-            user: record('manager'),
+            user: record('user'),
             role: z.union([
                 z.literal('owner'),
                 z.literal('administrator'),
@@ -132,7 +132,7 @@ const relate_creator = /* surrealql */ `
 const log = /* surrealql */ `
     DEFINE EVENT log ON organisation THEN {
         LET $fields = ["name", "description", "website", "email"];
-        fn::log::generate::any::batch($before, $after, $fields, false);
+        fn::log::generate::any::batch($event, $before, $after, $fields, false);
     };
 `;
 

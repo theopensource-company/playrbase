@@ -8,7 +8,7 @@ const admin = /* surrealql */ `
 
     DEFINE FIELD name               ON TABLE admin TYPE string    ASSERT array::len(string::words($value)) > 1;
     DEFINE FIELD email              ON TABLE admin TYPE string    ASSERT string::is::email($value);
-    DEFINE FIELD type               ON TABLE admin VALUE meta::tb(id);
+    DEFINE FIELD type               ON admin VALUE meta::tb(id) DEFAULT meta::tb(id);
 
     DEFINE FIELD profile_picture    ON admin TYPE option<string>
         PERMISSIONS
@@ -37,7 +37,7 @@ export type Admin = z.infer<typeof Admin>;
 const log = /* surrealql */ `
     DEFINE EVENT log ON admin THEN {
         LET $fields = ["name", "email"];
-        fn::log::generate::any::batch($before, $after, $fields, false);
+        fn::log::generate::any::batch($event, $before, $after, $fields, false);
     };
 `;
 

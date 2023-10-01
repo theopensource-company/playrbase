@@ -82,7 +82,7 @@ export type Event = z.infer<typeof Event>;
 const log = /* surrealql */ `
     DEFINE EVENT log ON event THEN {
         LET $fields = ["name", "description", "published", "discoverable", "start", "end", "options"];
-        fn::log::generate::any::batch($before, $after, $fields, false);
+        fn::log::generate::any::batch($event, $before, $after, $fields, false);
     };
 `;
 

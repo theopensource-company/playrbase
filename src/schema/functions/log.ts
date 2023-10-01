@@ -40,7 +40,7 @@ const log = /* surrealql */ `
         FOR $field IN $field {
             fn::log::generate::update($before, $after, $field, $redacted);
         }
-    }
+    };
 
     DEFINE FUNCTION fn::log::generate::delete(
         $before: object
@@ -70,8 +70,8 @@ const log = /* surrealql */ `
 
     DEFINE FUNCTION fn::log::generate::any::batch(
         $event: string,
-        $before: object, 
-        $after: object, 
+        $before: option<object>, 
+        $after: option<object>, 
         $fields: array<string>, 
         $redacted: option<bool>
     ) {

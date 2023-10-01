@@ -25,58 +25,62 @@ export function DevTools() {
                 <span className="ml-2 md:hidden">Devtools</span>
             </DialogTrigger>
             <DialogContent className="fixed left-0 top-0 mt-[2.5vh] h-[95vh] w-full rounded-xl border-none bg-muted">
-                <div className="p-12">
-                    <Tabs defaultValue="environment" className="w-full">
-                        <TabsList className="mb-4 bg-primary-foreground">
-                            <TabsTrigger
-                                className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
-                                value="environment"
-                            >
-                                {t('environment.title')}
-                            </TabsTrigger>
-                            <TabsTrigger
-                                className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
-                                value="query"
-                            >
-                                {t('query.title')}
-                            </TabsTrigger>
-                            <TabsTrigger
-                                className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
-                                value="emails"
-                                disabled={!featureFlags.localEmail}
-                            >
-                                Emails
-                            </TabsTrigger>
-                            <TabsTrigger
-                                className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
-                                value="migrate-database"
-                                disabled={!featureFlags.migrateDatabase}
-                            >
-                                {t('migrate-database.title')}
-                            </TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="environment">
-                            <Devtools_Environment />
-                        </TabsContent>
-                        <TabsContent value="query">
-                            <Devtools_Query />
-                        </TabsContent>
-                        <TabsContent value="emails">
-                            <Devtools_Emails />
-                        </TabsContent>
-                        <TabsContent value="migrate-database">
-                            <Devtools_MigrateDatabase />
-                        </TabsContent>
+                <div className="h-full overflow-hidden p-12">
+                    <Tabs
+                        defaultValue="environment"
+                        className="h-full w-full pb-12"
+                    >
+                        <div className="mb-4 flex justify-between gap-10 overflow-x-auto rounded-md">
+                            <TabsList className="bg-primary-foreground ">
+                                <TabsTrigger
+                                    className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
+                                    value="environment"
+                                >
+                                    {t('environment.title')}
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
+                                    value="query"
+                                >
+                                    {t('query.title')}
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
+                                    value="emails"
+                                    disabled={!featureFlags.localEmail}
+                                >
+                                    Emails
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
+                                    value="migrate-database"
+                                    disabled={!featureFlags.migrateDatabase}
+                                >
+                                    {t('migrate-database.title')}
+                                </TabsTrigger>
+                            </TabsList>
+                            <DialogClose aria-label="Close" asChild>
+                                <Button size="sm" className="h-10">
+                                    <X />
+                                </Button>
+                            </DialogClose>
+                        </div>
+                        <div className="h-full overflow-y-auto">
+                            <TabsContent value="environment">
+                                <Devtools_Environment />
+                            </TabsContent>
+                            <TabsContent value="query">
+                                <Devtools_Query />
+                            </TabsContent>
+                            <TabsContent value="emails">
+                                <Devtools_Emails />
+                            </TabsContent>
+                            <TabsContent value="migrate-database">
+                                <Devtools_MigrateDatabase />
+                            </TabsContent>
+                        </div>
                     </Tabs>
                 </div>
-                <DialogClose
-                    aria-label="Close"
-                    className="fixed right-0 top-0 mr-12 mt-[5.3rem]"
-                >
-                    <Button size="sm">
-                        <X />
-                    </Button>
-                </DialogClose>
             </DialogContent>
         </Dialog>
     );

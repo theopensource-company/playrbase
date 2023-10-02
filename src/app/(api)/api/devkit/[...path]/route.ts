@@ -1,5 +1,5 @@
 import { Deployed, Environment } from '@/config/Environment';
-import { handler as not_found } from '../../route';
+import { handler as not_found } from '../../404handler';
 
 function handler(req: Request, { params }: { params: { path: string } }) {
     if (Deployed || Environment !== 'dev') return not_found();

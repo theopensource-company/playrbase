@@ -1,15 +1,4 @@
-import { NextResponse } from 'next/server';
-
-function handler() {
-    return NextResponse.json(
-        {
-            success: false,
-            error: 'not_found',
-        },
-        { status: 404 }
-    );
-}
-
+import { handler } from './404handler';
 export {
     handler as DELETE,
     handler as GET,
@@ -18,5 +7,4 @@ export {
     handler as PATCH,
     handler as POST,
     handler as PUT,
-    handler,
 };

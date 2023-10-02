@@ -10,7 +10,7 @@ export default function Container({
     return (
         <div
             className={[
-                'mx-auto w-full max-w-screen-2xl px-8 sm:px-24',
+                'mx-auto w-full max-w-screen-2xl px-6 sm:px-14',
                 className,
             ]
                 .filter((a) => !!a)

@@ -24,12 +24,13 @@ export function Avatar({
 }: {
     profile?: Profile;
     loading?: boolean;
-    size?: 'small' | 'normal' | 'big' | 'huge';
+    size?: 'tiny' | 'small' | 'normal' | 'big' | 'huge';
     renderBadge?: boolean;
     className?: string;
 }) {
     const avatarFallback = avatarFallbackByName(profile.name);
     const avatarSize = {
+        tiny: 'h-8 w-8 text-md',
         small: 'h-10 w-10 text-lg',
         normal: 'h-12 w-12 text-xl',
         big: 'h-14 w-14 text-2xl',

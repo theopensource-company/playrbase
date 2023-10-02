@@ -11,7 +11,8 @@ const organisation = /* surrealql */ `
             FOR delete WHERE 
                 $scope = 'user' && managers[WHERE role IN ["owner", "adminstrator"] AND org != NONE].user CONTAINS $auth.id;
 
-    DEFINE FIELD name               ON organisation TYPE string;
+    DEFINE FIELD name               ON organisation TYPE string
+        ASSERT string::len($value) > 0 && string::len($value) <= 32;
     DEFINE FIELD description        ON organisation TYPE option<string>;
     DEFINE FIELD website            ON organisation TYPE option<string>;
     DEFINE FIELD email              ON organisation TYPE string           
@@ -81,14 +82,14 @@ const organisation = /* surrealql */ `
 
     DEFINE FIELD created            ON organisation TYPE datetime VALUE $before OR time::now()    DEFAULT time::now();
     DEFINE FIELD updated            ON organisation TYPE datetime VALUE time::now()               DEFAULT time::now()
-        PERMISSIONS FOR select NONE;
+        PERMISSIONS FOR select WHERE $scope = 'user' && managers.*.user CONTAINS $auth.id;
 
     DEFINE INDEX unique_slug        ON organisation FIELDS slug UNIQUE;
 `;
 
 export const Organisation = z.object({
     id: record('organisation'),
-    name: z.string(),
+    name: z.string().min(1).max(32),
     description: z.string().optional(),
     website: z.string().url().optional(),
     email: z.string().email(),

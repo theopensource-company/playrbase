@@ -23,7 +23,13 @@ import { useLocale, useTranslations } from 'next-intl';
 import { usePathname } from 'next-intl/client';
 import Link from 'next-intl/link';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, {
+    ReactNode,
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+} from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import LogoFull from '../../assets/LogoFull.svg';
 import { Profile } from '../cards/profile.tsx';
@@ -33,7 +39,7 @@ import { Skeleton } from '../ui/skeleton.tsx';
 import Container from './Container.tsx';
 import { DevTools } from './DevTools/index.tsx';
 
-export const Navbar = () => {
+export const Navbar = ({ children }: { children?: ReactNode }) => {
     const [scrolled, setScrolled] = useState(false);
 
     // Enabled in prod/preview with:
@@ -58,46 +64,58 @@ export const Navbar = () => {
     }, [setScrolled]);
 
     return (
-        <Container
-            className={cn(
-                'fixed left-0 right-0 z-10 flex items-center justify-between backdrop-blur-lg transition-height',
-                scrolled ? 'h-24' : 'h-36'
-            )}
-        >
-            <Link href="/">
-                <Image
-                    src={LogoFull}
-                    alt="Logo"
-                    className="h-10 w-min sm:h-12"
-                />
-            </Link>
-            <div className="flex gap-4">
-                <div className="hidden md:block">
-                    <Links devTools={devTools} />
+        <div className={cn('fixed left-0 right-0 z-10 backdrop-blur-lg')}>
+            <Container
+                className={cn(
+                    'flex items-center justify-between transition-height',
+                    scrolled
+                        ? children
+                            ? 'mt-2 h-14'
+                            : 'h-16'
+                        : children
+                        ? 'mb-1 mt-3 h-24'
+                        : 'h-36'
+                )}
+            >
+                <Link href="/">
+                    <Image
+                        src={LogoFull}
+                        alt="Logo"
+                        className={cn(
+                            'w-min transition-height',
+                            scrolled ? 'h-9' : 'h-10 sm:h-12'
+                        )}
+                    />
+                </Link>
+                <div className="flex gap-4">
+                    <div className="hidden md:block">
+                        <Links devTools={devTools} />
+                    </div>
+                    <div className="block md:hidden">
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button variant="outline">
+                                    <AlignRight size="24" />
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent>
+                                <div className="p-4">
+                                    <Link href="/">
+                                        <Image
+                                            src={LogoFull}
+                                            alt="Logo"
+                                            className="h-10 w-min sm:h-12"
+                                        />
+                                    </Link>
+                                    <Links devTools={devTools} />
+                                </div>
+                            </SheetContent>
+                        </Sheet>
+                    </div>
                 </div>
-                <div className="block md:hidden">
-                    <Sheet>
-                        <SheetTrigger asChild>
-                            <Button variant="outline">
-                                <AlignRight size="24" />
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent>
-                            <div className="p-4">
-                                <Link href="/">
-                                    <Image
-                                        src={LogoFull}
-                                        alt="Logo"
-                                        className="h-10 w-min sm:h-12"
-                                    />
-                                </Link>
-                                <Links devTools={devTools} />
-                            </div>
-                        </SheetContent>
-                    </Sheet>
-                </div>
-            </div>
-        </Container>
+            </Container>
+            {children}
+        </div>
     );
 };
 
@@ -115,7 +133,7 @@ const Links = ({ devTools }: { devTools: boolean }) => {
                         <Skeleton className="h-10 w-24" />
                     ) : user ? (
                         <>
-                            <NavigationMenuTrigger>
+                            <NavigationMenuTrigger className="bg-transparent">
                                 <ChevronRightSquare className="mr-2 md:hidden" />
                                 {user.name.split(' ')[0]}
                             </NavigationMenuTrigger>
@@ -124,11 +142,11 @@ const Links = ({ devTools }: { devTools: boolean }) => {
                             </NavigationMenuContent>
                         </>
                     ) : (
-                        <Link href="/console" legacyBehavior passHref>
+                        <Link href="/account" legacyBehavior passHref>
                             <NavigationMenuLink
                                 className={cn(
                                     navigationMenuTriggerStyle(),
-                                    'max-sm:bg-muted'
+                                    'bg-transparent'
                                 )}
                             >
                                 <ChevronRightSquare className="mr-2 md:hidden" />
@@ -139,7 +157,7 @@ const Links = ({ devTools }: { devTools: boolean }) => {
                 </NavigationMenuItem>
                 {featureFlags.switchLanguage && (
                     <NavigationMenuItem>
-                        <NavigationMenuTrigger className="max-sm:bg-muted">
+                        <NavigationMenuTrigger className="bg-transparent">
                             <Languages size={20} />
                             <span className="ml-2 md:hidden">Language</span>
                         </NavigationMenuTrigger>
@@ -167,7 +185,7 @@ const AccountOptions = () => {
         user && (
             <ul className="grid gap-6 p-6">
                 <NavigationMenuItem>
-                    <Link href="/console" legacyBehavior passHref>
+                    <Link href="/account" legacyBehavior passHref>
                         <NavigationMenuLink
                             className={cn(
                                 navigationMenuTriggerStyle(),
@@ -238,3 +256,51 @@ const LanguageOptions = () => {
         </ul>
     );
 };
+
+const NavbarSubLinksContext = createContext('/');
+
+export function NavbarSubLinks({
+    baseUrl,
+    children,
+}: {
+    baseUrl: string;
+    children: ReactNode;
+}) {
+    baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+    return (
+        <NavbarSubLinksContext.Provider value={baseUrl}>
+            <Container className="flex border-b-2 border-muted pt-1">
+                {children}
+            </Container>
+        </NavbarSubLinksContext.Provider>
+    );
+}
+
+export function NavbarSubLink({
+    link,
+    children,
+}: {
+    link: string;
+    children: ReactNode;
+}) {
+    const pathname = usePathname();
+    const baseUrl = useContext(NavbarSubLinksContext);
+    link = link.startsWith('/') ? link.slice(1) : link;
+    const url = `${baseUrl}/${link}`;
+    const active = pathname.includes(url);
+
+    return (
+        <div className="space-y-1">
+            <Link
+                href={url}
+                className={cn(
+                    'inline-flex h-8 w-max items-center justify-center rounded-md bg-transparent px-2.5 py-2 text-sm font-medium transition-colors hover:bg-accent/80 hover:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50',
+                    active ? 'text-accent-foreground' : 'text-muted-foreground'
+                )}
+            >
+                {children}
+            </Link>
+            {active && <div className="mx-2.5 border-b-2 border-white" />}
+        </div>
+    );
+}

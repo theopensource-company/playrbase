@@ -71,7 +71,6 @@ export const useUpdateOrganisation = (id: Organisation['id']) =>
                     | 'banner'
                     | 'slug'
                     | 'tier'
-                    | 'manager_roles'
                     | 'part_of'
                 >
             >

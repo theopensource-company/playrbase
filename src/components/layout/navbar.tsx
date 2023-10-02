@@ -278,16 +278,25 @@ export function NavbarSubLinks({
 
 export function NavbarSubLink({
     link,
+    href,
     children,
 }: {
-    link: string;
+    link?: string;
+    href?: string;
     children: ReactNode;
 }) {
     const pathname = usePathname();
     const baseUrl = useContext(NavbarSubLinksContext);
-    link = link.startsWith('/') ? link.slice(1) : link;
-    const url = `${baseUrl}/${link}`;
-    const active = pathname.includes(url);
+
+    let url: string = baseUrl;
+    if (link) {
+        link = link.startsWith('/') ? link.slice(1) : link;
+        url = `${baseUrl}/${link}`;
+    } else if (href) {
+        url = href;
+    }
+
+    const active = pathname.endsWith(url);
 
     return (
         <div className="space-y-1">

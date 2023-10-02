@@ -49,6 +49,21 @@ export const User = z.object({
 
 export type User = z.infer<typeof User>;
 
+export const UserAnonymous = User.omit({
+    email: true,
+    updated: true,
+});
+
+export type UserAnonymous = z.infer<typeof UserAnonymous>;
+
+// - Team co-members
+// - Managers in organisations from which the user is participating in one of their events
+export const UserAsRelatedUser = User.omit({
+    updated: true,
+});
+
+export type UserAsRelatedUser = z.infer<typeof UserAsRelatedUser>;
+
 /* Events */
 
 const log = /* surrealql */ `

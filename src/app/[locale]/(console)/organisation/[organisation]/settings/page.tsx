@@ -26,7 +26,7 @@ export default function Account() {
         isLoading,
         data: organisation,
         refetch,
-    } = useOrganisation({ slug });
+    } = useOrganisation<Organisation>({ slug });
 
     return isLoading ? (
         <Container className="flex w-full flex-grow items-center justify-center">

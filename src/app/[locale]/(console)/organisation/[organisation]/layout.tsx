@@ -6,9 +6,11 @@ import {
     NavbarSubLink,
     NavbarSubLinks,
 } from '@/components/layout/navbar';
+import { useOrganisation } from '@/lib/Queries/Organisation';
 import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
-import { Loader2 } from 'lucide-react';
+import { User } from '@/schema/resources/user';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useRouter } from 'next-intl/client';
 import { useParams } from 'next/navigation';
 import React, { ReactNode, useEffect, useState } from 'react';
@@ -21,14 +23,28 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
         : params.organisation;
 
     const [scrolled, setScrolled] = useState(false);
-    const { loading, user } = useAuth(({ loading, user }) => ({
+    const { isLoading: orgLoading, data: organisation } = useOrganisation({
+        slug,
+    });
+    const { loading: authLoading, user } = useAuth(({ loading, user }) => ({
         loading,
         user,
     }));
 
+    const loading = orgLoading || authLoading;
+
     useEffect(() => {
-        if (!loading && !user) router.push('/account/signin');
-    }, [user, loading, router]);
+        if (!loading) {
+            if (!user) return router.push('/account/signin');
+            if (
+                !organisation?.managers
+                    .map(({ user }) => user)
+                    .includes(user.id as User['id'])
+            ) {
+                router.push(`/organisation/${slug}`);
+            }
+        }
+    }, [user, loading, router, organisation, slug]);
 
     useEffect(() => {
         const handler = () => {
@@ -49,6 +65,9 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
         <>
             <Navbar>
                 <NavbarSubLinks baseUrl={`/organisation/${slug}`}>
+                    <NavbarSubLink>
+                        <ArrowLeft />
+                    </NavbarSubLink>
                     <NavbarSubLink link="events">Events</NavbarSubLink>
                     <NavbarSubLink link="members">Members</NavbarSubLink>
                     <NavbarSubLink link="settings">Settings</NavbarSubLink>
@@ -62,7 +81,7 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
                     )}
                 />
                 {children}
-            </Container>{' '}
+            </Container>
         </>
     );
 }

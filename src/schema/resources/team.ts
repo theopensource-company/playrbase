@@ -4,8 +4,9 @@ import { record } from '../../lib/zod.ts';
 const team = /* surrealql */ `
     DEFINE TABLE team SCHEMAFULL
         PERMISSIONS
+            FOR select FULL
             FOR create WHERE $scope = 'user'
-            FOR select, update, delete 
+            FOR update, delete 
                 WHERE $auth.id IN players.*;
 
     DEFINE FIELD name           ON team TYPE string ASSERT string::len($value) > 0;
@@ -31,7 +32,8 @@ const team = /* surrealql */ `
         PERMISSIONS FOR select NONE;
 
     DEFINE FIELD created        ON team TYPE datetime VALUE $before OR time::now()    DEFAULT time::now();
-    DEFINE FIELD updated        ON team TYPE datetime VALUE time::now()               DEFAULT time::now();
+    DEFINE FIELD updated        ON team TYPE datetime VALUE time::now()               DEFAULT time::now()
+        PERMISSIONS FOR select WHERE $auth.id IN players.*;
 `;
 
 export const Team = z.object({
@@ -47,6 +49,12 @@ export const Team = z.object({
 });
 
 export type Team = z.infer<typeof Team>;
+
+export const TeamAnonymous = Team.omit({
+    updated: true,
+});
+
+export type TeamAnonymous = z.infer<typeof TeamAnonymous>;
 
 const relate_creator = /* surrealql */ `
     DEFINE EVENT relate_creator ON team WHEN $event = "CREATE" THEN {

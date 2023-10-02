@@ -1,4 +1,7 @@
-import { Organisation } from '@/schema/resources/organisation';
+import {
+    Organisation,
+    OrganisationSafeParse,
+} from '@/schema/resources/organisation';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import {
@@ -37,14 +40,16 @@ export const useOrganisations = (
         },
     });
 
-export const useOrganisation = (filters: {
+export const useOrganisation = <
+    T extends OrganisationSafeParse = OrganisationSafeParse,
+>(filters: {
     id?: Organisation['id'];
     slug?: Organisation['slug'];
 }) =>
     useQuery({
         queryKey: ['organisation', filters],
         queryFn: async () => {
-            const result = await surreal.query<[Organisation[]]>(
+            const result = await surreal.query<[T[]]>(
                 `SELECT * FROM organisation ${await buildOrganisationFilters(
                     filters
                 )}`,
@@ -52,7 +57,7 @@ export const useOrganisation = (filters: {
             );
 
             if (!result?.[0]?.result?.[0]) return null;
-            return Organisation.parse(result[0].result[0]);
+            return OrganisationSafeParse.parse(result[0].result[0]) as T;
         },
     });
 

@@ -50,10 +50,12 @@ const organisation = /* surrealql */ `
 
     DEFINE FIELD part_of            ON organisation TYPE option<record<organisation>>
         VALUE
-            IF $value && (SELECT VALUE id FROM $value WHERE managers[WHERE role IN ["owner", "adminstrator"]].user CONTAINS $auth.id)[0] THEN
+            IF !$scope THEN
+                $value
+            ELSE IF $value && (SELECT VALUE id FROM $value WHERE managers[WHERE role IN ["owner", "adminstrator"]].user CONTAINS $auth.id)[0] THEN
                 $value
             ELSE 
-                NONE
+                $before
             END
         PERMISSIONS
             FOR update NONE;
@@ -63,13 +65,12 @@ const organisation = /* surrealql */ `
             -- Find all confirmed managers of this org
             LET $local = SELECT <-manages[?confirmed] AS managers FROM ONLY $parent.id;
             -- Grab the role and user ID
-            LET $local = SELECT role, in AS user FROM $local.managers;
+            LET $local = SELECT role, in AS user, id as edge FROM $local.managers;
 
-            LET $part_of = type::thing(part_of);
             -- Select all managers from the org we are a part of, if any
-            LET $inherited = (SELECT VALUE managers FROM ONLY $part_of) ?? [];
+            LET $inherited = SELECT managers FROM ONLY $parent.part_of;
             -- Add an org field describing from which org these members are inherited, if not already inherited before
-            LET $inherited = SELECT *, org OR $part_of AS org FROM $inherited;
+            LET $inherited = SELECT *, org OR $parent.part_of AS org FROM ($inherited.managers || []);
 
             -- Return the combined result
             RETURN array::concat($local, $inherited);
@@ -113,6 +114,7 @@ export const Organisation = z.object({
                 z.literal('event_manager'),
                 z.literal('event_viewer'),
             ]),
+            edge: record('manages'),
             org: record('organisation').optional(),
         })
     ),
@@ -121,6 +123,13 @@ export const Organisation = z.object({
 });
 
 export type Organisation = z.infer<typeof Organisation>;
+
+export const OrganisationSafeParse = Organisation.partial({
+    tier: true,
+    updated: true,
+});
+
+export type OrganisationSafeParse = z.infer<typeof OrganisationSafeParse>;
 
 /* Events */
 

@@ -2,6 +2,18 @@
 
 import { Avatar } from '@/components/cards/avatar';
 import Container from '@/components/layout/Container';
+import { UserSelector, useUserSelector } from '@/components/logic/UserSelector';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
     Table,
     TableBody,
@@ -15,11 +27,12 @@ import { SurrealInstance as surreal } from '@/lib/Surreal';
 import { record } from '@/lib/zod';
 import { Organisation } from '@/schema/resources/organisation';
 import { User } from '@/schema/resources/user';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
-import { Loader2 } from 'lucide-react';
+import { ArrowRight, Loader2, Mail, Plus, Trash2 } from 'lucide-react';
+import Link from 'next-intl/link';
 import { useParams } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 import { z } from 'zod';
 
 export default function Account() {
@@ -27,11 +40,7 @@ export default function Account() {
     const slug = Array.isArray(params.organisation)
         ? params.organisation[0]
         : params.organisation;
-    const {
-        isLoading,
-        data: organisation,
-        // refetch,
-    } = useData(slug);
+    const { isLoading, data: organisation, refetch } = useData(slug);
 
     // Split the managers out per organisation,
     // store managers for the current org under the '__' key
@@ -46,13 +55,20 @@ export default function Account() {
         </Container>
     ) : organisation ? (
         <div className="flex flex-grow flex-col pt-6">
-            <h1 className="pb-2 text-3xl font-semibold">Members</h1>
+            <div className="flex items-center justify-between pb-6">
+                <h1 className="text-3xl font-semibold">Members</h1>
+                {organisation.can_manage && (
+                    <AddMember organisation={organisation.id} />
+                )}
+            </div>
             <div className="space-y-20">
                 {Object.entries(perOrg).map(([key, managers]) => (
                     <ListManagers
                         key={key}
                         managers={managers}
                         organisation={managers.find(({ org }) => org)?.org}
+                        canManage={organisation.can_manage}
+                        refresh={refetch}
                     />
                 ))}
             </div>
@@ -65,9 +81,13 @@ export default function Account() {
 function ListManagers({
     organisation,
     managers,
+    canManage,
+    refresh,
 }: {
     organisation?: Organisation;
-    managers: OrganisationFetchedManagers['managers'];
+    managers: Data['managers'];
+    canManage: boolean;
+    refresh: () => unknown;
 }) {
     return (
         <div>
@@ -86,11 +106,17 @@ function ListManagers({
                         <TableHead>Name</TableHead>
                         <TableHead>Email</TableHead>
                         <TableHead>Role</TableHead>
+                        <TableHead align="right" />
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {managers.map((manager) => (
-                        <ListManager key={manager.edge} manager={manager} />
+                        <ListManager
+                            key={manager.edge}
+                            manager={manager}
+                            canManage={canManage}
+                            refresh={refresh}
+                        />
                     ))}
                 </TableBody>
             </Table>
@@ -99,14 +125,40 @@ function ListManagers({
 }
 
 function ListManager({
+    refresh,
+    canManage,
     manager: {
         user: { id, name, email, profile_picture },
         role,
-        // org,
+        org,
+        edge,
     },
 }: {
-    manager: OrganisationFetchedManagers['managers'][number];
+    refresh: () => unknown;
+    canManage: boolean;
+    manager: Data['managers'][number];
 }) {
+    const { mutate: updateRole, isLoading: isUpdatingRole } = useMutation({
+        mutationKey: ['organisation', 'update-role', edge],
+        mutationFn: async (role: Organisation['managers'][number]['role']) => {
+            await surreal.merge(edge, {
+                role,
+            });
+
+            await refresh();
+        },
+    });
+
+    const { mutate: deleteManager, isLoading: isDeletingManager } = useMutation(
+        {
+            mutationKey: ['organisation', 'delete-manager', edge],
+            mutationFn: async () => {
+                await surreal.delete(edge);
+                await refresh();
+            },
+        }
+    );
+
     return (
         <TableRow>
             <TableCell>
@@ -122,12 +174,132 @@ function ListManager({
             </TableCell>
             <TableCell>{name}</TableCell>
             <TableCell>{email}</TableCell>
-            <TableCell>{role}</TableCell>
+            <TableCell>
+                {!canManage || org ? (
+                    role
+                ) : isUpdatingRole ? (
+                    <Skeleton className="h-10 w-24" />
+                ) : (
+                    <Select onValueChange={updateRole} defaultValue={role}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="owner">Owner</SelectItem>
+                            <SelectItem value="administrator">
+                                Administrator
+                            </SelectItem>
+                            <SelectItem value="event_manager">
+                                Event Manager
+                            </SelectItem>
+                            <SelectItem value="event_viewer">
+                                Event Viewer
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                )}
+            </TableCell>
+            <TableCell align="right">
+                {!canManage ? null : org ? (
+                    <Link
+                        className={buttonVariants({ variant: 'outline' })}
+                        href={`/organisation/${org.slug}/members`}
+                    >
+                        Via {org.name}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                ) : isDeletingManager ? (
+                    <Skeleton className="h-10 w-14" />
+                ) : (
+                    <Button
+                        variant="destructive"
+                        onClick={() => deleteManager()}
+                    >
+                        <Trash2 />
+                    </Button>
+                )}
+            </TableCell>
         </TableRow>
     );
 }
 
-const OrganisationFetchedManagers = Organisation.extend({
+function AddMember({ organisation }: { organisation: Organisation['id'] }) {
+    const [user, setUser] = useUserSelector();
+    const [role, setRole] = useState('event_viewer');
+    const [open, setOpen] = useState(false);
+
+    const { mutateAsync, error } = useMutation({
+        mutationKey: ['manages', 'invite'],
+        async mutationFn() {
+            // TODO set to correct type, not important for the moment
+            const [res] = await surreal.query<[string[]]>(
+                /* surql */ `
+                RELATE $user->manages->$organisation SET role = $role
+            `,
+                { user, role, organisation }
+            );
+
+            if (res.detail) throw new Error(res.detail);
+        },
+    });
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button>
+                    Add member
+                    <Plus className="ml-2 h-6 w-6" />
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <h3 className="mb-4 text-2xl font-bold">Invite user</h3>
+                <div className="space-y-6">
+                    <UserSelector user={user} setUser={setUser} />
+
+                    <div className="space-y-3">
+                        <Label htmlFor="role">Role</Label>
+                        <Select onValueChange={setRole} value={role}>
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Role" />
+                            </SelectTrigger>
+                            <SelectContent id="role">
+                                <SelectItem value="owner">Owner</SelectItem>
+                                <SelectItem value="administrator">
+                                    Administrator
+                                </SelectItem>
+                                <SelectItem value="event_manager">
+                                    Event Manager
+                                </SelectItem>
+                                <SelectItem value="event_viewer">
+                                    Event Viewer
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+                <div className="mt-3">
+                    <Button
+                        disabled={!user || !role}
+                        onClick={() => {
+                            mutateAsync().then(() => {
+                                setUser(undefined);
+                                setRole('event_viewer');
+                                setOpen(false);
+                            });
+                        }}
+                    >
+                        <Mail className="mr-2 h-4 w-4" />
+                        Send invite
+                    </Button>
+                </div>
+                {!!error && <p>{(error as Error).message}</p>}
+            </DialogContent>
+        </Dialog>
+    );
+}
+
+const Data = Organisation.extend({
+    can_manage: z.boolean(),
     managers: z.array(
         z.object({
             user: User.pick({
@@ -148,15 +320,18 @@ const OrganisationFetchedManagers = Organisation.extend({
     ),
 });
 
-type OrganisationFetchedManagers = z.infer<typeof OrganisationFetchedManagers>;
+type Data = z.infer<typeof Data>;
 
 function useData(slug: Organisation['slug']) {
     return useQuery({
         queryKey: ['organisation', 'members', slug],
         queryFn: async () => {
-            const result = await surreal.query<[OrganisationFetchedManagers[]]>(
+            const result = await surreal.query<[Data[]]>(
                 /* surql */ `
-                    SELECT * FROM organisation 
+                    SELECT 
+                        *,
+                        $auth.id IN managers[WHERE role = "owner" OR (role = "administrator" AND org != NONE)].user AS can_manage
+                    FROM organisation 
                         WHERE slug = $slug 
                         FETCH 
                             managers.*.user.*, 
@@ -166,7 +341,7 @@ function useData(slug: Organisation['slug']) {
             );
 
             if (!result?.[0]?.result?.[0]) return null;
-            return OrganisationFetchedManagers.parse(result[0].result[0]);
+            return Data.parse(result[0].result[0]);
         },
     });
 }

@@ -1,34 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Playrbase
 
-## Getting Started
+Playrbase is a flexible player and event management system.
 
-First, run the development server:
+## Requirements
+- pnpm
+- SurrealDB
+- `minio` and `mc` executable available in PATH
+- The `dev-s3-create-bucket` command is currently broken on windows, so you cannot upload images there at the moment
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Get started
+- Clone the repo
+- Run `pnpm i`
+- Run `pnpm dev`
+- Open http://localhost:13000
+- Open devkit from the navbar (top right)
+- Run database migrations in the devkit
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How to signin/signin (dev)
+On the signin page, just enter an email address for which you want to create an account, or for an existing account.
+Now, to make your life a little bit easier, in development mode Emails are being stored locally so you don't need to configure an API key for some email sending service. 
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Simply open the Devkit, then go to the Emails tab and find the email there :)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Dev commands
+- `pnpm dev`: Shows NextJS & Devkit logs
+- `pnpm debug`: Shows NextJS, Devkit & SurrealDB logs
+- `pnpm dbonly`: Shows only SurrealDB logs
+- `pnpm ts`: Typescript validation (watch mode)
+- `pnpm lint`: Validate linting (including prettier)
+- `pnpm lint --fix`: Fix linting issues (including prettier)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Ports used
+- **13000**: NextJS (Frontend)
+- **13001**: SurrealDB
+- **13002**: MinIO S3 bucket (Image uploads)
+- **13003**: MinIO Console address
+- **13004**: Devkit API
+- **13005**: React-email devserver
 
-## Learn More
+## Deploying
+Might write a guide later but there are quite some steps, not relevant at this stage.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Contributing
+We are rushing at the moment, so I cannot guarantee that your contribution aligns with our strategy/plans/ideas. Please contact us via [Discord](https://discord.gg/eSt4nrbSyH) if you have specific ideas/fixes/features in mind that you would like to work on. We don't have the capability to delagate work however at this time.

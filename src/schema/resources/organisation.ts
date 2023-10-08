@@ -68,7 +68,7 @@ const organisation = /* surrealql */ `
             LET $local = SELECT role, in AS user, id as edge FROM $local.managers;
 
             -- Select all managers from the org we are a part of, if any
-            LET $inherited = SELECT managers FROM ONLY $parent.part_of;
+            LET $inherited = SELECT managers FROM ONLY $parent.part_of.id;
             -- Add an org field describing from which org these members are inherited, if not already inherited before
             LET $inherited = SELECT *, org OR $parent.part_of AS org FROM ($inherited.managers || []);
 

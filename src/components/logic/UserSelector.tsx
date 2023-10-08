@@ -23,11 +23,13 @@ export function UserSelector({
     user,
     setUser,
     autoFocus,
+    autoComplete,
     children,
 }: {
     user?: User['id'];
     setUser: Dispatch<SetStateAction<User['id'] | undefined>>;
     autoFocus?: boolean;
+    autoComplete?: string;
     children?: ReactNode;
 }) {
     const [input, setInput] = useState('');
@@ -82,6 +84,7 @@ export function UserSelector({
                 value={input}
                 onInput={(e) => setInput(e.currentTarget.value)}
                 autoFocus={autoFocus}
+                autoComplete={autoComplete}
             />
             {matches && (
                 <div>

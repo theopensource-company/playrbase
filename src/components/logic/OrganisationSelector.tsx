@@ -25,6 +25,7 @@ export function OrganisationSelector({
     label,
     placeholder,
     autoFocus,
+    autoComplete,
     children,
 }: {
     organisation?: Organisation['id'];
@@ -32,6 +33,7 @@ export function OrganisationSelector({
     label?: string;
     placeholder?: string;
     autoFocus?: boolean;
+    autoComplete?: string;
     children?: ReactNode;
 }) {
     const [input, setInput] = useState('');
@@ -93,6 +95,7 @@ export function OrganisationSelector({
                         value={input}
                         onInput={(e) => setInput(e.currentTarget.value)}
                         autoFocus={autoFocus}
+                        autoComplete={autoComplete}
                     />
                     {matches && (
                         <div>

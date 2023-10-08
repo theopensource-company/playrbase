@@ -378,6 +378,7 @@ function DangerZone({ organisation }: { organisation: Organisation }) {
                                     </Label>
                                     <Input
                                         id="name_delete"
+                                        autoComplete="off"
                                         {...register('name')}
                                     />
                                 </div>
@@ -390,6 +391,7 @@ function DangerZone({ organisation }: { organisation: Organisation }) {
                                     </Label>
                                     <Input
                                         id="email_delete"
+                                        autoComplete="off"
                                         {...register('email')}
                                     />
                                 </div>

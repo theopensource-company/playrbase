@@ -241,6 +241,7 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
                                     undefined
                                 }
                                 autoFocus
+                                autoComplete="off"
                             />
                             {errors?.name && !isSubmitSuccessful && (
                                 <p className="text-red-600">
@@ -254,6 +255,7 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
                                 id="email"
                                 {...register('email')}
                                 placeholder="hello@foo.bar"
+                                autoComplete="off"
                             />
                             {errors?.email && !isSubmitSuccessful && (
                                 <p className="text-red-600">
@@ -266,6 +268,7 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
                             setOrganisation={setPartOf}
                             label="Part of organisation"
                             placeholder="Name or Email"
+                            autoComplete="off"
                         />
                     </div>
                     <div className="mt-3">

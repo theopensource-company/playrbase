@@ -318,7 +318,12 @@ function AddMember({ organisation }: { organisation: Organisation['id'] }) {
             <DialogContent>
                 <h3 className="mb-4 text-2xl font-bold">Invite user</h3>
                 <div className="space-y-6">
-                    <UserSelector user={user} setUser={setUser} autoFocus />
+                    <UserSelector
+                        user={user}
+                        setUser={setUser}
+                        autoFocus
+                        autoComplete="off"
+                    />
 
                     <div className="space-y-3">
                         <Label htmlFor="role">Role</Label>

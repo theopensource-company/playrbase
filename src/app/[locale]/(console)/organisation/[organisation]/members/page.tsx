@@ -4,6 +4,7 @@ import { Avatar } from '@/components/cards/avatar';
 import { Profile } from '@/components/cards/profile';
 import Container from '@/components/layout/Container';
 import { UserSelector, useUserSelector } from '@/components/logic/UserSelector';
+import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -27,11 +28,11 @@ import {
 import { SurrealInstance as surreal } from '@/lib/Surreal';
 import { record } from '@/lib/zod';
 import { Organisation } from '@/schema/resources/organisation';
-import { User } from '@/schema/resources/user';
+import { User, UserAsRelatedUser } from '@/schema/resources/user';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
-import { ArrowRight, Loader2, Mail, Plus, Trash2 } from 'lucide-react';
+import { ArrowRight, Loader2, Mail, MailX, Plus, Trash2 } from 'lucide-react';
 import Link from 'next-intl/link';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
@@ -42,7 +43,10 @@ export default function Account() {
     const slug = Array.isArray(params.organisation)
         ? params.organisation[0]
         : params.organisation;
-    const { isLoading, data: organisation, refetch } = useData(slug);
+    const { isLoading, data, refetch } = useData(slug);
+
+    const organisation = data?.organisation;
+    const invited_members = data?.invited_members;
 
     // Split the managers out per organisation,
     // store managers for the current org under the '__' key
@@ -75,6 +79,7 @@ export default function Account() {
                     <ListManagers
                         key={key}
                         managers={managers}
+                        invites={key == '__' ? invited_members : []}
                         organisation={managers.find(({ org }) => org)?.org}
                         canManage={organisation.can_manage}
                         canDeleteOwner={canDeleteOwner}
@@ -91,12 +96,14 @@ export default function Account() {
 function ListManagers({
     organisation,
     managers,
+    invites,
     canManage,
     canDeleteOwner,
     refresh,
 }: {
     organisation?: Organisation;
     managers: Data['managers'];
+    invites?: Invited[];
     canManage: boolean;
     canDeleteOwner?: boolean;
     refresh: () => unknown;
@@ -110,7 +117,7 @@ function ListManagers({
             )}
             <Table>
                 <TableCaption>
-                    <b>Count:</b> {managers.length}
+                    <b>Count:</b> {managers.length + (invites?.length ?? 0)}
                 </TableCaption>
                 <TableHeader>
                     <TableRow>
@@ -122,6 +129,14 @@ function ListManagers({
                     </TableRow>
                 </TableHeader>
                 <TableBody>
+                    {invites?.map((invite) => (
+                        <InvitedManager
+                            key={invite.edge}
+                            invite={invite}
+                            canManage={canManage}
+                            refresh={refresh}
+                        />
+                    ))}
                     {managers.map((manager) => (
                         <ListManager
                             key={manager.edge}
@@ -287,6 +302,81 @@ function ListManager({
     );
 }
 
+function InvitedManager({
+    invite: { user, role, edge },
+    canManage,
+    refresh,
+}: {
+    invite: Invited;
+    canManage: boolean;
+    refresh: () => unknown;
+}) {
+    const { mutate: updateRole, isLoading: isUpdatingRole } = useMutation({
+        mutationKey: ['organisation', 'update-role', edge],
+        mutationFn: async (role: Organisation['managers'][number]['role']) => {
+            await surreal.merge(edge, {
+                role,
+            });
+
+            await refresh();
+        },
+    });
+
+    const { mutate: revokeInvite, isLoading: isRevokingInvite } = useMutation({
+        mutationKey: ['organisation', 'revoke-invite', edge],
+        mutationFn: async () => {
+            await surreal.delete(edge);
+            await refresh();
+        },
+    });
+
+    return (
+        <TableRow>
+            <TableCell>
+                <Avatar profile={user as User} />
+            </TableCell>
+            <TableCell>
+                {user.name} <Badge className="ml-3">Pending invite</Badge>
+            </TableCell>
+            <TableCell>{user.email}</TableCell>
+            <TableCell>
+                {!canManage ? (
+                    role
+                ) : isUpdatingRole ? (
+                    <Skeleton className="h-10 w-24" />
+                ) : (
+                    <Select onValueChange={updateRole} defaultValue={role}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="owner">Owner</SelectItem>
+                            <SelectItem value="administrator">
+                                Administrator
+                            </SelectItem>
+                            <SelectItem value="event_manager">
+                                Event Manager
+                            </SelectItem>
+                            <SelectItem value="event_viewer">
+                                Event Viewer
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                )}
+            </TableCell>
+            <TableCell align="right">
+                <Button
+                    variant="destructive"
+                    onClick={() => revokeInvite()}
+                    disabled={isRevokingInvite}
+                >
+                    <MailX />
+                </Button>
+            </TableCell>
+        </TableRow>
+    );
+}
+
 function AddMember({ organisation }: { organisation: Organisation['id'] }) {
     const [user, setUser] = useUserSelector();
     const [role, setRole] = useState('event_viewer');
@@ -391,26 +481,48 @@ const Data = Organisation.extend({
 
 type Data = z.infer<typeof Data>;
 
+const Invited = z.object({
+    user: UserAsRelatedUser,
+    edge: record('manages'),
+    role: z.union([
+        z.literal('owner'),
+        z.literal('administrator'),
+        z.literal('event_manager'),
+        z.literal('event_viewer'),
+    ]),
+});
+
+type Invited = z.infer<typeof Invited>;
+
 function useData(slug: Organisation['slug']) {
     return useQuery({
         queryKey: ['organisation', 'members', slug],
         queryFn: async () => {
-            const result = await surreal.query<[Data[]]>(
+            const result = await surreal.query<[null[], Invited[], Data]>(
                 /* surql */ `
-                    SELECT 
+                    LET $org = SELECT 
                         *,
                         $auth.id IN managers[WHERE role = "owner" OR (role = "administrator" AND org != NONE)].user AS can_manage
-                    FROM organisation 
+                    FROM ONLY organisation 
                         WHERE slug = $slug 
                         FETCH 
                             managers.*.user.*, 
                             managers.*.org.name;
+
+                    SELECT in.* as user, id as edge, role
+                        FROM $org.id<-manages[?!confirmed];
+
+                    $org;  
                 `,
                 { slug }
             );
 
-            if (!result?.[0]?.result?.[0]) return null;
-            return Data.parse(result[0].result[0]);
+            if (!result?.[1]?.result || !result?.[2]?.result) return null;
+
+            return {
+                organisation: Data.parse(result[2].result),
+                invited_members: z.array(Invited).parse(result[1].result),
+            };
         },
     });
 }

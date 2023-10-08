@@ -33,6 +33,10 @@ const event = /* surrealql */ `
     DEFINE FIELD discoverable               ON event TYPE bool DEFAULT true;
     DEFINE FIELD published                  ON event TYPE bool DEFAULT false;
     DEFINE FIELD tournament                 ON event TYPE option<record<event>>;
+    DEFINE FIELD is_tournament              ON event VALUE <future> {
+        RETURN !!(SELECT VALUE id FROM ONLY event WHERE tournament = $parent.id LIMIT 1);
+    };
+
     DEFINE FIELD root_for_org               ON event 
         VALUE !tournament OR (SELECT VALUE organiser FROM ONLY $parent.tournament) != organiser;
 

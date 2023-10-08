@@ -19,7 +19,7 @@ import {
     OrganisationSafeParse,
 } from '@/schema/resources/organisation';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Check, LogOut, Settings2, X } from 'lucide-react';
+import { Check, Settings2, X } from 'lucide-react';
 import Link from 'next-intl/link';
 import React from 'react';
 import { z } from 'zod';
@@ -86,11 +86,7 @@ export default function Account() {
                                 </h2>
                             )}
                             {organisations.confirmed.map((data) => (
-                                <RenderConfirmed
-                                    data={data}
-                                    refetch={refetch}
-                                    key={data.edge}
-                                />
+                                <RenderConfirmed data={data} key={data.edge} />
                             ))}
                         </>
                     )}
@@ -145,21 +141,7 @@ function RenderUnconfirmed({
     );
 }
 
-function RenderConfirmed({
-    data: { organisation, edge },
-    refetch,
-}: {
-    data: Data;
-    refetch: () => unknown;
-}) {
-    const { mutate: leave } = useMutation({
-        mutationKey: ['manages', 'leave', edge],
-        async mutationFn() {
-            await surreal.delete(edge);
-            refetch();
-        },
-    });
-
+function RenderConfirmed({ data: { organisation } }: { data: Data }) {
     return (
         <TableRow>
             <TableCell>
@@ -179,9 +161,6 @@ function RenderConfirmed({
                 >
                     <Settings2 />
                 </Link>
-                <Button size="sm" onClick={() => leave()} variant="destructive">
-                    <LogOut />
-                </Button>
             </TableCell>
         </TableRow>
     );

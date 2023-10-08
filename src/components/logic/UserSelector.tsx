@@ -79,7 +79,6 @@ export function UserSelector({
                 placeholder="john@doe.org"
                 value={input}
                 onInput={(e) => setInput(e.currentTarget.value)}
-                className="text-md px-5 py-6"
                 autoFocus
             />
             {matches && (

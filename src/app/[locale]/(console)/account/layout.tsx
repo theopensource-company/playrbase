@@ -1,8 +1,13 @@
 'use client';
 
 import Container from '@/components/layout/Container';
-import { Navbar } from '@/components/layout/navbar';
+import {
+    Navbar,
+    NavbarSubLink,
+    NavbarSubLinks,
+} from '@/components/layout/navbar';
 import { useAuth } from '@/lib/auth';
+import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next-intl/client';
 import React, { ReactNode, useEffect, useState } from 'react';
@@ -36,8 +41,21 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
         </Container>
     ) : (
         <>
-            <Navbar />
-            <Container className={scrolled ? 'py-24' : 'py-36'}>
+            <Navbar>
+                <NavbarSubLinks baseUrl={`/account`}>
+                    <NavbarSubLink>Account</NavbarSubLink>
+                    <NavbarSubLink link="organisations">
+                        Organisations
+                    </NavbarSubLink>
+                </NavbarSubLinks>
+            </Navbar>
+            <Container className="pb-24 pt-8">
+                <div
+                    className={cn(
+                        'transition-height',
+                        scrolled ? 'h-24' : 'h-36'
+                    )}
+                />
                 {children}
             </Container>{' '}
         </>

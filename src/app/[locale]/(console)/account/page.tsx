@@ -41,7 +41,7 @@ export default function Account() {
 
     return (
         <div className="flex flex-grow flex-col gap-12 pt-6">
-            <h1 className="text-4xl font-bold">Account</h1>
+            <h1 className="text-3xl font-bold">Account</h1>
             <div className="flex w-full max-w-2xl flex-col gap-6 rounded-lg border p-6">
                 <Profile loading={loading} profile={user} size="big" />
                 <Table>

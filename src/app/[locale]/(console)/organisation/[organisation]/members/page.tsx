@@ -71,7 +71,10 @@ export default function Account() {
             <div className="flex items-center justify-between pb-6">
                 <h1 className="text-3xl font-semibold">Members</h1>
                 {organisation.can_manage && (
-                    <AddMember organisation={organisation.id} />
+                    <AddMember
+                        organisation={organisation.id}
+                        refresh={refetch}
+                    />
                 )}
             </div>
             <div className="space-y-20">
@@ -377,7 +380,13 @@ function InvitedManager({
     );
 }
 
-function AddMember({ organisation }: { organisation: Organisation['id'] }) {
+function AddMember({
+    organisation,
+    refresh,
+}: {
+    organisation: Organisation['id'];
+    refresh: () => unknown;
+}) {
     const [user, setUser] = useUserSelector();
     const [role, setRole] = useState('event_viewer');
     const [open, setOpen] = useState(false);
@@ -394,6 +403,7 @@ function AddMember({ organisation }: { organisation: Organisation['id'] }) {
             );
 
             if (res.detail) throw new Error(res.detail);
+            refresh();
         },
     });
 

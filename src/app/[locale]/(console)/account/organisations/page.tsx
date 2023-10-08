@@ -269,6 +269,7 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
                             label="Part of organisation"
                             placeholder="Name or Email"
                             autoComplete="off"
+                            canManage
                         />
                     </div>
                     <div className="mt-3">

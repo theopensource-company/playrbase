@@ -11,6 +11,7 @@ import React, {
     useState,
 } from 'react';
 import { Profile } from '../cards/profile';
+import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -27,6 +28,7 @@ export function OrganisationSelector({
     autoFocus,
     autoComplete,
     limit = 5,
+    canManage,
     children,
 }: {
     organisation?: Organisation['id'];
@@ -36,10 +38,13 @@ export function OrganisationSelector({
     autoFocus?: boolean;
     autoComplete?: string;
     limit?: number;
+    canManage?: boolean;
     children?: ReactNode;
 }) {
+    type Org = Organisation & { can_manage: boolean };
+
     const [input, setInput] = useState('');
-    const [matches, setMatches] = useState<Organisation[]>([]);
+    const [matches, setMatches] = useState<Org[]>([]);
     const { data: profile } = useQuery({
         queryKey: ['organisation', organisation],
         async queryFn() {
@@ -52,9 +57,12 @@ export function OrganisationSelector({
     useEffect(() => {
         const timeOutId = setTimeout(() => {
             surreal
-                .query<[Organisation[]]>(
+                .query<[Org[]]>(
                     /* surql */ `
-                        SELECT * FROM organisation 
+                        SELECT 
+                            *,
+                            $auth.id IN managers[WHERE role IN ["owner", "administrator"]].user AS can_manage
+                        FROM organisation 
                             WHERE $input
                             AND (
                                 email ~ $input
@@ -111,14 +119,22 @@ export function OrganisationSelector({
                                         profile={organisation}
                                         size="small"
                                     />
-                                    <Button
-                                        size="sm"
-                                        onClick={() =>
-                                            setOrganisation(organisation.id)
-                                        }
-                                    >
-                                        {children ?? 'Select'}
-                                    </Button>
+                                    {(
+                                        canManage
+                                            ? organisation.can_manage
+                                            : true
+                                    ) ? (
+                                        <Button
+                                            size="sm"
+                                            onClick={() =>
+                                                setOrganisation(organisation.id)
+                                            }
+                                        >
+                                            {children ?? 'Select'}
+                                        </Button>
+                                    ) : (
+                                        <Badge>No permissions</Badge>
+                                    )}
                                 </div>
                             ))}
                         </div>

@@ -52,7 +52,7 @@ const organisation = /* surrealql */ `
         VALUE
             IF !$scope THEN
                 $value
-            ELSE IF $value && (SELECT VALUE id FROM $value WHERE managers[WHERE role IN ["owner", "adminstrator"]].user CONTAINS $auth.id)[0] THEN
+            ELSE IF $value && (SELECT VALUE id FROM $value WHERE managers[WHERE role IN ["owner", "administrator"]].user CONTAINS $auth.id)[0] THEN
                 $value
             ELSE 
                 $before

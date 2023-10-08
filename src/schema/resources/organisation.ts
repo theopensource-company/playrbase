@@ -9,7 +9,7 @@ const organisation = /* surrealql */ `
             FOR update WHERE 
                 $scope = 'user' && managers[WHERE role IN ["owner", "adminstrator"]].user CONTAINS $auth.id
             FOR delete WHERE 
-                $scope = 'user' && managers[WHERE role IN ["owner", "adminstrator"] AND org != NONE].user CONTAINS $auth.id;
+                $scope = 'user' && managers[WHERE role = "owner" OR (role = "adminstrator" AND org != NONE)].user CONTAINS $auth.id;
 
     DEFINE FIELD name               ON organisation TYPE string
         ASSERT string::len($value) > 0 && string::len($value) <= 32;

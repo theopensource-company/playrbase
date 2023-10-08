@@ -192,7 +192,7 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitSuccessful },
+        formState: { errors, isSubmitSuccessful, isValid },
     } = useForm<Schema>({
         resolver: zodResolver(Schema),
     });
@@ -240,6 +240,7 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
                                     Organisation.shape.name.maxLength ??
                                     undefined
                                 }
+                                autoFocus
                             />
                             {errors?.name && !isSubmitSuccessful && (
                                 <p className="text-red-600">
@@ -268,7 +269,7 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
                         />
                     </div>
                     <div className="mt-3">
-                        <Button disabled={!partOf}>
+                        <Button disabled={!isValid}>
                             <Plus className="mr-2 h-4 w-4" />
                             Create
                         </Button>

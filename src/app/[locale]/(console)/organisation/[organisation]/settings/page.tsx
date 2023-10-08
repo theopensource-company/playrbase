@@ -327,7 +327,7 @@ function DangerZone({ organisation }: { organisation: Organisation }) {
     });
 
     const handler = handleSubmit(async () => {
-        await surreal.delete(organisation.id);
+        await surreal.query(/* surql */ `DELETE $id`, { id: organisation.id });
         router.push('/account/organisations');
     });
 

@@ -22,10 +22,12 @@ export function useUserSelector() {
 export function UserSelector({
     user,
     setUser,
+    autoFocus,
     children,
 }: {
     user?: User['id'];
     setUser: Dispatch<SetStateAction<User['id'] | undefined>>;
+    autoFocus?: boolean;
     children?: ReactNode;
 }) {
     const [input, setInput] = useState('');
@@ -79,7 +81,7 @@ export function UserSelector({
                 placeholder="john@doe.org"
                 value={input}
                 onInput={(e) => setInput(e.currentTarget.value)}
-                autoFocus
+                autoFocus={autoFocus}
             />
             {matches && (
                 <div>

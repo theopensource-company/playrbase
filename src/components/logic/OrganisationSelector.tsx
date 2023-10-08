@@ -24,12 +24,14 @@ export function OrganisationSelector({
     setOrganisation,
     label,
     placeholder,
+    autoFocus,
     children,
 }: {
     organisation?: Organisation['id'];
     setOrganisation: Dispatch<SetStateAction<Organisation['id'] | undefined>>;
     label?: string;
     placeholder?: string;
+    autoFocus?: boolean;
     children?: ReactNode;
 }) {
     const [input, setInput] = useState('');
@@ -90,7 +92,7 @@ export function OrganisationSelector({
                         placeholder={placeholder ?? 'john@doe.org'}
                         value={input}
                         onInput={(e) => setInput(e.currentTarget.value)}
-                        autoFocus
+                        autoFocus={autoFocus}
                     />
                     {matches && (
                         <div>

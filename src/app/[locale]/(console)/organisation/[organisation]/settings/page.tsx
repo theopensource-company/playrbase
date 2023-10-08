@@ -2,16 +2,21 @@
 
 import Container from '@/components/layout/Container';
 import { Button } from '@/components/ui/button';
+import { DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
     useOrganisation,
     useUpdateOrganisation,
 } from '@/lib/Queries/Organisation';
+import { SurrealInstance as surreal } from '@/lib/Surreal';
 import { promiseTimeout } from '@/lib/utils';
 import { Organisation } from '@/schema/resources/organisation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2 } from 'lucide-react';
+import { Dialog, DialogClose } from '@radix-ui/react-dialog';
+import { AlertOctagon, Loader2 } from 'lucide-react';
+import { useRouter } from 'next-intl/client';
 import { useParams } from 'next/navigation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -39,6 +44,7 @@ export default function Account() {
             <EmailEditor organisation={organisation} onSubmit={refetch} />
             <WebsiteEditor organisation={organisation} onSubmit={refetch} />
             <DescriptionEditor organisation={organisation} onSubmit={refetch} />
+            <DangerZone organisation={organisation} />
         </div>
     ) : (
         <p>org not found</p>
@@ -299,5 +305,123 @@ function DescriptionEditor({
                 )}
             </div>
         </form>
+    );
+}
+
+function DangerZone({ organisation }: { organisation: Organisation }) {
+    const router = useRouter();
+
+    const Schema = z.object({
+        name: z.literal(organisation.name),
+        email: z.literal(organisation.email),
+    });
+
+    type Schema = z.infer<typeof Schema>;
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isValid, isSubmitting },
+    } = useForm<Schema>({
+        resolver: zodResolver(Schema),
+    });
+
+    const handler = handleSubmit(async () => {
+        await surreal.delete(organisation.id);
+        router.push('/account/organisations');
+    });
+
+    return (
+        <div className="flex w-full flex-col gap-6 rounded-lg border border-red-600 border-opacity-40 p-6">
+            <div className="space-y-2">
+                <h2 className="text-xl font-bold">Danger zone</h2>
+                <p>
+                    Deleting this organisation will <b>permanently</b> remove
+                    all details about this organisation, all events, and other
+                    related data. This action <b>cannot be reversed!</b>
+                </p>
+            </div>
+            <div className="flex items-center gap-4">
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button
+                            variant="destructive"
+                            className="opacity-70 transition-all hover:opacity-100"
+                        >
+                            <AlertOctagon className="mr-2 h-4 w-4" />
+                            Delete organisation
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <form onSubmit={handler}>
+                            <h2 className="mb-4 text-2xl font-bold">
+                                Delete {organisation.name}
+                            </h2>
+                            <p>
+                                Deleting this organisation will{' '}
+                                <b>permanently</b> remove all details about this
+                                organisation, all events, and other related
+                                data. This action <b>cannot be reversed!</b>
+                                <br />
+                                <br />
+                                To confirm the deletion, please re-type the
+                                organisation&apos;s name and email address
+                            </p>
+
+                            <div className="mb-5 mt-3 space-y-5">
+                                <div className="space-y-3">
+                                    <Label htmlFor="name_delete">
+                                        <b>Type:</b>{' '}
+                                        <i className="select-none">
+                                            {organisation.name}
+                                        </i>
+                                    </Label>
+                                    <Input
+                                        id="name_delete"
+                                        {...register('name')}
+                                    />
+                                </div>
+                                <div className="space-y-3">
+                                    <Label htmlFor="email_delete">
+                                        <b>Type:</b>{' '}
+                                        <i className="select-none">
+                                            {organisation.email}
+                                        </i>
+                                    </Label>
+                                    <Input
+                                        id="email_delete"
+                                        {...register('email')}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                                <DialogClose asChild>
+                                    <Button variant="outline" type="button">
+                                        Cancel
+                                    </Button>
+                                </DialogClose>
+                                <Button
+                                    variant="destructive"
+                                    disabled={!isValid}
+                                >
+                                    {isSubmitting ? (
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    ) : (
+                                        <AlertOctagon className="mr-2 h-4 w-4" />
+                                    )}
+                                    Permanently delete
+                                </Button>
+                            </div>
+                            {errors?.root && (
+                                <p className="text-red-600">
+                                    {errors.root.message}
+                                </p>
+                            )}
+                        </form>
+                    </DialogContent>
+                </Dialog>
+            </div>
+        </div>
     );
 }

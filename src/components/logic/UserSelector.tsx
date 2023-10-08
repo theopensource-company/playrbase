@@ -57,7 +57,7 @@ export function UserSelector({
                 .then(([{ result }]) => {
                     setMatches(result ?? []);
                 });
-        }, 500);
+        }, 300);
 
         return () => clearTimeout(timeOutId);
     }, [input, limit]);

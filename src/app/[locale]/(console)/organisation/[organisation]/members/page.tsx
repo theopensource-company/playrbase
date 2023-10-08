@@ -1,6 +1,7 @@
 'use client';
 
 import { Avatar } from '@/components/cards/avatar';
+import { Profile } from '@/components/cards/profile';
 import Container from '@/components/layout/Container';
 import { UserSelector, useUserSelector } from '@/components/logic/UserSelector';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -27,6 +28,7 @@ import { SurrealInstance as surreal } from '@/lib/Surreal';
 import { record } from '@/lib/zod';
 import { Organisation } from '@/schema/resources/organisation';
 import { User } from '@/schema/resources/user';
+import { DialogClose } from '@radix-ui/react-dialog';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
 import { ArrowRight, Loader2, Mail, Plus, Trash2 } from 'lucide-react';
@@ -49,6 +51,13 @@ export default function Account() {
         ({ org }) => org?.id ?? '__'
     );
 
+    const canDeleteOwner =
+        !!organisation &&
+        !!(
+            organisation.managers.filter(({ role }) => role == 'owner').length >
+            1
+        );
+
     return isLoading ? (
         <Container className="flex w-full flex-grow items-center justify-center">
             <Loader2 size={50} className="animate-spin" />
@@ -68,6 +77,7 @@ export default function Account() {
                         managers={managers}
                         organisation={managers.find(({ org }) => org)?.org}
                         canManage={organisation.can_manage}
+                        canDeleteOwner={canDeleteOwner}
                         refresh={refetch}
                     />
                 ))}
@@ -82,11 +92,13 @@ function ListManagers({
     organisation,
     managers,
     canManage,
+    canDeleteOwner,
     refresh,
 }: {
     organisation?: Organisation;
     managers: Data['managers'];
     canManage: boolean;
+    canDeleteOwner?: boolean;
     refresh: () => unknown;
 }) {
     return (
@@ -115,6 +127,7 @@ function ListManagers({
                             key={manager.edge}
                             manager={manager}
                             canManage={canManage}
+                            canDeleteOwner={canDeleteOwner}
                             refresh={refresh}
                         />
                     ))}
@@ -127,6 +140,7 @@ function ListManagers({
 function ListManager({
     refresh,
     canManage,
+    canDeleteOwner,
     manager: {
         user: { id, name, email, profile_picture },
         role,
@@ -136,6 +150,7 @@ function ListManager({
 }: {
     refresh: () => unknown;
     canManage: boolean;
+    canDeleteOwner?: boolean;
     manager: Data['managers'][number];
 }) {
     const { mutate: updateRole, isLoading: isUpdatingRole } = useMutation({
@@ -180,7 +195,11 @@ function ListManager({
                 ) : isUpdatingRole ? (
                     <Skeleton className="h-10 w-24" />
                 ) : (
-                    <Select onValueChange={updateRole} defaultValue={role}>
+                    <Select
+                        onValueChange={updateRole}
+                        defaultValue={role}
+                        disabled={!canDeleteOwner && role == 'owner'}
+                    >
                         <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Role" />
                         </SelectTrigger>
@@ -211,12 +230,57 @@ function ListManager({
                 ) : isDeletingManager ? (
                     <Skeleton className="h-10 w-14" />
                 ) : (
-                    <Button
-                        variant="destructive"
-                        onClick={() => deleteManager()}
-                    >
-                        <Trash2 />
-                    </Button>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button
+                                variant="destructive"
+                                disabled={!canDeleteOwner && role == 'owner'}
+                            >
+                                <Trash2 />
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <h3 className="text-2xl font-bold">
+                                Remove {name}
+                            </h3>
+                            <p>
+                                Are you sure that you want to remove this
+                                manager?
+                            </p>
+                            <div className="my-4 rounded-md border p-4">
+                                <Profile
+                                    profile={
+                                        {
+                                            id,
+                                            name,
+                                            profile_picture,
+                                            email,
+                                        } as User
+                                    }
+                                />
+                            </div>
+                            <div className="flex justify-end gap-4">
+                                <DialogClose>
+                                    <Button
+                                        variant="outline"
+                                        disabled={isDeletingManager}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </DialogClose>
+                                <Button
+                                    variant="destructive"
+                                    onClick={() => deleteManager()}
+                                    disabled={isDeletingManager}
+                                >
+                                    {isDeletingManager && (
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    )}
+                                    Remove
+                                </Button>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
                 )}
             </TableCell>
         </TableRow>

@@ -24,12 +24,14 @@ export function UserSelector({
     setUser,
     autoFocus,
     autoComplete,
+    limit = 5,
     children,
 }: {
     user?: User['id'];
     setUser: Dispatch<SetStateAction<User['id'] | undefined>>;
     autoFocus?: boolean;
     autoComplete?: string;
+    limit?: number;
     children?: ReactNode;
 }) {
     const [input, setInput] = useState('');
@@ -48,9 +50,9 @@ export function UserSelector({
             surreal
                 .query<[User[]]>(
                     /* surql */ `
-                        SELECT * FROM user WHERE id != $auth && $email && email ~ $email
+                        SELECT * FROM user WHERE id != $auth && $email && email ~ $email LIMIT $limit
                     `,
-                    { email: input }
+                    { email: input, limit }
                 )
                 .then(([{ result }]) => {
                     setMatches(result ?? []);
@@ -58,7 +60,7 @@ export function UserSelector({
         }, 500);
 
         return () => clearTimeout(timeOutId);
-    }, [input]);
+    }, [input, limit]);
 
     useEffect(() => {
         if (user && input) setInput('');

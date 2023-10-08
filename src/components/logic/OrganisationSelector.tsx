@@ -26,6 +26,7 @@ export function OrganisationSelector({
     placeholder,
     autoFocus,
     autoComplete,
+    limit = 5,
     children,
 }: {
     organisation?: Organisation['id'];
@@ -34,6 +35,7 @@ export function OrganisationSelector({
     placeholder?: string;
     autoFocus?: boolean;
     autoComplete?: string;
+    limit?: number;
     children?: ReactNode;
 }) {
     const [input, setInput] = useState('');
@@ -57,9 +59,10 @@ export function OrganisationSelector({
                             AND (
                                 email ~ $input
                                 OR name ~ $input
-                            );
+                            )
+                            LIMIT $limit;
                     `,
-                    { input }
+                    { input, limit }
                 )
                 .then(([{ result }]) => {
                     setMatches(result ?? []);
@@ -67,7 +70,7 @@ export function OrganisationSelector({
         }, 500);
 
         return () => clearTimeout(timeOutId);
-    }, [input]);
+    }, [input, limit]);
 
     useEffect(() => {
         if (organisation && input) setInput('');

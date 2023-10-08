@@ -269,9 +269,9 @@ export function NavbarSubLinks({
     baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
     return (
         <NavbarSubLinksContext.Provider value={baseUrl}>
-            <Container className="flex border-b-2 border-muted pt-1">
-                {children}
-            </Container>
+            <div className="border-b-2 border-muted">
+                <Container className="flex pt-1">{children}</Container>
+            </div>
         </NavbarSubLinksContext.Provider>
     );
 }

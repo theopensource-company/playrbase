@@ -22,7 +22,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
     return (
         <>
             <Navbar />
-            <Container className="pb-24">
+            <Container className="flex min-h-screen flex-col pb-24">
                 <div
                     className={cn(
                         'transition-height',

@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { SurrealInstance as surreal } from '@/lib/Surreal';
+import { surreal } from '@/lib/Surreal';
 import { useTranslations } from 'next-intl';
 import React, { ReactNode, createRef, useCallback, useState } from 'react';
 

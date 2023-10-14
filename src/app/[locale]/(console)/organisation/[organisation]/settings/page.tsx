@@ -10,7 +10,7 @@ import {
     useOrganisation,
     useUpdateOrganisation,
 } from '@/lib/Queries/Organisation';
-import { SurrealInstance as surreal } from '@/lib/Surreal';
+import { surreal } from '@/lib/Surreal';
 import { promiseTimeout } from '@/lib/utils';
 import { Organisation } from '@/schema/resources/organisation';
 import { zodResolver } from '@hookform/resolvers/zod';

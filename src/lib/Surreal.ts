@@ -2,17 +2,17 @@
 
 import { Surreal } from 'surrealdb.js';
 
-export const SurrealEndpoint = `${
+export const endpoint = `${
     process.env.NEXT_PUBLIC_SURREAL_ENDPOINT ?? 'https://euc1-1-db.kards.social'
 }/rpc`;
-export const SurrealNamespace =
+export const namespace =
     process.env.NEXT_PUBLIC_SURREAL_NAMESPACE ?? 'playrbase';
-export const SurrealDatabase =
+export const database =
     process.env.NEXT_PUBLIC_SURREAL_DATABASE ?? 'playrbase-deployment_unknown';
 
-export const SurrealInstance = new Surreal(SurrealEndpoint, {
+export const surreal = new Surreal(endpoint, {
     prepare: async (surreal) => {
-        await surreal.use({ ns: SurrealNamespace, db: SurrealDatabase });
+        await surreal.use({ ns: namespace, db: database });
         if (typeof window !== 'undefined') {
             const token = await fetch('/api/auth/token')
                 .then((res) => res.json())

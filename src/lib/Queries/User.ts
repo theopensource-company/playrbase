@@ -1,11 +1,7 @@
 import { User } from '@/schema/resources/user';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
-import {
-    buildTableFilters,
-    isNoneValue,
-    SurrealInstance as surreal,
-} from '../Surreal';
+import { buildTableFilters, isNoneValue, surreal } from '../Surreal';
 
 export const buildUserFilters = buildTableFilters<User>(
     async (property, filters) => {

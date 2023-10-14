@@ -23,7 +23,7 @@ import {
     TableHead,
     TableRow,
 } from '@/components/ui/table';
-import { SurrealInstance as surreal } from '@/lib/Surreal';
+import { surreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
 import { fullname } from '@/lib/zod';
 import { Admin } from '@/schema/resources/admin';

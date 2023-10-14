@@ -19,7 +19,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { SurrealInstance as surreal } from '@/lib/Surreal';
+import { surreal } from '@/lib/Surreal';
 import { record } from '@/lib/zod';
 import {
     Organisation,

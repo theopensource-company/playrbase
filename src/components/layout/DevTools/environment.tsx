@@ -14,12 +14,7 @@ import {
     featureFlagOptions,
     featureFlags,
 } from '@/config/Environment';
-import {
-    SurrealDatabase,
-    SurrealEndpoint,
-    SurrealInstance,
-    SurrealNamespace,
-} from '@/lib/Surreal';
+import { database, endpoint, namespace, surreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
@@ -102,7 +97,7 @@ export default function Devtools_Environment() {
                             <span
                                 style={{
                                     color: ['green', 'red', 'yellow'][
-                                        SurrealInstance.status
+                                        surreal.status
                                     ],
                                 }}
                             >
@@ -117,7 +112,7 @@ export default function Devtools_Environment() {
                                         t(
                                             'table.surrealdb-connection.caption.reconnecting'
                                         ),
-                                    ][SurrealInstance.status]
+                                    ][surreal.status]
                                 }
                             </span>
                         </TableCaption>
@@ -142,7 +137,7 @@ export default function Devtools_Environment() {
                                         'table.surrealdb-connection.row.endpoint'
                                     )}
                                 </TableCell>
-                                <TableCell>{SurrealEndpoint}</TableCell>
+                                <TableCell>{endpoint}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>
@@ -150,7 +145,7 @@ export default function Devtools_Environment() {
                                         'table.surrealdb-connection.row.namespace'
                                     )}
                                 </TableCell>
-                                <TableCell>{SurrealNamespace}</TableCell>
+                                <TableCell>{namespace}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>
@@ -158,7 +153,7 @@ export default function Devtools_Environment() {
                                         'table.surrealdb-connection.row.database'
                                     )}
                                 </TableCell>
-                                <TableCell>{SurrealDatabase}</TableCell>
+                                <TableCell>{database}</TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>

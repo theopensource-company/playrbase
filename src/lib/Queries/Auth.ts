@@ -1,10 +1,6 @@
 import { User } from '@/schema/resources/user';
 import { useMutation } from '@tanstack/react-query';
-import {
-    SurrealDatabase,
-    SurrealInstance,
-    SurrealNamespace,
-} from '../../lib/Surreal';
+import { database, namespace, surreal } from '../../lib/Surreal';
 
 export const useSignin = () =>
     useMutation({
@@ -13,9 +9,9 @@ export const useSignin = () =>
                 password: string;
             }
         ) => {
-            const token = await SurrealInstance.signin({
-                NS: SurrealNamespace,
-                DB: SurrealDatabase,
+            const token = await surreal.signin({
+                NS: namespace,
+                DB: database,
                 SC: 'user',
                 ...auth,
             });
@@ -28,7 +24,7 @@ export const useSignin = () =>
 export const useSignout = () =>
     useMutation({
         mutationFn: async () => {
-            await SurrealInstance.invalidate();
+            await surreal.invalidate();
             // FIXME: Remove next line once updated to beta 9.
             location.reload();
             return true;

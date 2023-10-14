@@ -4,11 +4,7 @@ import {
 } from '@/schema/resources/organisation';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
-import {
-    buildTableFilters,
-    isNoneValue,
-    SurrealInstance as surreal,
-} from '../../lib/Surreal';
+import { buildTableFilters, isNoneValue, surreal } from '../../lib/Surreal';
 
 export const buildOrganisationFilters = buildTableFilters<Organisation>(
     async (property, filters) => {

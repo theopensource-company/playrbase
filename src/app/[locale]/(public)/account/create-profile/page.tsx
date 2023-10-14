@@ -11,7 +11,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { SurrealInstance as surreal } from '@/lib/Surreal';
+import { surreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 import { fullname } from '@/lib/zod';

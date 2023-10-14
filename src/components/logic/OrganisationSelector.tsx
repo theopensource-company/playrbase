@@ -1,6 +1,6 @@
 'use client';
 
-import { SurrealInstance as surreal } from '@/lib/Surreal';
+import { surreal } from '@/lib/Surreal';
 import { Organisation } from '@/schema/resources/organisation';
 import { useQuery } from '@tanstack/react-query';
 import React, {

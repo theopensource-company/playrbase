@@ -1,10 +1,6 @@
 import { Event } from '@/schema/resources/event';
 import { useQuery } from '@tanstack/react-query';
-import {
-    buildTableFilters,
-    isNoneValue,
-    SurrealInstance as surreal,
-} from '../../lib/Surreal';
+import { buildTableFilters, isNoneValue, surreal } from '../../lib/Surreal';
 
 export function processEventRecord({
     created,

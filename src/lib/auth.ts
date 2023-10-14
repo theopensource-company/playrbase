@@ -1,6 +1,6 @@
 'use client';
 
-import { SurrealInstance as surreal } from '@/lib/Surreal';
+import { surreal } from '@/lib/Surreal';
 import { Admin } from '@/schema/resources/admin';
 import { User } from '@/schema/resources/user';
 import { create } from 'zustand';

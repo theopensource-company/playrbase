@@ -1,11 +1,7 @@
 import { Admin } from '@/schema/resources/admin';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
-import {
-    buildTableFilters,
-    isNoneValue,
-    SurrealInstance as surreal,
-} from '../Surreal';
+import { buildTableFilters, isNoneValue, surreal } from '../Surreal';
 
 export const buildAdminFilters = buildTableFilters<Admin>(
     async (property, filters) => {

@@ -10,7 +10,8 @@ export const namespace =
 export const database =
     process.env.NEXT_PUBLIC_SURREAL_DATABASE ?? 'playrbase-deployment_unknown';
 
-export const surreal = new Surreal(endpoint, {
+export const surreal = new Surreal();
+surreal.connect(endpoint, {
     prepare: async (surreal) => {
         await surreal.use({ ns: namespace, db: database });
         if (typeof window !== 'undefined') {

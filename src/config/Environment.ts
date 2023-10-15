@@ -1,4 +1,9 @@
-export const Environment = (process.env.NEXT_PUBLIC_ENV ?? 'prod') as TEnv;
+export const Environment = ['prod', 'production', undefined].includes(
+    process.env.NEXT_PUBLIC_ENV
+)
+    ? 'prod'
+    : 'dev';
+
 export const Deployed =
     process.env.NEXT_PUBLIC_DEPLOYMENT_STATUS === 'deployed';
 export const Preview = Environment != 'prod' && Deployed;

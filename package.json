@@ -78,6 +78,7 @@
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "autoprefixer": "^10.4.16",
+    "aws-crt": "^1.18.0",
     "concurrently": "^8.2.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
@@ -98,6 +99,7 @@
   },
   "peerDependencies": {
     "@babel/core": "^7.20.7",
+    "aws-crt": "^1.18.0",
     "react-hook-form": "^7.41.2"
   }
 }

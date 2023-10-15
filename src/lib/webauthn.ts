@@ -1,4 +1,3 @@
-import { Deployed } from '@/config/Environment';
 import { client } from '@passwordless-id/webauthn';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';

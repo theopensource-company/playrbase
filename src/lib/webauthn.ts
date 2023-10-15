@@ -1,19 +1,18 @@
+import { Deployed } from '@/config/Environment';
 import { client } from '@passwordless-id/webauthn';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { surreal } from './Surreal';
 import { useAuth } from './auth';
+import { useReadyAfter } from './utilHooks';
 
-export function useWebAuthnAvailable() {
-    const [available, setAvailable] = useState(false);
-
-    useEffect(() => {
-        if (client.isAvailable()) setAvailable(true);
-    }, [setAvailable]);
-
-    return available;
-}
+// About the usage of the "useReadyAfter" hook in this file.
+// We want to automatically ask for the user to create or apply a passkey
+// But we need to trigger those hooks ONLY ONCE
+// Now, I like React Strict mode, but I need to hack around it for this scenario.
+// Somehow, when using something like a reference to track any invocation
+// It would break tanstack query, so doing it a bit different
 
 const ChallengeResponse = z.discriminatedUnion('success', [
     z.object({
@@ -50,9 +49,20 @@ const AuthenticationResponse = z.discriminatedUnion('success', [
     }),
 ]);
 
+export function useWebAuthnAvailable() {
+    const [available, setAvailable] = useState(false);
+
+    useEffect(() => {
+        if (client.isAvailable()) setAvailable(true);
+    }, [setAvailable]);
+
+    return available;
+}
+
 export function useRegisterPasskey() {
     const [didPoke, setDidPoke] = useState(false);
     const { user, loading: userLoading } = useAuth();
+    const ready = useReadyAfter(10, Deployed);
 
     const {
         isLoading: isRegistering,
@@ -113,21 +123,22 @@ export function useRegisterPasskey() {
     const loading = userLoading || isRegistering;
 
     useEffect(() => {
-        if (!userLoading && user && !isRegistering && !didPoke) {
+        if (ready && !loading && user && !didPoke) {
             register();
             setDidPoke(true);
         }
-    }, [userLoading, user, register, isRegistering, didPoke, setDidPoke]);
+    }, [ready, loading, user, register, didPoke, setDidPoke]);
 
     return { loading, register, passkey };
 }
 
 export function usePasskeyAuthentication() {
     const [didPoke, setDidPoke] = useState(false);
-    const { refreshUser, loading: userLoading } = useAuth();
+    const { refreshUser } = useAuth();
+    const ready = useReadyAfter(10, Deployed);
 
     const {
-        isLoading: isAuthenticating,
+        isLoading: loading,
         mutate: authenticate,
         data: passkey,
     } = useMutation({
@@ -194,14 +205,12 @@ export function usePasskeyAuthentication() {
         },
     });
 
-    const loading = userLoading || isAuthenticating;
-
     useEffect(() => {
-        if (!loading && !didPoke) {
+        if (ready && !loading && !didPoke) {
             authenticate();
             setDidPoke(true);
         }
-    }, [loading, authenticate, didPoke, setDidPoke]);
+    }, [ready, loading, authenticate, didPoke, setDidPoke]);
 
-    return { loading, isAuthenticating, authenticate, passkey };
+    return { loading, authenticate, passkey };
 }

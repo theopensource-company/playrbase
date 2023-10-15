@@ -44,7 +44,7 @@ export default function Signin() {
         'user';
 
     const {
-        isAuthenticating: passkeyLoading,
+        loading: passkeyLoading,
         authenticate: tryPasskey,
         passkey,
     } = usePasskeyAuthentication();

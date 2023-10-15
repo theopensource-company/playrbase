@@ -25,8 +25,9 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export default function Page() {
-    const searchParams = useSearchParams();
     const { loading, register, passkey } = useRegisterPasskey();
+    const searchParams = useSearchParams();
+    const signup = [...searchParams.keys()].includes('signup');
 
     return (
         <Container className="flex flex-grow flex-col items-center justify-center">
@@ -42,12 +43,12 @@ export default function Page() {
                         </CardDescription>
                     </CardHeader>
                     {passkey ? (
-                        <UpdateName passkey={passkey} />
+                        <UpdateName passkey={passkey} signup={signup} />
                     ) : (
                         <CreatePasskey
                             loading={loading}
                             register={register}
-                            signup={[...searchParams.keys()].includes('signup')}
+                            signup={signup}
                         />
                     )}
                 </Card>
@@ -70,7 +71,7 @@ function CreatePasskey({
                 Create Passkey
             </Button>
             <Link
-                href="/account"
+                href={signup ? '/account' : '/account/passkeys'}
                 className={buttonVariants({
                     variant: 'outline',
                 })}
@@ -82,8 +83,10 @@ function CreatePasskey({
 }
 
 function UpdateName({
+    signup,
     passkey,
 }: {
+    signup?: boolean;
     passkey: Exclude<
         ReturnType<typeof useRegisterPasskey>['passkey'],
         null | undefined
@@ -107,27 +110,22 @@ function UpdateName({
 
     const handler = handleSubmit(async ({ name }) => {
         await surreal.merge(passkey.credentialId, { name });
-        router.push('/account');
+        router.push(signup ? '/account' : '/account/passkeys');
     });
 
     return (
         <form onSubmit={handler}>
             <CardContent className="flex flex-col gap-2 pt-1">
-                {passkey && (
-                    <>
-                        <Label htmlFor="name">Passkey Name</Label>
-                        <Input
-                            id="name"
-                            placeholder={passkey.name}
-                            maxLength={Schema.shape.name.maxLength ?? undefined}
-                            {...register('name')}
-                        />
-                        {errors?.name && !isSubmitSuccessful && (
-                            <p className="text-red-600">
-                                {errors.name.message}
-                            </p>
-                        )}
-                    </>
+                <Label htmlFor="name">Passkey Name</Label>
+                <Input
+                    id="name"
+                    placeholder={passkey.name}
+                    maxLength={Schema.shape.name.maxLength ?? undefined}
+                    autoComplete="off"
+                    {...register('name')}
+                />
+                {errors?.name && !isSubmitSuccessful && (
+                    <p className="text-red-600">{errors.name.message}</p>
                 )}
             </CardContent>
             <CardFooter>

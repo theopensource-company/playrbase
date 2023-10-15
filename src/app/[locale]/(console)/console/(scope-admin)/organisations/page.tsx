@@ -185,8 +185,7 @@ function OrganisationEditor({ organisation }: { organisation: Organisation }) {
     });
 
     const handler = handleSubmit(async (changes) => {
-        const result = await updateOrganisation(changes);
-        console.log(result);
+        const _result = await updateOrganisation(changes);
     });
 
     return (

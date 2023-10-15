@@ -126,8 +126,6 @@ export async function GET(req: NextRequest) {
         }
     );
 
-    console.log(res);
-
     const user = res?.result?.[0];
     if (!user)
         return NextResponse.json(
@@ -138,6 +136,7 @@ export async function GET(req: NextRequest) {
     const { header } = generateUserToken({
         SC: decoded.scope,
         ID: user.id,
+        secure: req.nextUrl.protocol !== 'http:',
     });
 
     return new NextResponse('Success! Redirecting to /console', {

@@ -7,9 +7,11 @@ export function generateUserToken({
     SC,
     SC: TK,
     ID,
+    secure = true,
 }: {
     SC: string;
     ID: string;
+    secure?: boolean;
 }) {
     const maxAge =
         SC in sessionLength
@@ -32,7 +34,16 @@ export function generateUserToken({
         }
     );
 
-    const header = `playrbase-token=${token}; HttpOnly; Max-Age=${maxAge}; Path=/api; SameSite=Strict; Secure;`;
+    const header = [
+        `playrbase-token=${token};`,
+        `HttpOnly;`,
+        `Max-Age=${maxAge};`,
+        `Path=/api;`,
+        `SameSite=Strict;`,
+        secure !== false && `Secure;`,
+    ]
+        .filter((a) => a)
+        .join(' ');
 
     return { token, header, maxAge };
 }

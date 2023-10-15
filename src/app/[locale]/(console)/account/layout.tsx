@@ -44,6 +44,7 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
             <Navbar>
                 <NavbarSubLinks baseUrl={`/account`}>
                     <NavbarSubLink>Account</NavbarSubLink>
+                    <NavbarSubLink link="passkeys">Passkeys</NavbarSubLink>
                     <NavbarSubLink link="organisations">
                         Organisations
                     </NavbarSubLink>

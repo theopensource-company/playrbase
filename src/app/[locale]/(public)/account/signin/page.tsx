@@ -18,10 +18,13 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { usePasskeyAuthentication } from '@/lib/webauthn';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ChevronsUpDown, Info, Loader2, XCircle } from 'lucide-react';
+import { ChevronsUpDown, Info, KeyRound, Loader2, XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next-intl/client';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -40,6 +43,13 @@ export default function Signin() {
             (localStorage.getItem('signin.default-scope') as scope)) ||
         'user';
 
+    const {
+        loading: passkeyLoading,
+        authenticate: tryPasskey,
+        passkey,
+    } = usePasskeyAuthentication();
+    const router = useRouter();
+    const [navigating, setNavigating] = useState(false);
     const t = useTranslations('pages.account.signin');
     const [scope, setScope] = useState<scope>(defaultScope);
     const [status, setStatus] = useState<{
@@ -74,6 +84,15 @@ export default function Signin() {
         }
     }, [errors, status, setStatus]);
 
+    useEffect(() => {
+        if (!navigating && passkey) {
+            setNavigating(true);
+            setTimeout(() => {
+                router.push('/account');
+            }, 1000);
+        }
+    }, [navigating, passkey, router]);
+
     const handler = handleSubmit(async ({ identifier }) => {
         setStatus({ message: 'Loading', loading: true });
 
@@ -106,7 +125,7 @@ export default function Signin() {
                 className="flex flex-col items-center gap-8"
                 onSubmit={handler}
             >
-                <Card className="flex flex-col gap-4">
+                <Card className="flex min-w-[400px] flex-col">
                     <CardHeader className="flex flex-row justify-between gap-24">
                         <div>
                             <CardTitle className="text-3xl font-bold">
@@ -114,37 +133,59 @@ export default function Signin() {
                             </CardTitle>
                             <CardDescription>{t('tagline')}</CardDescription>
                         </div>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    className="capitalize"
-                                    role="combobox"
-                                >
-                                    {t(`scope.${scope}`)}
-                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56">
-                                <DropdownMenuRadioGroup
-                                    value={scope}
-                                    onValueChange={(s) => setScope(s as scope)}
-                                >
-                                    <DropdownMenuRadioItem value="user">
-                                        {t('scope.user')}
-                                    </DropdownMenuRadioItem>
-                                    <DropdownMenuRadioItem value="admin">
-                                        {t('scope.admin')}
-                                    </DropdownMenuRadioItem>
-                                </DropdownMenuRadioGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        {!passkey && (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        className="capitalize"
+                                        role="combobox"
+                                        disabled={passkeyLoading}
+                                    >
+                                        {t(`scope.${scope}`)}
+                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56">
+                                    <DropdownMenuRadioGroup
+                                        value={scope}
+                                        onValueChange={(s) =>
+                                            setScope(s as scope)
+                                        }
+                                    >
+                                        <DropdownMenuRadioItem value="user">
+                                            {t('scope.user')}
+                                        </DropdownMenuRadioItem>
+                                        <DropdownMenuRadioItem value="admin">
+                                            {t('scope.admin')}
+                                        </DropdownMenuRadioItem>
+                                    </DropdownMenuRadioGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )}
                     </CardHeader>
                     <CardContent>
-                        <Input
-                            placeholder={t('input.email.placeholder')}
-                            {...register('identifier')}
-                        />
+                        {!passkey ? (
+                            <Input
+                                className="mt-2"
+                                placeholder={t('input.email.placeholder')}
+                                disabled={!!passkey || passkeyLoading}
+                                {...register('identifier')}
+                            />
+                        ) : (
+                            <div className="space-y-1">
+                                <Label className="opacity-60">
+                                    Used Passkey
+                                </Label>
+                                <div className="text-md flex items-center justify-between rounded-md border px-4 py-3">
+                                    <div className="flex items-center gap-2.5">
+                                        <KeyRound className="h-5 w-5" />{' '}
+                                        {passkey.name}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         <div className="h-4 pt-2">
                             {status.message && (
                                 <p
@@ -168,9 +209,30 @@ export default function Signin() {
                             )}
                         </div>
                     </CardContent>
-                    <CardFooter>
-                        <Button type="submit">{t('button.continue')}</Button>
-                    </CardFooter>
+                    {!passkey && (
+                        <CardFooter className="space-x-4">
+                            <Button
+                                type="submit"
+                                disabled={!!passkey || passkeyLoading}
+                            >
+                                {t('button.continue')}
+                            </Button>
+                            <Button
+                                type="button"
+                                className={passkey ? ' bg-green-500' : ''}
+                                onClick={() => tryPasskey()}
+                                variant={passkey ? 'default' : 'outline'}
+                                disabled={passkeyLoading}
+                            >
+                                {passkeyLoading ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <KeyRound className="mr-2 h-4 w-4" />
+                                )}
+                                Passkey
+                            </Button>
+                        </CardFooter>
+                    )}
                 </Card>
             </form>
         </Container>

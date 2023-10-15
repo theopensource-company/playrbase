@@ -138,6 +138,7 @@ export async function GET(req: NextRequest) {
     const { header } = generateUserToken({
         SC: decoded.scope,
         ID: user.id,
+        secure: req.nextUrl.protocol !== 'http:',
     });
 
     return new NextResponse('Success! Redirecting to /console', {

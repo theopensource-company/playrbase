@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { surreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
+import { useWebAuthnAvailable } from '@/lib/webauthn';
 import { fullname } from '@/lib/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import jwt from 'jsonwebtoken';
@@ -36,6 +37,7 @@ export default function CreateProfile() {
     const token = z.string().parse(useSearchParams().get('token'));
     const refreshUser = useAuth((s) => s.refreshUser);
     const decoded = jwt.decode(token);
+    const webAuthnAvailable = useWebAuthnAvailable();
 
     const t = useTranslations('pages.account.create-profile');
     const [status, setStatus] = useState<{
@@ -91,7 +93,11 @@ export default function CreateProfile() {
                 .authenticate(res.token)
                 .then(() => {
                     refreshUser();
-                    router.push('/console');
+                    router.push(
+                        webAuthnAvailable
+                            ? '/account/setup-passkey'
+                            : '/console'
+                    );
                 })
                 .catch((e) => {
                     setStatus({

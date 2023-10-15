@@ -160,11 +160,7 @@ export default function Account() {
     );
 }
 
-export function OrganisationEditor({
-    organisation,
-}: {
-    organisation: Organisation;
-}) {
+function OrganisationEditor({ organisation }: { organisation: Organisation }) {
     const { mutateAsync: updateOrganisation, isLoading } =
         useUpdateOrganisation(organisation.id);
 

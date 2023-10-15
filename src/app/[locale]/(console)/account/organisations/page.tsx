@@ -311,7 +311,6 @@ function useData() {
             `);
 
             if (!result?.[0]?.result || !result?.[1]?.result) return null;
-            console.log(result[0].result);
             return {
                 confirmed: z.array(Data).parse(result[0].result),
                 unconfirmed: z.array(Data).parse(result[1].result),

@@ -126,8 +126,6 @@ export async function GET(req: NextRequest) {
         }
     );
 
-    console.log(res);
-
     const user = res?.result?.[0];
     if (!user)
         return NextResponse.json(

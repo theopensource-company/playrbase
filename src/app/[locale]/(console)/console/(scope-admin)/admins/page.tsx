@@ -86,7 +86,6 @@ export default function Account() {
                               </TableRow>
                           ))
                         : admins?.map((admin) => {
-                              console.log(admin);
                               return (
                                   <TableRow key={admin.id}>
                                       <TableCell>
@@ -163,8 +162,7 @@ function AdminEditor({ admin }: { admin: Admin }) {
     });
 
     const handler = handleSubmit(async (changes) => {
-        const result = await updateAdmin(changes);
-        console.log(result);
+        const _result = await updateAdmin(changes);
     });
 
     return (

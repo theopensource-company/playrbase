@@ -9,8 +9,8 @@ surreal.connect(process.env.NEXT_PUBLIC_SURREAL_ENDPOINT ?? '', {
         });
 
         await surreal.signin({
-            user: process.env.SURREAL_USER ?? '',
-            pass: process.env.SURREAL_PASS ?? '',
+            user: process.env.SURREAL_USERNAME ?? '',
+            pass: process.env.SURREAL_PASSWORD ?? '',
         });
     },
 });

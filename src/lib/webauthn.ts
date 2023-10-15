@@ -123,10 +123,11 @@ export function useRegisterPasskey() {
 }
 
 export function usePasskeyAuthentication() {
-    const { refreshUser } = useAuth();
+    const [didPoke, setDidPoke] = useState(false);
+    const { refreshUser, loading: userLoading } = useAuth();
 
     const {
-        isLoading: loading,
+        isLoading: isAuthenticating,
         mutate: authenticate,
         data: passkey,
     } = useMutation({
@@ -142,7 +143,11 @@ export function usePasskeyAuthentication() {
                     throw new Error(`Failed to obtain challenge: ${res.error}`);
                 });
 
-            const authentication = await client.authenticate([], challenge);
+            const authentication = await client
+                .authenticate([], challenge)
+                .catch(() => false);
+
+            if (!authentication) return null;
 
             const { name } = await fetch('/api/auth/passkey/authenticate', {
                 method: 'POST',
@@ -189,9 +194,14 @@ export function usePasskeyAuthentication() {
         },
     });
 
-    useEffect(() => {
-        // authenticate();
-    });
+    const loading = userLoading || isAuthenticating;
 
-    return { loading, authenticate, passkey };
+    useEffect(() => {
+        if (!loading && !didPoke) {
+            authenticate();
+            setDidPoke(true);
+        }
+    }, [loading, authenticate, didPoke, setDidPoke]);
+
+    return { loading, isAuthenticating, authenticate, passkey };
 }

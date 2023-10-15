@@ -19,11 +19,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next-intl/client';
 import Link from 'next-intl/link';
+import { useSearchParams } from 'next/navigation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export default function Page() {
+    const searchParams = useSearchParams();
     const { loading, register, passkey } = useRegisterPasskey();
 
     return (
@@ -32,7 +34,7 @@ export default function Page() {
                 <Card className="flex flex-col gap-3">
                     <CardHeader className="w-96 max-w-full">
                         <CardTitle className="text-3xl font-bold">
-                            Setup a Passkey
+                            Create a Passkey
                         </CardTitle>
                         <CardDescription>
                             Use a passkey to easily and securely authenticate
@@ -42,7 +44,11 @@ export default function Page() {
                     {passkey ? (
                         <UpdateName passkey={passkey} />
                     ) : (
-                        <CreatePasskey loading={loading} register={register} />
+                        <CreatePasskey
+                            loading={loading}
+                            register={register}
+                            signup={[...searchParams.keys()].includes('signup')}
+                        />
                     )}
                 </Card>
             </div>
@@ -53,7 +59,10 @@ export default function Page() {
 function CreatePasskey({
     loading,
     register,
-}: Pick<ReturnType<typeof useRegisterPasskey>, 'loading' | 'register'>) {
+    signup,
+}: Pick<ReturnType<typeof useRegisterPasskey>, 'loading' | 'register'> & {
+    signup?: boolean;
+}) {
     return (
         <CardFooter className="space-x-4">
             <Button onClick={() => register()} disabled={loading}>
@@ -66,7 +75,7 @@ function CreatePasskey({
                     variant: 'outline',
                 })}
             >
-                Skip
+                {signup ? 'Skip' : 'Back'}
             </Link>
         </CardFooter>
     );

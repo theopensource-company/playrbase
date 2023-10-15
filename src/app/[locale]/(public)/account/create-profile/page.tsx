@@ -95,8 +95,8 @@ export default function CreateProfile() {
                     refreshUser();
                     router.push(
                         webAuthnAvailable
-                            ? '/account/setup-passkey'
-                            : '/console'
+                            ? '/account/create-passkey?signup'
+                            : '/account'
                     );
                 })
                 .catch((e) => {

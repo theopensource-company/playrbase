@@ -13,7 +13,6 @@ export async function sendEmail(email: Email) {
     });
 
     if (Deployed) {
-        console.log(email);
         const command = new SendEmailCommand({
             Destination: {
                 ToAddresses: [email.to],

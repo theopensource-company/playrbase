@@ -62,7 +62,7 @@ export function useWebAuthnAvailable() {
 export function useRegisterPasskey() {
     const [didPoke, setDidPoke] = useState(false);
     const { user, loading: userLoading } = useAuth();
-    const ready = useReadyAfter(10, Deployed);
+    const ready = useReadyAfter(10);
 
     const {
         isLoading: isRegistering,
@@ -135,7 +135,7 @@ export function useRegisterPasskey() {
 export function usePasskeyAuthentication() {
     const [didPoke, setDidPoke] = useState(false);
     const { refreshUser } = useAuth();
-    const ready = useReadyAfter(10, Deployed);
+    const ready = useReadyAfter(10);
     const surreal = useSurreal();
 
     const {

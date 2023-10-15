@@ -139,7 +139,7 @@ export default function Account() {
     );
 }
 
-export function AdminEditor({ admin }: { admin: Admin }) {
+function AdminEditor({ admin }: { admin: Admin }) {
     const { mutateAsync: updateAdmin, isLoading } = useUpdateAdmin(admin.id);
 
     const Schema = z.object({

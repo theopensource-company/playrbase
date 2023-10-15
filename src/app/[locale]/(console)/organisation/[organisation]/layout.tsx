@@ -23,13 +23,10 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
         : params.organisation;
 
     const [scrolled, setScrolled] = useState(false);
+    const { loading: authLoading, user } = useAuth();
     const { isLoading: orgLoading, data: organisation } = useOrganisation({
         slug,
     });
-    const { loading: authLoading, user } = useAuth(({ loading, user }) => ({
-        loading,
-        user,
-    }));
 
     const loading = orgLoading || authLoading;
 

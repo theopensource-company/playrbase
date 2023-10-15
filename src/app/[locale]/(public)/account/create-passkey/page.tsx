@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { surreal } from '@/lib/Surreal';
+import { useSurreal } from '@/lib/Surreal';
 import { useRegisterPasskey } from '@/lib/webauthn';
 import { Credential } from '@/schema/resources/credential';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -92,6 +92,7 @@ function UpdateName({
         null | undefined
     >;
 }) {
+    const surreal = useSurreal();
     const router = useRouter();
 
     const Schema = Credential.pick({

@@ -25,7 +25,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { surreal } from '@/lib/Surreal';
+import { useSurreal } from '@/lib/Surreal';
 import { record } from '@/lib/zod';
 import { Organisation } from '@/schema/resources/organisation';
 import { User, UserAsRelatedUser } from '@/schema/resources/user';
@@ -171,6 +171,7 @@ function ListManager({
     canDeleteOwner?: boolean;
     manager: Data['managers'][number];
 }) {
+    const surreal = useSurreal();
     const { mutate: updateRole, isLoading: isUpdatingRole } = useMutation({
         mutationKey: ['organisation', 'update-role', edge],
         mutationFn: async (role: Organisation['managers'][number]['role']) => {
@@ -314,6 +315,7 @@ function InvitedManager({
     canManage: boolean;
     refresh: () => unknown;
 }) {
+    const surreal = useSurreal();
     const { mutate: updateRole, isLoading: isUpdatingRole } = useMutation({
         mutationKey: ['organisation', 'update-role', edge],
         mutationFn: async (role: Organisation['managers'][number]['role']) => {
@@ -387,6 +389,7 @@ function AddMember({
     organisation: Organisation['id'];
     refresh: () => unknown;
 }) {
+    const surreal = useSurreal();
     const [user, setUser] = useUserSelector();
     const [role, setRole] = useState('event_viewer');
     const [open, setOpen] = useState(false);
@@ -505,6 +508,7 @@ const Invited = z.object({
 type Invited = z.infer<typeof Invited>;
 
 function useData(slug: Organisation['slug']) {
+    const surreal = useSurreal();
     return useQuery({
         queryKey: ['organisation', 'members', slug],
         queryFn: async () => {

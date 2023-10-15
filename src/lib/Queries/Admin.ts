@@ -1,7 +1,7 @@
 import { Admin } from '@/schema/resources/admin';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
-import { buildTableFilters, isNoneValue, surreal } from '../Surreal';
+import { buildTableFilters, isNoneValue, useSurreal } from '../Surreal';
 
 export const buildAdminFilters = buildTableFilters<Admin>(
     async (property, filters) => {
@@ -17,8 +17,9 @@ export const buildAdminFilters = buildTableFilters<Admin>(
 
 export const useAdmins = (
     filters: Partial<Pick<Admin, 'name' | 'email'>> = {}
-) =>
-    useQuery({
+) => {
+    const surreal = useSurreal();
+    return useQuery({
         queryKey: ['admins', filters],
         queryFn: async (): Promise<Admin[]> => {
             const result = await surreal.query<[Admin[]]>(
@@ -33,12 +34,14 @@ export const useAdmins = (
             return z.array(Admin).parse(result[0].result);
         },
     });
+};
 
 export const useAdmin = (filters: {
     id?: Admin['id'];
     email?: Admin['email'];
-}) =>
-    useQuery({
+}) => {
+    const surreal = useSurreal();
+    return useQuery({
         queryKey: ['admin', filters],
         queryFn: async () => {
             const result = await surreal.query<[Admin[]]>(
@@ -51,9 +54,11 @@ export const useAdmin = (filters: {
             return Admin.parse(result[0].result[0]);
         },
     });
+};
 
-export const useUpdateAdmin = (id: Admin['id']) =>
-    useMutation({
+export const useUpdateAdmin = (id: Admin['id']) => {
+    const surreal = useSurreal();
+    return useMutation({
         mutationKey: ['admin', id],
         mutationFn: async (
             changes: Partial<Pick<Admin, 'name' | 'email' | 'profile_picture'>>
@@ -67,9 +72,11 @@ export const useUpdateAdmin = (id: Admin['id']) =>
             return Admin.parse(result[0]);
         },
     });
+};
 
-export const useCreateAdmin = () =>
-    useMutation({
+export const useCreateAdmin = () => {
+    const surreal = useSurreal();
+    return useMutation({
         mutationKey: ['admin'],
         mutationFn: async (
             changes: Pick<Admin, 'name' | 'email'> &
@@ -84,3 +91,4 @@ export const useCreateAdmin = () =>
             return Admin.parse(result[0]);
         },
     });
+};

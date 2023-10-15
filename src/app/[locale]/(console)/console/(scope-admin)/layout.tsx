@@ -7,10 +7,7 @@ import React, { ReactNode, useEffect } from 'react';
 
 export default function AdminBoundry({ children }: { children: ReactNode }) {
     const router = useRouter();
-    const { loading, user } = useAuth(({ loading, user }) => ({
-        loading,
-        user,
-    }));
+    const { loading, user } = useAuth();
 
     useEffect(() => {
         if (!loading && user?.scope !== 'admin')

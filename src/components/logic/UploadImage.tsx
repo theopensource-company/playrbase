@@ -35,13 +35,7 @@ export default function UploadImage({
     const [blob, setBlob] = useState<Blob | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState(false);
-    const { loading, user, refreshUser } = useAuth(
-        ({ loading, user, refreshUser }) => ({
-            loading,
-            user,
-            refreshUser,
-        })
-    );
+    const { loading, user, refreshUser } = useAuth();
 
     // FIXME: Nasty workaround to force react-image-crop to reexecute the "onComplete" function by unrendering and rerendering the whole component.
     // This is needed because otherwise the output will not update when selecting a new picture.

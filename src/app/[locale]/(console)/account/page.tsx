@@ -23,7 +23,7 @@ import {
     TableHead,
     TableRow,
 } from '@/components/ui/table';
-import { surreal } from '@/lib/Surreal';
+import { useSurreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
 import { fullname } from '@/lib/zod';
 import { Admin } from '@/schema/resources/admin';
@@ -34,10 +34,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export default function Account() {
-    const { loading, user } = useAuth(({ loading, user }) => ({
-        loading,
-        user,
-    }));
+    const { loading, user } = useAuth();
 
     return (
         <div className="flex flex-grow flex-col gap-12 pt-6">
@@ -98,14 +95,9 @@ export default function Account() {
 }
 
 function EditName() {
+    const surreal = useSurreal();
     const [open, setOpen] = useState(false);
-    const { loading, user, refreshUser } = useAuth(
-        ({ loading, user, refreshUser }) => ({
-            loading,
-            user,
-            refreshUser,
-        })
-    );
+    const { loading, user, refreshUser } = useAuth();
 
     const Schema = z.object({
         name: fullname(),
@@ -193,10 +185,7 @@ function EditName() {
 function EditEmail() {
     const [open, setOpen] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
-    const { loading, user } = useAuth(({ loading, user }) => ({
-        loading,
-        user,
-    }));
+    const { loading, user } = useAuth();
 
     const Schema = z.object({
         email: z.string().email(),

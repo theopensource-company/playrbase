@@ -3,7 +3,7 @@ import { client } from '@passwordless-id/webauthn';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
-import { surreal } from './Surreal';
+import { useSurreal } from './Surreal';
 import { useAuth } from './auth';
 import { useReadyAfter } from './utilHooks';
 
@@ -136,6 +136,7 @@ export function usePasskeyAuthentication() {
     const [didPoke, setDidPoke] = useState(false);
     const { refreshUser } = useAuth();
     const ready = useReadyAfter(10, Deployed);
+    const surreal = useSurreal();
 
     const {
         isLoading: loading,

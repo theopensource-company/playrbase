@@ -10,7 +10,7 @@ import {
     useOrganisation,
     useUpdateOrganisation,
 } from '@/lib/Queries/Organisation';
-import { surreal } from '@/lib/Surreal';
+import { useSurreal } from '@/lib/Surreal';
 import { promiseTimeout } from '@/lib/utils';
 import { Organisation } from '@/schema/resources/organisation';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -309,6 +309,7 @@ function DescriptionEditor({
 }
 
 function DangerZone({ organisation }: { organisation: Organisation }) {
+    const surreal = useSurreal();
     const router = useRouter();
 
     const Schema = z.object({

@@ -19,7 +19,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { surreal } from '@/lib/Surreal';
+import { useSurreal } from '@/lib/Surreal';
 import { record } from '@/lib/zod';
 import {
     Organisation,
@@ -115,6 +115,7 @@ function RenderUnconfirmed({
     data: Data;
     refetch: () => unknown;
 }) {
+    const surreal = useSurreal();
     const { mutate: accept } = useMutation({
         mutationKey: ['manages', 'accept-invite', edge],
         async mutationFn() {
@@ -179,6 +180,7 @@ function RenderConfirmed({ data: { organisation } }: { data: Data }) {
 }
 
 function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
+    const surreal = useSurreal();
     const [partOf, setPartOf] = useOrganisationSelector();
     const [open, setOpen] = useState(false);
 
@@ -297,6 +299,7 @@ const Data = z.object({
 type Data = z.infer<typeof Data>;
 
 function useData() {
+    const surreal = useSurreal();
     return useQuery({
         queryKey: ['organisations'],
         queryFn: async () => {

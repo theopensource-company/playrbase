@@ -11,7 +11,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { surreal } from '@/lib/Surreal';
+import { useSurreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 import { useWebAuthnAvailable } from '@/lib/webauthn';
@@ -33,9 +33,10 @@ const Schema = z.object({
 type Schema = z.infer<typeof Schema>;
 
 export default function CreateProfile() {
+    const surreal = useSurreal();
     const router = useLocalizedRouter();
     const token = z.string().parse(useSearchParams().get('token'));
-    const refreshUser = useAuth((s) => s.refreshUser);
+    const { refreshUser } = useAuth();
     const decoded = jwt.decode(token);
     const webAuthnAvailable = useWebAuthnAvailable();
 

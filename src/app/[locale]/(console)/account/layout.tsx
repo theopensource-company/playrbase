@@ -15,10 +15,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 export default function ConsoleLayout({ children }: { children: ReactNode }) {
     const router = useRouter();
     const [scrolled, setScrolled] = useState(false);
-    const { loading, user } = useAuth(({ loading, user }) => ({
-        loading,
-        user,
-    }));
+    const { loading, user } = useAuth();
 
     useEffect(() => {
         if (!loading && !user) router.push('/account/signin');

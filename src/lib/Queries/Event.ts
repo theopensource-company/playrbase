@@ -1,6 +1,6 @@
 import { Event } from '@/schema/resources/event';
 import { useQuery } from '@tanstack/react-query';
-import { buildTableFilters, isNoneValue, surreal } from '../../lib/Surreal';
+import { buildTableFilters, isNoneValue, useSurreal } from '../../lib/Surreal';
 
 export function processEventRecord({
     created,
@@ -34,8 +34,9 @@ export const useEvents = (
     filters: Partial<
         Pick<Event, 'organiser' | 'tournament' | 'root_for_org'>
     > = {}
-) =>
-    useQuery({
+) => {
+    const surreal = useSurreal();
+    return useQuery({
         queryKey: ['events', filters],
         queryFn: async () => {
             const result = await surreal.query<[Event[]]>(
@@ -49,3 +50,4 @@ export const useEvents = (
             return result[0].result.map(processEventRecord);
         },
     });
+};

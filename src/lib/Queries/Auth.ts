@@ -1,9 +1,10 @@
 import { User } from '@/schema/resources/user';
 import { useMutation } from '@tanstack/react-query';
-import { database, namespace, surreal } from '../../lib/Surreal';
+import { database, namespace, useSurreal } from '../../lib/Surreal';
 
-export const useSignin = () =>
-    useMutation({
+export const useSignin = () => {
+    const surreal = useSurreal();
+    return useMutation({
         mutationFn: async (
             auth: Pick<User, 'email'> & {
                 password: string;
@@ -20,9 +21,11 @@ export const useSignin = () =>
             return !!token;
         },
     });
+};
 
-export const useSignout = () =>
-    useMutation({
+export const useSignout = () => {
+    const surreal = useSurreal();
+    return useMutation({
         mutationFn: async () => {
             await surreal.invalidate();
             // FIXME: Remove next line once updated to beta 9.
@@ -30,3 +33,4 @@ export const useSignout = () =>
             return true;
         },
     });
+};

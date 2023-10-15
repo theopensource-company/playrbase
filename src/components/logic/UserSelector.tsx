@@ -1,6 +1,6 @@
 'use client';
 
-import { surreal } from '@/lib/Surreal';
+import { useSurreal } from '@/lib/Surreal';
 import { User } from '@/schema/resources/user';
 import { useQuery } from '@tanstack/react-query';
 import React, {
@@ -34,6 +34,7 @@ export function UserSelector({
     limit?: number;
     children?: ReactNode;
 }) {
+    const surreal = useSurreal();
     const [input, setInput] = useState('');
     const [matches, setMatches] = useState<User[]>([]);
     const { data: profile } = useQuery({
@@ -60,7 +61,7 @@ export function UserSelector({
         }, 300);
 
         return () => clearTimeout(timeOutId);
-    }, [input, limit]);
+    }, [input, limit, surreal]);
 
     useEffect(() => {
         if (user && input) setInput('');

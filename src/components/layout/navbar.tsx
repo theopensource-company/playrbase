@@ -10,7 +10,7 @@ import {
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu.tsx';
 import { featureFlags } from '@/config/Environment.ts';
-import { useAuth } from '@/lib/auth.ts';
+import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils.ts';
 import { Language, languages } from '@/locales/languages.ts';
 import {
@@ -120,10 +120,7 @@ export const Navbar = ({ children }: { children?: ReactNode }) => {
 };
 
 const Links = ({ devTools }: { devTools: boolean }) => {
-    const { loading, user } = useAuth(({ loading, user }) => ({
-        loading,
-        user,
-    }));
+    const { loading, user } = useAuth();
 
     return (
         <NavigationMenu className="max-sm:justify-start max-sm:pt-8">
@@ -173,13 +170,7 @@ const Links = ({ devTools }: { devTools: boolean }) => {
 };
 
 const AccountOptions = () => {
-    const { user, loading, signout } = useAuth(
-        ({ user, loading, signout }) => ({
-            user,
-            loading,
-            signout,
-        })
-    );
+    const { user, loading, signout } = useAuth();
 
     return (
         user && (

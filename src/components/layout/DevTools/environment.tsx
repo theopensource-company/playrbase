@@ -14,7 +14,7 @@ import {
     featureFlagOptions,
     featureFlags,
 } from '@/config/Environment';
-import { database, endpoint, namespace, surreal } from '@/lib/Surreal';
+import { database, endpoint, namespace, useSurreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
@@ -24,8 +24,9 @@ import React from 'react';
 dayjs.extend(calendar);
 
 export default function Devtools_Environment() {
+    const surreal = useSurreal();
     const t = useTranslations('components.devtools.environment');
-    const user = useAuth(({ user }) => user);
+    const { user } = useAuth();
 
     return (
         <div className="flex flex-col gap-16">

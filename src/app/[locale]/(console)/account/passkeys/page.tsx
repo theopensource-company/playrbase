@@ -22,7 +22,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { surreal } from '@/lib/Surreal';
+import { useSurreal } from '@/lib/Surreal';
 import { Credential } from '@/schema/resources/credential';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogClose } from '@radix-ui/react-dialog';
@@ -133,6 +133,7 @@ function EditCredential({
     credential: Credential;
     refetch: () => unknown;
 }) {
+    const surreal = useSurreal();
     const [open, setOpen] = useState(false);
     const Schema = Credential.pick({
         name: true,
@@ -211,6 +212,7 @@ function DeleteCredential({
     credential: Credential;
     refetch: () => unknown;
 }) {
+    const surreal = useSurreal();
     const Schema = z.object({
         name: z.literal(credential.name),
     });
@@ -290,6 +292,7 @@ function DeleteCredential({
 }
 
 function useData() {
+    const surreal = useSurreal();
     return useQuery({
         queryKey: ['passkeys'],
         queryFn: async () => {

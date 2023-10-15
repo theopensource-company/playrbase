@@ -4,7 +4,7 @@ import {
 } from '@/schema/resources/organisation';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
-import { buildTableFilters, isNoneValue, surreal } from '../../lib/Surreal';
+import { buildTableFilters, isNoneValue, useSurreal } from '../../lib/Surreal';
 
 export const buildOrganisationFilters = buildTableFilters<Organisation>(
     async (property, filters) => {
@@ -20,8 +20,9 @@ export const buildOrganisationFilters = buildTableFilters<Organisation>(
 
 export const useOrganisations = (
     filters: Partial<Pick<Organisation, 'part_of'>> = {}
-) =>
-    useQuery({
+) => {
+    const surreal = useSurreal();
+    return useQuery({
         queryKey: ['organisations', filters],
         queryFn: async () => {
             const result = await surreal.query<[Organisation[]]>(
@@ -35,14 +36,16 @@ export const useOrganisations = (
             return z.array(Organisation).parse(result[0].result);
         },
     });
+};
 
 export const useOrganisation = <
     T extends OrganisationSafeParse = OrganisationSafeParse,
 >(filters: {
     id?: Organisation['id'];
     slug?: Organisation['slug'];
-}) =>
-    useQuery({
+}) => {
+    const surreal = useSurreal();
+    return useQuery({
         queryKey: ['organisation', filters],
         queryFn: async () => {
             const result = await surreal.query<[T[]]>(
@@ -56,9 +59,11 @@ export const useOrganisation = <
             return OrganisationSafeParse.parse(result[0].result[0]) as T;
         },
     });
+};
 
-export const useUpdateOrganisation = (id: Organisation['id']) =>
-    useMutation({
+export const useUpdateOrganisation = (id: Organisation['id']) => {
+    const surreal = useSurreal();
+    return useMutation({
         mutationKey: ['organisation', id],
         mutationFn: async (
             changes: Partial<
@@ -85,3 +90,4 @@ export const useUpdateOrganisation = (id: Organisation['id']) =>
             return Organisation.parse(result[0]);
         },
     });
+};

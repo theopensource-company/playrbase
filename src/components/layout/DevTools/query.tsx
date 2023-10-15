@@ -2,11 +2,12 @@
 
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { surreal } from '@/lib/Surreal';
+import { useSurreal } from '@/lib/Surreal';
 import { useTranslations } from 'next-intl';
 import React, { ReactNode, createRef, useCallback, useState } from 'react';
 
 export default function Devtools_Query() {
+    const surreal = useSurreal();
     const [result, setResult] = useState<object>({});
     const inputRef = createRef<HTMLTextAreaElement>();
     const t = useTranslations('components.devtools.query');
@@ -19,7 +20,7 @@ export default function Devtools_Query() {
         } else {
             alert(t('alert.no-query'));
         }
-    }, [inputRef, setResult, t]);
+    }, [inputRef, setResult, t, surreal]);
 
     return (
         <div className="flex flex-col gap-16">

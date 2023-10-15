@@ -4,7 +4,7 @@ import { useAuth } from '@/lib/auth';
 import { useEffect } from 'react';
 
 export function Hydrate() {
-    const refreshUser = useAuth(({ refreshUser }) => refreshUser);
+    const { refreshUser } = useAuth();
 
     useEffect(() => {
         setInterval(refreshUser, 60000);

@@ -1,7 +1,7 @@
 import { User } from '@/schema/resources/user';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
-import { buildTableFilters, isNoneValue, surreal } from '../Surreal';
+import { buildTableFilters, isNoneValue, useSurreal } from '../Surreal';
 
 export const buildUserFilters = buildTableFilters<User>(
     async (property, filters) => {
@@ -15,8 +15,11 @@ export const buildUserFilters = buildTableFilters<User>(
     }
 );
 
-export const useUsers = (filters: Partial<Pick<User, 'name' | 'email'>> = {}) =>
-    useQuery({
+export const useUsers = (
+    filters: Partial<Pick<User, 'name' | 'email'>> = {}
+) => {
+    const surreal = useSurreal();
+    return useQuery({
         queryKey: ['events', filters],
         queryFn: async () => {
             const result = await surreal.query<[User[]]>(
@@ -30,9 +33,14 @@ export const useUsers = (filters: Partial<Pick<User, 'name' | 'email'>> = {}) =>
             return z.array(User).parse(result[0].result);
         },
     });
+};
 
-export const useUser = (filters: { id?: User['id']; email?: User['email'] }) =>
-    useQuery({
+export const useUser = (filters: {
+    id?: User['id'];
+    email?: User['email'];
+}) => {
+    const surreal = useSurreal();
+    return useQuery({
         queryKey: ['events', filters],
         queryFn: async () => {
             const result = await surreal.query<[User[]]>(
@@ -44,3 +52,4 @@ export const useUser = (filters: { id?: User['id']; email?: User['email'] }) =>
             return User.parse(result[0].result[0]);
         },
     });
+};

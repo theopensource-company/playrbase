@@ -1,7 +1,7 @@
+import { sendEmail } from '@/app/(api)/lib/email';
 import { generateUserToken } from '@/app/(api)/lib/token';
 import AuthMagicLinkEmail from '@/emails/auth-magic-link';
 import { fullname } from '@/lib/zod';
-import { Email } from '@/schema/miscellaneous/email';
 import { Admin } from '@/schema/resources/admin';
 import { token_secret } from '@/schema/resources/auth';
 import { User } from '@/schema/resources/user';
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
             }
         );
 
-        const body = Email.parse({
+        await sendEmail({
             from: 'noreply@playrbase.app',
             to: email,
             subject: 'PlayrBase signin link',
@@ -53,14 +53,6 @@ export async function POST(req: NextRequest) {
                 plainText: true,
             }),
             html: render(AuthMagicLinkEmail({ token })),
-        } satisfies Email);
-
-        await fetch('http://127.0.0.1:13004/email/store', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
         });
     }
 

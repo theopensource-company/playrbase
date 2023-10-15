@@ -1,10 +1,10 @@
+import { sendEmail } from '@/app/(api)/lib/email';
 import {
     extractUserTokenFromRequest,
     generateUserToken,
 } from '@/app/(api)/lib/token';
 import AuthChangeEmailEmail from '@/emails/auth-change-email';
 import AuthRevertChangeEmailEmail from '@/emails/auth-revert-change-email';
-import { Email } from '@/schema/miscellaneous/email';
 import { Admin } from '@/schema/resources/admin';
 import { token_secret } from '@/schema/resources/auth';
 import { User } from '@/schema/resources/user';
@@ -71,46 +71,31 @@ export async function POST(req: NextRequest) {
         }
     );
 
-    const body_verify = Email.parse({
-        from: 'noreply@playrbase.app',
-        to: new_email,
-        subject: 'PlayrBase change email',
-        text: render(AuthChangeEmailEmail({ token: token_verify }), {
-            plainText: true,
-        }),
-        html: render(AuthChangeEmailEmail({ token: token_verify })),
-    } satisfies Email);
-
-    const body_reset = Email.parse({
-        from: 'noreply@playrbase.app',
-        to: record.email,
-        subject: 'PlayrBase change email',
-        text: render(
-            AuthRevertChangeEmailEmail({ token: token_reset, new_email }),
-            {
+    await Promise.all([
+        sendEmail({
+            from: 'noreply@playrbase.app',
+            to: new_email,
+            subject: 'PlayrBase change email',
+            text: render(AuthChangeEmailEmail({ token: token_verify }), {
                 plainText: true,
-            }
-        ),
-        html: render(
-            AuthRevertChangeEmailEmail({ token: token_reset, new_email })
-        ),
-    } satisfies Email);
-
-    await fetch('http://127.0.0.1:13004/email/store', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body_verify),
-    });
-
-    await fetch('http://127.0.0.1:13004/email/store', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body_reset),
-    });
+            }),
+            html: render(AuthChangeEmailEmail({ token: token_verify })),
+        }),
+        sendEmail({
+            from: 'noreply@playrbase.app',
+            to: record.email,
+            subject: 'PlayrBase change email',
+            text: render(
+                AuthRevertChangeEmailEmail({ token: token_reset, new_email }),
+                {
+                    plainText: true,
+                }
+            ),
+            html: render(
+                AuthRevertChangeEmailEmail({ token: token_reset, new_email })
+            ),
+        }),
+    ]);
 
     return NextResponse.json({ success: true });
 }

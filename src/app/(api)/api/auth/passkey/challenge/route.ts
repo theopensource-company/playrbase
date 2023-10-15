@@ -4,13 +4,18 @@ import { Challenge } from '@/schema/resources/challenge';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
-    const { decoded: token } = extractUserTokenFromRequest(req);
+    let user;
+    const fromUrl = new URL(req.url).searchParams.get('user');
+    if (fromUrl) {
+        const { decoded: token } = extractUserTokenFromRequest(req);
+        if (token?.ID === fromUrl) user = token?.ID;
+    }
 
     const [challenge] = await surreal.create<Challenge, { user?: string }>(
         'challenge',
-        token
+        user
             ? {
-                  user: token.ID,
+                  user,
               }
             : undefined
     );

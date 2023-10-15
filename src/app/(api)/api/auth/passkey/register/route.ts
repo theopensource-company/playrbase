@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     const challenge = await surreal
         .query<[Challenge]>(
             /* surrealql */ `
-                SELECT * FROM ONLY challenge WHERE id = $challengeId AND user = $user AND created > time::now() - 5m
+                SELECT * FROM ONLY type::thing($challengeId) WHERE user = $user AND created > time::now() - 5m
             `,
             { challengeId, user: user.id }
         )

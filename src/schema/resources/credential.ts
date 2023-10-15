@@ -16,7 +16,7 @@ const credential = /* surrealql */ `
 
 export const Credential = z.object({
     id: record('credential'),
-    user: record('user').optional(),
+    user: record('user'),
     name: z.string().min(1).max(64),
     public_key: z.string(),
     algorithm: z.union([z.literal('RS256'), z.literal('ES256')]),

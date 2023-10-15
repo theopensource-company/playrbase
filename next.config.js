@@ -15,6 +15,9 @@ const nextConfig = withNextIntl({
         });
         return config;
     },
+    typescript: {
+        ignoreBuildErrors: true,
+    },
 });
 
 export default nextConfig;

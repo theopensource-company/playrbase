@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
 
     const expected = {
         challenge: challenge.challenge,
-        origin: req.nextUrl.origin,
+        origin: process.env.PLAYRBASE_ENV_ORIGIN ?? req.nextUrl.origin,
         userVerified: true,
         counter: -1,
     };

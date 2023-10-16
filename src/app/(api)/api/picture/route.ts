@@ -66,7 +66,9 @@ export async function PUT(req: NextRequest) {
 
     const public_url = new URL(
         `/cdn/s3/${key}`,
-        new URL(req.headers.get('referer') ?? '').origin
+        new URL(
+            process.env.PLAYRBASE_ENV_ORIGIN ?? req.headers.get('referer') ?? ''
+        ).origin
     );
 
     if (s3res) {

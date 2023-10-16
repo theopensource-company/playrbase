@@ -84,12 +84,21 @@ export function useRegisterPasskey() {
                     throw new Error(`Failed to obtain challenge: ${res.error}`);
                 });
 
-            const registration = await client.register(user.email, challenge, {
-                userHandle: crypto
-                    .getRandomValues(new Uint8Array(32))
-                    .toString()
-                    .slice(64),
-            });
+            const registration = await client
+                .register(user.email, challenge, {
+                    userHandle: crypto
+                        .getRandomValues(new Uint8Array(32))
+                        .toString()
+                        .slice(64),
+                })
+                .catch((rege) => {
+                    console.log({ rege });
+                    return false;
+                });
+
+            console.log({ registration });
+
+            if (!registration) return null;
 
             const { id: credentialId, name } = await fetch(
                 '/api/auth/passkey/register',
@@ -156,7 +165,12 @@ export function usePasskeyAuthentication() {
 
             const authentication = await client
                 .authenticate([], challenge)
-                .catch(() => false);
+                .catch((authe) => {
+                    console.log({ authe });
+                    return false;
+                });
+
+            console.log({ authentication });
 
             if (!authentication) return null;
 

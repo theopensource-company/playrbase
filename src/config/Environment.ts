@@ -60,19 +60,9 @@ export const featureFlags = new FeatureFlags({
                 : parseInt(v);
         };
 
-        if (typeof window !== 'undefined') {
-            const v = localStorage.getItem(`playrbase_fflag_${flag}`);
-            if (v) return parse(v);
-        }
-
         if (process.env[`NEXT_PUBLIC_FFLAG_${flag.toUpperCase()}`]) {
             const v = process.env[`NEXT_PUBLIC_FFLAG_${flag.toUpperCase()}`];
             if (v) return parse(v);
-        }
-    },
-    subscription: (flag, value) => {
-        if (typeof window !== 'undefined') {
-            localStorage.setItem(`playrbase_fflag_${flag}`, `${value}`);
         }
     },
 });

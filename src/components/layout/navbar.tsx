@@ -43,9 +43,14 @@ export const Navbar = ({ children }: { children?: ReactNode }) => {
     const [scrolled, setScrolled] = useState(false);
 
     // Enabled in prod/preview with:
-    // localStorage.setItem('playrbase_fflags_devTools', 'true')
+    // localStorage.setItem('devTools', 'enabled')
     // Then reload page
-    const devTools = featureFlags.store.devTools;
+    const [devTools, setDevTools] = useState(featureFlags.store.devTools);
+    useEffect(() => {
+        if (localStorage.getItem('devTools') == 'enabled') {
+            setDevTools(true);
+        }
+    }, [setDevTools]);
 
     useEffect(() => {
         const handler = () => {

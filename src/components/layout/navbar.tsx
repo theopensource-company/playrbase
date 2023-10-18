@@ -43,14 +43,9 @@ export const Navbar = ({ children }: { children?: ReactNode }) => {
     const [scrolled, setScrolled] = useState(false);
 
     // Enabled in prod/preview with:
-    // localStorage.setItem('devTools', 'enabled')
+    // localStorage.setItem('playrbase_fflags_devTools', 'true')
     // Then reload page
-    const [devTools, setDevTools] = useState(featureFlags.devTools);
-    useEffect(() => {
-        if (localStorage.getItem('devTools') == 'enabled') {
-            setDevTools(true);
-        }
-    }, [setDevTools]);
+    const devTools = featureFlags.store.devTools;
 
     useEffect(() => {
         const handler = () => {
@@ -152,7 +147,7 @@ const Links = ({ devTools }: { devTools: boolean }) => {
                         </Link>
                     )}
                 </NavigationMenuItem>
-                {featureFlags.switchLanguage && (
+                {featureFlags.store.switchLanguage && (
                     <NavigationMenuItem>
                         <NavigationMenuTrigger className="bg-transparent">
                             <Languages size={20} />

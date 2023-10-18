@@ -1,3 +1,5 @@
+import { FeatureFlags } from '@theopensource-company/feature-flags';
+
 export const Environment = ['prod', 'production', undefined].includes(
     process.env.NEXT_PUBLIC_ENV
 )
@@ -8,111 +10,69 @@ export const Deployed =
     process.env.NEXT_PUBLIC_DEPLOYMENT_STATUS === 'deployed';
 export const Preview = Environment != 'prod' && Deployed;
 
-const hasFFValue = (v: unknown): v is FeatureFlagValue =>
-    ['string', 'number', 'boolean'].includes(typeof v);
-
 /////////////////////////////////////
 ///             Schema            ///
 /////////////////////////////////////
 
-export const featureFlagSchema = {
+export const schema = {
     preLaunchPage: {
-        options: [false, true] as const,
+        options: [false, true],
     },
     devTools: {
-        options: [false, true] as const,
+        options: [false, true],
     },
     switchLanguage: {
-        options: [true, false] as const,
+        options: [true, false],
     },
     migrateDatabase: {
-        options: [false, true] as const,
+        options: [false, true],
         readonly: true,
     },
     localEmail: {
-        options: [false, true] as const,
+        options: [false, true],
         readonly: true,
     },
-} satisfies FeatureFlagSchema;
+} as const;
 
-/////////////////////////////////////
-///         Environmental         ///
-/////////////////////////////////////
-
-export const featureFlagDefaults = {
-    prod: {
-        preLaunchPage: true,
+export const featureFlags = new FeatureFlags({
+    schema,
+    environment: Preview ? 'preview' : Environment,
+    defaults: {
+        prod: {
+            preLaunchPage: true,
+        },
+        dev: {
+            devTools: true,
+            migrateDatabase: true,
+            localEmail: true,
+        },
+        preview: {},
     },
-    dev: {
-        devTools: true,
-        migrateDatabase: true,
-        localEmail: true,
+    overrides: (flag) => {
+        const parse = (v: string) => {
+            const lower = v?.toLowerCase();
+            return lower === 'true'
+                ? true
+                : lower === 'false'
+                ? false
+                : !v || isNaN(+v)
+                ? v
+                : parseInt(v);
+        };
+
+        if (typeof window !== 'undefined') {
+            const v = localStorage.getItem(`playrbase_fflag_${flag}`);
+            if (v) return parse(v);
+        }
+
+        if (process.env[`NEXT_PUBLIC_FFLAG_${flag.toUpperCase()}`]) {
+            const v = process.env[`NEXT_PUBLIC_FFLAG_${flag.toUpperCase()}`];
+            if (v) return parse(v);
+        }
     },
-    preview: {},
-} satisfies FeatureFlagDefaults;
-
-/////////////////////////////////////
-///            Helpers            ///
-/////////////////////////////////////
-
-const featureFlagFromEnv = (flag: FeatureFlag): FeatureFlagValue | void => {
-    const schema = featureFlagSchema[flag];
-    if ('readonly' in schema && schema.readonly) return undefined;
-    if (process.env[`NEXT_PUBLIC_FFLAG_${flag.toUpperCase()}`]) {
-        const v = process.env[`NEXT_PUBLIC_FFLAG_${flag.toUpperCase()}`];
-        const lower = v?.toLowerCase();
-        return lower === 'true'
-            ? true
-            : lower === 'false'
-            ? false
-            : !v || isNaN(+v)
-            ? v
-            : parseInt(v);
-    }
-};
-
-const featureFlagDefault = (flag: FeatureFlag): FeatureFlagValue => {
-    const envFlags = featureFlagDefaults[Preview ? 'preview' : Environment];
-    return flag in envFlags
-        ? envFlags[flag as keyof typeof envFlags]
-        : featureFlagSchema[flag].options[0];
-};
-
-export const featureFlagOptions = Object.keys(
-    featureFlagSchema
-) as FeatureFlag[];
-
-export const featureFlags = featureFlagOptions.reduce((prev, flag) => {
-    const fromEnv = featureFlagFromEnv(flag);
-    return {
-        ...prev,
-        [flag]: hasFFValue(fromEnv) ? fromEnv : featureFlagDefault(flag),
-    } as FeatureFlags;
-}, {} as FeatureFlags);
-
-/////////////////////////////////////
-///             Types             ///
-/////////////////////////////////////
-
-export type TEnv = 'dev' | 'prod';
-export type FeatureFlagValue = boolean | number | string;
-export type FeatureFlagSchema = Record<
-    string,
-    {
-        readonly?: boolean;
-        options: readonly [FeatureFlagValue, ...FeatureFlagValue[]];
-    }
->;
-
-export type FeatureFlags = {
-    [T in FeatureFlag]: FeatureFlagOption<T>;
-};
-
-export type FeatureFlagDefaults = Record<
-    TEnv | 'preview',
-    Partial<FeatureFlags>
->;
-
-export type FeatureFlag = keyof typeof featureFlagSchema;
-export type FeatureFlagOption<TFeatureFlag extends FeatureFlag> =
-    (typeof featureFlagSchema)[TFeatureFlag]['options'][number];
+    subscription: (flag, value) => {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem(`playrbase_fflag_${flag}`, `${value}`);
+        }
+    },
+});

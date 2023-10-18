@@ -47,14 +47,16 @@ export function DevTools() {
                                 <TabsTrigger
                                     className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
                                     value="emails"
-                                    disabled={!featureFlags.localEmail}
+                                    disabled={!featureFlags.store.localEmail}
                                 >
                                     Emails
                                 </TabsTrigger>
                                 <TabsTrigger
                                     className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
                                     value="migrate-database"
-                                    disabled={!featureFlags.migrateDatabase}
+                                    disabled={
+                                        !featureFlags.store.migrateDatabase
+                                    }
                                 >
                                     {t('migrate-database.title')}
                                 </TabsTrigger>

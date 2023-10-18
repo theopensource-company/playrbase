@@ -11,11 +11,12 @@ import {
     Deployed,
     Environment,
     Preview,
-    featureFlagOptions,
     featureFlags,
+    schema,
 } from '@/config/Environment';
 import { database, endpoint, namespace, useSurreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
+import { FeatureFlags } from '@theopensource-company/feature-flags';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
 import { useTranslations } from 'next-intl';
@@ -71,17 +72,21 @@ export default function Devtools_Environment() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {featureFlagOptions.map((flag) => (
-                                <TableRow key={flag}>
-                                    <TableCell>{flag}</TableCell>
-                                    <TableCell className="w-[150px] capitalize">
-                                        {typeof featureFlags[flag]}
-                                    </TableCell>
-                                    <TableCell>
-                                        {JSON.stringify(featureFlags[flag])}
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {FeatureFlags.listOptionsFromSchema(schema).map(
+                                (flag) => (
+                                    <TableRow key={flag}>
+                                        <TableCell>{flag}</TableCell>
+                                        <TableCell className="w-[150px] capitalize">
+                                            {typeof featureFlags.store[flag]}
+                                        </TableCell>
+                                        <TableCell>
+                                            {JSON.stringify(
+                                                featureFlags.store[flag]
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            )}
                         </TableBody>
                     </Table>
                 </div>

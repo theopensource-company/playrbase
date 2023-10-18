@@ -21,7 +21,7 @@ export default function Home() {
                 <h2>{t.rich('headline.2', { tint })}</h2>
             </div>
             <div>
-                {featureFlags.preLaunchPage ? (
+                {featureFlags.store.preLaunchPage ? (
                     <Button disabled>
                         <Clock className="mr-2 h-4 w-4" />
                         {t('button.releasing-soon')}

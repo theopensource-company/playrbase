@@ -3,6 +3,7 @@
 Playrbase is a flexible player and event management system.
 
 ## Requirements
+- Tested with NodeJS v21.1.0
 - pnpm
 - SurrealDB
 - `minio` and `mc` executable available in PATH

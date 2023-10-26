@@ -15,7 +15,7 @@
     "dev-email": "email dev --dir ./src/emails --port 13005",
     "ts": "tsc --watch",
     "lint": "eslint . --ext ts --ext tsx --max-warnings 0",
-    "deploy": "export NODE_ENV=\"production\" SURREAL_DATABASE=playrbase-deployment_$AWS_BRANCH && export NEXT_PUBLIC_SURREAL_DATABASE=$SURREAL_DATABASE && ts-node ./src/scripts/predeploy.ts && pnpm build",
+    "deploy": "export NODE_ENV=\"production\" SURREAL_DATABASE=playrbase-deployment_$AWS_BRANCH && export NEXT_PUBLIC_SURREAL_DATABASE=$SURREAL_DATABASE && node --loader ts-node/esm ./src/scripts/predeploy.ts && pnpm build",
     "build": "next build && rm -rf out/dev"
   },
   "dependencies": {

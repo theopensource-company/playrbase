@@ -15,6 +15,9 @@ const nextConfig = withNextIntl({
         });
         return config;
     },
+    experimental: {
+        webpackBuildWorker: true
+    }
 });
 
 export default nextConfig;

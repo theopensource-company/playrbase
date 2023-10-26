@@ -11,9 +11,9 @@ export default function Page() {
     const slug = Array.isArray(params.organisation)
         ? params.organisation[0]
         : params.organisation;
-    const { isLoading, data: organisation } = useOrganisation({ slug });
+    const { isPending, data: organisation } = useOrganisation({ slug });
 
-    return isLoading ? (
+    return isPending ? (
         <Container className="flex w-full flex-grow items-center justify-center">
             <Loader2 size={50} className="animate-spin" />
         </Container>

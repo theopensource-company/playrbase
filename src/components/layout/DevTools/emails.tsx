@@ -33,7 +33,7 @@ dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
 
 export default function Devtools_Emails() {
-    const { data, isLoading } = useQuery({
+    const { data, isPending } = useQuery({
         queryKey: ['devkit', '/email/list'],
         queryFn: async () => {
             const raw = await fetch('/api/devkit/email/list');
@@ -75,7 +75,7 @@ export default function Devtools_Emails() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {isLoading
+                    {isPending
                         ? new Array(5).fill(0).map((_, i) => (
                               <TableRow key={i}>
                                   <TableCell>

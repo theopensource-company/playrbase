@@ -43,7 +43,7 @@ export default function Account() {
     const slug = Array.isArray(params.organisation)
         ? params.organisation[0]
         : params.organisation;
-    const { isLoading, data, refetch } = useData(slug);
+    const { isPending, data, refetch } = useData(slug);
 
     const organisation = data?.organisation;
     const invited_members = data?.invited_members;
@@ -62,7 +62,7 @@ export default function Account() {
             1
         );
 
-    return isLoading ? (
+    return isPending ? (
         <Container className="flex w-full flex-grow items-center justify-center">
             <Loader2 size={50} className="animate-spin" />
         </Container>
@@ -172,7 +172,7 @@ function ListManager({
     manager: Data['managers'][number];
 }) {
     const surreal = useSurreal();
-    const { mutate: updateRole, isLoading: isUpdatingRole } = useMutation({
+    const { mutate: updateRole, isPending: isUpdatingRole } = useMutation({
         mutationKey: ['organisation', 'update-role', edge],
         mutationFn: async (role: Organisation['managers'][number]['role']) => {
             await surreal.merge(edge, {
@@ -183,7 +183,7 @@ function ListManager({
         },
     });
 
-    const { mutate: deleteManager, isLoading: isDeletingManager } = useMutation(
+    const { mutate: deleteManager, isPending: isDeletingManager } = useMutation(
         {
             mutationKey: ['organisation', 'delete-manager', edge],
             mutationFn: async () => {
@@ -316,7 +316,7 @@ function InvitedManager({
     refresh: () => unknown;
 }) {
     const surreal = useSurreal();
-    const { mutate: updateRole, isLoading: isUpdatingRole } = useMutation({
+    const { mutate: updateRole, isPending: isUpdatingRole } = useMutation({
         mutationKey: ['organisation', 'update-role', edge],
         mutationFn: async (role: Organisation['managers'][number]['role']) => {
             await surreal.merge(edge, {
@@ -327,7 +327,7 @@ function InvitedManager({
         },
     });
 
-    const { mutate: revokeInvite, isLoading: isRevokingInvite } = useMutation({
+    const { mutate: revokeInvite, isPending: isRevokingInvite } = useMutation({
         mutationKey: ['organisation', 'revoke-invite', edge],
         mutationFn: async () => {
             await surreal.delete(edge);

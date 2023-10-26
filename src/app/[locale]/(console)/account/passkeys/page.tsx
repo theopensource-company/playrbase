@@ -34,7 +34,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export default function Account() {
-    const { data: credentials, isLoading, refetch } = useData();
+    const { data: credentials, isPending, refetch } = useData();
 
     return (
         <div className="flex flex-grow flex-col gap-12 pt-6">
@@ -69,7 +69,7 @@ export default function Account() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {isLoading &&
+                        {isPending &&
                             new Array(3).fill(0).map((_, id) => (
                                 <TableRow key={id}>
                                     <TableCell>

@@ -34,7 +34,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export default function Account() {
-    const { data: organisations, isLoading, refetch } = useData();
+    const { data: organisations, isPending, refetch } = useData();
 
     return (
         <div className="flex flex-grow flex-col gap-12 pt-6">
@@ -59,7 +59,7 @@ export default function Account() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {isLoading && (
+                    {isPending && (
                         <TableRow>
                             <TableCell>
                                 <Skeleton className="h-10 w-10 rounded-full" />

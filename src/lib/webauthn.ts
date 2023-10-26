@@ -64,7 +64,7 @@ export function useRegisterPasskey() {
     const ready = useReadyAfter(10);
 
     const {
-        isLoading: isRegistering,
+        isPending: isRegistering,
         mutate: register,
         data: passkey,
     } = useMutation({
@@ -148,7 +148,7 @@ export function usePasskeyAuthentication() {
     const surreal = useSurreal();
 
     const {
-        isLoading: loading,
+        isPending: loading,
         mutate: authenticate,
         data: passkey,
     } = useMutation({

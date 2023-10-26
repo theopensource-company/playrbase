@@ -28,12 +28,12 @@ export default function Account() {
         ? params.organisation[0]
         : params.organisation;
     const {
-        isLoading,
+        isPending,
         data: organisation,
         refetch,
     } = useOrganisation<Organisation>({ slug });
 
-    return isLoading ? (
+    return isPending ? (
         <Container className="flex w-full flex-grow items-center justify-center">
             <Loader2 size={50} className="animate-spin" />
         </Container>

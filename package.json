@@ -97,5 +97,10 @@
     "@babel/core": "^7.20.7",
     "aws-crt": "^1.18.0",
     "react-hook-form": "^7.41.2"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@react-email/render@0.0.7": "patches/@react-email__render@0.0.7.patch"
+    }
   }
 }

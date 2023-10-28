@@ -90,14 +90,8 @@ export function useRegisterPasskey() {
                         .getRandomValues(new Uint8Array(32))
                         .toString()
                         .slice(64),
-                    debug: true,
                 })
-                .catch((rege) => {
-                    console.log({ rege });
-                    return false;
-                });
-
-            console.log({ registration });
+                .catch(() => false);
 
             if (!registration) return null;
 
@@ -165,13 +159,8 @@ export function usePasskeyAuthentication() {
                 });
 
             const authentication = await client
-                .authenticate([], challenge, { debug: true })
-                .catch((authe) => {
-                    console.log({ authe });
-                    return false;
-                });
-
-            console.log({ authentication });
+                .authenticate([], challenge)
+                .catch(() => false);
 
             if (!authentication) return null;
 

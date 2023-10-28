@@ -1,73 +1,79 @@
 'use client';
 
+import { signout as actionSignout } from '@/actions/auth';
 import { Admin } from '@/schema/resources/admin';
 import { User } from '@/schema/resources/user';
-import React, { ReactNode, createContext, useContext, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import React, { ReactNode, createContext, useContext } from 'react';
 import { useSurreal } from './Surreal';
 
 type AnyUser = User | Admin;
 
 export type AuthStore = {
-    user?: AnyUser & { scope: string };
+    user?: (AnyUser & { scope: string }) | null;
     loading: boolean;
-    setUser: (user: AnyUser & { scope: string }) => void;
     refreshUser: () => Promise<void>;
     signout: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthStore>({
     loading: true,
-    setUser() {},
     async refreshUser() {},
     async signout() {},
 });
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function useCreateAuthState() {
     const surreal = useSurreal();
-    const [state, setState] = useState<AuthStore>({
-        loading: true,
-        setUser(user: AnyUser & { scope: string }) {
-            setState({ ...state, loading: false, user });
-        },
-        async refreshUser() {
-            await surreal
-                .query<[(AnyUser & { scope: string })[]]>(
-                    /* surrealql */ `
-            IF $auth THEN 
-                SELECT *, meta::tb(id) AS scope FROM $auth
-            ELSE
-                RETURN []
-            END;
-        `
-                )
-                .then((res) => {
-                    const user = res?.[0]?.result?.[0];
-                    if (res?.[0]?.status === 'OK' && user) {
-                        setState({ ...state, user, loading: false });
-                    } else {
-                        setState({ ...state, loading: false });
-                    }
-                });
-        },
-        async signout() {
-            setState({
-                ...state,
-                user: undefined,
-                loading: true,
-            });
+    const {
+        data: user,
+        isLoading: isFetchingUser,
+        refetch: refreshUser,
+    } = useQuery({
+        queryKey: ['state', 'auth'],
+        refetchInterval: 60000,
+        refetchIntervalInBackground: false,
+        async queryFn() {
+            const [res] = await surreal.query<
+                [AnyUser & { scope: string }]
+            >(/* surrealql */ `
+                IF $auth THEN 
+                    SELECT *, meta::tb(id) AS scope FROM ONLY $auth
+                ELSE
+                    RETURN NONE
+                END;
+            `);
 
-            await Promise.all([
-                fetch('/api/auth/token', { method: 'DELETE' }),
-                surreal.invalidate(),
-            ]);
-
-            setState({
-                ...state,
-                user: undefined,
-                loading: false,
-            });
+            if (res.status == 'OK') {
+                return res.result;
+            } else {
+                throw new Error(res.detail);
+            }
         },
     });
+
+    const { mutate: signout, isPending: isSigningOut } = useMutation({
+        mutationKey: ['state', 'auth'],
+        async mutationFn() {
+            await Promise.all([actionSignout(), surreal.invalidate()]);
+        },
+    });
+
+    const loading = isFetchingUser || isSigningOut;
+
+    return {
+        loading,
+        user,
+        refreshUser: async () => {
+            await refreshUser();
+        },
+        signout: async () => {
+            await signout();
+        },
+    } satisfies AuthStore;
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+    const state = useCreateAuthState();
 
     return (
         <AuthContext.Provider value={state}>{children}</AuthContext.Provider>

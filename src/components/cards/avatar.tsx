@@ -18,16 +18,17 @@ import {
 export function Avatar({
     loading,
     size,
-    profile = unknownProfile,
+    profile,
     renderBadge = true,
     className,
 }: {
-    profile?: Profile;
+    profile?: Profile | null;
     loading?: boolean;
     size?: 'tiny' | 'small' | 'normal' | 'big' | 'huge';
     renderBadge?: boolean;
     className?: string;
 }) {
+    profile = profile ?? unknownProfile;
     const avatarFallback = avatarFallbackByName(profile.name);
     const avatarSize = {
         tiny: 'h-8 w-8 text-md',

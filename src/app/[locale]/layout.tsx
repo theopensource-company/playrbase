@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 
 import React from 'react';
 
@@ -9,7 +9,6 @@ import { importLocale } from '@/locales';
 import { Language } from '@/locales/languages';
 import { NextIntlClientProvider, useLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
-import { Hydrate } from './hydrate';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
@@ -18,15 +17,15 @@ export const metadata: Metadata = {
         template: `%s - ${siteConfig.name}`,
     },
     description: siteConfig.description,
-    themeColor: [
-        { media: '(prefers-color-scheme: light)', color: 'white' },
-        { media: '(prefers-color-scheme: dark)', color: 'black' },
-    ],
     icons: {
         icon: '/favicon.ico',
         shortcut: '/apple-touch-icon.png',
         apple: '/apple-touch-icon.png',
     },
+};
+
+export const viewport: Viewport = {
+    themeColor: [{ media: '(prefers-color-scheme: dark)', color: 'black' }],
 };
 
 interface RootLayoutProps {
@@ -65,7 +64,6 @@ export default async function RootLayout({
                             messages={messages}
                         >
                             <div className="flex min-h-screen flex-col">
-                                <Hydrate />
                                 {children}
                             </div>
                         </NextIntlClientProvider>

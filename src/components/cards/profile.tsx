@@ -10,14 +10,15 @@ import { Avatar } from './avatar';
 export function Profile({
     loading,
     size,
-    profile = unknownProfile,
+    profile,
     noSub,
 }: {
-    profile?: TProfile;
+    profile?: TProfile | null;
     loading?: boolean;
     size?: 'tiny' | 'small' | 'normal' | 'big';
     noSub?: boolean;
 }) {
+    profile = profile ?? unknownProfile;
     return (
         <div
             className={cn(

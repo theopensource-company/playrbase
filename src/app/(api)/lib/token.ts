@@ -38,7 +38,6 @@ export function generateUserToken({
         `playrbase-token=${token};`,
         `HttpOnly;`,
         `Max-Age=${maxAge};`,
-        `Path=/api;`,
         `SameSite=Strict;`,
         secure !== false && `Secure;`,
     ]

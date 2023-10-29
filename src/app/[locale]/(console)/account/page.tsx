@@ -29,22 +29,24 @@ import { fullname } from '@/lib/zod';
 import { Admin } from '@/schema/resources/admin';
 import { User } from '@/schema/resources/user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export default function Account() {
     const { loading, user } = useAuth();
+    const t = useTranslations('pages.console.account.index');
 
     return (
         <div className="flex flex-grow flex-col gap-12 pt-6">
-            <h1 className="text-3xl font-bold">Account</h1>
+            <h1 className="text-3xl font-bold">{t('title')}</h1>
             <div className="flex w-full max-w-2xl flex-col gap-6 rounded-lg border p-6">
                 <Profile loading={loading} profile={user} size="big" />
                 <Table>
                     <TableBody>
                         <TableRow>
-                            <TableHead>Profile picture</TableHead>
+                            <TableHead>{t('picture.title')}</TableHead>
                             <TableCell>
                                 <Avatar
                                     loading={loading}
@@ -56,13 +58,15 @@ export default function Account() {
                             <TableCell align="right">
                                 <UploadImage
                                     intent="profile_picture"
-                                    title="Change profile picture"
-                                    description="Drop a new image to change your profile picture"
+                                    title={t('picture.uploader.title')}
+                                    description={t(
+                                        'picture.uploader.description'
+                                    )}
                                 />
                             </TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableHead>Name</TableHead>
+                            <TableHead>{t('name.title')}</TableHead>
                             <TableCell>
                                 {!loading ? (
                                     user?.name
@@ -75,7 +79,7 @@ export default function Account() {
                             </TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableHead>Email</TableHead>
+                            <TableHead>{t('email.title')}</TableHead>
                             <TableCell>
                                 {!loading ? (
                                     user?.email
@@ -98,6 +102,7 @@ function EditName() {
     const surreal = useSurreal();
     const [open, setOpen] = useState(false);
     const { loading, user, refreshUser } = useAuth();
+    const t = useTranslations('pages.console.account.index.name.dialog');
 
     const Schema = z.object({
         name: fullname(),
@@ -139,22 +144,21 @@ function EditName() {
                 {loading ? (
                     <Skeleton className="h-10 w-20" />
                 ) : (
-                    <Button>Change</Button>
+                    <Button>{t('trigger')}</Button>
                 )}
             </DialogTrigger>
             <DialogContent>
                 <form onSubmit={handler}>
                     <DialogHeader>
-                        <DialogTitle>Change your name</DialogTitle>
+                        <DialogTitle>{t('title')}</DialogTitle>
                         <DialogDescription>
-                            Enter your name in the field below and click save to
-                            apply changes
+                            {t('description')}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="name" className="text-right">
-                                Name
+                                {t('label')}
                             </Label>
                             {loading ? (
                                 <Skeleton className="col-span-2 h-8" />
@@ -174,7 +178,7 @@ function EditName() {
                         )}
                     </div>
                     <DialogFooter>
-                        <Button type="submit">Save changes</Button>
+                        <Button type="submit">{t('submit')}</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -186,6 +190,7 @@ function EditEmail() {
     const [open, setOpen] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
     const { loading, user } = useAuth();
+    const t = useTranslations('pages.console.account.index.email.dialog');
 
     const Schema = z.object({
         email: z.string().email(),
@@ -230,39 +235,36 @@ function EditEmail() {
                 {loading ? (
                     <Skeleton className="h-10 w-20" />
                 ) : (
-                    <Button>Change</Button>
+                    <Button>{t('trigger')}</Button>
                 )}
             </DialogTrigger>
             <DialogContent>
                 {emailSent ? (
                     <>
                         <DialogHeader>
-                            <DialogTitle>Email sent</DialogTitle>
+                            <DialogTitle>{t('sent.title')}</DialogTitle>
                             <DialogDescription>
-                                We have sent a confirmation to your old and new
-                                Email address. Please verify the change within
-                                30 minutes!
+                                {t('sent.description')}
                             </DialogDescription>
                         </DialogHeader>
                         <DialogFooter>
                             <Button onClick={() => setOpen(false)}>
-                                Close
+                                {t('sent.close')}
                             </Button>
                         </DialogFooter>
                     </>
                 ) : (
                     <form onSubmit={handler}>
                         <DialogHeader>
-                            <DialogTitle>Change your email</DialogTitle>
+                            <DialogTitle>{t('form.title')}</DialogTitle>
                             <DialogDescription>
-                                Enter your email in the field below and click
-                                save to apply changes
+                                {t('form.description')}
                             </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="email" className="text-right">
-                                    Email
+                                    {t('form.label')}
                                 </Label>
                                 {loading ? (
                                     <Skeleton className="col-span-2 h-8" />
@@ -283,7 +285,7 @@ function EditEmail() {
                             )}
                         </div>
                         <DialogFooter>
-                            <Button type="submit">Save changes</Button>
+                            <Button type="submit">{t('form.submit')}</Button>
                         </DialogFooter>
                     </form>
                 )}

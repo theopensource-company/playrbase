@@ -2,6 +2,7 @@ import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 import { Dialog } from '@radix-ui/react-dialog';
 import { Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import React, { MouseEvent, useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import ReactCrop, {
@@ -36,6 +37,7 @@ export default function UploadImage({
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState(false);
     const { loading, user, refreshUser } = useAuth();
+    const t = useTranslations('components.logic.upload-image');
 
     // FIXME: Nasty workaround to force react-image-crop to reexecute the "onComplete" function by unrendering and rerendering the whole component.
     // This is needed because otherwise the output will not update when selecting a new picture.
@@ -57,7 +59,7 @@ export default function UploadImage({
 
     const saveImage = async () => {
         if (!blob) {
-            alert('no image');
+            alert(t('error.no-image'));
             return;
         }
 
@@ -76,7 +78,7 @@ export default function UploadImage({
             if (res.success) {
                 return true;
             } else {
-                alert('whoops');
+                alert(`${t('error.server')}: ${res.error}`);
             }
         })().then((success) => {
             setIsLoading(false);
@@ -130,7 +132,7 @@ export default function UploadImage({
                     {loading ? (
                         <Skeleton className="h-10 w-20" />
                     ) : (
-                        <Button>Change</Button>
+                        <Button>{t('trigger')}</Button>
                     )}
                 </DialogTrigger>
                 <DialogContent>
@@ -146,7 +148,7 @@ export default function UploadImage({
                                 className="flex aspect-video w-full cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-muted-foreground border-white"
                             >
                                 <p className="text-muted-foreground">
-                                    Drop your picture here
+                                    {t('empty.drop')}
                                 </p>
                             </div>
                         ) : (
@@ -182,19 +184,19 @@ export default function UploadImage({
                                     disabled={isLoading}
                                     variant="destructive"
                                 >
-                                    Remove
+                                    {t('dialog.remove')}
                                 </Button>
                             )}
                             {uploaded && (
                                 <>
                                     <Button onClick={open} disabled={isLoading}>
-                                        Change
+                                        {t('dialog.change')}
                                     </Button>
                                     <Button
                                         onClick={saveImage}
                                         disabled={isLoading}
                                     >
-                                        Save
+                                        {t('dialog.save')}
                                     </Button>
                                 </>
                             )}
@@ -213,6 +215,7 @@ export function CropProfilePicture({
     file: File;
     setBlob: (blob: Blob) => void;
 }) {
+    const t = useTranslations('components.logic.upload-image.cropper');
     const [crop, setCrop] = useState<Crop>();
     const [size, setSize] = useState<{
         width: number;
@@ -232,7 +235,7 @@ export function CropProfilePicture({
     });
 
     img.src = url;
-    img.alt = 'Selected picture';
+    img.alt = t('img-alt');
 
     return (
         <ReactCrop
@@ -246,7 +249,7 @@ export function CropProfilePicture({
             keepSelection={true}
         >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={url} alt="Uploaded picture" className="rounded-lg" />
+            <img src={url} alt={t('img-alt')} className="rounded-lg" />
         </ReactCrop>
     );
 }

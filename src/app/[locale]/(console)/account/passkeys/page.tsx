@@ -28,6 +28,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { useQuery } from '@tanstack/react-query';
 import { AlertOctagon, Loader2, Pencil, Plus, Trash } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next-intl/link';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -35,36 +36,35 @@ import { z } from 'zod';
 
 export default function Account() {
     const { data: credentials, isPending, refetch } = useData();
+    const t = useTranslations('pages.console.account.passkeys');
 
     return (
         <div className="flex flex-grow flex-col gap-12 pt-6">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">Passkeys</h1>
+                <h1 className="text-3xl font-bold">{t('title')}</h1>
                 <Link
                     href="/account/create-passkey"
                     className={buttonVariants()}
                 >
-                    Create passkey
+                    {t('create')}
                     <Plus className="ml-2 h-6 w-6" />
                 </Link>
             </div>
             {credentials && credentials.length == 0 ? (
-                <p className="opacity-50">
-                    There are no Passkeys linked to your account. Create one by
-                    pressing the button above!
-                </p>
+                <p className="opacity-50">{t('empty')}</p>
             ) : (
                 <Table>
                     {credentials && (
                         <TableCaption>
-                            <b>Count:</b> {credentials.length}
+                            <b>{t('table.caption.count')}:</b>{' '}
+                            {credentials.length}
                         </TableCaption>
                     )}
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Created</TableHead>
-                            <TableHead>Updated</TableHead>
+                            <TableHead>{t('table.columns.name')}</TableHead>
+                            <TableHead>{t('table.columns.created')}</TableHead>
+                            <TableHead>{t('table.columns.updated')}</TableHead>
                             <TableHead />
                         </TableRow>
                     </TableHeader>
@@ -135,6 +135,8 @@ function EditCredential({
 }) {
     const surreal = useSurreal();
     const [open, setOpen] = useState(false);
+    const t = useTranslations('pages.console.account.passkeys.edit');
+
     const Schema = Credential.pick({
         name: true,
     });
@@ -165,13 +167,11 @@ function EditCredential({
             <DialogContent>
                 <form onSubmit={handler}>
                     <CardHeader>
-                        <CardTitle>Edit Passkey</CardTitle>
-                        <CardDescription>
-                            Change the name of your passkey
-                        </CardDescription>
+                        <CardTitle>{t('title')}</CardTitle>
+                        <CardDescription>{t('description')}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <Label htmlFor="name">Passkey Name</Label>
+                        <Label htmlFor="name">{t('fields.name.label')}</Label>
                         <Input
                             id="name"
                             placeholder={credential.name}
@@ -191,7 +191,7 @@ function EditCredential({
                             {isSubmitting && (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             )}
-                            Save name
+                            {t('submit')}
                         </Button>
                         {errors?.root && (
                             <p className="text-red-600">
@@ -213,6 +213,8 @@ function DeleteCredential({
     refetch: () => unknown;
 }) {
     const surreal = useSurreal();
+    const t = useTranslations('pages.console.account.passkeys.delete');
+
     const Schema = z.object({
         name: z.literal(credential.name),
     });
@@ -242,19 +244,17 @@ function DeleteCredential({
             <DialogContent>
                 <form onSubmit={handler}>
                     <CardHeader>
-                        <CardTitle>Delete Passkey</CardTitle>
+                        <CardTitle>{t('title')}</CardTitle>
                         <CardDescription>
-                            Deleting this passkey will <b>permanently</b>{' '}
-                            disallow access to Playrbase via this Passkey.
-                            <br />
-                            <br />
-                            To confirm the deletion, please re-type the
-                            Passkey&apos;s name
+                            {t.rich('description', {
+                                b: (children) => <b>{children}</b>,
+                                br: () => <br />,
+                            })}
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-col gap-2 pt-1">
                         <Label htmlFor="name_delete">
-                            <b>Type:</b>{' '}
+                            <b>{t('repeat')}:</b>{' '}
                             <i className="select-none">{credential.name}</i>
                         </Label>
                         <Input
@@ -267,7 +267,7 @@ function DeleteCredential({
                         <div className="flex items-center gap-4">
                             <DialogClose asChild>
                                 <Button variant="outline" type="button">
-                                    Cancel
+                                    {t('cancel')}
                                 </Button>
                             </DialogClose>
                             <Button variant="destructive" disabled={!isValid}>
@@ -276,7 +276,7 @@ function DeleteCredential({
                                 ) : (
                                     <AlertOctagon className="mr-2 h-4 w-4" />
                                 )}
-                                Permanently delete
+                                {t('submit')}
                             </Button>
                         </div>
                         {errors?.root && (

@@ -3,6 +3,7 @@
 import { useSurreal } from '@/lib/Surreal';
 import { Organisation } from '@/schema/resources/organisation';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import React, {
     Dispatch,
     ReactNode,
@@ -42,6 +43,7 @@ export function OrganisationSelector({
     children?: ReactNode;
 }) {
     const surreal = useSurreal();
+    const t = useTranslations('components.logic.organisation-selector');
     type Org = Organisation & { can_manage: boolean };
 
     const [input, setInput] = useState('');
@@ -96,7 +98,7 @@ export function OrganisationSelector({
                         size="sm"
                         onClick={() => setOrganisation(undefined)}
                     >
-                        Clear
+                        {t('selected.button.clear')}
                     </Button>
                 </div>
             ) : (
@@ -134,7 +136,11 @@ export function OrganisationSelector({
                                             {children ?? 'Select'}
                                         </Button>
                                     ) : (
-                                        <Badge>No permissions</Badge>
+                                        <Badge>
+                                            {t(
+                                                'unselected.badge.no-permissions'
+                                            )}
+                                        </Badge>
                                     )}
                                 </div>
                             ))}

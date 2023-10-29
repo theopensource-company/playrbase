@@ -3,6 +3,7 @@
 import { Avatar } from '@/components/cards/avatar';
 import { Profile } from '@/components/cards/profile';
 import Container from '@/components/layout/Container';
+import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { UserSelector, useUserSelector } from '@/components/logic/UserSelector';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -33,6 +34,7 @@ import { DialogClose } from '@radix-ui/react-dialog';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
 import { ArrowRight, Loader2, Mail, MailX, Plus, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next-intl/link';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
@@ -44,6 +46,7 @@ export default function Account() {
         ? params.organisation[0]
         : params.organisation;
     const { isPending, data, refetch } = useData(slug);
+    const t = useTranslations('pages.console.organisation.members');
 
     const organisation = data?.organisation;
     const invited_members = data?.invited_members;
@@ -69,7 +72,7 @@ export default function Account() {
     ) : organisation ? (
         <div className="flex flex-grow flex-col pt-6">
             <div className="flex items-center justify-between pb-6">
-                <h1 className="text-3xl font-semibold">Members</h1>
+                <h1 className="text-3xl font-semibold">{t('title')}</h1>
                 {organisation.can_manage && (
                     <AddMember
                         organisation={organisation.id}
@@ -92,7 +95,7 @@ export default function Account() {
             </div>
         </div>
     ) : (
-        <p>org not found</p>
+        <NotFoundScreen text={t('not_found')} />
     );
 }
 
@@ -111,23 +114,30 @@ function ListManagers({
     canDeleteOwner?: boolean;
     refresh: () => unknown;
 }) {
+    const t = useTranslations(
+        'pages.console.organisation.members.list_managers'
+    );
+
     return (
         <div>
             {organisation && (
                 <h2 className="pb-2 text-2xl font-semibold">
-                    From {organisation.name}
+                    {t.rich('title', {
+                        org: () => organisation.name,
+                    })}
                 </h2>
             )}
             <Table>
                 <TableCaption>
-                    <b>Count:</b> {managers.length + (invites?.length ?? 0)}
+                    <b>{t('table.caption.count')}:</b>{' '}
+                    {managers.length + (invites?.length ?? 0)}
                 </TableCaption>
                 <TableHeader>
                     <TableRow>
                         <TableHead />
-                        <TableHead>Name</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Role</TableHead>
+                        <TableHead>{t('table.columns.name')}</TableHead>
+                        <TableHead>{t('table.columns.email')}</TableHead>
+                        <TableHead>{t('table.columns.role')}</TableHead>
                         <TableHead align="right" />
                     </TableRow>
                 </TableHeader>
@@ -172,6 +182,10 @@ function ListManager({
     manager: Data['managers'][number];
 }) {
     const surreal = useSurreal();
+    const t = useTranslations(
+        'pages.console.organisation.members.list_manager'
+    );
+
     const { mutate: updateRole, isPending: isUpdatingRole } = useMutation({
         mutationKey: ['organisation', 'update-role', edge],
         mutationFn: async (role: Organisation['managers'][number]['role']) => {
@@ -220,18 +234,20 @@ function ListManager({
                         disabled={!canDeleteOwner && role == 'owner'}
                     >
                         <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Role" />
+                            <SelectValue placeholder={t('role.placeholder')} />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="owner">Owner</SelectItem>
+                            <SelectItem value="owner">
+                                {t('role.roles.owner')}
+                            </SelectItem>
                             <SelectItem value="administrator">
-                                Administrator
+                                {t('role.roles.administrator')}
                             </SelectItem>
                             <SelectItem value="event_manager">
-                                Event Manager
+                                {t('role.roles.event_manager')}
                             </SelectItem>
                             <SelectItem value="event_viewer">
-                                Event Viewer
+                                {t('role.roles.event_viewer')}
                             </SelectItem>
                         </SelectContent>
                     </Select>
@@ -243,7 +259,9 @@ function ListManager({
                         className={buttonVariants({ variant: 'outline' })}
                         href={`/organisation/${org.slug}/members`}
                     >
-                        Via {org.name}
+                        {t.rich('actions.via', {
+                            org: () => org.name,
+                        })}
                         <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                 ) : isDeletingManager ? (
@@ -260,12 +278,11 @@ function ListManager({
                         </DialogTrigger>
                         <DialogContent>
                             <h3 className="text-2xl font-bold">
-                                Remove {name}
+                                {t.rich('actions.remove-dialog.title', {
+                                    name: () => name,
+                                })}
                             </h3>
-                            <p>
-                                Are you sure that you want to remove this
-                                manager?
-                            </p>
+                            <p>{t('actions.remove-dialog.description')}</p>
                             <div className="my-4 rounded-md border p-4">
                                 <Profile
                                     profile={
@@ -284,7 +301,7 @@ function ListManager({
                                         variant="outline"
                                         disabled={isDeletingManager}
                                     >
-                                        Cancel
+                                        {t('actions.remove-dialog.cancel')}
                                     </Button>
                                 </DialogClose>
                                 <Button
@@ -295,7 +312,7 @@ function ListManager({
                                     {isDeletingManager && (
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                     )}
-                                    Remove
+                                    {t('actions.remove-dialog.submit')}
                                 </Button>
                             </div>
                         </DialogContent>
@@ -316,6 +333,10 @@ function InvitedManager({
     refresh: () => unknown;
 }) {
     const surreal = useSurreal();
+    const t = useTranslations(
+        'pages.console.organisation.members.invited_manager'
+    );
+
     const { mutate: updateRole, isPending: isUpdatingRole } = useMutation({
         mutationKey: ['organisation', 'update-role', edge],
         mutationFn: async (role: Organisation['managers'][number]['role']) => {
@@ -341,7 +362,8 @@ function InvitedManager({
                 <Avatar profile={user as User} />
             </TableCell>
             <TableCell>
-                {user.name} <Badge className="ml-3">Pending invite</Badge>
+                {user.name}{' '}
+                <Badge className="ml-3">{t('pending-invite')}</Badge>
             </TableCell>
             <TableCell>{user.email}</TableCell>
             <TableCell>
@@ -352,18 +374,20 @@ function InvitedManager({
                 ) : (
                     <Select onValueChange={updateRole} defaultValue={role}>
                         <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Role" />
+                            <SelectValue placeholder={t('role.placeholder')} />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="owner">Owner</SelectItem>
+                            <SelectItem value="owner">
+                                {t('role.roles.owner')}
+                            </SelectItem>
                             <SelectItem value="administrator">
-                                Administrator
+                                {t('role.roles.administrator')}
                             </SelectItem>
                             <SelectItem value="event_manager">
-                                Event Manager
+                                {t('role.roles.event_manager')}
                             </SelectItem>
                             <SelectItem value="event_viewer">
-                                Event Viewer
+                                {t('role.roles.event_viewer')}
                             </SelectItem>
                         </SelectContent>
                     </Select>
@@ -393,6 +417,7 @@ function AddMember({
     const [user, setUser] = useUserSelector();
     const [role, setRole] = useState('event_viewer');
     const [open, setOpen] = useState(false);
+    const t = useTranslations('pages.console.organisation.members.add_member');
 
     const { mutateAsync, error } = useMutation({
         mutationKey: ['manages', 'invite'],
@@ -414,12 +439,12 @@ function AddMember({
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button>
-                    Add member
+                    {t('trigger')}
                     <Plus className="ml-2 h-6 w-6" />
                 </Button>
             </DialogTrigger>
             <DialogContent>
-                <h3 className="mb-4 text-2xl font-bold">Invite user</h3>
+                <h3 className="mb-4 text-2xl font-bold"> {t('title')}</h3>
                 <div className="space-y-6">
                     <UserSelector
                         user={user}
@@ -429,21 +454,25 @@ function AddMember({
                     />
 
                     <div className="space-y-3">
-                        <Label htmlFor="role">Role</Label>
+                        <Label htmlFor="role"> {t('role.label')}</Label>
                         <Select onValueChange={setRole} value={role}>
                             <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Role" />
+                                <SelectValue
+                                    placeholder={t('role.placeholder')}
+                                />
                             </SelectTrigger>
                             <SelectContent id="role">
-                                <SelectItem value="owner">Owner</SelectItem>
+                                <SelectItem value="owner">
+                                    {t('role.roles.owner')}
+                                </SelectItem>
                                 <SelectItem value="administrator">
-                                    Administrator
+                                    {t('role.roles.administrator')}
                                 </SelectItem>
                                 <SelectItem value="event_manager">
-                                    Event Manager
+                                    {t('role.roles.event_manager')}
                                 </SelectItem>
                                 <SelectItem value="event_viewer">
-                                    Event Viewer
+                                    {t('role.roles.event_viewer')}
                                 </SelectItem>
                             </SelectContent>
                         </Select>
@@ -461,7 +490,7 @@ function AddMember({
                         }}
                     >
                         <Mail className="mr-2 h-4 w-4" />
-                        Send invite
+                        {t('submit')}
                     </Button>
                 </div>
                 {!!error && <p>{(error as Error).message}</p>}

@@ -1,6 +1,7 @@
 'use client';
 
-import Container from '@/components/layout/Container';
+import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
+import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { Button } from '@/components/ui/button';
 import { DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -16,6 +17,7 @@ import { Organisation } from '@/schema/resources/organisation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog, DialogClose } from '@radix-ui/react-dialog';
 import { AlertOctagon, Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next-intl/client';
 import { useParams } from 'next/navigation';
 import React from 'react';
@@ -32,14 +34,13 @@ export default function Account() {
         data: organisation,
         refetch,
     } = useOrganisation<Organisation>({ slug });
+    const t = useTranslations('pages.console.organisation.settings');
 
     return isPending ? (
-        <Container className="flex w-full flex-grow items-center justify-center">
-            <Loader2 size={50} className="animate-spin" />
-        </Container>
+        <LoaderOverlay />
     ) : organisation ? (
         <div className="flex max-w-2xl flex-grow flex-col gap-6 pt-6">
-            <h1 className="pb-6 text-3xl font-semibold">Settings</h1>
+            <h1 className="pb-6 text-3xl font-semibold">{t('title')}</h1>
             <NameEditor organisation={organisation} onSubmit={refetch} />
             <EmailEditor organisation={organisation} onSubmit={refetch} />
             <WebsiteEditor organisation={organisation} onSubmit={refetch} />
@@ -47,7 +48,7 @@ export default function Account() {
             <DangerZone organisation={organisation} />
         </div>
     ) : (
-        <p>org not found</p>
+        <NotFoundScreen text={t('not_found')} />
     );
 }
 
@@ -59,6 +60,7 @@ function NameEditor({
     onSubmit: () => void;
 }) {
     const { mutateAsync } = useUpdateOrganisation(organisation.id);
+    const t = useTranslations('pages.console.organisation.settings.name');
 
     const Schema = Organisation.pick({
         name: true,
@@ -88,11 +90,8 @@ function NameEditor({
             className="flex w-full flex-col gap-6 rounded-lg border p-6"
         >
             <div className="space-y-2">
-                <h2 className="text-xl font-bold">Organisation name</h2>
-                <p>
-                    This is the public name of your organisation, shown all
-                    throughout Playrbase.
-                </p>
+                <h2 className="text-xl font-bold">{t('title')}</h2>
+                <p>{t('description')}</p>
             </div>
             <Input
                 defaultValue={organisation?.name}
@@ -105,7 +104,7 @@ function NameEditor({
                     {isSubmitting && (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    Save changes
+                    {t('submit')}
                 </Button>
                 {errors?.name && !isSubmitSuccessful && (
                     <p className="text-red-600">{errors.name.message}</p>
@@ -123,6 +122,7 @@ function EmailEditor({
     onSubmit: () => void;
 }) {
     const { mutateAsync } = useUpdateOrganisation(organisation.id);
+    const t = useTranslations('pages.console.organisation.settings.email');
 
     const Schema = Organisation.pick({
         email: true,
@@ -152,14 +152,11 @@ function EmailEditor({
             className="flex w-full flex-col gap-6 rounded-lg border p-6"
         >
             <div className="space-y-2">
-                <h2 className="text-xl font-bold">Email address</h2>
-                <p>
-                    This is the public email of your organisation, shown all
-                    throughout Playrbase.
-                </p>
+                <h2 className="text-xl font-bold">{t('title')}</h2>
+                <p>{t('description')}</p>
             </div>
             <Input
-                placeholder="hello@foo.bar"
+                placeholder={t('placeholder')}
                 defaultValue={organisation?.email}
                 {...register('email')}
                 className="max-w-sm"
@@ -169,7 +166,7 @@ function EmailEditor({
                     {isSubmitting && (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    Save changes
+                    {t('submit')}
                 </Button>
                 {errors?.email && !isSubmitSuccessful && (
                     <p className="text-red-600">{errors.email.message}</p>
@@ -187,6 +184,7 @@ function WebsiteEditor({
     onSubmit: () => void;
 }) {
     const { mutateAsync } = useUpdateOrganisation(organisation.id);
+    const t = useTranslations('pages.console.organisation.settings.website');
 
     const Schema = z.object({
         website: z.union([z.literal(''), Organisation.shape.website]),
@@ -216,14 +214,11 @@ function WebsiteEditor({
             className="flex w-full flex-col gap-6 rounded-lg border p-6"
         >
             <div className="space-y-2">
-                <h2 className="text-xl font-bold">Website</h2>
-                <p>
-                    This is the public website of your organisation, shown all
-                    throughout Playrbase.
-                </p>
+                <h2 className="text-xl font-bold">{t('title')}</h2>
+                <p>{t('description')}</p>
             </div>
             <Input
-                placeholder="https://www.foo.bar"
+                placeholder={t('placeholder')}
                 defaultValue={organisation?.website}
                 {...register('website')}
                 className="max-w-sm"
@@ -233,7 +228,7 @@ function WebsiteEditor({
                     {isSubmitting && (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    Save changes
+                    {t('submit')}
                 </Button>
                 {errors?.website && !isSubmitSuccessful && (
                     <p className="text-red-600">{errors.website.message}</p>
@@ -251,6 +246,9 @@ function DescriptionEditor({
     onSubmit: () => void;
 }) {
     const { mutateAsync } = useUpdateOrganisation(organisation.id);
+    const t = useTranslations(
+        'pages.console.organisation.settings.description'
+    );
 
     const Schema = Organisation.pick({
         description: true,
@@ -280,14 +278,11 @@ function DescriptionEditor({
             className="flex w-full flex-col gap-6 rounded-lg border p-6"
         >
             <div className="space-y-2">
-                <h2 className="text-xl font-bold">Description</h2>
-                <p>
-                    This is the public description of your organisation, shown
-                    all throughout Playrbase.
-                </p>
+                <h2 className="text-xl font-bold">{t('title')}</h2>
+                <p>{t('description')}</p>
             </div>
             <Textarea
-                placeholder="Give your organisation a nice description to give others a look and feel of how you roll."
+                placeholder={t('placeholder')}
                 defaultValue={organisation?.description}
                 {...register('description')}
                 className="max-w-sm"
@@ -298,7 +293,7 @@ function DescriptionEditor({
                     {isSubmitting && (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    Save changes
+                    {t('submit')}
                 </Button>
                 {errors?.description && !isSubmitSuccessful && (
                     <p className="text-red-600">{errors.description.message}</p>
@@ -311,6 +306,9 @@ function DescriptionEditor({
 function DangerZone({ organisation }: { organisation: Organisation }) {
     const surreal = useSurreal();
     const router = useRouter();
+    const t = useTranslations(
+        'pages.console.organisation.settings.danger-zone'
+    );
 
     const Schema = z.object({
         name: z.literal(organisation.name),
@@ -335,11 +333,11 @@ function DangerZone({ organisation }: { organisation: Organisation }) {
     return (
         <div className="flex w-full flex-col gap-6 rounded-lg border border-red-600 border-opacity-40 p-6">
             <div className="space-y-2">
-                <h2 className="text-xl font-bold">Danger zone</h2>
+                <h2 className="text-xl font-bold">{t('title')}</h2>
                 <p>
-                    Deleting this organisation will <b>permanently</b> remove
-                    all details about this organisation, all events, and other
-                    related data. This action <b>cannot be reversed!</b>
+                    {t.rich('description', {
+                        b: (children) => <b>{children}</b>,
+                    })}
                 </p>
             </div>
             <div className="flex items-center gap-4">
@@ -350,29 +348,27 @@ function DangerZone({ organisation }: { organisation: Organisation }) {
                             className="opacity-70 transition-all hover:opacity-100"
                         >
                             <AlertOctagon className="mr-2 h-4 w-4" />
-                            Delete organisation
+                            {t('dialog.trigger')}
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
                         <form onSubmit={handler}>
                             <h2 className="mb-4 text-2xl font-bold">
-                                Delete {organisation.name}
+                                {t.rich('dialog.title', {
+                                    org: () => organisation.name,
+                                })}
                             </h2>
                             <p>
-                                Deleting this organisation will{' '}
-                                <b>permanently</b> remove all details about this
-                                organisation, all events, and other related
-                                data. This action <b>cannot be reversed!</b>
-                                <br />
-                                <br />
-                                To confirm the deletion, please re-type the
-                                organisation&apos;s name and email address
+                                {t.rich('dialog.description', {
+                                    b: (children) => <b>{children}</b>,
+                                    br: () => <br />,
+                                })}
                             </p>
 
                             <div className="mb-5 mt-3 space-y-5">
                                 <div className="space-y-3">
                                     <Label htmlFor="name_delete">
-                                        <b>Type:</b>{' '}
+                                        <b>{t('dialog.repeat')}:</b>{' '}
                                         <i className="select-none">
                                             {organisation.name}
                                         </i>
@@ -385,7 +381,7 @@ function DangerZone({ organisation }: { organisation: Organisation }) {
                                 </div>
                                 <div className="space-y-3">
                                     <Label htmlFor="email_delete">
-                                        <b>Type:</b>{' '}
+                                        <b>{t('dialog.repeat')}:</b>{' '}
                                         <i className="select-none">
                                             {organisation.email}
                                         </i>
@@ -401,7 +397,7 @@ function DangerZone({ organisation }: { organisation: Organisation }) {
                             <div className="flex items-center gap-4">
                                 <DialogClose asChild>
                                     <Button variant="outline" type="button">
-                                        Cancel
+                                        {t('dialog.cancel')}
                                     </Button>
                                 </DialogClose>
                                 <Button
@@ -413,7 +409,7 @@ function DangerZone({ organisation }: { organisation: Organisation }) {
                                     ) : (
                                         <AlertOctagon className="mr-2 h-4 w-4" />
                                     )}
-                                    Permanently delete
+                                    {t('dialog.submit')}
                                 </Button>
                             </div>
                             {errors?.root && (

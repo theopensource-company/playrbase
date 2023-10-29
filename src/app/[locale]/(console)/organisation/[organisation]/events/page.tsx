@@ -1,8 +1,9 @@
 'use client';
 
-import Container from '@/components/layout/Container';
+import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
+import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { useOrganisation } from '@/lib/Queries/Organisation';
-import { Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React from 'react';
 
@@ -11,6 +12,7 @@ export default function Account() {
     const slug = Array.isArray(params.organisation)
         ? params.organisation[0]
         : params.organisation;
+    const t = useTranslations('pages.console.organisation.events');
     const {
         isPending,
         data: organisation,
@@ -18,14 +20,12 @@ export default function Account() {
     } = useOrganisation({ slug });
 
     return isPending ? (
-        <Container className="flex w-full flex-grow items-center justify-center">
-            <Loader2 size={50} className="animate-spin" />
-        </Container>
+        <LoaderOverlay />
     ) : organisation ? (
         <div className="flex max-w-2xl flex-grow flex-col gap-6 pt-6">
-            <h1 className="pb-6 text-3xl font-semibold">Events</h1>
+            <h1 className="pb-6 text-3xl font-semibold">{t('title')}</h1>
         </div>
     ) : (
-        <p>org not found</p>
+        <NotFoundScreen text={t('not_found')} />
     );
 }

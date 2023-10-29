@@ -16,16 +16,235 @@
       "button": "Doorgaan",
       "user": "Gebruiker",
       "manager": "Beheerder"
+    },
+    "account": {
+      "organisations": {
+        "new": {
+          "fields": {
+            "email": {
+              "label": "E-mailadres",
+              "placeholder": "hallo@foo.bar"
+            },
+            "name": {
+              "label": "Naam"
+            },
+            "selector": {
+              "label": "Onderdeel van organisatie",
+              "placeholder": "Naam of E-mail"
+            }
+          },
+          "submit": "Maken",
+          "title": "Nieuwe organisatie",
+          "trigger": "Nieuwe organisatie"
+        },
+        "table": {
+          "body": {
+            "confirmed": "Bevestigd",
+            "invitations": "Uitnodigingen"
+          },
+          "caption": {
+            "count": "Aantal"
+          },
+          "columns": {
+            "actions": "Acties",
+            "email": "E-mail",
+            "name": "Naam"
+          }
+        },
+        "title": "Organisaties"
+      },
+      "passkeys": {
+        "create": "Passkey aanmaken",
+        "delete": {
+          "cancel": "Annuleren",
+          "description": "Het verwijderen van deze passkey zal <b>permanent</b> toegang weigeren tot Playrbase met deze Passkey. <br></br><br></br> Herhaal de naam van de Passkey om de verwijdering te bevestigen",
+          "repeat": "Herhaal",
+          "submit": "Permanent verwijderen",
+          "title": "Passkey verwijderen"
+        },
+        "edit": {
+          "description": "Verander de naam van je passkey",
+          "fields": {
+            "name": {
+              "label": "Passkey Naam"
+            }
+          },
+          "submit": "Naam opslaan",
+          "title": "Passkey aanpassen"
+        },
+        "empty": "Er zijn geen Passkeys gekoppeld aan je account. Maak eentje aan met de bovenstaande knop!",
+        "table": {
+          "caption": {
+            "count": "Aantal"
+          },
+          "columns": {
+            "created": "Aangemaakt",
+            "name": "Naam",
+            "updated": "Bewerkt"
+          }
+        },
+        "title": "Passkeys"
+      },
+      "index": {
+        "email": {
+          "dialog": {
+            "form": {
+              "description": "Voer je e-mailadres in in het onderstaande veld en klik op opslaan om de wijzinging door te voeren ",
+              "label": "E-mailadres",
+              "submit": "Opslaan",
+              "title": "Wijzig je e-mailadres"
+            },
+            "sent": {
+              "close": "Sluiten",
+              "description": "We hebben een bevestigingsmail verstuurd naar je oude en nieuwe E-mailadres. Bevestig de wijziging binnen 30 minuten!",
+              "title": "E-mail verzonden"
+            },
+            "trigger": "Wijzigen"
+          },
+          "title": "E-mailadres"
+        },
+        "name": {
+          "dialog": {
+            "description": "Voer je naam in in het onderstaande veld en klik op opslaan om de wijzinging door te voeren ",
+            "label": "Naam",
+            "submit": "Opslaan",
+            "title": "Wijzig je naam",
+            "trigger": "Wijzigen"
+          },
+          "title": "Wijzig"
+        },
+        "picture": {
+          "title": "Profielfoto",
+          "uploader": {
+            "description": "Upload een nieuw plaatje om je profielfoto te wijzigen",
+            "title": "Wijzig je profielfoto"
+          }
+        },
+        "title": "Account"
+      }
+    },
+    "organisation": {
+      "members": {
+        "add_member": {
+          "role": {
+            "label": "Rol",
+            "placeholder": "Rol",
+            "roles": {
+              "administrator": "Administrator",
+              "event_manager": "Evenement Beheerder",
+              "event_viewer": "Evenement Kijker",
+              "owner": "Eigenaar"
+            }
+          },
+          "submit": "Verstuur uitnodiging",
+          "title": "Gebruiker uitnodigen",
+          "trigger": "Lid toevoegen"
+        },
+        "invited_manager": {
+          "pending-invite": "Openstaande uitnodiging",
+          "role": {
+            "placeholder": "Rol",
+            "roles": {
+              "administrator": "Administrator",
+              "event_manager": "Evenement Beheerder",
+              "event_viewer": "Evenement Kijker",
+              "owner": "Eigenaar"
+            }
+          }
+        },
+        "list_manager": {
+          "actions": {
+            "remove-dialog": {
+              "cancel": "Annuleren",
+              "description": "Weet je zeker dat je deze beheerder wilt verwijderen?",
+              "submit": "Verwijderen",
+              "title": "Verwijder <name></name>"
+            },
+            "via": "Via <org></org>"
+          },
+          "role": {
+            "placeholder": "Rol",
+            "roles": {
+              "administrator": "Administrator",
+              "event_manager": "Evenement Beheerder",
+              "event_viewer": "Evenement Kijker",
+              "owner": "Eigenaar"
+            }
+          }
+        },
+        "list_managers": {
+          "table": {
+            "caption": {
+              "count": "Aantal"
+            },
+            "columns": {
+              "email": "E-mailadres",
+              "name": "Naam",
+              "role": "Rol"
+            }
+          },
+          "title": "Via <org></org>"
+        },
+        "not_found": "Organisatie niet gevonden",
+        "title": "Leden"
+      },
+      "settings": {
+        "title": "Instellingen",
+        "not_found": "Organisatie niet gevonden",
+        "name": {
+          "description": "Dit is de publieke naam van je organisatie, die wordt getoond door heel Playrbase.",
+          "title": "Organisatie naam",
+          "submit": "Wijziging opslaan"
+        },
+        "email": {
+          "description": "Dit is het publieke e-mailadres van je organisatie, die wordt getoond door heel Playrbase.",
+          "title": "Organisatie e-mailadres",
+          "submit": "Wijziging opslaan",
+          "placeholder": "hallo@foo.bar"
+        },
+        "description": {
+          "description": "Dit is de publieke beschrijving van je organisatie, die wordt getoond door heel Playrbase.",
+          "title": "Beschrijving",
+          "submit": "Wijziging opslaan",
+          "placeholder": "Geef je organisatie een goede omschrijving, zodat anderen kunnen zien hoe jullie te werk gaan."
+        },
+        "website": {
+          "description": "Dit is de publieke website van je organisatie, die wordt getoond door heel Playrbase.",
+          "title": "Website",
+          "submit": "Wijziging opslaan",
+          "placeholder": "https://www.foo.bar"
+        },
+        "danger-zone": {
+          "title": "Gevarenzone",
+          "dialog": {
+            "cancel": "Annuleren",
+            "description": "Het verwijderen van deze organisatie zal <b>permanent</b> alle gegevens over deze organisatie, alle evenementen, en andere gerelateerde informatie verwijderen. Deze actie <b>kan niet worden teruggedraaid!</b> <br></br><br></br> Herhaal de naam en het e-mailadres van de organisatie om de verwijdering te bevestigen",
+            "repeat": "Herhaal",
+            "submit": "Permanent verwijderen",
+            "title": "Verwijder <org></org>",
+            "trigger": "Verwijder organisatie"
+          },
+          "description": "Het verwijderen van deze organisatie zal <b>permanent</b> alle gegevens over deze organisatie, alle evenementen, en andere gerelateerde informatie verwijderen. Deze actie <b>kan niet worden teruggedraaid!</b>"
+        }
+      },
+      "events": {
+        "not_found": "Organisatie niet gevonden",
+        "title": "Evenementen"
+      }
     }
   },
   "account": {
     "signin": {
       "button": {
-        "continue": "Doorgaan"
+        "continue": "Doorgaan",
+        "passkey": "Passkey"
       },
       "input": {
         "email": {
           "placeholder": "E-mailadres"
+        },
+        "passkey": {
+          "label": "Gebruikte Passkey"
         }
       },
       "scope": {
@@ -49,6 +268,19 @@
       },
       "tagline": "om inschrijving te voltooien",
       "title": "Profiel aanmaken"
+    },
+    "create-passkey": {
+      "created": {
+        "label": "Passkey Naam",
+        "trigger": "Naam opslaan"
+      },
+      "description": "Gebruik een passkey om jezelf gemakkelijk en veilig in te authenticeren",
+      "pre": {
+        "back": "Terug",
+        "skip": "Overslaan",
+        "trigger": "Passkey maken"
+      },
+      "title": "Maak een Passkey"
     }
   }
 }

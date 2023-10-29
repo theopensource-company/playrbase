@@ -103,10 +103,10 @@ export async function GET(req: NextRequest) {
         secure: req.nextUrl.protocol !== 'http:',
     });
 
-    return new NextResponse('Success! Redirecting to /console', {
+    return new NextResponse('Success! Redirecting to /account', {
         status: 302,
         headers: {
-            Location: '/console',
+            Location: '/account',
             'Set-Cookie': header,
         },
     });

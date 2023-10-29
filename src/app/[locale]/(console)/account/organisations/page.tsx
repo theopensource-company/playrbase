@@ -28,6 +28,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Check, Plus, Settings2, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next-intl/link';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -35,17 +36,18 @@ import { z } from 'zod';
 
 export default function Account() {
     const { data: organisations, isPending, refetch } = useData();
+    const t = useTranslations('pages.console.account.organisations');
 
     return (
         <div className="flex flex-grow flex-col gap-12 pt-6">
             <div className="flex items-center justify-between pb-6">
-                <h1 className="text-3xl font-bold">Organisations</h1>
+                <h1 className="text-3xl font-bold">{t('title')}</h1>
                 <CreateOrganisation refetch={refetch} />
             </div>
             <Table>
                 {organisations && (
                     <TableCaption>
-                        <b>Count:</b>{' '}
+                        <b>{t('table.caption.count')}:</b>{' '}
                         {organisations.confirmed.length +
                             organisations.unconfirmed.length}
                     </TableCaption>
@@ -53,9 +55,9 @@ export default function Account() {
                 <TableHeader>
                     <TableRow>
                         <TableHead />
-                        <TableHead>Name</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Actions</TableHead>
+                        <TableHead>{t('table.columns.name')}</TableHead>
+                        <TableHead>{t('table.columns.email')}</TableHead>
+                        <TableHead>{t('table.columns.actions')}</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -77,7 +79,7 @@ export default function Account() {
                         <>
                             {organisations.confirmed.length > 0 && (
                                 <h2 className="mb-4 mt-6 text-2xl">
-                                    Invitations
+                                    {t('table.body.invitations')}
                                 </h2>
                             )}
                             {organisations.unconfirmed.map((data) => (
@@ -94,7 +96,7 @@ export default function Account() {
                         <>
                             {organisations.unconfirmed.length > 0 && (
                                 <h2 className="mb-4 mt-12 text-2xl">
-                                    Confirmed
+                                    {t('table.body.confirmed')}
                                 </h2>
                             )}
                             {organisations.confirmed.map((data) => (
@@ -183,6 +185,7 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
     const surreal = useSurreal();
     const [partOf, setPartOf] = useOrganisationSelector();
     const [open, setOpen] = useState(false);
+    const t = useTranslations('pages.console.account.organisations.new');
 
     const Schema = Organisation.pick({
         name: true,
@@ -223,18 +226,18 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button>
-                    New organisation
+                    {t('trigger')}
                     <Plus className="ml-2 h-6 w-6" />
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <form onSubmit={handler}>
-                    <h3 className="mb-4 text-2xl font-bold">
-                        New organisation
-                    </h3>
+                    <h3 className="mb-4 text-2xl font-bold">{t('title')}</h3>
                     <div className="mb-8 mt-6 space-y-4">
                         <div className="space-y-3">
-                            <Label htmlFor="name">Name</Label>
+                            <Label htmlFor="name">
+                                {t('fields.name.label')}
+                            </Label>
                             <Input
                                 id="name"
                                 {...register('name')}
@@ -252,11 +255,13 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
                             )}
                         </div>
                         <div className="space-y-3">
-                            <Label htmlFor="email">Email address</Label>
+                            <Label htmlFor="email">
+                                {t('fields.email.label')}
+                            </Label>
                             <Input
                                 id="email"
                                 {...register('email')}
-                                placeholder="hello@foo.bar"
+                                placeholder={t('fields.email.placeholder')}
                                 autoComplete="off"
                             />
                             {errors?.email && !isSubmitSuccessful && (
@@ -268,8 +273,8 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
                         <OrganisationSelector
                             organisation={partOf}
                             setOrganisation={setPartOf}
-                            label="Part of organisation"
-                            placeholder="Name or Email"
+                            label={t('fields.selector.label')}
+                            placeholder={t('fields.selector.placeholder')}
                             autoComplete="off"
                             canManage
                         />
@@ -277,7 +282,7 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
                     <div className="mt-3">
                         <Button disabled={!isValid}>
                             <Plus className="mr-2 h-4 w-4" />
-                            Create
+                            {t('submit')}
                         </Button>
                     </div>
                     {errors?.root && !isSubmitSuccessful && (

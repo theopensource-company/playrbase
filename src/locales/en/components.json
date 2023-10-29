@@ -91,5 +91,49 @@
         }
       }
     }
+  },
+  "logic": {
+    "organisation-selector": {
+      "selected": {
+        "button": {
+          "clear": "Clear"
+        }
+      },
+      "unselected": {
+        "badge": {
+          "no-permissions": "No permissions"
+        }
+      }
+    },
+    "upload-image": {
+      "trigger": "Change",
+      "empty": {
+        "drop": "Drop your picture here"
+      },
+      "dialog": {
+        "remove": "Remove",
+        "change": "Change",
+        "save": "Save"
+      },
+      "cropper": {
+        "img-alt": "Selected picture"
+      },
+      "error": {
+        "no-image": "You have not selected an image",
+        "server": "An error occured"
+      }
+    },
+    "user-selector": {
+      "selected": {
+        "button": {
+          "clear": "Clear"
+        }
+      },
+      "unselected": {
+        "label": "Email address",
+        "placeholder": "john@doe.org",
+        "select": "Select"
+      }
+    }
   }
 }

@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/navigation-menu.tsx';
 import { featureFlags } from '@/config/Environment.ts';
 import { useAuth } from '@/lib/auth';
+import { useScrolledState } from '@/lib/scrolled.tsx';
 import { cn } from '@/lib/utils.ts';
 import { Language, languages } from '@/locales/languages.ts';
 import {
@@ -40,7 +41,7 @@ import Container from './Container.tsx';
 import { DevTools } from './DevTools/index.tsx';
 
 export const Navbar = ({ children }: { children?: ReactNode }) => {
-    const [scrolled, setScrolled] = useState(false);
+    const scrolled = useScrolledState();
 
     // Enabled in prod/preview with:
     // localStorage.setItem('devTools', 'enabled')
@@ -51,17 +52,6 @@ export const Navbar = ({ children }: { children?: ReactNode }) => {
             setDevTools(true);
         }
     }, [setDevTools]);
-
-    useEffect(() => {
-        const handler = () => {
-            setScrolled(
-                (window.pageYOffset || document.documentElement.scrollTop) > 0
-            );
-        };
-
-        window.addEventListener('scroll', handler);
-        return () => window.removeEventListener('scroll', handler);
-    }, [setScrolled]);
 
     return (
         <div className={cn('fixed left-0 right-0 z-10 backdrop-blur-lg')}>

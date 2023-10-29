@@ -175,7 +175,7 @@ export default function Signin() {
                         ) : (
                             <div className="space-y-1">
                                 <Label className="opacity-60">
-                                    Used Passkey
+                                    {t('input.passkey.label')}
                                 </Label>
                                 <div className="text-md flex items-center justify-between rounded-md border px-4 py-3">
                                     <div className="flex items-center gap-2.5">
@@ -229,7 +229,7 @@ export default function Signin() {
                                 ) : (
                                     <KeyRound className="mr-2 h-4 w-4" />
                                 )}
-                                Passkey
+                                {t('button.passkey')}
                             </Button>
                         </CardFooter>
                     )}

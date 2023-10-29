@@ -4,7 +4,8 @@ import { signout as actionSignout } from '@/actions/auth';
 import { Admin } from '@/schema/resources/admin';
 import { User } from '@/schema/resources/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import React, { ReactNode, createContext, useContext } from 'react';
+import { useRouter } from 'next-intl/client';
+import React, { ReactNode, createContext, useContext, useEffect } from 'react';
 import { useSurreal } from './Surreal';
 
 type AnyUser = User | Admin;
@@ -80,6 +81,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
 }
 
-export function useAuth() {
-    return useContext(AuthContext);
+export function useAuth({ authRequired }: { authRequired?: boolean } = {}) {
+    const router = useRouter();
+    const state = useContext(AuthContext);
+
+    useEffect(() => {
+        if (authRequired && !state.loading && !state.user)
+            router.push('/account/signin');
+    }, [authRequired, state, router]);
+
+    return state;
 }

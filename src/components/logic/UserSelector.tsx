@@ -3,6 +3,7 @@
 import { useSurreal } from '@/lib/Surreal';
 import { User } from '@/schema/resources/user';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import React, {
     Dispatch,
     ReactNode,
@@ -37,6 +38,8 @@ export function UserSelector({
     const surreal = useSurreal();
     const [input, setInput] = useState('');
     const [matches, setMatches] = useState<User[]>([]);
+    const t = useTranslations('components.logic.user-selector');
+
     const { data: profile } = useQuery({
         queryKey: ['user', user],
         async queryFn() {
@@ -75,15 +78,15 @@ export function UserSelector({
                 size="sm"
                 onClick={() => setUser(undefined)}
             >
-                Clear
+                {t('selected.button.clear')}
             </Button>
         </div>
     ) : (
         <div className="space-y-3">
-            <Label htmlFor="email">Email address</Label>
+            <Label htmlFor="email">{t('unselected.label')}</Label>
             <Input
                 id="email"
-                placeholder="john@doe.org"
+                placeholder={t('unselected.placeholder')}
                 value={input}
                 onInput={(e) => setInput(e.currentTarget.value)}
                 autoFocus={autoFocus}
@@ -98,7 +101,7 @@ export function UserSelector({
                         >
                             <Profile profile={user} size="small" />
                             <Button size="sm" onClick={() => setUser(user.id)}>
-                                {children ?? 'Select'}
+                                {children ?? t('unselected.select')}
                             </Button>
                         </div>
                     ))}

@@ -6,44 +6,25 @@ import {
     NavbarSubLink,
     NavbarSubLinks,
 } from '@/components/layout/navbar';
-import { useAuth } from '@/lib/auth';
+import { useScrolledState } from '@/lib/scrolled';
 import { cn } from '@/lib/utils';
-import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next-intl/client';
-import React, { ReactNode, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import React, { ReactNode } from 'react';
 
 export default function ConsoleLayout({ children }: { children: ReactNode }) {
-    const router = useRouter();
-    const [scrolled, setScrolled] = useState(false);
-    const { loading, user } = useAuth();
+    const scrolled = useScrolledState();
+    const t = useTranslations('pages.console.account');
 
-    useEffect(() => {
-        if (!loading && !user) router.push('/account/signin');
-    }, [user, loading, router]);
-
-    useEffect(() => {
-        const handler = () => {
-            setScrolled(
-                (window.pageYOffset || document.documentElement.scrollTop) > 0
-            );
-        };
-
-        window.addEventListener('scroll', handler);
-        return () => window.removeEventListener('scroll', handler);
-    }, [setScrolled]);
-
-    return loading ? (
-        <Container className="flex w-full flex-grow items-center justify-center">
-            <Loader2 size={50} className="animate-spin" />
-        </Container>
-    ) : (
+    return (
         <>
             <Navbar>
                 <NavbarSubLinks baseUrl={`/account`}>
-                    <NavbarSubLink>Account</NavbarSubLink>
-                    <NavbarSubLink link="passkeys">Passkeys</NavbarSubLink>
+                    <NavbarSubLink>{t('index.title')}</NavbarSubLink>
+                    <NavbarSubLink link="passkeys">
+                        {t('passkeys.title')}
+                    </NavbarSubLink>
                     <NavbarSubLink link="organisations">
-                        Organisations
+                        {t('organisations.title')}
                     </NavbarSubLink>
                 </NavbarSubLinks>
             </Navbar>

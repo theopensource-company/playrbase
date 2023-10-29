@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import React from 'react';
 import { Dialog } from '../../ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
+import Container from '../Container';
 import Devtools_Emails from './emails';
 import Devtools_Environment from './environment';
 import Devtools_MigrateDatabase from './migrate-database';
@@ -24,13 +25,13 @@ export function DevTools() {
                 <Wrench />
                 <span className="ml-2 md:hidden">Devtools</span>
             </DialogTrigger>
-            <DialogContent className="fixed left-0 top-0 mt-[2.5vh] h-[95vh] w-full rounded-xl border-none bg-muted">
-                <div className="h-full overflow-hidden p-12">
+            <DialogContent className="fixed left-0 top-0 h-screen w-full border-none bg-muted">
+                <Container className="h-full overflow-hidden p-12">
                     <Tabs
                         defaultValue="environment"
                         className="h-full w-full pb-12"
                     >
-                        <div className="mb-4 flex justify-between gap-10 overflow-x-auto rounded-md">
+                        <div className="mb-8 flex justify-between gap-10 overflow-x-auto rounded-md">
                             <TabsList className="bg-primary-foreground ">
                                 <TabsTrigger
                                     className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
@@ -82,7 +83,7 @@ export function DevTools() {
                             </TabsContent>
                         </div>
                     </Tabs>
-                </div>
+                </Container>
             </DialogContent>
         </Dialog>
     );

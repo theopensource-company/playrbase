@@ -16,6 +16,221 @@
       "button": "Continue",
       "user": "User",
       "manager": "Manager"
+    },
+    "account": {
+      "index": {
+        "title": "Account",
+        "picture": {
+          "title": "Profile picture",
+          "uploader": {
+            "title": "Change profile picture",
+            "description": "Drop a new image to change your profile picture"
+          }
+        },
+        "name": {
+          "title": "Change",
+          "dialog": {
+            "trigger": "Change",
+            "title": "Change your name",
+            "description": "Enter your name in the field below and click save to apply changes",
+            "label": "Name",
+            "submit": "Save changes"
+          }
+        },
+        "email": {
+          "title": "Email",
+          "dialog": {
+            "trigger": "Change",
+            "form": {
+              "title": "Change your email",
+              "description": "Enter your email in the field below and click save to apply changes",
+              "label": "Email",
+              "submit": "Save changes"
+            },
+            "sent": {
+              "title": "Email sent",
+              "description": "We have sent a confirmation to your old and new Email address. Please verify the change within 30 minutes!",
+              "close": "Close"
+            }
+          }
+        }
+      },
+      "organisations": {
+        "title": "Organisations",
+        "table": {
+          "caption": {
+            "count": "Count"
+          },
+          "columns": {
+            "name": "Name",
+            "email": "Email",
+            "actions": "Actions"
+          },
+          "body": {
+            "invitations": "Invitations",
+            "confirmed": "Confirmed"
+          }
+        },
+        "new": {
+          "trigger": "New organisation",
+          "title": "New organisation",
+          "fields": {
+            "name": {
+              "label": "Name"
+            },
+            "email": {
+              "label": "Email address",
+              "placeholder": "hello@foo.bar"
+            },
+            "selector": {
+              "label": "Part of organisation",
+              "placeholder": "Name or Email"
+            }
+          },
+          "submit": "Create"
+        }
+      },
+      "passkeys": {
+        "title": "Passkeys",
+        "create": "Create passkey",
+        "empty": "There are no Passkeys linked to your account. Create one by pressing the button above!",
+        "table": {
+          "caption": {
+            "count": "Count"
+          },
+          "columns": {
+            "name": "Name",
+            "created": "Created",
+            "updated": "Updated"
+          }
+        },
+        "edit": {
+          "title": "Edit Passkey",
+          "description": "Change the name of your passkey",
+          "fields": {
+            "name": {
+              "label": "Passkey Name"
+            }
+          },
+          "submit": "Save name"
+        },
+        "delete": {
+          "title": "Delete Passkey",
+          "description": "Deleting this passkey will <b>permanently</b> disallow access to Playrbase via this Passkey. <br></br><br></br> To confirm the deletion, please repeat the Passkey's name",
+          "repeat": "Repeat",
+          "cancel": "Cancel",
+          "submit": "Permanently delete"
+        }
+      }
+    },
+    "organisation": {
+      "events": {
+        "title": "Events",
+        "not_found": "Organisation not found"
+      },
+      "members": {
+        "title": "Members",
+        "not_found": "Organisation not found",
+        "list_managers": {
+          "title": "From <org></org>",
+          "table": {
+            "caption": {
+              "count": "Count"
+            },
+            "columns": {
+              "name": "Name",
+              "email": "Email",
+              "role": "Role"
+            }
+          }
+        },
+        "list_manager": {
+          "role": {
+            "placeholder": "Role",
+            "roles": {
+              "owner": "Owner",
+              "administrator": "Administrator",
+              "event_manager": "Event Manager",
+              "event_viewer": "Event Viewer"
+            }
+          },
+          "actions": {
+            "via": "Via <org></org>",
+            "remove-dialog": {
+              "title": "Remove <name></name>",
+              "description": "Are you sure that you want to remove this manager?",
+              "cancel": "Cancel",
+              "submit": "Remove"
+            }
+          }
+        },
+        "invited_manager": {
+          "pending-invite": "Pending invite",
+          "role": {
+            "placeholder": "Role",
+            "roles": {
+              "owner": "Owner",
+              "administrator": "Administrator",
+              "event_manager": "Event Manager",
+              "event_viewer": "Event Viewer"
+            }
+          }
+        },
+        "add_member": {
+          "trigger": "Add member",
+          "title": "Invite user",
+          "role": {
+            "label": "Role",
+            "placeholder": "Role",
+            "roles": {
+              "owner": "Owner",
+              "administrator": "Administrator",
+              "event_manager": "Event Manager",
+              "event_viewer": "Event Viewer"
+            }
+          },
+          "submit": "Send invite"
+        }
+      },
+      "settings": {
+        "title": "Settings",
+        "not_found": "Organisation not found",
+        "name": {
+          "title": "Organisation name",
+          "description": "This is the public name of your organisation, shown all throughout Playrbase.",
+          "submit": "Save changes"
+        },
+        "email": {
+          "title": "Organisation email",
+          "description": "This is the public email of your organisation, shown all throughout Playrbase.",
+          "placeholder": "hello@foo.bar",
+          "submit": "Save changes"
+        },
+        "website": {
+          "title": "Website",
+          "description": "This is the public website of your organisation, shown all throughout Playrbase.",
+          "placeholder": "https://www.foo.bar",
+          "submit": "Save changes"
+        },
+        "description": {
+          "title": "Description",
+          "description": "This is the public description of your organisation, shown all throughout Playrbase.",
+          "placeholder": "Give your organisation a nice description to give others a look and feel of how you roll.",
+          "submit": "Save changes"
+        },
+        "danger-zone": {
+          "title": "Danger zone",
+          "description": "Deleting this organisation will <b>permanently</b> remove all details about this organisation, all events, and other related data. This action <b>cannot be reversed!</b>",
+          "dialog": {
+            "trigger": "Delete organisation",
+            "title": "Delete <org></org>",
+            "description": "Deleting this organisation will <b>permanently</b> remove all details about this organisation, all events, and other related data. This action <b>cannot be reversed!</b> <br></br><br></br> To confirm the deletion, please repeat the organisation's name and email address",
+            "repeat": "Repeat",
+            "cancel": "Cancel",
+            "submit": "Permanently delete"
+          }
+        }
+      }
     }
   },
   "account": {
@@ -29,10 +244,14 @@
       "input": {
         "email": {
           "placeholder": "Email address"
+        },
+        "passkey": {
+          "label": "Used Passkey"
         }
       },
       "button": {
-        "continue": "Continue"
+        "continue": "Continue",
+        "passkey": "Passkey"
       }
     },
     "create-profile": {
@@ -48,6 +267,19 @@
       },
       "button": {
         "continue": "Continue"
+      }
+    },
+    "create-passkey": {
+      "title": "Create a Passkey",
+      "description": "Use a passkey to easily and securely authenticate yourself",
+      "pre": {
+        "trigger": "Create Passkey",
+        "skip": "Skip",
+        "back": "Back"
+      },
+      "created": {
+        "label": "Passkey Name",
+        "trigger": "Save name"
       }
     }
   }

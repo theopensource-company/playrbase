@@ -91,5 +91,49 @@
         }
       }
     }
+  },
+  "logic": {
+    "organisation-selector": {
+      "selected": {
+        "button": {
+          "clear": "Wissen"
+        }
+      },
+      "unselected": {
+        "badge": {
+          "no-permissions": "Geen rechten"
+        }
+      }
+    },
+    "upload-image": {
+      "cropper": {
+        "img-alt": "Gekozen afbeelding"
+      },
+      "dialog": {
+        "change": "Wijzigen",
+        "remove": "Verwijderen",
+        "save": "Opslaan"
+      },
+      "empty": {
+        "drop": "Sleep je foto hier naartoe"
+      },
+      "error": {
+        "no-image": "Je hebt geen foto geselecteerd",
+        "server": "Er is een fout opgetreden"
+      },
+      "trigger": "Wijzigen"
+    },
+    "user-selector": {
+      "selected": {
+        "button": {
+          "clear": "Wissen"
+        }
+      },
+      "unselected": {
+        "label": "E-mailadres",
+        "placeholder": "john@doe.org",
+        "select": "Selecteren"
+      }
+    }
   }
 }

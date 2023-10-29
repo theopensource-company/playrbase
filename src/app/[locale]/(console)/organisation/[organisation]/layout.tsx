@@ -8,12 +8,14 @@ import {
 } from '@/components/layout/navbar';
 import { useOrganisation } from '@/lib/Queries/Organisation';
 import { useAuth } from '@/lib/auth';
+import { useScrolledState } from '@/lib/scrolled';
 import { cn } from '@/lib/utils';
 import { User } from '@/schema/resources/user';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next-intl/client';
 import { useParams } from 'next/navigation';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 
 export default function ConsoleLayout({ children }: { children: ReactNode }) {
     const router = useRouter();
@@ -21,8 +23,9 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
     const slug = Array.isArray(params.organisation)
         ? params.organisation[0]
         : params.organisation;
+    const t = useTranslations('pages.console.organisation');
 
-    const [scrolled, setScrolled] = useState(false);
+    const scrolled = useScrolledState();
     const { loading: authLoading, user } = useAuth();
     const { isPending: orgLoading, data: organisation } = useOrganisation({
         slug,
@@ -32,45 +35,35 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         if (!loading) {
-            if (!user) return router.push('/account/signin');
             if (
                 !organisation?.managers
                     .map(({ user }) => user)
-                    .includes(user.id as User['id'])
+                    .includes(user?.id as User['id'])
             ) {
                 router.push(`/organisation/${slug}`);
             }
         }
     }, [user, loading, router, organisation, slug]);
 
-    useEffect(() => {
-        const handler = () => {
-            setScrolled(
-                (window.pageYOffset || document.documentElement.scrollTop) > 0
-            );
-        };
-
-        window.addEventListener('scroll', handler);
-        return () => window.removeEventListener('scroll', handler);
-    }, [setScrolled]);
-
-    return loading ? (
-        <Container className="flex w-full flex-grow items-center justify-center">
-            <Loader2 size={50} className="animate-spin" />
-        </Container>
-    ) : (
+    return (
         <>
             <Navbar>
                 <NavbarSubLinks baseUrl={`/organisation/${slug}`}>
                     <NavbarSubLink>
                         <ArrowLeft />
                     </NavbarSubLink>
-                    <NavbarSubLink link="events">Events</NavbarSubLink>
-                    <NavbarSubLink link="members">Members</NavbarSubLink>
-                    <NavbarSubLink link="settings">Settings</NavbarSubLink>
+                    <NavbarSubLink link="events">
+                        {t('events.title')}
+                    </NavbarSubLink>
+                    <NavbarSubLink link="members">
+                        {t('members.title')}
+                    </NavbarSubLink>
+                    <NavbarSubLink link="settings">
+                        {t('settings.title')}
+                    </NavbarSubLink>
                 </NavbarSubLinks>
             </Navbar>
-            <Container className="pb-24 pt-8">
+            <Container className="flex flex-grow flex-col pb-24 pt-8">
                 <div
                     className={cn(
                         'transition-height',

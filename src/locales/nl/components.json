@@ -135,5 +135,16 @@
         "select": "Selecteren"
       }
     }
+  },
+  "layout": {
+    "navbar": {
+      "account-options": {
+        "signout": "Uitloggen"
+      },
+      "links": {
+        "account": "Account",
+        "language": "Taal"
+      }
+    }
   }
 }

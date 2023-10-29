@@ -111,6 +111,7 @@ export const Navbar = ({ children }: { children?: ReactNode }) => {
 
 const Links = ({ devTools }: { devTools: boolean }) => {
     const { loading, user } = useAuth();
+    const t = useTranslations('components.layout.navbar.links');
 
     return (
         <NavigationMenu className="max-sm:justify-start max-sm:pt-8">
@@ -137,7 +138,7 @@ const Links = ({ devTools }: { devTools: boolean }) => {
                                 )}
                             >
                                 <ChevronRightSquare className="mr-2 md:hidden" />
-                                Account
+                                {t('account')}
                             </NavigationMenuLink>
                         </Link>
                     )}
@@ -146,7 +147,9 @@ const Links = ({ devTools }: { devTools: boolean }) => {
                     <NavigationMenuItem>
                         <NavigationMenuTrigger className="bg-transparent">
                             <Languages size={20} />
-                            <span className="ml-2 md:hidden">Language</span>
+                            <span className="ml-2 md:hidden">
+                                {t('language')}
+                            </span>
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>
                             <LanguageOptions />
@@ -161,6 +164,7 @@ const Links = ({ devTools }: { devTools: boolean }) => {
 
 const AccountOptions = () => {
     const { user, loading, signout } = useAuth();
+    const t = useTranslations('components.layout.navbar.account-options');
 
     return (
         user && (
@@ -184,7 +188,7 @@ const AccountOptions = () => {
                 <NavigationMenuItem asChild>
                     <Button variant="destructive" onClick={signout}>
                         <LogOut className="mr-2" size={18} />
-                        Signout
+                        {t('signout')}
                     </Button>
                 </NavigationMenuItem>
             </ul>

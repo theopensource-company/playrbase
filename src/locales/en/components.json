@@ -135,5 +135,16 @@
         "select": "Select"
       }
     }
+  },
+  "layout": {
+    "navbar": {
+      "links": {
+        "account": "Account",
+        "language": "Language"
+      },
+      "account-options": {
+        "signout": "Signout"
+      }
+    }
   }
 }

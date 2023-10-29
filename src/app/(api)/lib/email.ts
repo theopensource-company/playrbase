@@ -1,6 +1,6 @@
 import { Deployed } from '@/config/Environment';
 import { Email } from '@/schema/miscellaneous/email';
-import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import { SendEmailCommand, SESClient } from '@aws-sdk/client-ses';
 
 export async function sendEmail(email: Email) {
     email = Email.parse(email);

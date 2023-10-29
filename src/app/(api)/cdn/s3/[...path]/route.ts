@@ -15,12 +15,13 @@ export async function GET(
         })
     );
 
-    if (retrieved.Body)
+    if (retrieved.Body) {
         return new NextResponse(await retrieved.Body.transformToByteArray(), {
             headers: {
                 'Content-Type': 'image/webp',
             },
         });
+    }
 
     return NextResponse.json(
         {

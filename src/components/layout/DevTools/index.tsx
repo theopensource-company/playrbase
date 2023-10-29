@@ -1,5 +1,7 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
-import { featureFlags } from '@/config/Environment';
+import { useFeatureFlags } from '@/lib/featureFlags';
 import {
     DialogClose,
     DialogContent,
@@ -18,7 +20,7 @@ import Devtools_Query from './query';
 
 export function DevTools() {
     const t = useTranslations('components.devtools');
-    const showWarning = featureFlags.store.devToolsWarning;
+    const [featureFlags] = useFeatureFlags();
 
     return (
         <Dialog>
@@ -27,7 +29,7 @@ export function DevTools() {
                 <span className="ml-2 md:hidden">Devtools</span>
             </DialogTrigger>
             <DialogContent className="fixed left-0 top-0 h-screen w-full border-none bg-muted">
-                {showWarning && (
+                {featureFlags.devToolsWarning && (
                     <div className="w-screen bg-red-stripes p-2 text-center text-xl font-bold drop-shadow-xl">
                         <span className="text-yellow-300 drop-shadow-2xl">
                             USE THIS TOOL WITH CAUTION. YOU CAN DAMAGE YOUR
@@ -57,16 +59,14 @@ export function DevTools() {
                                 <TabsTrigger
                                     className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
                                     value="emails"
-                                    disabled={!featureFlags.store.localEmail}
+                                    disabled={!featureFlags.localEmail}
                                 >
                                     Emails
                                 </TabsTrigger>
                                 <TabsTrigger
                                     className="data-[state=active]:bg-secondary-foreground data-[state=active]:text-primary-foreground"
                                     value="migrate-database"
-                                    disabled={
-                                        !featureFlags.store.migrateDatabase
-                                    }
+                                    disabled={!featureFlags.migrateDatabase}
                                 >
                                     {t('migrate-database.title')}
                                 </TabsTrigger>

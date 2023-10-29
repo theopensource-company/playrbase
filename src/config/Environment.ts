@@ -10,6 +10,17 @@ export const Deployed =
     process.env.NEXT_PUBLIC_DEPLOYMENT_STATUS === 'deployed';
 export const Preview = Environment != 'prod' && Deployed;
 
+export const parseValueFromString = (v: string) => {
+    const lower = v?.toLowerCase();
+    return lower === 'true'
+        ? true
+        : lower === 'false'
+        ? false
+        : !v || isNaN(+v)
+        ? v
+        : parseInt(v);
+};
+
 /////////////////////////////////////
 ///             Schema            ///
 /////////////////////////////////////
@@ -23,17 +34,18 @@ export const schema = {
     },
     devToolsWarning: {
         options: [true, false],
+        readonly: Deployed,
     },
     switchLanguage: {
         options: [true, false],
     },
     migrateDatabase: {
         options: [false, true],
-        readonly: true,
+        readonly: Deployed,
     },
     localEmail: {
         options: [false, true],
-        readonly: true,
+        readonly: Deployed,
     },
 } as const;
 
@@ -53,20 +65,9 @@ export const featureFlags = new FeatureFlags({
         preview: {},
     },
     overrides: (flag) => {
-        const parse = (v: string) => {
-            const lower = v?.toLowerCase();
-            return lower === 'true'
-                ? true
-                : lower === 'false'
-                ? false
-                : !v || isNaN(+v)
-                ? v
-                : parseInt(v);
-        };
-
         if (process.env[`NEXT_PUBLIC_FFLAG_${flag.toUpperCase()}`]) {
             const v = process.env[`NEXT_PUBLIC_FFLAG_${flag.toUpperCase()}`];
-            if (v) return parse(v);
+            if (v) return parseValueFromString(v);
         }
     },
 });

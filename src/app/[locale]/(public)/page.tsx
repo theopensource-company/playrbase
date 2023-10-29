@@ -1,5 +1,7 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
-import { featureFlags } from '@/config/Environment';
+import { useFeatureFlags } from '@/lib/featureFlags';
 import { Clock } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next-intl/link';
@@ -7,6 +9,7 @@ import React, { ReactNode } from 'react';
 
 export default function Home() {
     const t = useTranslations('pages.home');
+    const [featureFlags] = useFeatureFlags();
     const tint = (children: ReactNode) => (
         <span className="bg-gradient-to-tr from-blue-400 via-indigo-600 to-purple-400 bg-clip-text text-transparent">
             {children}
@@ -21,7 +24,7 @@ export default function Home() {
                 <h2>{t.rich('headline.2', { tint })}</h2>
             </div>
             <div>
-                {featureFlags.store.preLaunchPage ? (
+                {featureFlags.preLaunchPage ? (
                     <Button disabled>
                         <Clock className="mr-2 h-4 w-4" />
                         {t('button.releasing-soon')}

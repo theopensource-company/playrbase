@@ -11,18 +11,20 @@ import { z } from 'zod';
 
 export async function POST(req: NextRequest) {
     const { decoded: token } = extractUserTokenFromRequest(req);
-    if (!token)
+    if (!token) {
         return NextResponse.json(
             { success: false, error: 'not_authenticated' },
             { status: 403 }
         );
+    }
 
     const [user] = await surreal.select<User>(token.ID);
-    if (!user)
+    if (!user) {
         return NextResponse.json(
             { success: false, error: 'unknown_user' },
             { status: 403 }
         );
+    }
 
     const log = debugLogFactory(user.id);
 
@@ -44,11 +46,12 @@ export async function POST(req: NextRequest) {
 
     log?.('body', body);
 
-    if (!body.success)
+    if (!body.success) {
         return NextResponse.json(
             { success: false, error: 'invalid_body' },
             { status: 400 }
         );
+    }
 
     const { challengeId, registration } = body.data;
     const challenge = await surreal
@@ -62,11 +65,12 @@ export async function POST(req: NextRequest) {
 
     log?.('challenge', challenge);
 
-    if (!challenge)
+    if (!challenge) {
         return NextResponse.json(
             { success: false, error: 'invalid_challenge' },
             { status: 400 }
         );
+    }
 
     const expected = {
         challenge: challenge.challenge,
@@ -84,11 +88,12 @@ export async function POST(req: NextRequest) {
 
     log?.('registrationParsed', registrationParsed);
 
-    if (!registrationParsed)
+    if (!registrationParsed) {
         return NextResponse.json(
             { success: false, error: 'invalid_credential' },
             { status: 400 }
         );
+    }
 
     const credential = await surreal
         .query<[Credential]>(
@@ -112,11 +117,12 @@ export async function POST(req: NextRequest) {
 
     log?.('credential', credential);
 
-    if (!credential)
+    if (!credential) {
         return NextResponse.json(
             { success: false, error: 'credential_not_stored' },
             { status: 400 }
         );
+    }
 
     return NextResponse.json({
         success: true,

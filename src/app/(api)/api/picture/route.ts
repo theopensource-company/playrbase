@@ -16,11 +16,12 @@ const sizeByIntent = {
 
 export async function PUT(req: NextRequest) {
     const { decoded: token } = extractUserTokenFromRequest(req);
-    if (!token)
+    if (!token) {
         return NextResponse.json(
             { success: false, error: 'not_authenticated' },
             { status: 403 }
         );
+    }
 
     const formData = await req.formData();
     const intent = (() => {
@@ -29,20 +30,22 @@ export async function PUT(req: NextRequest) {
         if (parsed.success) return parsed.data;
     })();
 
-    if (!intent)
+    if (!intent) {
         return NextResponse.json(
             { success: false, error: 'missing_intent' },
             { status: 400 }
         );
+    }
 
     const target = token.ID;
 
     const file = formData.get('file');
-    if (!(file instanceof Blob || file instanceof File))
+    if (!(file instanceof Blob || file instanceof File)) {
         return NextResponse.json(
             { success: false, error: 'file_not_a_file' },
             { status: 400 }
         );
+    }
 
     const compressed = await sharp(await file.arrayBuffer())
         .resize({ width: sizeByIntent[intent], withoutEnlargement: true })
@@ -90,11 +93,12 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
     const { decoded: token } = extractUserTokenFromRequest(req);
-    if (!token)
+    if (!token) {
         return NextResponse.json(
             { success: false, error: 'not_authenticated' },
             { status: 403 }
         );
+    }
 
     const body = await req.json();
     const intent = (() => {
@@ -103,11 +107,12 @@ export async function DELETE(req: NextRequest) {
         if (parsed.success) return parsed.data;
     })();
 
-    if (!intent)
+    if (!intent) {
         return NextResponse.json(
             { success: false, error: 'missing_intent' },
             { status: 400 }
         );
+    }
 
     const target = token.ID;
 

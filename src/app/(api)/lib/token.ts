@@ -78,18 +78,20 @@ export function validateUserToken(token: string) {
 
 export function extractUserTokenFromRequest(req: NextRequest) {
     const token = req.cookies.get('playrbase-token')?.value;
-    if (!token)
+    if (!token) {
         return {
             success: false,
             error: 'missing_token',
         };
+    }
 
     const decoded = validateUserToken(token);
-    if (!decoded || typeof decoded === 'string')
+    if (!decoded || typeof decoded === 'string') {
         return {
             success: false,
             error: 'invalid_token',
         };
+    }
 
     return { success: true, token, decoded };
 }

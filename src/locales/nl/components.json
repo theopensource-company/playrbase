@@ -145,6 +145,9 @@
         "account": "Account",
         "language": "Taal"
       }
+    },
+    "not-found-screen": {
+      "text": "Object niet gevonden"
     }
   }
 }

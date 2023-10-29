@@ -53,6 +53,9 @@ module.exports = {
                     foreground: 'hsl(var(--card-foreground))',
                 },
             },
+            backgroundImage: {
+                'red-stripes': `repeating-linear-gradient(45deg, #c24444, #c24444 10px, #b32020 10px, #b32020 20px)`,
+            },
             borderRadius: {
                 lg: 'var(--radius)',
                 md: 'calc(var(--radius) - 2px)',

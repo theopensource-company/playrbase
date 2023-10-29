@@ -18,6 +18,7 @@ import Devtools_Query from './query';
 
 export function DevTools() {
     const t = useTranslations('components.devtools');
+    const showWarning = featureFlags.store.devToolsWarning;
 
     return (
         <Dialog>
@@ -26,7 +27,15 @@ export function DevTools() {
                 <span className="ml-2 md:hidden">Devtools</span>
             </DialogTrigger>
             <DialogContent className="fixed left-0 top-0 h-screen w-full border-none bg-muted">
-                <Container className="h-full overflow-hidden p-12">
+                {showWarning && (
+                    <div className="bg-red-stripes w-screen p-2 text-center text-xl font-bold drop-shadow-xl">
+                        <span className="text-yellow-300 drop-shadow-2xl">
+                            USE THIS TOOL WITH CAUTION. YOU CAN DAMAGE YOUR
+                            ACCOUNT
+                        </span>
+                    </div>
+                )}
+                <Container className="h-full overflow-hidden p-12 pt-12">
                     <Tabs
                         defaultValue="environment"
                         className="h-full w-full pb-12"

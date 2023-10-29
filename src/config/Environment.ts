@@ -21,6 +21,9 @@ export const schema = {
     devTools: {
         options: [false, true],
     },
+    devToolsWarning: {
+        options: [true, false],
+    },
     switchLanguage: {
         options: [true, false],
     },
@@ -43,6 +46,7 @@ export const featureFlags = new FeatureFlags({
         },
         dev: {
             devTools: true,
+            // devToolsWarning: false,
             migrateDatabase: true,
             localEmail: true,
         },

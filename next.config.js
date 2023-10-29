@@ -17,6 +17,7 @@ const nextConfig = withNextIntl({
     },
     experimental: {
         webpackBuildWorker: true,
+        esmExternals: 'loose',
     },
 });
 

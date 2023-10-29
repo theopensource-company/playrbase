@@ -1,3 +1,12 @@
+'use client';
+
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import {
     Table,
     TableBody,
@@ -11,11 +20,12 @@ import {
     Deployed,
     Environment,
     Preview,
-    featureFlags,
+    parseValueFromString,
     schema,
 } from '@/config/Environment';
 import { database, endpoint, namespace, useSurreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
+import { useFeatureFlags } from '@/lib/featureFlags';
 import { FeatureFlags } from '@theopensource-company/feature-flags';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
@@ -23,6 +33,51 @@ import { useTranslations } from 'next-intl';
 import React from 'react';
 
 dayjs.extend(calendar);
+
+function RenderFeatureFlag({ flag }: { flag: keyof typeof schema }) {
+    const [featureFlags, setFeatureFlags] = useFeatureFlags();
+    const opts = schema[flag];
+    const readonly = 'readonly' in opts && opts.readonly;
+
+    return (
+        <TableRow key={flag}>
+            <TableCell>{flag}</TableCell>
+            <TableCell className="w-[150px] capitalize">
+                {typeof featureFlags[flag]}
+            </TableCell>
+            <TableCell>
+                {readonly ? (
+                    <div className="flex h-8 w-full items-center justify-between rounded-md border border-input bg-background/20 px-3 py-2 text-sm ring-offset-background">
+                        {JSON.stringify(featureFlags[flag])}
+                    </div>
+                ) : (
+                    <Select
+                        value={JSON.stringify(featureFlags[flag])}
+                        onValueChange={(value) => {
+                            setFeatureFlags({
+                                [flag]: parseValueFromString(value),
+                            });
+                        }}
+                    >
+                        <SelectTrigger className="h-8 bg-background/50">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {opts.options.map((opt) => {
+                                const str = JSON.stringify(opt);
+                                return (
+                                    <SelectItem key={str} value={str}>
+                                        {str}
+                                    </SelectItem>
+                                );
+                            })}
+                        </SelectContent>
+                    </Select>
+                )}
+            </TableCell>
+        </TableRow>
+    );
+}
 
 export default function Devtools_Environment() {
     const surreal = useSurreal();
@@ -74,17 +129,7 @@ export default function Devtools_Environment() {
                         <TableBody>
                             {FeatureFlags.listOptionsFromSchema(schema).map(
                                 (flag) => (
-                                    <TableRow key={flag}>
-                                        <TableCell>{flag}</TableCell>
-                                        <TableCell className="w-[150px] capitalize">
-                                            {typeof featureFlags.store[flag]}
-                                        </TableCell>
-                                        <TableCell>
-                                            {JSON.stringify(
-                                                featureFlags.store[flag]
-                                            )}
-                                        </TableCell>
-                                    </TableRow>
+                                    <RenderFeatureFlag key={flag} flag={flag} />
                                 )
                             )}
                         </TableBody>
@@ -164,7 +209,7 @@ export default function Devtools_Environment() {
                         </TableBody>
                     </Table>
 
-                    <h2 className="mb-4 text-2xl font-bold">
+                    <h2 className="mb-4 mt-8 text-2xl font-bold">
                         {t('table.authentication.title')}
                     </h2>
                     <Table>

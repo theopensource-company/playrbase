@@ -63,11 +63,12 @@ export async function GET(req: NextRequest) {
     const token = z.string().parse(new URL(req.url).searchParams.get('token'));
     const decoded = await verifyEmailVerificationToken(token);
 
-    if (!decoded)
+    if (!decoded) {
         return NextResponse.json(
             { success: false, error: 'invalid_credentials' },
             { status: 400 }
         );
+    }
 
     const isEmail = z.string().email().safeParse(decoded.subject).success;
     if (isEmail) {
@@ -91,11 +92,12 @@ export async function GET(req: NextRequest) {
     );
 
     const user = res?.result?.[0];
-    if (!user)
+    if (!user) {
         return NextResponse.json(
             { success: false, error: 'unknown_user' },
             { status: 400 }
         );
+    }
 
     const { header } = generateUserToken({
         SC: decoded.scope,
@@ -122,24 +124,27 @@ export async function PUT(req: NextRequest) {
 
     const decoded = await verifyEmailVerificationToken(token);
 
-    if (!decoded)
+    if (!decoded) {
         return NextResponse.json(
             { success: false, error: 'invalid_credentials' },
             { status: 400 }
         );
+    }
 
     const isEmail = z.string().email().safeParse(decoded.subject).success;
-    if (!isEmail)
+    if (!isEmail) {
         return NextResponse.json(
             { success: false, error: 'invalid_token_subject' },
             { status: 400 }
         );
+    }
 
-    if (decoded.scope !== 'user')
+    if (decoded.scope !== 'user') {
         return NextResponse.json(
             { success: false, error: 'invalid_token_scope' },
             { status: 400 }
         );
+    }
 
     const [user] = await surreal.create<User, Pick<User, 'email' | 'name'>>(
         'user',
@@ -149,11 +154,12 @@ export async function PUT(req: NextRequest) {
         }
     );
 
-    if (!user)
+    if (!user) {
         return NextResponse.json(
             { success: false, error: 'user_creation_failed' },
             { status: 400 }
         );
+    }
 
     const userToken = generateUserToken({
         SC: decoded.scope,
@@ -193,11 +199,12 @@ async function verifyEmailVerificationToken(token: string) {
             },
             (error, decoded) => {
                 if (error) return resolve(false);
-                if (typeof decoded == 'object')
+                if (typeof decoded == 'object') {
                     return resolve({
                         subject: decoded.sub as string,
                         scope: decoded.SC as string,
                     });
+                }
 
                 resolve(false);
             }

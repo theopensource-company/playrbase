@@ -9,8 +9,8 @@ import {
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu.tsx';
-import { featureFlags } from '@/config/Environment.ts';
 import { useAuth } from '@/lib/auth';
+import { useFeatureFlags } from '@/lib/featureFlags.tsx';
 import { useScrolledState } from '@/lib/scrolled.tsx';
 import { cn } from '@/lib/utils.ts';
 import { Language, languages } from '@/locales/languages.ts';
@@ -24,13 +24,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { usePathname } from 'next-intl/client';
 import Link from 'next-intl/link';
 import Image from 'next/image';
-import React, {
-    ReactNode,
-    createContext,
-    useContext,
-    useEffect,
-    useState,
-} from 'react';
+import React, { ReactNode, createContext, useContext } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import LogoFull from '../../assets/LogoFull.svg';
 import { Profile } from '../cards/profile.tsx';
@@ -42,16 +36,11 @@ import { DevTools } from './DevTools/index.tsx';
 
 export const Navbar = ({ children }: { children?: ReactNode }) => {
     const scrolled = useScrolledState();
+    const [featureFlags] = useFeatureFlags();
 
     // Enabled in prod/preview with:
-    // localStorage.setItem('devTools', 'enabled')
+    // localStorage.setItem('playrbase_fflag_devTools', 'true')
     // Then reload page
-    const [devTools, setDevTools] = useState(featureFlags.store.devTools);
-    useEffect(() => {
-        if (localStorage.getItem('devTools') == 'enabled') {
-            setDevTools(true);
-        }
-    }, [setDevTools]);
 
     return (
         <div className={cn('fixed left-0 right-0 z-10 backdrop-blur-lg')}>
@@ -79,7 +68,7 @@ export const Navbar = ({ children }: { children?: ReactNode }) => {
                 </Link>
                 <div className="flex gap-4">
                     <div className="hidden md:block">
-                        <Links devTools={devTools} />
+                        <Links devTools={featureFlags.devTools} />
                     </div>
                     <div className="block md:hidden">
                         <Sheet>
@@ -97,7 +86,7 @@ export const Navbar = ({ children }: { children?: ReactNode }) => {
                                             className="h-10 w-min sm:h-12"
                                         />
                                     </Link>
-                                    <Links devTools={devTools} />
+                                    <Links devTools={featureFlags.devTools} />
                                 </div>
                             </SheetContent>
                         </Sheet>
@@ -112,6 +101,7 @@ export const Navbar = ({ children }: { children?: ReactNode }) => {
 const Links = ({ devTools }: { devTools: boolean }) => {
     const { loading, user } = useAuth();
     const t = useTranslations('components.layout.navbar.links');
+    const [featureFlags] = useFeatureFlags();
 
     return (
         <NavigationMenu className="max-sm:justify-start max-sm:pt-8">
@@ -143,7 +133,7 @@ const Links = ({ devTools }: { devTools: boolean }) => {
                         </Link>
                     )}
                 </NavigationMenuItem>
-                {featureFlags.store.switchLanguage && (
+                {featureFlags.switchLanguage && (
                     <NavigationMenuItem>
                         <NavigationMenuTrigger className="bg-transparent">
                             <Languages size={20} />

@@ -41,7 +41,7 @@ export default async function RootLayout({
 }: RootLayoutProps) {
     let messages = {};
     /* eslint-disable-next-line */
-    const locale = useLocale();
+  const locale = useLocale();
     if (params.locale !== locale) {
         notFound();
     } else {

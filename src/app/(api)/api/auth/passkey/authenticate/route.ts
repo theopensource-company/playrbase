@@ -21,11 +21,12 @@ export async function POST(req: NextRequest) {
     });
 
     const body = Body.safeParse(await req.json());
-    if (!body.success)
+    if (!body.success) {
         return NextResponse.json(
             { success: false, error: 'invalid_body' },
             { status: 400 }
         );
+    }
 
     const { challengeId, authentication } = body.data;
     const challenge = await surreal
@@ -37,11 +38,12 @@ export async function POST(req: NextRequest) {
         )
         .then(([res]) => res.result);
 
-    if (!challenge)
+    if (!challenge) {
         return NextResponse.json(
             { success: false, error: 'invalid_challenge' },
             { status: 400 }
         );
+    }
 
     const credential = await surreal
         .query<[Credential]>(
@@ -52,11 +54,12 @@ export async function POST(req: NextRequest) {
         )
         .then(([res]) => res.result);
 
-    if (!credential)
+    if (!credential) {
         return NextResponse.json(
             { success: false, error: 'invalid_credential' },
             { status: 400 }
         );
+    }
 
     const log = debugLogFactory(credential.user);
 
@@ -86,11 +89,12 @@ export async function POST(req: NextRequest) {
 
     log?.('authenticationParsed', authenticationParsed);
 
-    if (!authenticationParsed)
+    if (!authenticationParsed) {
         return NextResponse.json(
             { success: false, error: 'authentication_failed' },
             { status: 400 }
         );
+    }
 
     const user = await surreal
         .query<[User]>(
@@ -101,11 +105,12 @@ export async function POST(req: NextRequest) {
         )
         .then(([res]) => res.result);
 
-    if (!user)
+    if (!user) {
         return NextResponse.json(
             { success: false, error: 'unknown_user' },
             { status: 400 }
         );
+    }
 
     const { header } = generateUserToken({
         SC: 'user',

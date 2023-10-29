@@ -2,6 +2,7 @@
 
 import { SurrealProvider } from '@/lib/Surreal';
 import { AuthProvider } from '@/lib/auth';
+import { FeatureFlagsProvider } from '@/lib/featureFlags';
 import { ScrolledStateProvider } from '@/lib/scrolled';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { ReactNode } from 'react';
@@ -13,7 +14,11 @@ export function Providers({ children }: { children: ReactNode }) {
         <QueryClientProvider client={queryClient}>
             <SurrealProvider>
                 <AuthProvider>
-                    <ScrolledStateProvider>{children}</ScrolledStateProvider>
+                    <FeatureFlagsProvider>
+                        <ScrolledStateProvider>
+                            {children}
+                        </ScrolledStateProvider>
+                    </FeatureFlagsProvider>
                 </AuthProvider>
             </SurrealProvider>
         </QueryClientProvider>

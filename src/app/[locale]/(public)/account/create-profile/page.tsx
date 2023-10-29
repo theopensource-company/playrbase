@@ -13,6 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useSurreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
+import { useFeatureFlags } from '@/lib/featureFlags';
 import { cn } from '@/lib/utils';
 import { useWebAuthnAvailable } from '@/lib/webauthn';
 import { fullname } from '@/lib/zod';
@@ -39,6 +40,7 @@ export default function CreateProfile() {
     const { refreshUser } = useAuth();
     const decoded = jwt.decode(token);
     const webAuthnAvailable = useWebAuthnAvailable();
+    const [featureFlags] = useFeatureFlags();
 
     const t = useTranslations('pages.account.create-profile');
     const [status, setStatus] = useState<{
@@ -95,7 +97,7 @@ export default function CreateProfile() {
                 .then(() => {
                     refreshUser();
                     router.push(
-                        webAuthnAvailable
+                        featureFlags.passkeys && webAuthnAvailable
                             ? '/account/create-passkey?signup'
                             : '/account'
                     );

@@ -1,5 +1,6 @@
 'use client';
 
+import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
@@ -23,6 +24,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useSurreal } from '@/lib/Surreal';
+import { useFeatureFlags } from '@/lib/featureFlags';
 import { Credential } from '@/schema/resources/credential';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogClose } from '@radix-ui/react-dialog';
@@ -36,9 +38,10 @@ import { z } from 'zod';
 
 export default function Account() {
     const { data: credentials, isPending, refetch } = useData();
+    const [featureFlags] = useFeatureFlags();
     const t = useTranslations('pages.console.account.passkeys');
 
-    return (
+    return featureFlags.passkeys ? (
         <div className="flex flex-grow flex-col gap-12 pt-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold">{t('title')}</h1>
@@ -99,6 +102,8 @@ export default function Account() {
                 </Table>
             )}
         </div>
+    ) : (
+        <NotFoundScreen />
     );
 }
 

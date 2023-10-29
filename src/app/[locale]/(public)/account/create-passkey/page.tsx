@@ -1,6 +1,7 @@
 'use client';
 
 import Container from '@/components/layout/Container';
+import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
     Card,
@@ -14,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useSurreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
+import { useFeatureFlags } from '@/lib/featureFlags';
 import { useRegisterPasskey } from '@/lib/webauthn';
 import { Credential } from '@/schema/resources/credential';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,10 +32,11 @@ export default function Page() {
     const { loading, register, passkey } = useRegisterPasskey();
     const searchParams = useSearchParams();
     const signup = [...searchParams.keys()].includes('signup');
+    const [featureFlags] = useFeatureFlags();
     const t = useTranslations('pages.account.create-passkey');
     useAuth({ authRequired: true });
 
-    return (
+    return featureFlags.passkeys ? (
         <Container className="flex flex-grow flex-col items-center justify-center">
             <div className="flex flex-col items-center gap-8">
                 <Card className="flex flex-col gap-3">
@@ -55,6 +58,8 @@ export default function Page() {
                 </Card>
             </div>
         </Container>
+    ) : (
+        <NotFoundScreen />
     );
 }
 

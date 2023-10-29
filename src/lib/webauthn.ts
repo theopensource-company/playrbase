@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { useSurreal } from './Surreal';
 import { useAuth } from './auth';
+import { useFeatureFlags } from './featureFlags';
 import { useReadyAfter } from './utilHooks';
 
 // About the usage of the "useReadyAfter" hook in this file.
@@ -59,6 +60,7 @@ export function useWebAuthnAvailable() {
 }
 
 export function useRegisterPasskey() {
+    const [featureFlags] = useFeatureFlags();
     const [didPoke, setDidPoke] = useState(false);
     const { user, loading: userLoading } = useAuth();
     const ready = useReadyAfter(10);
@@ -71,6 +73,7 @@ export function useRegisterPasskey() {
         mutationKey: ['register-passkey'],
         async mutationFn() {
             if (!user) return null;
+            if (!featureFlags.passkeys) return null;
             const { id: challengeId, challenge } = await fetch(
                 `/api/auth/passkey/challenge?` +
                     new URLSearchParams({
@@ -136,6 +139,7 @@ export function useRegisterPasskey() {
 }
 
 export function usePasskeyAuthentication() {
+    const [featureFlags] = useFeatureFlags();
     const [didPoke, setDidPoke] = useState(false);
     const { refreshUser } = useAuth();
     const ready = useReadyAfter(10);
@@ -148,6 +152,7 @@ export function usePasskeyAuthentication() {
     } = useMutation({
         mutationKey: ['authenticate-passkey'],
         async mutationFn() {
+            if (!featureFlags.passkeys) return null;
             const { id: challengeId, challenge } = await fetch(
                 '/api/auth/passkey/challenge'
             )

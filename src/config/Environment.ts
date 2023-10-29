@@ -47,6 +47,9 @@ export const schema = {
         options: [false, true],
         readonly: Deployed,
     },
+    passkeys: {
+        options: [true, false],
+    },
 } as const;
 
 export const featureFlags = new FeatureFlags({
@@ -58,7 +61,6 @@ export const featureFlags = new FeatureFlags({
         },
         dev: {
             devTools: true,
-            // devToolsWarning: false,
             migrateDatabase: true,
             localEmail: true,
         },

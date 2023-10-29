@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useFeatureFlags } from '@/lib/featureFlags';
 import { cn } from '@/lib/utils';
 import { usePasskeyAuthentication } from '@/lib/webauthn';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -48,6 +49,7 @@ export default function Signin() {
         authenticate: tryPasskey,
         passkey,
     } = usePasskeyAuthentication();
+    const [featureFlags] = useFeatureFlags();
     const router = useRouter();
     const [navigating, setNavigating] = useState(false);
     const t = useTranslations('pages.account.signin');
@@ -217,20 +219,22 @@ export default function Signin() {
                             >
                                 {t('button.continue')}
                             </Button>
-                            <Button
-                                type="button"
-                                className={passkey ? ' bg-green-500' : ''}
-                                onClick={() => tryPasskey()}
-                                variant={passkey ? 'default' : 'outline'}
-                                disabled={passkeyLoading}
-                            >
-                                {passkeyLoading ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <KeyRound className="mr-2 h-4 w-4" />
-                                )}
-                                {t('button.passkey')}
-                            </Button>
+                            {featureFlags.passkeys && (
+                                <Button
+                                    type="button"
+                                    className={passkey ? ' bg-green-500' : ''}
+                                    onClick={() => tryPasskey()}
+                                    variant={passkey ? 'default' : 'outline'}
+                                    disabled={passkeyLoading}
+                                >
+                                    {passkeyLoading ? (
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    ) : (
+                                        <KeyRound className="mr-2 h-4 w-4" />
+                                    )}
+                                    {t('button.passkey')}
+                                </Button>
+                            )}
                         </CardFooter>
                     )}
                 </Card>

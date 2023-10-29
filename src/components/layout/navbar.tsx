@@ -284,7 +284,12 @@ export function NavbarSubLink({
             >
                 {children}
             </Link>
-            {active && <div className="mx-2.5 border-b-2 border-white" />}
+            <div
+                className={cn(
+                    'mx-2.5 border-b-2',
+                    active ? 'border-white' : 'border-transparent'
+                )}
+            />
         </div>
     );
 }

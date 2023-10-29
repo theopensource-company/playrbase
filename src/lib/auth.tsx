@@ -1,9 +1,8 @@
 'use client';
 
-import { signout as actionSignout } from '@/actions/auth';
 import { Admin } from '@/schema/resources/admin';
 import { User } from '@/schema/resources/user';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next-intl/client';
 import React, { ReactNode, createContext, useContext, useEffect } from 'react';
 import { useSurreal } from './Surreal';
@@ -25,6 +24,8 @@ export const AuthContext = createContext<AuthStore>({
 
 export function useCreateAuthState() {
     const surreal = useSurreal();
+    const queryClient = useQueryClient();
+
     const {
         data: user,
         isLoading: isFetchingUser,
@@ -55,7 +56,12 @@ export function useCreateAuthState() {
     const { mutate: signout, isPending: isSigningOut } = useMutation({
         mutationKey: ['state', 'auth'],
         async mutationFn() {
-            await Promise.all([actionSignout(), surreal.invalidate()]);
+            await Promise.allSettled([
+                fetch('/api/auth/token', { method: 'DELETE' }),
+                surreal.invalidate(),
+            ]);
+
+            queryClient.setQueryData(['state', 'auth'], null);
         },
     });
 

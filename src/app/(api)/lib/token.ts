@@ -34,17 +34,32 @@ export function generateUserToken({
         }
     );
 
+    const header = generateCookieHeader({ token, maxAge, secure });
+
+    return { token, header, maxAge };
+}
+
+export function generateCookieHeader({
+    token = '',
+    maxAge = 0,
+    secure = true,
+}: {
+    token?: string;
+    maxAge?: number;
+    secure?: boolean;
+}) {
     const header = [
         `playrbase-token=${token};`,
         `HttpOnly;`,
         `Max-Age=${maxAge};`,
+        `Path=/api;`,
         `SameSite=Strict;`,
         secure !== false && `Secure;`,
     ]
         .filter((a) => a)
         .join(' ');
 
-    return { token, header, maxAge };
+    return header;
 }
 
 export function validateUserToken(token: string) {

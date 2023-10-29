@@ -28,7 +28,7 @@ export function DevTools() {
             </DialogTrigger>
             <DialogContent className="fixed left-0 top-0 h-screen w-full border-none bg-muted">
                 {showWarning && (
-                    <div className="bg-red-stripes w-screen p-2 text-center text-xl font-bold drop-shadow-xl">
+                    <div className="w-screen bg-red-stripes p-2 text-center text-xl font-bold drop-shadow-xl">
                         <span className="text-yellow-300 drop-shadow-2xl">
                             USE THIS TOOL WITH CAUTION. YOU CAN DAMAGE YOUR
                             ACCOUNT

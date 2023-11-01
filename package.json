@@ -39,7 +39,7 @@
     "@theopensource-company/feature-flags": "^0.4.3",
     "@types/jsonwebtoken": "^9.0.4",
     "@types/lodash": "^4.14.200",
-    "@types/node": "20.8.9",
+    "@types/node": "20.8.10",
     "@types/react": "18.2.33",
     "@types/react-dom": "18.2.14",
     "class-variance-authority": "^0.7.0",

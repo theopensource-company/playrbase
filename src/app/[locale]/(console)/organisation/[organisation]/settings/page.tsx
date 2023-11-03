@@ -13,12 +13,12 @@ import {
 } from '@/lib/Queries/Organisation';
 import { useSurreal } from '@/lib/Surreal';
 import { promiseTimeout } from '@/lib/utils';
+import { useRouter } from '@/locales/navigation';
 import { Organisation } from '@/schema/resources/organisation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog, DialogClose } from '@radix-ui/react-dialog';
 import { AlertOctagon, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next-intl/client';
 import { useParams } from 'next/navigation';
 import React from 'react';
 import { useForm } from 'react-hook-form';

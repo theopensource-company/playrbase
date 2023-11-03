@@ -58,7 +58,7 @@ export function UserSelector({
                     `,
                     { email: input, limit }
                 )
-                .then(([{ result }]) => {
+                .then(([result]) => {
                     setMatches(result ?? []);
                 });
         }, 300);

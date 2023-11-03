@@ -29,9 +29,8 @@ export const useAdmins = (
                 { filters }
             );
 
-            if (result?.[0]?.detail) throw new Error(result[0].detail);
-            if (!result?.[0]?.result) return [];
-            return z.array(Admin).parse(result[0].result);
+            if (!result?.[0]) return [];
+            return z.array(Admin).parse(result[0]);
         },
     });
 };
@@ -49,9 +48,8 @@ export const useAdmin = (filters: {
                 { filters }
             );
 
-            if (result?.[0]?.detail) throw new Error(result[0].detail);
-            if (!result?.[0]?.result?.[0]) return null;
-            return Admin.parse(result[0].result[0]);
+            if (!result?.[0]?.[0]) return null;
+            return Admin.parse(result[0][0]);
         },
     });
 };

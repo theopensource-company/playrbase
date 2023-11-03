@@ -60,7 +60,7 @@ export const AuthChangeEmailEmail = ({
                         The following link will be valid for 30 minutes.
                     </Text>
                     <Section style={buttonContainer}>
-                        <Button pY={11} pX={23} style={button} href={url}>
+                        <Button style={button} href={url}>
                             Confirm changed Email
                         </Button>
                     </Section>

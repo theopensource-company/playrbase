@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
         { subject: token.ID, scope_name: token.SC, new_email }
     );
 
-    const record = res.result?.[0];
+    const record = res[0];
     if (!record)
         return NextResponse.json(
             { success: false, error: 'unknown_user' },
@@ -126,7 +126,7 @@ export async function GET(req: NextRequest) {
         }
     );
 
-    const user = res?.result?.[0];
+    const user = res?.[0];
     if (!user)
         return NextResponse.json(
             { success: false, error: 'unknown_user' },

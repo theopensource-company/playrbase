@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
             `,
             { challengeId, user: user.id }
         )
-        .then(([res]) => res.result);
+        .then(([res]) => res);
 
     log?.('challenge', challenge);
 
@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
                 algorithm: registration.credential.algorithm,
             }
         )
-        .then(([res]) => res.result);
+        .then(([res]) => res);
 
     log?.('credential', credential);
 

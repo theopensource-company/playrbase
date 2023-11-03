@@ -11,9 +11,9 @@ export const useSignin = () => {
             }
         ) => {
             const token = await surreal.signin({
-                NS: namespace,
-                DB: database,
-                SC: 'user',
+                namespace,
+                database,
+                scope: 'user',
                 ...auth,
             });
 

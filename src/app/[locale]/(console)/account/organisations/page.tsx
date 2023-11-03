@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/table';
 import { useSurreal } from '@/lib/Surreal';
 import { record } from '@/lib/zod';
+import { Link } from '@/locales/navigation';
 import {
     Organisation,
     OrganisationSafeParse,
@@ -29,7 +30,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Check, Plus, Settings2, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import Link from 'next-intl/link';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -204,7 +204,7 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
 
     const handler = handleSubmit(async ({ name, email }) => {
         // TODO set to correct type, not important for the moment
-        const [res] = await surreal.query<[Organisation]>(
+        await surreal.query<[Organisation]>(
             /* surql */ `
             CREATE ONLY organisation CONTENT {
                 name: $name,
@@ -214,8 +214,6 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
         `,
             { name, email, part_of: partOf }
         );
-
-        if (res.detail) throw new Error(res.detail);
 
         refetch();
         setPartOf(undefined);
@@ -318,10 +316,10 @@ function useData() {
                     FETCH organisation.part_of.*;          
             `);
 
-            if (!result?.[0]?.result || !result?.[1]?.result) return null;
+            if (!result?.[0] || !result?.[1]) return null;
             return {
-                confirmed: z.array(Data).parse(result[0].result),
-                unconfirmed: z.array(Data).parse(result[1].result),
+                confirmed: z.array(Data).parse(result[0]),
+                unconfirmed: z.array(Data).parse(result[1]),
             };
         },
     });

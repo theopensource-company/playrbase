@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
             `,
             { challengeId }
         )
-        .then(([res]) => res.result);
+        .then(([res]) => res);
 
     if (!challenge) {
         return NextResponse.json(
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
         `,
             { credentialId: authentication.credentialId }
         )
-        .then(([res]) => res.result);
+        .then(([res]) => res);
 
     if (!credential) {
         return NextResponse.json(
@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
             `,
             { id: credential.user }
         )
-        .then(([res]) => res.result);
+        .then(([res]) => res);
 
     if (!user) {
         return NextResponse.json(

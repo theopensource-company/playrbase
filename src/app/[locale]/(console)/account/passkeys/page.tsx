@@ -25,13 +25,13 @@ import {
 } from '@/components/ui/table';
 import { useSurreal } from '@/lib/Surreal';
 import { useFeatureFlags } from '@/lib/featureFlags';
+import { Link } from '@/locales/navigation';
 import { Credential } from '@/schema/resources/credential';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { useQuery } from '@tanstack/react-query';
 import { AlertOctagon, Loader2, Pencil, Plus, Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import Link from 'next-intl/link';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -305,8 +305,8 @@ function useData() {
                 SELECT * FROM credential WHERE user = $auth;        
             `);
 
-            if (!result?.[0]?.result) return null;
-            return result[0].result;
+            if (!result?.[0]) return null;
+            return result[0];
         },
     });
 }

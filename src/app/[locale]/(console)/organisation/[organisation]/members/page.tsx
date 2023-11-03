@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/table';
 import { useSurreal } from '@/lib/Surreal';
 import { record } from '@/lib/zod';
+import { Link } from '@/locales/navigation';
 import { Organisation } from '@/schema/resources/organisation';
 import { User, UserAsRelatedUser } from '@/schema/resources/user';
 import { DialogClose } from '@radix-ui/react-dialog';
@@ -35,7 +36,6 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
 import { ArrowRight, Loader2, Mail, MailX, Plus, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import Link from 'next-intl/link';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { z } from 'zod';
@@ -423,14 +423,12 @@ function AddMember({
         mutationKey: ['manages', 'invite'],
         async mutationFn() {
             // TODO set to correct type, not important for the moment
-            const [res] = await surreal.query<[string[]]>(
+            await surreal.query<[string[]]>(
                 /* surql */ `
                 RELATE $user->manages->$organisation SET role = $role
             `,
                 { user, role, organisation }
             );
-
-            if (res.detail) throw new Error(res.detail);
             refresh();
         },
     });
@@ -560,11 +558,11 @@ function useData(slug: Organisation['slug']) {
                 { slug }
             );
 
-            if (!result?.[1]?.result || !result?.[2]?.result) return null;
+            if (!result?.[1] || !result?.[2]) return null;
 
             return {
-                organisation: Data.parse(result[2].result),
-                invited_members: z.array(Invited).parse(result[1].result),
+                organisation: Data.parse(result[2]),
+                invited_members: z.array(Invited).parse(result[1]),
             };
         },
     });

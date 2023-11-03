@@ -32,8 +32,8 @@ export const useOrganisations = (
                 { filters }
             );
 
-            if (!result?.[0]?.result) return null;
-            return z.array(Organisation).parse(result[0].result);
+            if (!result?.[0]) return null;
+            return z.array(Organisation).parse(result[0]);
         },
     });
 };
@@ -55,8 +55,8 @@ export const useOrganisation = <
                 { filters }
             );
 
-            if (!result?.[0]?.result?.[0]) return null;
-            return OrganisationSafeParse.parse(result[0].result[0]) as T;
+            if (!result?.[0]?.[0]) return null;
+            return OrganisationSafeParse.parse(result[0][0]) as T;
         },
     });
 };

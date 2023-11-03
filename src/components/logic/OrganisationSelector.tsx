@@ -75,7 +75,7 @@ export function OrganisationSelector({
                     `,
                     { input, limit }
                 )
-                .then(([{ result }]) => {
+                .then(([result]) => {
                     setMatches(result ?? []);
                 });
         }, 300);

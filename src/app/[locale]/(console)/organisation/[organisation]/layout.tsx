@@ -10,10 +10,10 @@ import { useOrganisation } from '@/lib/Queries/Organisation';
 import { useAuth } from '@/lib/auth';
 import { useScrolledState } from '@/lib/scrolled';
 import { cn } from '@/lib/utils';
+import { useRouter } from '@/locales/navigation';
 import { User } from '@/schema/resources/user';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next-intl/client';
 import { useParams } from 'next/navigation';
 import React, { ReactNode, useEffect } from 'react';
 

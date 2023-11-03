@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         { identifier, scope_name: scope }
     );
 
-    const record = res.result?.[0];
+    const record = res[0];
     const email = record?.email || identifier;
     const sub = record ? record.id : scope == 'user' ? identifier : undefined;
 
@@ -91,7 +91,7 @@ export async function GET(req: NextRequest) {
         { subject: decoded.subject, scope_name: decoded.scope }
     );
 
-    const user = res?.result?.[0];
+    const user = res?.[0];
     if (!user) {
         return NextResponse.json(
             { success: false, error: 'unknown_user' },

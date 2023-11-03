@@ -12,7 +12,6 @@ const nextConfig = withNextIntl({
         config.externals.push({
             'utf-8-validate': 'commonjs utf-8-validate',
             bufferutil: 'commonjs bufferutil',
-            'use-intl': 'commonjs use-intl',
         });
         return config;
     },

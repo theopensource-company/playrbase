@@ -127,11 +127,10 @@ function EditName() {
         );
 
         if (!result?.[0]) throw new Error('Unexpected error occurred');
-        if (result[0].detail) throw new Error(result[0].detail);
 
-        if (!Array.isArray(result?.[0].result))
+        if (!Array.isArray(result?.[0]))
             throw new Error('Unexpected result format');
-        if (result?.[0].result?.[0]?.name !== name)
+        if (result?.[0][0]?.name !== name)
             throw new Error('Update not applied');
 
         refreshUser();

@@ -13,7 +13,8 @@ import { useAuth } from '@/lib/auth';
 import { useFeatureFlags } from '@/lib/featureFlags.tsx';
 import { useScrolledState } from '@/lib/scrolled.tsx';
 import { cn } from '@/lib/utils.ts';
-import { Language, languages } from '@/locales/languages.ts';
+import { Language, languageEntries } from '@/locales/languages.ts';
+import { Link, usePathname } from '@/locales/navigation.ts';
 import {
     AlignRight,
     ChevronRightSquare,
@@ -21,8 +22,6 @@ import {
     LogOut,
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { usePathname } from 'next-intl/client';
-import Link from 'next-intl/link';
 import Image from 'next/image';
 import React, { ReactNode, createContext, useContext } from 'react';
 import ReactCountryFlag from 'react-country-flag';
@@ -193,7 +192,7 @@ const LanguageOptions = () => {
 
     return (
         <ul className="grid gap-3 p-6">
-            {Object.entries(languages).map(([lang, { native, flag }]) => (
+            {languageEntries.map(([lang, { native, flag }]) => (
                 <NavigationMenuItem key={lang}>
                     <Link href={pathname} locale={lang} legacyBehavior passHref>
                         <NavigationMenuLink

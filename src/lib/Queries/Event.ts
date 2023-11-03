@@ -46,8 +46,8 @@ export const useEvents = (
                 { filters }
             );
 
-            if (!result?.[0]?.result) return null;
-            return result[0].result.map(processEventRecord);
+            if (!result?.[0]) return null;
+            return result[0].map(processEventRecord);
         },
     });
 };

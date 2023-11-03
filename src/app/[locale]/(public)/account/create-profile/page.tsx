@@ -17,11 +17,11 @@ import { useFeatureFlags } from '@/lib/featureFlags';
 import { cn } from '@/lib/utils';
 import { useWebAuthnAvailable } from '@/lib/webauthn';
 import { fullname } from '@/lib/zod';
+import { useRouter } from '@/locales/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import jwt from 'jsonwebtoken';
 import { Info, Loader2, XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useLocalizedRouter } from 'next-intl/client';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -35,7 +35,7 @@ type Schema = z.infer<typeof Schema>;
 
 export default function CreateProfile() {
     const surreal = useSurreal();
-    const router = useLocalizedRouter();
+    const router = useRouter();
     const token = z.string().parse(useSearchParams().get('token'));
     const { refreshUser } = useAuth();
     const decoded = jwt.decode(token);

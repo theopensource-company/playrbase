@@ -60,7 +60,7 @@ export const AuthRevertChangeEmailEmail = ({
                         the change and contact us for further assistance.
                     </Text>
                     <Section style={buttonContainer}>
-                        <Button pY={11} pX={23} style={button} href={url}>
+                        <Button style={button} href={url}>
                             Revert changed Email
                         </Button>
                     </Section>

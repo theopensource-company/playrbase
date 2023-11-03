@@ -29,8 +29,8 @@ export const useUsers = (
                 { filters }
             );
 
-            if (!result?.[0]?.result) return null;
-            return z.array(User).parse(result[0].result);
+            if (!result?.[0]) return null;
+            return z.array(User).parse(result[0]);
         },
     });
 };
@@ -48,8 +48,8 @@ export const useUser = (filters: {
                 { filters }
             );
 
-            if (!result?.[0]?.result?.[0]) return null;
-            return User.parse(result[0].result[0]);
+            if (!result?.[0]?.[0]) return null;
+            return User.parse(result[0][0]);
         },
     });
 };

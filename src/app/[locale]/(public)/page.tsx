@@ -2,9 +2,9 @@
 
 import { Button } from '@/components/ui/button';
 import { useFeatureFlags } from '@/lib/featureFlags';
+import { Link } from '@/locales/navigation';
 import { Clock } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import Link from 'next-intl/link';
 import React, { ReactNode } from 'react';
 
 export default function Home() {

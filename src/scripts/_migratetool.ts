@@ -36,13 +36,13 @@ export const migrateDatabase = async (
         log?.('NS: ' + env.SURREAL_NAMESPACE);
         log?.('DB: ' + env.SURREAL_DATABASE);
 
-        const db = new ExperimentalSurrealHTTP(env.SURREAL_HOST, {
-            fetch,
-            ns: env.SURREAL_NAMESPACE,
-            db: env.SURREAL_DATABASE,
+        const db = new ExperimentalSurrealHTTP({ fetch });
+        await db.connect(env.SURREAL_HOST, {
+            namespace: env.SURREAL_NAMESPACE,
+            database: env.SURREAL_DATABASE,
             auth: {
-                user: env.SURREAL_USERNAME,
-                pass: env.SURREAL_PASSWORD,
+                username: env.SURREAL_USERNAME,
+                password: env.SURREAL_PASSWORD,
             },
         });
 

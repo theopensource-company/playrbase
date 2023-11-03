@@ -17,7 +17,7 @@ export function SurrealProvider({ children }: { children: ReactNode }) {
     const surreal = new Surreal();
     surreal.connect(endpoint, {
         prepare: async (surreal) => {
-            await surreal.use({ ns: namespace, db: database });
+            await surreal.use({ namespace, database });
             if (typeof window !== 'undefined') {
                 const token = await fetch('/api/auth/token')
                     .then((res) => res.json())

@@ -1,9 +1,9 @@
 'use client';
 
+import { useRouter } from '@/locales/navigation';
 import { Admin } from '@/schema/resources/admin';
 import { User } from '@/schema/resources/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next-intl/client';
 import React, { ReactNode, createContext, useContext, useEffect } from 'react';
 import { useSurreal } from './Surreal';
 
@@ -45,11 +45,7 @@ export function useCreateAuthState() {
                 END;
             `);
 
-            if (res.status == 'OK') {
-                return res.result;
-            } else {
-                throw new Error(res.detail);
-            }
+            return res;
         },
     });
 

@@ -6,23 +6,29 @@ import React, {
     useState,
 } from 'react';
 
-export const ScrolledStateContext = createContext(false);
+export const ScrolledStateContext = createContext({
+    mobile: false,
+    scrolled: false,
+});
 
 function useCreateState() {
-    const [scrolled, setScrolled] = useState(false);
+    const [state, setState] = useState({ mobile: false, scrolled: false });
 
     useEffect(() => {
         const handler = () => {
-            setScrolled(
-                (window.pageYOffset || document.documentElement.scrollTop) > 0
-            );
+            setState({
+                scrolled:
+                    (window.pageYOffset || document.documentElement.scrollTop) >
+                    0,
+                mobile: window.innerWidth < 768,
+            });
         };
 
         window.addEventListener('scroll', handler);
         return () => window.removeEventListener('scroll', handler);
-    }, [setScrolled]);
+    }, [setState]);
 
-    return scrolled;
+    return state;
 }
 
 export function ScrolledStateProvider({ children }: { children: ReactNode }) {
@@ -35,6 +41,10 @@ export function ScrolledStateProvider({ children }: { children: ReactNode }) {
     );
 }
 
-export function useScrolledState() {
-    return useContext(ScrolledStateContext);
+export function useScrolledState({
+    protectMobile,
+}: { protectMobile?: boolean } = {}) {
+    protectMobile = typeof protectMobile != 'boolean' || protectMobile;
+    const { scrolled, mobile } = useContext(ScrolledStateContext);
+    return protectMobile && mobile ? false : scrolled;
 }

@@ -161,10 +161,11 @@ export default function Devtools_Emails() {
                                                           value="text"
                                                           className="h-full w-full"
                                                       >
-                                                          <iframe
-                                                              srcDoc={text}
-                                                              className="h-full w-full"
-                                                          />
+                                                          <div
+                                                              className="h-full w-full text-white/90 break-all whitespace-pre-line"
+                                                          >
+                                                            {text}
+                                                        </div>
                                                       </TabsContent>
                                                   </Tabs>
                                               </DialogContent>

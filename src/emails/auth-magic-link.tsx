@@ -130,7 +130,7 @@ const button = {
     display: 'block',
     fontSize: '0.875rem',
     lineHeight: '1.25rem',
-    padding: '1rem 0.5rem',
+    padding: '0.75rem 1rem',
 };
 
 const line = {
@@ -144,4 +144,5 @@ const fallback = {
 const fallbackLink = {
     fontSize: '14px',
     color: '#535969',
-};
+    wordBreak: 'break-all',
+} as const;

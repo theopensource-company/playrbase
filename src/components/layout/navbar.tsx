@@ -18,7 +18,14 @@ import { Link, usePathname } from '@/locales/navigation.ts';
 import { ChevronRightSquare, Languages, LogOut, Menu } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
-import React, { ReactNode, createContext, useContext, useState } from 'react';
+import React, {
+    ReactNode,
+    createContext,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import LogoFull from '../../assets/LogoFull.svg';
 import { Profile } from '../cards/profile.tsx';
@@ -36,7 +43,7 @@ export const Navbar = ({ children }: { children?: ReactNode }) => {
     // localStorage.setItem('playrbase_fflag_devTools', 'true')
     // Then reload page
 
-    const links = <Links devTools={featureFlags.devTools} />;
+    const links = <Links devTools={featureFlags.devTools} setOpen={setOpen} />;
 
     return (
         <div
@@ -91,7 +98,13 @@ export const Navbar = ({ children }: { children?: ReactNode }) => {
     );
 };
 
-const Links = ({ devTools }: { devTools: boolean }) => {
+const Links = ({
+    devTools,
+    setOpen,
+}: {
+    devTools: boolean;
+    setOpen: (open: boolean) => void;
+}) => {
     const { loading, user } = useAuth();
     const t = useTranslations('components.layout.navbar.links');
     const [featureFlags] = useFeatureFlags();
@@ -107,6 +120,21 @@ const Links = ({ devTools }: { devTools: boolean }) => {
         onPointerMove: preventHover,
         onPointerLeave: preventHover,
     };
+
+    const pathname = usePathname();
+    const pathnameRef = useRef(pathname);
+    const authenticatedRef = useRef(!!user);
+    useEffect(() => {
+        if (
+            pathname !== pathnameRef.current ||
+            !!user !== authenticatedRef.current
+        ) {
+            pathnameRef.current = pathname;
+            authenticatedRef.current = !!user;
+            setState('');
+            setOpen(false);
+        }
+    }, [setState, setOpen, pathname, user]);
 
     return (
         <NavigationMenu

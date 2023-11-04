@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
 
     const registrationParsed = await server
         .verifyRegistration(registration, expected)
-        .catch((e) => false);
+        .catch(() => false);
 
     if (!registrationParsed) {
         return NextResponse.json(

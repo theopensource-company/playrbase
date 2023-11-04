@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
             },
             expected
         )
-        .catch((e) => false);
+        .catch(() => false);
 
     if (!authenticationParsed) {
         return NextResponse.json(

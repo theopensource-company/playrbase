@@ -52,7 +52,7 @@ module.exports = {
                     DEFAULT: 'hsl(var(--card))',
                     foreground: 'hsl(var(--card-foreground))',
                 },
-                email: 'hsl(var(--email))'
+                email: 'hsl(var(--email))',
             },
             backgroundImage: {
                 'red-stripes': `repeating-linear-gradient(45deg, #c24444, #c24444 10px, #b32020 10px, #b32020 20px)`,

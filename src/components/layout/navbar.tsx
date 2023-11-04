@@ -15,20 +15,14 @@ import { useScrolledState } from '@/lib/scrolled.tsx';
 import { cn } from '@/lib/utils.ts';
 import { Language, languageEntries } from '@/locales/languages.ts';
 import { Link, usePathname } from '@/locales/navigation.ts';
-import {
-    AlignRight,
-    ChevronRightSquare,
-    Languages,
-    LogOut,
-} from 'lucide-react';
+import { ChevronRightSquare, Languages, LogOut, Menu } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
-import React, { ReactNode, createContext, useContext } from 'react';
+import React, { ReactNode, createContext, useContext, useState } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import LogoFull from '../../assets/LogoFull.svg';
 import { Profile } from '../cards/profile.tsx';
 import { Button } from '../ui/button.tsx';
-import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet.tsx';
 import { Skeleton } from '../ui/skeleton.tsx';
 import Container from './Container.tsx';
 import { DevTools } from './DevTools/index.tsx';
@@ -36,63 +30,63 @@ import { DevTools } from './DevTools/index.tsx';
 export const Navbar = ({ children }: { children?: ReactNode }) => {
     const scrolled = useScrolledState();
     const [featureFlags] = useFeatureFlags();
+    const [open, setOpen] = useState(false);
 
     // Enabled in prod/preview with:
     // localStorage.setItem('playrbase_fflag_devTools', 'true')
     // Then reload page
 
+    const links = <Links devTools={featureFlags.devTools} />;
+
     return (
-        <div className={cn('fixed left-0 right-0 z-10 backdrop-blur-lg')}>
+        <div
+            className={cn(
+                'fixed left-0 right-0 z-10 backdrop-blur-lg transition-all',
+                open && 'max-md:h-screen max-md:bg-black'
+            )}
+        >
             <Container
                 className={cn(
-                    'flex items-center justify-between transition-height',
+                    'flex justify-between transition-height max-md:flex-col md:items-center',
                     scrolled
                         ? children
-                            ? 'mt-2 h-14'
-                            : 'h-16'
+                            ? 'mt-2 md:h-14'
+                            : 'md:h-16'
                         : children
-                        ? 'mb-1 mt-3 h-24'
-                        : 'h-36'
+                        ? 'mb-1 mt-3 md:h-24'
+                        : 'md:h-36'
                 )}
             >
-                <Link href="/">
-                    <Image
-                        src={LogoFull}
-                        alt="Logo"
-                        className={cn(
-                            'w-min transition-height',
-                            scrolled ? 'h-9' : 'h-10 sm:h-12'
-                        )}
-                    />
-                </Link>
-                <div className="flex gap-4">
-                    <div className="hidden md:block">
-                        <Links devTools={featureFlags.devTools} />
-                    </div>
-                    <div className="block md:hidden">
-                        <Sheet>
-                            <SheetTrigger asChild>
-                                <Button variant="outline">
-                                    <AlignRight size="24" />
-                                </Button>
-                            </SheetTrigger>
-                            <SheetContent>
-                                <div className="p-4">
-                                    <Link href="/">
-                                        <Image
-                                            src={LogoFull}
-                                            alt="Logo"
-                                            className="h-10 w-min sm:h-12"
-                                        />
-                                    </Link>
-                                    <Links devTools={featureFlags.devTools} />
-                                </div>
-                            </SheetContent>
-                        </Sheet>
-                    </div>
+                <div className="flex items-center justify-between max-md:my-4 max-md:w-full">
+                    <Link href="/">
+                        <Image
+                            src={LogoFull}
+                            alt="Logo"
+                            className={cn(
+                                'w-min transition-height',
+                                scrolled ? 'h-9' : 'h-10 sm:h-12'
+                            )}
+                        />
+                    </Link>
+                    <Button
+                        variant="ghost"
+                        onClick={() => setOpen(!open)}
+                        className="md:hidden"
+                    >
+                        <Menu />
+                    </Button>
                 </div>
+                <div className="max-md:hidden">{links}</div>
             </Container>
             {children}
+            <div
+                className={cn(
+                    'overflow-hidden md:hidden',
+                    open ? 'h-full' : 'h-0'
+                )}
+            >
+                <Container className="py-2">{links}</Container>
+            </div>
         </div>
     );
 };
@@ -102,19 +96,38 @@ const Links = ({ devTools }: { devTools: boolean }) => {
     const t = useTranslations('components.layout.navbar.links');
     const [featureFlags] = useFeatureFlags();
 
+    const [state, setState] = useState('');
+    const preventHover = (e: unknown) => {
+        if (!state.startsWith('radix') || window.innerWidth < 768) {
+            (e as Event).preventDefault();
+        }
+    };
+
+    const hoverOptions = {
+        onPointerMove: preventHover,
+        onPointerLeave: preventHover,
+    };
+
     return (
-        <NavigationMenu className="max-sm:justify-start max-sm:pt-8">
-            <NavigationMenuList className="flex flex-col items-start gap-4 space-x-0 md:flex-row md:items-center">
+        <NavigationMenu
+            className="max-sm:justify-start"
+            value={state}
+            onValueChange={setState}
+        >
+            <NavigationMenuList className="flex flex-col items-start gap-4 space-x-0 max-md:py-4 md:flex-row md:items-center">
                 <NavigationMenuItem>
                     {loading ? (
                         <Skeleton className="h-10 w-24" />
                     ) : user ? (
                         <>
-                            <NavigationMenuTrigger className="bg-transparent">
+                            <NavigationMenuTrigger
+                                className="data-[state:open]:bg-muted bg-transparent hover:bg-accent focus:bg-transparent focus:hover:bg-accent active:bg-muted"
+                                {...hoverOptions}
+                            >
                                 <ChevronRightSquare className="mr-2 md:hidden" />
                                 {user.name.split(' ')[0]}
                             </NavigationMenuTrigger>
-                            <NavigationMenuContent>
+                            <NavigationMenuContent {...hoverOptions}>
                                 <AccountOptions />
                             </NavigationMenuContent>
                         </>
@@ -134,13 +147,16 @@ const Links = ({ devTools }: { devTools: boolean }) => {
                 </NavigationMenuItem>
                 {featureFlags.switchLanguage && (
                     <NavigationMenuItem>
-                        <NavigationMenuTrigger className="bg-transparent">
+                        <NavigationMenuTrigger
+                            className="data-[state:open]:bg-muted bg-transparent hover:bg-accent focus:bg-transparent focus:hover:bg-accent active:bg-muted"
+                            {...hoverOptions}
+                        >
                             <Languages size={20} />
                             <span className="ml-2 md:hidden">
                                 {t('language')}
                             </span>
                         </NavigationMenuTrigger>
-                        <NavigationMenuContent>
+                        <NavigationMenuContent {...hoverOptions}>
                             <LanguageOptions />
                         </NavigationMenuContent>
                     </NavigationMenuItem>
@@ -244,7 +260,9 @@ export function NavbarSubLinks({
     return (
         <NavbarSubLinksContext.Provider value={baseUrl}>
             <div className="border-b-2 border-muted">
-                <Container className="flex pt-1">{children}</Container>
+                <Container className="flex overflow-x-auto pt-1">
+                    {children}
+                </Container>
             </div>
         </NavbarSubLinksContext.Provider>
     );

@@ -1,5 +1,6 @@
 'use client';
 
+import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -25,6 +26,7 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { Dot } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 
@@ -100,24 +102,7 @@ export default function Devtools_Emails() {
                               ({ key, sent, subject, to, html, text }) => (
                                   <TableRow key={key}>
                                       <TableCell>
-                                          <TooltipProvider>
-                                              <Tooltip>
-                                                  <TooltipTrigger>
-                                                      {dayjs
-                                                          .duration(
-                                                              dayjs(sent).diff()
-                                                          )
-                                                          .humanize(true)}
-                                                  </TooltipTrigger>
-                                                  <TooltipContent>
-                                                      <i>
-                                                          {dayjs(sent).format(
-                                                              'LLLL'
-                                                          )}
-                                                      </i>
-                                                  </TooltipContent>
-                                              </Tooltip>
-                                          </TooltipProvider>
+                                          <DateTooltip date={sent} />
                                       </TableCell>
                                       <TableCell>{subject}</TableCell>
                                       <TableCell>{to}</TableCell>
@@ -131,43 +116,56 @@ export default function Devtools_Emails() {
                                                   </Button>
                                               </DialogTrigger>
                                               <DialogContent
-                                                  className="h-[700px] max-h-[90%] w-[800px]"
-                                                  style={{ maxWidth: '90%' }}
+                                                  className="h-[900px] max-h-[90%]"
+                                                  style={{
+                                                      maxWidth: '90%',
+                                                      width: '900px',
+                                                  }}
                                               >
-                                                  <Tabs
-                                                      defaultValue="html"
-                                                      className="flex w-full flex-col"
-                                                  >
-                                                      <div>
-                                                          <TabsList className="mb-4">
-                                                              <TabsTrigger value="html">
-                                                                  HTML
-                                                              </TabsTrigger>
-                                                              <TabsTrigger value="text">
-                                                                  Text
-                                                              </TabsTrigger>
-                                                          </TabsList>
+                                                  <div className="flex flex-grow flex-col gap-8 pt-2 px-2">
+                                                      <div className='space-y-2'>
+                                                          <h3 className='text-3xl font-bold'>{subject}</h3>
+                                                          <p className='text-sm text-muted-foreground space-x-2'>
+                                                              <DateTooltip
+                                                                  date={sent}
+                                                              />
+                                                              <span>-</span>
+                                                              <span>{to}</span>
+                                                          </p>
                                                       </div>
-                                                      <TabsContent
-                                                          value="html"
-                                                          className="h-full w-full"
+                                                      <Tabs
+                                                          defaultValue="html"
+                                                          className="flex w-full flex-grow flex-col"
                                                       >
-                                                          <iframe
-                                                              srcDoc={html}
+                                                          <div>
+                                                              <TabsList className="mb-4">
+                                                                  <TabsTrigger value="html">
+                                                                      HTML
+                                                                  </TabsTrigger>
+                                                                  <TabsTrigger value="text">
+                                                                      Text
+                                                                  </TabsTrigger>
+                                                              </TabsList>
+                                                          </div>
+                                                          <TabsContent
+                                                              value="html"
                                                               className="h-full w-full"
-                                                          />
-                                                      </TabsContent>
-                                                      <TabsContent
-                                                          value="text"
-                                                          className="h-full w-full"
-                                                      >
-                                                          <div
-                                                              className="h-full w-full text-white/90 break-all whitespace-pre-line"
                                                           >
-                                                            {text}
-                                                        </div>
-                                                      </TabsContent>
-                                                  </Tabs>
+                                                              <iframe
+                                                                  srcDoc={html}
+                                                                  className="h-full w-full rounded border"
+                                                              />
+                                                          </TabsContent>
+                                                          <TabsContent
+                                                              value="text"
+                                                              className="h-full w-full"
+                                                          >
+                                                              <div className="bg-email h-full w-full whitespace-pre-line break-all rounded border p-8 text-white/80">
+                                                                  {text}
+                                                              </div>
+                                                          </TabsContent>
+                                                      </Tabs>
+                                                  </div>
                                               </DialogContent>
                                           </Dialog>
                                       </TableCell>

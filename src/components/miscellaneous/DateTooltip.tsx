@@ -17,9 +17,11 @@ dayjs.extend(relativeTime);
 export function DateTooltip({ date }: { date: Date }) {
     return (
         <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger>
-                    {dayjs.duration(dayjs(date).diff()).humanize(true)}
+            <Tooltip delayDuration={200}>
+                <TooltipTrigger asChild>
+                    <span>
+                        {dayjs.duration(dayjs(date).diff()).humanize(true)}
+                    </span>
                 </TooltipTrigger>
                 <TooltipContent>
                     <i>{dayjs(date).format('LLLL')}</i>

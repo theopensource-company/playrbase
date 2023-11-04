@@ -133,7 +133,7 @@ dependencies:
     version: 0.32.6
   surrealdb.js:
     specifier: ^0.11.0
-    version: 0.11.0
+    version: 0.11.0(bufferutil@4.0.8)(utf-8-validate@6.0.3)
   tailwind-merge:
     specifier: ^2.0.0
     version: 2.0.0
@@ -171,7 +171,10 @@ devDependencies:
     version: 10.4.16(postcss@8.4.31)
   aws-crt:
     specifier: ^1.18.3
-    version: 1.18.3
+    version: 1.18.3(bufferutil@4.0.8)(utf-8-validate@6.0.3)
+  bufferutil:
+    specifier: ^4.0.8
+    version: 4.0.8
   concurrently:
     specifier: ^8.2.2
     version: 8.2.2
@@ -220,6 +223,9 @@ devDependencies:
   ts-node:
     specifier: ^10.9.1
     version: 10.9.1(@types/node@20.8.10)(typescript@5.2.2)
+  utf-8-validate:
+    specifier: ^6.0.3
+    version: 6.0.3
 
 packages:
 
@@ -853,7 +859,7 @@ packages:
       '@aws-sdk/types': 3.433.0
       '@smithy/node-config-provider': 2.1.3
       '@smithy/types': 2.4.0
-      aws-crt: 1.18.3
+      aws-crt: 1.18.3(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       tslib: 2.6.2
     dev: false
 
@@ -1379,7 +1385,7 @@ packages:
       react-hook-form: 7.47.0(react@18.2.0)
     dev: false
 
-  /@httptoolkit/websocket-stream@6.0.1:
+  /@httptoolkit/websocket-stream@6.0.1(bufferutil@4.0.8)(utf-8-validate@6.0.3):
     resolution: {integrity: sha512-A0NOZI+Glp3Xgcz6Na7i7o09+/+xm2m0UCU8gdtM2nIv6/cjLmhMZMqehSpTlgbx9omtLmV8LVqOskPEyWnmZQ==}
     dependencies:
       '@types/ws': 8.5.8
@@ -1388,7 +1394,7 @@ packages:
       isomorphic-ws: 4.0.1(ws@8.14.2)
       readable-stream: 2.3.8
       safe-buffer: 5.2.1
-      ws: 8.14.2
+      ws: 8.14.2(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       xtend: 4.0.2
     transitivePeerDependencies:
       - bufferutil
@@ -3931,16 +3937,16 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /aws-crt@1.18.3:
+  /aws-crt@1.18.3(bufferutil@4.0.8)(utf-8-validate@6.0.3):
     resolution: {integrity: sha512-SgY9bKtQQpuqWuXMdJS07lIr4JV80nFS4bpR9cW1TbfOhRLDBIHSHc/iat7T+6Co7+ukni1dhd5iZ0Uf24vqtQ==}
     requiresBuild: true
     dependencies:
       '@aws-sdk/util-utf8-browser': 3.259.0
-      '@httptoolkit/websocket-stream': 6.0.1
+      '@httptoolkit/websocket-stream': 6.0.1(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       axios: 0.24.0
       buffer: 6.0.3
       crypto-js: 4.2.0
-      mqtt: 4.3.7
+      mqtt: 4.3.7(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       process: 0.11.10
     transitivePeerDependencies:
       - bufferutil
@@ -4094,6 +4100,13 @@ packages:
     resolution: {integrity: sha512-9q/rDEGSb/Qsvv2qvzIzdluL5k7AaJOTrw23z9reQthrbF7is4CtlT0DXyO1oei2DCp4uojjzQ7igaSHp1kAEQ==}
     engines: {node: '>=0.2.0'}
     dev: false
+
+  /bufferutil@4.0.8:
+    resolution: {integrity: sha512-4T53u4PdgsXqKaIctwF8ifXlRTTmEPJ8iEPWFdGZvcf7sbwYo6FKFEX9eNNAnzFZ7EzJAQ3CJeOtCRA4rDp7Pw==}
+    engines: {node: '>=6.14.2'}
+    requiresBuild: true
+    dependencies:
+      node-gyp-build: 4.6.1
 
   /bundle-name@3.0.0:
     resolution: {integrity: sha512-PKA4BeSvBpQKQ8iPOGCSiell+N8P+Tf1DlwqmYhpe2gAhKPHn8EYOxVT+ShuGmhg8lN8XiSlS80yiExKXrURlw==}
@@ -6046,7 +6059,7 @@ packages:
     peerDependencies:
       ws: '*'
     dependencies:
-      ws: 8.14.2
+      ws: 8.14.2(bufferutil@4.0.8)(utf-8-validate@6.0.3)
 
   /iterator.prototype@1.1.2:
     resolution: {integrity: sha512-DR33HMMr8EzwuRL8Y9D3u2BMj8+RqSE850jfGu59kS7tbmPLzGkZmVSfyCFSDxuZiEY6Rzt3T2NA/qU+NwVj1w==}
@@ -6430,7 +6443,7 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /mqtt@4.3.7:
+  /mqtt@4.3.7(bufferutil@4.0.8)(utf-8-validate@6.0.3):
     resolution: {integrity: sha512-ew3qwG/TJRorTz47eW46vZ5oBw5MEYbQZVaEji44j5lAUSQSqIEoul7Kua/BatBW0H0kKQcC9kwUHa1qzaWHSw==}
     engines: {node: '>=10.0.0'}
     hasBin: true
@@ -6450,7 +6463,7 @@ packages:
       reinterval: 1.1.0
       rfdc: 1.3.0
       split2: 3.2.2
-      ws: 7.5.9
+      ws: 7.5.9(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       xtend: 4.0.2
     transitivePeerDependencies:
       - bufferutil
@@ -6579,6 +6592,10 @@ packages:
       fetch-blob: 3.2.0
       formdata-polyfill: 4.0.10
     dev: true
+
+  /node-gyp-build@4.6.1:
+    resolution: {integrity: sha512-24vnklJmyRS8ViBNI8KbtK/r/DmXQMRiOMXTNz2nrTnAYUwjmEEbnnpB/+kt+yWRv73bPsSPRFddrcIbAxSiMQ==}
+    hasBin: true
 
   /node-releases@2.0.13:
     resolution: {integrity: sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==}
@@ -7875,11 +7892,11 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /surrealdb.js@0.11.0:
+  /surrealdb.js@0.11.0(bufferutil@4.0.8)(utf-8-validate@6.0.3):
     resolution: {integrity: sha512-x/Qd0UYyNilwY27JZlWgP8NsCdBzDtextRzP9oIm7xO27qsZvE5Rh4wnYN0xD68zgRAE4W8Jsufbm+hKbaGsTg==}
     dependencies:
       unws: 0.2.4(ws@8.14.2)
-      ws: 8.14.2
+      ws: 8.14.2(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       zod: 3.22.4
     transitivePeerDependencies:
       - bufferutil
@@ -8257,7 +8274,7 @@ packages:
     peerDependencies:
       ws: '*'
     dependencies:
-      ws: 8.14.2
+      ws: 8.14.2(bufferutil@4.0.8)(utf-8-validate@6.0.3)
     dev: false
 
   /unzipper@0.10.14:
@@ -8330,6 +8347,13 @@ packages:
       react: 18.2.0
       tslib: 2.6.2
     dev: false
+
+  /utf-8-validate@6.0.3:
+    resolution: {integrity: sha512-uIuGf9TWQ/y+0Lp+KGZCMuJWc3N9BHA+l/UmHd/oUHwJJDeysyTRxNQVkbzsIWfGFbRe3OcgML/i0mvVRPOyDA==}
+    engines: {node: '>=6.14.2'}
+    requiresBuild: true
+    dependencies:
+      node-gyp-build: 4.6.1
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -8498,7 +8522,7 @@ packages:
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
-  /ws@7.5.9:
+  /ws@7.5.9(bufferutil@4.0.8)(utf-8-validate@6.0.3):
     resolution: {integrity: sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q==}
     engines: {node: '>=8.3.0'}
     peerDependencies:
@@ -8509,8 +8533,11 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+    dependencies:
+      bufferutil: 4.0.8
+      utf-8-validate: 6.0.3
 
-  /ws@8.14.2:
+  /ws@8.14.2(bufferutil@4.0.8)(utf-8-validate@6.0.3):
     resolution: {integrity: sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
@@ -8521,6 +8548,9 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+    dependencies:
+      bufferutil: 4.0.8
+      utf-8-validate: 6.0.3
 
   /xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}

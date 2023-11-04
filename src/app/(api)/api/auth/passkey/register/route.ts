@@ -1,4 +1,3 @@
-import { debugLogFactory } from '@/app/(api)/lib/debuglog';
 import { surreal } from '@/app/(api)/lib/surreal';
 import { extractUserTokenFromRequest } from '@/app/(api)/lib/token';
 import { record } from '@/lib/zod';
@@ -26,8 +25,6 @@ export async function POST(req: NextRequest) {
         );
     }
 
-    const log = debugLogFactory(user.id);
-
     const Body = z.object({
         challengeId: record('challenge'),
         registration: z.object({
@@ -43,8 +40,6 @@ export async function POST(req: NextRequest) {
     });
 
     const body = Body.safeParse(await req.json());
-
-    log?.('body', body);
 
     if (!body.success) {
         return NextResponse.json(
@@ -63,8 +58,6 @@ export async function POST(req: NextRequest) {
         )
         .then(([res]) => res);
 
-    log?.('challenge', challenge);
-
     if (!challenge) {
         return NextResponse.json(
             { success: false, error: 'invalid_challenge' },
@@ -77,16 +70,9 @@ export async function POST(req: NextRequest) {
         origin: process.env.PLAYRBASE_ENV_ORIGIN ?? req.nextUrl.origin,
     };
 
-    log?.('expected', expected);
-
     const registrationParsed = await server
         .verifyRegistration(registration, expected)
-        .catch((e) => {
-            log?.('registrationParsed_error', e);
-            return false;
-        });
-
-    log?.('registrationParsed', registrationParsed);
+        .catch((e) => false);
 
     if (!registrationParsed) {
         return NextResponse.json(
@@ -114,8 +100,6 @@ export async function POST(req: NextRequest) {
             }
         )
         .then(([res]) => res);
-
-    log?.('credential', credential);
 
     if (!credential) {
         return NextResponse.json(

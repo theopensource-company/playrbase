@@ -1,4 +1,3 @@
-import { debugLogFactory } from '@/app/(api)/lib/debuglog';
 import { surreal } from '@/app/(api)/lib/surreal';
 import { generateUserToken } from '@/app/(api)/lib/token';
 import { record } from '@/lib/zod';
@@ -61,16 +60,12 @@ export async function POST(req: NextRequest) {
         );
     }
 
-    const log = debugLogFactory(credential.user);
-
     const expected = {
         challenge: challenge.challenge,
         origin: process.env.PLAYRBASE_ENV_ORIGIN ?? req.nextUrl.origin,
         userVerified: true,
         counter: -1,
     };
-
-    log?.('expected', expected);
 
     const authenticationParsed = await server
         .verifyAuthentication(
@@ -82,12 +77,7 @@ export async function POST(req: NextRequest) {
             },
             expected
         )
-        .catch((e) => {
-            log?.('authenticationParsed_error', e);
-            return false;
-        });
-
-    log?.('authenticationParsed', authenticationParsed);
+        .catch((e) => false);
 
     if (!authenticationParsed) {
         return NextResponse.json(

@@ -14,19 +14,13 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
+
 import { Email } from '@/schema/miscellaneous/email';
-import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Dot } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 
@@ -122,10 +116,12 @@ export default function Devtools_Emails() {
                                                       width: '900px',
                                                   }}
                                               >
-                                                  <div className="flex flex-grow flex-col gap-8 pt-2 px-2">
-                                                      <div className='space-y-2'>
-                                                          <h3 className='text-3xl font-bold'>{subject}</h3>
-                                                          <p className='text-sm text-muted-foreground space-x-2'>
+                                                  <div className="flex flex-grow flex-col gap-8 px-2 pt-2">
+                                                      <div className="space-y-2">
+                                                          <h3 className="text-3xl font-bold">
+                                                              {subject}
+                                                          </h3>
+                                                          <p className="space-x-2 text-sm text-muted-foreground">
                                                               <DateTooltip
                                                                   date={sent}
                                                               />
@@ -160,7 +156,7 @@ export default function Devtools_Emails() {
                                                               value="text"
                                                               className="h-full w-full"
                                                           >
-                                                              <div className="bg-email h-full w-full whitespace-pre-line break-all rounded border p-8 text-white/80">
+                                                              <div className="h-full w-full whitespace-pre-line break-all rounded border bg-email p-8 text-white/80">
                                                                   {text}
                                                               </div>
                                                           </TabsContent>

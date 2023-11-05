@@ -23,18 +23,18 @@ const event = /* surrealql */ `
     DEFINE FIELD banner                     ON event TYPE option<string>;
     DEFINE FIELD category                   ON event TYPE string 
         ASSERT $value IN ['baseball']
-        VALUE (SELECT VALUE category FROM event WHERE id = $parent.tournament)[0] OR $before OR $value;
+        VALUE (SELECT VALUE category FROM ONLY $parent.tournament) OR $before OR $value;
 
     DEFINE FIELD start                      ON event TYPE option<datetime>;
     DEFINE FIELD end                        ON event TYPE option<datetime>;
     DEFINE FIELD organiser                  ON event TYPE record<organisation>
-        VALUE $before OR $value OR (SELECT VALUE organiser FROM event WHERE id = $parent.tournament)[0];
+        VALUE $before OR $value OR (SELECT VALUE organiser FROM ONLY $parent.tournament);
 
     DEFINE FIELD discoverable               ON event TYPE bool DEFAULT true;
     DEFINE FIELD published                  ON event TYPE bool DEFAULT false;
     DEFINE FIELD tournament                 ON event TYPE option<record<event>>;
     DEFINE FIELD is_tournament              ON event VALUE <future> {
-        RETURN !!(SELECT VALUE id FROM ONLY event WHERE tournament = $parent.id LIMIT 1);
+        RETURN !!(SELECT VALUE id FROM event WHERE tournament = $parent.id)[0];
     };
 
     DEFINE FIELD root_for_org               ON event 

@@ -60,6 +60,7 @@
     "react-dropzone": "^14.2.3",
     "react-email": "^1.9.5",
     "react-image-crop": "^10.1.8",
+    "react-reverse-portal": "^2.1.1",
     "sharp": "^0.32.6",
     "surrealdb.js": "^0.11.0",
     "tailwind-merge": "^2.0.0",

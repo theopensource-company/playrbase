@@ -1,5 +1,6 @@
 'use client';
 
+import { NavbarProvider } from '@/components/layout/navbar';
 import { SurrealProvider } from '@/lib/Surreal';
 import { AuthProvider } from '@/lib/auth';
 import { FeatureFlagsProvider } from '@/lib/featureFlags';
@@ -16,7 +17,7 @@ export function Providers({ children }: { children: ReactNode }) {
                 <AuthProvider>
                     <FeatureFlagsProvider>
                         <ScrolledStateProvider>
-                            {children}
+                            <NavbarProvider>{children}</NavbarProvider>
                         </ScrolledStateProvider>
                     </FeatureFlagsProvider>
                 </AuthProvider>

@@ -23,10 +23,12 @@ import React, {
     createContext,
     useContext,
     useEffect,
+    useMemo,
     useRef,
     useState,
 } from 'react';
 import ReactCountryFlag from 'react-country-flag';
+import * as portals from 'react-reverse-portal';
 import LogoFull from '../../assets/LogoFull.svg';
 import { Profile } from '../cards/profile.tsx';
 import { Button } from '../ui/button.tsx';
@@ -34,7 +36,26 @@ import { Skeleton } from '../ui/skeleton.tsx';
 import Container from './Container.tsx';
 import { DevTools } from './DevTools/index.tsx';
 
-export const Navbar = ({ children }: { children?: ReactNode }) => {
+export const NavbarContext = createContext(portals.createHtmlPortalNode());
+export function NavbarProvider({ children }: { children?: ReactNode }) {
+    const portal = useMemo(() => portals.createHtmlPortalNode(), []);
+
+    return (
+        <NavbarContext.Provider value={portal}>
+            <portals.InPortal node={portal}>
+                <RenderNavbar />
+            </portals.InPortal>
+            {children}
+        </NavbarContext.Provider>
+    );
+}
+
+export function Navbar({ children }: { children?: ReactNode }) {
+    const portal = useContext(NavbarContext);
+    return <portals.OutPortal node={portal}>{children}</portals.OutPortal>;
+}
+
+export const RenderNavbar = ({ children }: { children?: ReactNode }) => {
     const scrolled = useScrolledState();
     const [featureFlags] = useFeatureFlags();
     const [open, setOpen] = useState(false);

@@ -40,8 +40,7 @@ export default async function RootLayout({
     params,
 }: RootLayoutProps) {
     let messages = {};
-    /* eslint-disable-next-line */
-  const locale = useLocale();
+    const locale = useLocale();
     if (params.locale !== locale) {
         notFound();
     } else {
@@ -58,17 +57,17 @@ export default async function RootLayout({
                         fontSans.variable
                     )}
                 >
-                    <Providers>
-                        <NextIntlClientProvider
-                            locale={locale}
-                            messages={messages}
-                            timeZone="Europe/Amsterdam"
-                        >
+                    <NextIntlClientProvider
+                        locale={locale}
+                        messages={messages}
+                        timeZone="Europe/Amsterdam"
+                    >
+                        <Providers>
                             <div className="flex min-h-screen flex-col">
                                 {children}
                             </div>
-                        </NextIntlClientProvider>
-                    </Providers>
+                        </Providers>
+                    </NextIntlClientProvider>
                 </body>
             </html>
         </>

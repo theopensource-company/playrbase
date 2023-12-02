@@ -19,6 +19,7 @@ export async function GET(
         return new NextResponse(await retrieved.Body.transformToByteArray(), {
             headers: {
                 'Content-Type': 'image/webp',
+                'Cache-Control': 'immutable',
             },
         });
     }

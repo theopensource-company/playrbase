@@ -546,6 +546,7 @@ function useData(slug: Organisation['slug']) {
                         $auth.id IN managers[WHERE role = "owner" OR (role = "administrator" AND org != NONE)].user AS can_manage
                     FROM ONLY organisation 
                         WHERE slug = $slug 
+                        LIMIT 1
                         FETCH 
                             managers.*.user.*, 
                             managers.*.org.name;

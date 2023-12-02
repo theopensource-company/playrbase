@@ -36,22 +36,40 @@ import { Skeleton } from '../ui/skeleton.tsx';
 import Container from './Container.tsx';
 import { DevTools } from './DevTools/index.tsx';
 
-export const NavbarContext = createContext(portals.createHtmlPortalNode());
+export const NavbarContext = createContext<portals.HtmlPortalNode | undefined>(
+    undefined
+);
+
 export function NavbarProvider({ children }: { children?: ReactNode }) {
-    const portal = useMemo(() => portals.createHtmlPortalNode(), []);
+    const portal = useMemo(() => {
+        if (typeof window !== 'undefined') {
+            return portals.createHtmlPortalNode();
+        }
+    }, []);
 
     return (
         <NavbarContext.Provider value={portal}>
-            <portals.InPortal node={portal}>
+            {portal ? (
+                <portals.InPortal node={portal}>
+                    <RenderNavbar />
+                </portals.InPortal>
+            ) : (
                 <RenderNavbar />
-            </portals.InPortal>
+            )}
             {children}
         </NavbarContext.Provider>
     );
 }
 
 export function Navbar({ children }: { children?: ReactNode }) {
+    const [onClient, setOnClient] = useState(false);
     const portal = useContext(NavbarContext);
+
+    useEffect(() => {
+        setOnClient(true);
+    }, []);
+
+    if (!portal || !onClient) return null;
     return <portals.OutPortal node={portal}>{children}</portals.OutPortal>;
 }
 

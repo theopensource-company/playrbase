@@ -1,15 +1,13 @@
 'use client';
 
-import Container from '@/components/layout/Container';
 import {
     Navbar,
+    NavbarHeightOffset,
     NavbarSubLink,
     NavbarSubLinks,
 } from '@/components/layout/navbar';
 import { useOrganisation } from '@/lib/Queries/Organisation';
 import { useAuth } from '@/lib/auth';
-import { useScrolledState } from '@/lib/scrolled';
-import { cn } from '@/lib/utils';
 import { useRouter } from '@/locales/navigation';
 import { User } from '@/schema/resources/user';
 import { ArrowLeft } from 'lucide-react';
@@ -25,7 +23,6 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
         : params.organisation;
     const t = useTranslations('pages.console.organisation');
 
-    const scrolled = useScrolledState();
     const { loading: authLoading, user } = useAuth();
     const { isPending: orgLoading, data: organisation } = useOrganisation({
         slug,
@@ -63,15 +60,10 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
                     </NavbarSubLink>
                 </NavbarSubLinks>
             </Navbar>
-            <Container className="flex flex-grow flex-col pb-24 pt-8">
-                <div
-                    className={cn(
-                        'transition-height',
-                        scrolled ? 'h-24' : 'h-36'
-                    )}
-                />
+            <div className="flex flex-grow flex-col pb-24 pt-8">
+                <NavbarHeightOffset />
                 {children}
-            </Container>
+            </div>
         </>
     );
 }

@@ -134,6 +134,18 @@
         "placeholder": "john@doe.org",
         "select": "Select"
       }
+    },
+    "event-selector": {
+      "selected": {
+        "button": {
+          "clear": "Clear"
+        }
+      },
+      "unselected": {
+        "badge": {
+          "no-permissions": "No permissions"
+        }
+      }
     }
   },
   "layout": {

@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/navigation-menu.tsx';
 import { useAuth } from '@/lib/auth';
 import { useFeatureFlags } from '@/lib/featureFlags.tsx';
-import { useScrolledState } from '@/lib/scrolled.tsx';
+import { useScrolledContext, useScrolledState } from '@/lib/scrolled.tsx';
 import { cn } from '@/lib/utils.ts';
 import { Language, languageEntries } from '@/locales/languages.ts';
 import { Link, usePathname } from '@/locales/navigation.ts';
@@ -355,7 +355,8 @@ export function NavbarSubLink({
         url = href;
     }
 
-    const active = pathname.endsWith(url);
+    const active =
+        url == baseUrl ? pathname.endsWith(url) : pathname.startsWith(url);
 
     return (
         <div className="space-y-1">
@@ -375,5 +376,17 @@ export function NavbarSubLink({
                 )}
             />
         </div>
+    );
+}
+
+export function NavbarHeightOffset() {
+    const { scrolled, mobile } = useScrolledContext();
+    return (
+        <div
+            className={cn(
+                'transition-height',
+                mobile ? 'h-28' : scrolled ? 'h-24' : 'h-36'
+            )}
+        />
     );
 }

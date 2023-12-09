@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { Admin } from './admin';
+import { Event } from './event';
 import { Organisation } from './organisation';
 import { Team } from './team';
 import { User } from './user';
@@ -16,7 +17,14 @@ export const FakeProfile = z.object({
 
 export type FakeProfile = z.infer<typeof FakeProfile>;
 
-export const Profile = z.union([User, Admin, Organisation, Team, FakeProfile]);
+export const Profile = z.union([
+    User,
+    Admin,
+    Organisation,
+    Team,
+    Event,
+    FakeProfile,
+]);
 export type Profile = z.infer<typeof Profile>;
 
 export const unknownProfile = {

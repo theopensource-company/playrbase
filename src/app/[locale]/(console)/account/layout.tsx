@@ -3,17 +3,15 @@
 import Container from '@/components/layout/Container';
 import {
     Navbar,
+    NavbarHeightOffset,
     NavbarSubLink,
     NavbarSubLinks,
 } from '@/components/layout/navbar';
 import { useFeatureFlags } from '@/lib/featureFlags';
-import { useScrolledState } from '@/lib/scrolled';
-import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import React, { ReactNode } from 'react';
 
 export default function ConsoleLayout({ children }: { children: ReactNode }) {
-    const scrolled = useScrolledState();
     const [featureFlags] = useFeatureFlags();
     const t = useTranslations('pages.console.account');
 
@@ -33,12 +31,7 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
                 </NavbarSubLinks>
             </Navbar>
             <Container className="flex flex-grow flex-col pb-24 pt-8">
-                <div
-                    className={cn(
-                        'transition-height',
-                        scrolled ? 'h-24' : 'h-36'
-                    )}
-                />
+                <NavbarHeightOffset />
                 {children}
             </Container>
         </>

@@ -1,5 +1,5 @@
 import { Event } from '@/schema/resources/event';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { buildTableFilters, isNoneValue, useSurreal } from '../../lib/Surreal';
 
 export function processEventRecord({
@@ -48,6 +48,38 @@ export const useEvents = (
 
             if (!result?.[0]) return null;
             return result[0].map(processEventRecord);
+        },
+    });
+};
+
+export const useUpdateEvent = (id: Event['id']) => {
+    const surreal = useSurreal();
+    return useMutation({
+        mutationKey: ['event', id],
+        mutationFn: async (
+            changes: Partial<
+                Pick<
+                    Event,
+                    | 'name'
+                    | 'description'
+                    | 'banner'
+                    | 'start'
+                    | 'end'
+                    | 'discoverable'
+                    | 'published'
+                    | 'tournament'
+                    | 'options'
+                >
+            >
+        ) => {
+            console.log({ changes });
+            const result = await surreal.merge<Event, typeof changes>(
+                id,
+                changes
+            );
+
+            if (!result?.[0]) return null;
+            return Event.parse(result[0]);
         },
     });
 };

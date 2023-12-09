@@ -92,7 +92,7 @@ export const Organisation = z.object({
     id: record('organisation'),
     name: z.string().min(1).max(32),
     description: z.string().optional(),
-    website: z.string().url().optional(),
+    website: z.union([z.string().url(), z.literal('')]).optional(),
     email: z.string().email(),
     type: z.literal('organisation'),
     logo: z.string().optional(),

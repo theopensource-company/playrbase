@@ -3,6 +3,7 @@ import React, {
     createContext,
     useContext,
     useEffect,
+    useRef,
     useState,
 } from 'react';
 
@@ -12,21 +13,38 @@ export const ScrolledStateContext = createContext({
 });
 
 function useCreateState() {
+    const init = useRef<boolean>(false);
     const [state, setState] = useState({ mobile: false, scrolled: false });
 
     useEffect(() => {
         const handler = () => {
-            setState({
+            const updated = {
                 scrolled:
                     (window.pageYOffset || document.documentElement.scrollTop) >
                     0,
                 mobile: window.innerWidth < 768,
-            });
+            };
+
+            if (
+                updated.scrolled !== state.scrolled ||
+                updated.mobile !== state.mobile
+            ) {
+                setState(updated);
+            }
         };
 
+        if (!init.current) {
+            init.current = true;
+            handler();
+        }
+
         window.addEventListener('scroll', handler);
-        return () => window.removeEventListener('scroll', handler);
-    }, [setState]);
+        window.addEventListener('resize', handler);
+        return () => {
+            window.removeEventListener('scroll', handler);
+            window.removeEventListener('resize', handler);
+        };
+    }, [setState, state]);
 
     return state;
 }
@@ -41,10 +59,19 @@ export function ScrolledStateProvider({ children }: { children: ReactNode }) {
     );
 }
 
+export function useScrolledContext() {
+    return useContext(ScrolledStateContext);
+}
+
 export function useScrolledState({
     protectMobile,
 }: { protectMobile?: boolean } = {}) {
     protectMobile = typeof protectMobile != 'boolean' || protectMobile;
     const { scrolled, mobile } = useContext(ScrolledStateContext);
     return protectMobile && mobile ? false : scrolled;
+}
+
+export function useIsMobileState() {
+    const { mobile } = useContext(ScrolledStateContext);
+    return mobile;
 }

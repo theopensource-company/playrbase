@@ -39,6 +39,7 @@ import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { z } from 'zod';
+import { TinyOrgName } from '../../TinyOrgName';
 
 export default function Account() {
     const params = useParams();
@@ -71,14 +72,17 @@ export default function Account() {
         </Container>
     ) : organisation ? (
         <div className="flex flex-grow flex-col pt-6">
-            <div className="flex items-center justify-between pb-6">
-                <h1 className="text-3xl font-semibold">{t('title')}</h1>
-                {organisation.can_manage && (
-                    <AddMember
-                        organisation={organisation.id}
-                        refresh={refetch}
-                    />
-                )}
+            <div>
+                <TinyOrgName name={organisation.name} />
+                <div className="flex items-center justify-between pb-6">
+                    <h1 className="text-3xl font-semibold">{t('title')}</h1>
+                    {organisation.can_manage && (
+                        <AddMember
+                            organisation={organisation.id}
+                            refresh={refetch}
+                        />
+                    )}
+                </div>
             </div>
             <div className="space-y-20">
                 {Object.entries(perOrg).map(([key, managers]) => (

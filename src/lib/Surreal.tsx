@@ -68,6 +68,29 @@ export function buildTableFilters<TRecord = unknown>(
     };
 }
 
+export function displayAsSurrealQL(v: unknown): string {
+    if (v instanceof Date) return JSON.stringify(v.toISOString());
+    if (Array.isArray(v)) return `[ ${v.map(displayAsSurrealQL).join(', ')} ]`;
+    if (v === null) return 'NULL';
+    switch (typeof v) {
+        case 'boolean':
+        case 'number':
+        case 'string':
+            return JSON.stringify(v);
+
+        case 'undefined':
+            return 'NONE';
+        case 'object':
+            return `{ ${Object.entries(v)
+                .map(
+                    ([k, v]) => `${JSON.stringify(k)}: ${displayAsSurrealQL(v)}`
+                )
+                .join(', ')} }`;
+    }
+
+    throw new Error(`Cannot display value with type ${typeof v} as SurrealQL.`);
+}
+
 export function isNoneValue<TRecord = unknown>(
     property: keyof TRecord,
     record: Partial<TRecord>

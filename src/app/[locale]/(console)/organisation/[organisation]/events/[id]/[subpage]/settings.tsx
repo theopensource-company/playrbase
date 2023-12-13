@@ -54,7 +54,6 @@ export function EventSettingsTab({
 
     const onSubmit = useCallback(
         async (payload: Schema) => {
-            console.log(payload);
             return promiseTimeout(
                 mutateAsync(payload).then(() => refetch()),
                 250

@@ -1,6 +1,11 @@
 import { Event } from '@/schema/resources/event';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { buildTableFilters, isNoneValue, useSurreal } from '../../lib/Surreal';
+import {
+    buildTableFilters,
+    displayAsSurrealQL,
+    isNoneValue,
+    useSurreal,
+} from '../../lib/Surreal';
 
 export function processEventRecord({
     created,
@@ -72,14 +77,14 @@ export const useUpdateEvent = (id: Event['id']) => {
                 >
             >
         ) => {
-            console.log({ changes });
-            const result = await surreal.merge<Event, typeof changes>(
-                id,
-                changes
-            );
+            const result = await surreal.query<[Event[]]>(/* surql */ `
+                UPDATE type::thing('event', ${JSON.stringify(
+                    id
+                )}) MERGE ${displayAsSurrealQL(changes)}
+            `);
 
-            if (!result?.[0]) return null;
-            return Event.parse(result[0]);
+            if (!result?.[0]?.[0]) return null;
+            return Event.parse(result[0][0]);
         },
     });
 };

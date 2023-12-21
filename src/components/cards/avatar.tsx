@@ -66,7 +66,7 @@ export function Avatar({
                     {avatarFallback}
                 </AvatarFallback>
             </RenderAvatar>
-            {renderBadge && profile.type == 'admin' && (
+            {renderBadge && 'type' in profile && profile.type == 'admin' && (
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>

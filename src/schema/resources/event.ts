@@ -34,7 +34,8 @@ const event = /* surrealql */ `
     DEFINE FIELD published                  ON event TYPE bool DEFAULT false;
     DEFINE FIELD tournament                 ON event TYPE option<record<event>>;
     DEFINE FIELD is_tournament              ON event VALUE <future> {
-        RETURN !!(SELECT VALUE id FROM event WHERE tournament = $parent.id)[0];
+        LET $id = meta::id(id);
+        RETURN !!(SELECT VALUE id FROM event WHERE tournament AND meta::id(tournament) = $id)[0];
     };
 
     DEFINE FIELD root_for_org               ON event 

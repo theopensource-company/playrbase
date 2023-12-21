@@ -4,10 +4,40 @@ import { SelectSingleEventHandler } from 'react-day-picker';
 import { Calendar } from './calendar';
 import { Input } from './input';
 import { Label } from './label';
+import { Popover, PopoverContent, PopoverTrigger } from './popover';
+import { Button } from './button';
+import { cn } from '@/lib/utils';
+import { CalendarIcon } from 'lucide-react';
 
 interface DateTimePickerProps {
     date?: Date;
     setDate: (date: Date) => void;
+}
+
+export function DateTimePickerField({ date, setDate }: DateTimePickerProps) {
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button
+                    variant={'outline'}
+                    className={cn(
+                        'flex pl-3 text-left font-normal gap-12 w-full',
+                        !date && 'text-muted-foreground'
+                    )}
+                >
+                    {date ? (
+                        dayjs(date).format('LL - HH:mm')
+                    ) : (
+                        <span>Pick a date</span>
+                    )}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+                <DateTimePicker date={date} setDate={setDate} />
+            </PopoverContent>
+        </Popover>
+    );
 }
 
 export function DateTimePicker({ date, setDate }: DateTimePickerProps) {
@@ -45,7 +75,7 @@ export function DateTimePicker({ date, setDate }: DateTimePickerProps) {
                 initialFocus
             />
             {!date ? (
-                <p className='text-sm p-4 pt-0'>Please pick a day.</p>
+                <p className="p-4 pt-0 text-sm">Please pick a day.</p>
             ) : (
                 <div className="space-y-2 p-4 pt-0">
                     <Label>Choose a time</Label>

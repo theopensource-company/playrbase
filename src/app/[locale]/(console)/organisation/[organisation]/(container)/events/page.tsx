@@ -19,6 +19,7 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuGroup,
+    DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
@@ -47,7 +48,16 @@ import { Event } from '@/schema/resources/event';
 import { Organisation } from '@/schema/resources/organisation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowRight, Check, Filter, Plus, RefreshCw, X } from 'lucide-react';
+import {
+    ArrowRight,
+    Check,
+    Filter,
+    MoreHorizontal,
+    Plus,
+    RefreshCw,
+    Wrench,
+    X,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
@@ -158,55 +168,85 @@ export default function Account() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {events?.map((event) => (
-                            <TableRow key={event.id}>
-                                <TableCell>{event.name}</TableCell>
-                                <TableCell>{event.category}</TableCell>
-                                <TableCell>
-                                    {event.start && (
-                                        <DateTooltip date={event.start} />
-                                    )}
-                                </TableCell>
-                                <TableCell>
-                                    {event.end && (
-                                        <DateTooltip date={event.end} />
-                                    )}
-                                </TableCell>
-                                <TableCell>
-                                    {event.published ? (
-                                        <Check size={20} />
-                                    ) : (
-                                        <X size={20} />
-                                    )}
-                                </TableCell>
-                                <TableCell>
-                                    {event.discoverable ? (
-                                        <Check size={20} />
-                                    ) : (
-                                        <X size={20} />
-                                    )}
-                                </TableCell>
-                                <TableCell>
-                                    <DateTooltip date={event.created} />
-                                </TableCell>
-                                <TableCell>
-                                    <Link
-                                        href={`/organisation/${slug}/events/${event.id.slice(
-                                            6
-                                        )}`}
-                                        className={buttonVariants({
-                                            size: 'sm',
-                                        })}
-                                    >
-                                        Manage{' '}
-                                        <ArrowRight
-                                            size={18}
-                                            className="ml-2"
-                                        />
-                                    </Link>
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                        {events?.map((event) => {
+                            const url = (page: string) =>
+                                `/organisation/${slug}/events/${event.id.slice(
+                                    6
+                                )}/${page}`;
+
+                            return (
+                                <TableRow key={event.id}>
+                                    <TableCell>{event.name}</TableCell>
+                                    <TableCell>{event.category}</TableCell>
+                                    <TableCell>
+                                        {event.start && (
+                                            <DateTooltip date={event.start} />
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {event.end && (
+                                            <DateTooltip date={event.end} />
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {event.published ? (
+                                            <Check size={20} />
+                                        ) : (
+                                            <X size={20} />
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {event.discoverable ? (
+                                            <Check size={20} />
+                                        ) : (
+                                            <X size={20} />
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        <DateTooltip date={event.created} />
+                                    </TableCell>
+                                    <TableCell className="flex items-center justify-end gap-4">
+                                        <Link
+                                            href={url('overview')}
+                                            className={buttonVariants({
+                                                size: 'sm',
+                                            })}
+                                        >
+                                            Manage{' '}
+                                            <ArrowRight
+                                                size={18}
+                                                className="ml-2"
+                                            />
+                                        </Link>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                >
+                                                    <MoreHorizontal size={20} />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent className="w-44">
+                                                <DropdownMenuLabel>
+                                                    More options
+                                                </DropdownMenuLabel>
+                                                <DropdownMenuSeparator />
+                                                <Link href={url('settings')}>
+                                                    <DropdownMenuItem className="hover:cursor-pointer">
+                                                        <Wrench
+                                                            size={18}
+                                                            className="mr-2 h-4 w-4"
+                                                        />
+                                                        Settings
+                                                    </DropdownMenuItem>
+                                                </Link>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
                     </TableBody>
                 </Table>
             </div>

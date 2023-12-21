@@ -9,8 +9,8 @@ import { z } from 'zod';
 
 const Intent = z.literal('profile_picture');
 const sizeByIntent = {
-    profile_picture: 512,
-    logo: 1024,
+    profile_picture: 128,
+    logo: 512,
     banner: 2048,
 };
 

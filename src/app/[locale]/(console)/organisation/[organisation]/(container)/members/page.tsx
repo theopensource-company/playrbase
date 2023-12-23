@@ -10,13 +10,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
     Table,
@@ -28,6 +21,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useSurreal } from '@/lib/Surreal';
+import { Role } from '@/lib/role';
 import { record } from '@/lib/zod';
 import { Link } from '@/locales/navigation';
 import { Organisation } from '@/schema/resources/organisation';
@@ -350,7 +344,7 @@ function InvitedManager({
     return (
         <TableRow>
             <TableCell>
-                <Avatar profile={user as User} />
+                <Avatar profile={user as User} size="small" />
             </TableCell>
             <TableCell>
                 {user.name}{' '}
@@ -363,25 +357,11 @@ function InvitedManager({
                 ) : isUpdatingRole ? (
                     <Skeleton className="h-10 w-24" />
                 ) : (
-                    <Select onValueChange={updateRole} defaultValue={role}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder={t('role.placeholder')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="owner">
-                                <RoleName role="owner" />
-                            </SelectItem>
-                            <SelectItem value="administrator">
-                                <RoleName role="administrator" />
-                            </SelectItem>
-                            <SelectItem value="event_manager">
-                                <RoleName role="event_manager" />
-                            </SelectItem>
-                            <SelectItem value="event_viewer">
-                                <RoleName role="event_viewer" />
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
+                    <SelectRole
+                        onRoleUpdate={updateRole}
+                        role={role}
+                        className="w-[200px]"
+                    />
                 )}
             </TableCell>
             <TableCell align="right">
@@ -406,7 +386,7 @@ function AddMember({
 }) {
     const surreal = useSurreal();
     const [user, setUser] = useUserSelector();
-    const [role, setRole] = useState('event_viewer');
+    const [role, setRole] = useState<Role>('event_viewer');
     const [open, setOpen] = useState(false);
     const t = useTranslations('pages.console.organisation.members.add_member');
 
@@ -444,27 +424,11 @@ function AddMember({
 
                     <div className="space-y-3">
                         <Label htmlFor="role"> {t('role.label')}</Label>
-                        <Select onValueChange={setRole} value={role}>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue
-                                    placeholder={t('role.placeholder')}
-                                />
-                            </SelectTrigger>
-                            <SelectContent id="role">
-                                <SelectItem value="owner">
-                                    <RoleName role="owner" />
-                                </SelectItem>
-                                <SelectItem value="administrator">
-                                    <RoleName role="administrator" />
-                                </SelectItem>
-                                <SelectItem value="event_manager">
-                                    <RoleName role="event_manager" />
-                                </SelectItem>
-                                <SelectItem value="event_viewer">
-                                    <RoleName role="event_viewer" />
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <SelectRole
+                            onRoleUpdate={setRole}
+                            role={role}
+                            className="w-[200px]"
+                        />
                     </div>
                 </div>
                 <div className="mt-3">

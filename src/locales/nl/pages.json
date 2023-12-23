@@ -124,6 +124,10 @@
       }
     },
     "organisation": {
+      "overview": {
+        "title": "Overzicht",
+        "not_found": "Organisatie niet gevonden"
+      },
       "members": {
         "add_member": {
           "role": {
@@ -230,6 +234,10 @@
       "events": {
         "not_found": "Organisatie niet gevonden",
         "title": "Evenementen"
+      },
+      "organisations": {
+        "not_found": "Organisatie niet gevonden",
+        "title": "Organisaties"
       }
     }
   },

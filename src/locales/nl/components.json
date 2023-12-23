@@ -134,6 +134,18 @@
         "placeholder": "john@doe.org",
         "select": "Selecteren"
       }
+    },
+    "event-selector": {
+      "selected": {
+        "button": {
+          "clear": "Wissen"
+        }
+      },
+      "unselected": {
+        "badge": {
+          "no-permissions": "Geen rechten"
+        }
+      }
     }
   },
   "layout": {
@@ -148,6 +160,25 @@
     },
     "not-found-screen": {
       "text": "Object niet gevonden"
+    }
+  },
+  "miscellaneous": {
+    "role": {
+      "description": {
+        "administrator": "Kan elke resource binnen een organisatie beheren, behalve het verwijderen van de hoofdorganisatie en het beheren van de leden ervan.",
+        "event_manager": "Kan alle evenementen in een organisatie beheren.",
+        "event_viewer": "Kan alle evenementen in een organisatie bekijken.",
+        "owner": "Kan elke resource in een organisatie beheren."
+      },
+      "name": {
+        "administrator": "Administrator",
+        "event_manager": "Evenement Beheerder",
+        "event_viewer": "Evenement Kijker",
+        "owner": "Eigenaar"
+      },
+      "select": {
+        "placeholder": "Selecteer een rol"
+      }
     }
   }
 }

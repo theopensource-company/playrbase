@@ -161,5 +161,24 @@
     "not-found-screen": {
       "text": "Resource not found"
     }
+  },
+  "miscellaneous": {
+    "role": {
+      "name": {
+        "owner": "Owner",
+        "administrator": "Administrator",
+        "event_manager": "Event Manager",
+        "event_viewer": "Event Viewer"
+      },
+      "description": {
+        "owner": "Can manage every resource within an organisation.",
+        "administrator": "Can manage every resource within an organisation, except for deleting the root organisation, and managing it's members.",
+        "event_manager": "Can manage all events in an organisation.",
+        "event_viewer": "Can view events in an organisation."
+      },
+      "select": {
+        "placeholder": "Select a role"
+      }
+    }
   }
 }

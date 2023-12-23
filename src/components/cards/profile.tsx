@@ -3,7 +3,7 @@ import {
     unknownProfile,
     type Profile as TProfile,
 } from '@/schema/resources/profile';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Skeleton } from '../ui/skeleton';
 import { Avatar } from './avatar';
 
@@ -12,13 +12,17 @@ export function Profile({
     size,
     profile,
     noSub,
+    customSub,
 }: {
     profile?: TProfile | null;
     loading?: boolean;
     size?: 'tiny' | 'small' | 'normal' | 'big';
     noSub?: boolean;
+    customSub?: ReactNode | string;
 }) {
     profile = profile ?? unknownProfile;
+    const sub = customSub || ('email' in profile && profile.email);
+
     return (
         <div
             className={cn(
@@ -42,10 +46,8 @@ export function Profile({
                     >
                         {profile.name}
                     </h2>
-                    {!noSub && 'email' in profile && profile.email && (
-                        <p className="text-xs text-muted-foreground">
-                            {profile.email}
-                        </p>
+                    {!noSub && sub && (
+                        <p className="text-xs text-muted-foreground">{sub}</p>
                     )}
                 </div>
             )}

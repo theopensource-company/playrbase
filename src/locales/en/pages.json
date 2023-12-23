@@ -124,6 +124,10 @@
       }
     },
     "organisation": {
+      "overview": {
+        "title": "Overview",
+        "not_found": "Organisation not found"
+      },
       "events": {
         "title": "Events",
         "not_found": "Organisation not found"
@@ -230,6 +234,10 @@
             "submit": "Permanently delete"
           }
         }
+      },
+      "organisations": {
+        "title": "Organisations",
+        "not_found": "Organisation not found"
       }
     }
   },

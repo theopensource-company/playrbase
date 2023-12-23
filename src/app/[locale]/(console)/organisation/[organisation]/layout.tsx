@@ -49,11 +49,17 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
                     <NavbarSubLink>
                         <ArrowLeft />
                     </NavbarSubLink>
+                    <NavbarSubLink link="overview">
+                        {t('overview.title')}
+                    </NavbarSubLink>
                     <NavbarSubLink link="events">
                         {t('events.title')}
                     </NavbarSubLink>
                     <NavbarSubLink link="members">
                         {t('members.title')}
+                    </NavbarSubLink>
+                    <NavbarSubLink link="organisations">
+                        {t('organisations.title')}
                     </NavbarSubLink>
                     <NavbarSubLink link="settings">
                         {t('settings.title')}

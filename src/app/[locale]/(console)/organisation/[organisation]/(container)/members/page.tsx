@@ -5,6 +5,7 @@ import { Profile } from '@/components/cards/profile';
 import Container from '@/components/layout/Container';
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { UserSelector, useUserSelector } from '@/components/logic/UserSelector';
+import { RoleName, SelectRole } from '@/components/miscellaneous/Role';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
@@ -125,46 +126,48 @@ function ListManagers({
     return (
         <div>
             {organisation && (
-                <h2 className="pb-2 text-2xl font-semibold">
+                <h2 className="pb-6 text-2xl font-semibold">
                     {t.rich('title', {
                         org: () => organisation.name,
                     })}
                 </h2>
             )}
-            <Table>
-                <TableCaption>
-                    <b>{t('table.caption.count')}:</b>{' '}
-                    {managers.length + (invites?.length ?? 0)}
-                </TableCaption>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead />
-                        <TableHead>{t('table.columns.name')}</TableHead>
-                        <TableHead>{t('table.columns.email')}</TableHead>
-                        <TableHead>{t('table.columns.role')}</TableHead>
-                        <TableHead align="right" />
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {invites?.map((invite) => (
-                        <InvitedManager
-                            key={invite.edge}
-                            invite={invite}
-                            canManage={canManage}
-                            refresh={refresh}
-                        />
-                    ))}
-                    {managers.map((manager) => (
-                        <ListManager
-                            key={manager.edge}
-                            manager={manager}
-                            canManage={canManage}
-                            canDeleteOwner={canDeleteOwner}
-                            refresh={refresh}
-                        />
-                    ))}
-                </TableBody>
-            </Table>
+            <div className="rounded border">
+                <Table>
+                    <TableCaption className="mb-4">
+                        <b>{t('table.caption.count')}:</b>{' '}
+                        {managers.length + (invites?.length ?? 0)}
+                    </TableCaption>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead />
+                            <TableHead>{t('table.columns.name')}</TableHead>
+                            <TableHead>{t('table.columns.email')}</TableHead>
+                            <TableHead>{t('table.columns.role')}</TableHead>
+                            <TableHead align="right" />
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {invites?.map((invite) => (
+                            <InvitedManager
+                                key={invite.edge}
+                                invite={invite}
+                                canManage={canManage}
+                                refresh={refresh}
+                            />
+                        ))}
+                        {managers.map((manager) => (
+                            <ListManager
+                                key={manager.edge}
+                                manager={manager}
+                                canManage={canManage}
+                                canDeleteOwner={canDeleteOwner}
+                                refresh={refresh}
+                            />
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
         </div>
     );
 }
@@ -215,6 +218,7 @@ function ListManager({
         <TableRow>
             <TableCell>
                 <Avatar
+                    size="small"
                     profile={
                         {
                             id,
@@ -228,33 +232,16 @@ function ListManager({
             <TableCell>{email}</TableCell>
             <TableCell>
                 {!canManage || org ? (
-                    role
+                    <RoleName role={role} />
                 ) : isUpdatingRole ? (
                     <Skeleton className="h-10 w-24" />
                 ) : (
-                    <Select
-                        onValueChange={updateRole}
-                        defaultValue={role}
+                    <SelectRole
+                        onRoleUpdate={updateRole}
+                        role={role}
                         disabled={!canDeleteOwner && role == 'owner'}
-                    >
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder={t('role.placeholder')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="owner">
-                                {t('role.roles.owner')}
-                            </SelectItem>
-                            <SelectItem value="administrator">
-                                {t('role.roles.administrator')}
-                            </SelectItem>
-                            <SelectItem value="event_manager">
-                                {t('role.roles.event_manager')}
-                            </SelectItem>
-                            <SelectItem value="event_viewer">
-                                {t('role.roles.event_viewer')}
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
+                        className="w-[200px]"
+                    />
                 )}
             </TableCell>
             <TableCell align="right">
@@ -382,16 +369,16 @@ function InvitedManager({
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="owner">
-                                {t('role.roles.owner')}
+                                <RoleName role="owner" />
                             </SelectItem>
                             <SelectItem value="administrator">
-                                {t('role.roles.administrator')}
+                                <RoleName role="administrator" />
                             </SelectItem>
                             <SelectItem value="event_manager">
-                                {t('role.roles.event_manager')}
+                                <RoleName role="event_manager" />
                             </SelectItem>
                             <SelectItem value="event_viewer">
-                                {t('role.roles.event_viewer')}
+                                <RoleName role="event_viewer" />
                             </SelectItem>
                         </SelectContent>
                     </Select>
@@ -465,16 +452,16 @@ function AddMember({
                             </SelectTrigger>
                             <SelectContent id="role">
                                 <SelectItem value="owner">
-                                    {t('role.roles.owner')}
+                                    <RoleName role="owner" />
                                 </SelectItem>
                                 <SelectItem value="administrator">
-                                    {t('role.roles.administrator')}
+                                    <RoleName role="administrator" />
                                 </SelectItem>
                                 <SelectItem value="event_manager">
-                                    {t('role.roles.event_manager')}
+                                    <RoleName role="event_manager" />
                                 </SelectItem>
                                 <SelectItem value="event_viewer">
-                                    {t('role.roles.event_viewer')}
+                                    <RoleName role="event_viewer" />
                                 </SelectItem>
                             </SelectContent>
                         </Select>

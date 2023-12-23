@@ -1,34 +1,22 @@
 'use client';
 
-import { Avatar } from '@/components/cards/avatar';
+import { OrganisationTable } from '@/components/data/organisations/table';
 import {
     OrganisationSelector,
     useOrganisationSelector,
 } from '@/components/logic/OrganisationSelector';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Skeleton } from '@/components/ui/skeleton';
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
 import { useSurreal } from '@/lib/Surreal';
-import { record } from '@/lib/zod';
-import { Link } from '@/locales/navigation';
 import {
     Organisation,
     OrganisationSafeParse,
 } from '@/schema/resources/organisation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Check, Plus, Settings2, X } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -38,146 +26,55 @@ export default function Account() {
     const { data: organisations, isPending, refetch } = useData();
     const t = useTranslations('pages.console.account.organisations');
 
-    return (
-        <div className="flex flex-grow flex-col gap-12 pt-6">
-            <div className="flex items-center justify-between pb-6">
-                <h1 className="text-3xl font-bold">{t('title')}</h1>
-                <CreateOrganisation refetch={refetch} />
-            </div>
-            <Table>
-                {organisations && (
-                    <TableCaption>
-                        <b>{t('table.caption.count')}:</b>{' '}
-                        {organisations.confirmed.length +
-                            organisations.unconfirmed.length}
-                    </TableCaption>
-                )}
-                <TableHeader>
-                    <TableRow>
-                        <TableHead />
-                        <TableHead>{t('table.columns.name')}</TableHead>
-                        <TableHead>{t('table.columns.email')}</TableHead>
-                        <TableHead>{t('table.columns.actions')}</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {isPending && (
-                        <TableRow>
-                            <TableCell>
-                                <Skeleton className="h-10 w-10 rounded-full" />
-                            </TableCell>
-                            <TableCell>
-                                <Skeleton className="h-4 w-24" />
-                            </TableCell>
-                            <TableCell>
-                                <Skeleton className="h-4 w-36" />
-                            </TableCell>
-                        </TableRow>
-                    )}
+    function findUnconfirmedEdge(id: Organisation['id']) {
+        const obj = organisations?.unconfirmed ?? {};
+        return Object.keys(obj).find((k) => obj[k].id === id);
+    }
 
-                    {organisations && organisations.unconfirmed.length > 0 && (
-                        <>
-                            {organisations.confirmed.length > 0 && (
-                                <h2 className="mb-4 mt-6 text-2xl">
-                                    {t('table.body.invitations')}
-                                </h2>
-                            )}
-                            {organisations.unconfirmed.map((data) => (
-                                <RenderUnconfirmed
-                                    data={data}
-                                    refetch={refetch}
-                                    key={data.edge}
-                                />
-                            ))}
-                        </>
-                    )}
-
-                    {organisations && organisations.confirmed.length > 0 && (
-                        <>
-                            {organisations.unconfirmed.length > 0 && (
-                                <h2 className="mb-4 mt-12 text-2xl">
-                                    {t('table.body.confirmed')}
-                                </h2>
-                            )}
-                            {organisations.confirmed.map((data) => (
-                                <RenderConfirmed data={data} key={data.edge} />
-                            ))}
-                        </>
-                    )}
-                </TableBody>
-            </Table>
-        </div>
-    );
-}
-
-function RenderUnconfirmed({
-    data: { organisation, edge },
-    refetch,
-}: {
-    data: Data;
-    refetch: () => unknown;
-}) {
     const surreal = useSurreal();
-    const { mutate: accept } = useMutation({
-        mutationKey: ['manages', 'accept-invite', edge],
-        async mutationFn() {
+    const { mutateAsync: acceptInvitation } = useMutation({
+        mutationKey: ['manages', 'accept-invite'],
+        async mutationFn(id: Organisation['id']) {
+            const edge = findUnconfirmedEdge(id);
+            if (!edge) throw new Error('Could not find unconfirmed edge');
             await surreal.merge(edge, { confirmed: true });
             refetch();
         },
     });
 
-    const { mutate: deny } = useMutation({
-        mutationKey: ['manages', 'deny-invite', edge],
-        async mutationFn() {
+    const { mutateAsync: denyInvitation } = useMutation({
+        mutationKey: ['manages', 'deny-invite'],
+        async mutationFn(id: Organisation['id']) {
+            const edge = findUnconfirmedEdge(id);
+            if (!edge) throw new Error('Could not find unconfirmed edge');
             await surreal.delete(edge);
             refetch();
         },
     });
 
     return (
-        <TableRow>
-            <TableCell>
-                <Avatar
-                    size="small"
-                    profile={organisation as unknown as Organisation}
-                />
-            </TableCell>
-            <TableCell>{organisation.name}</TableCell>
-            <TableCell>{organisation.email}</TableCell>
-            <TableCell className="space-x-3">
-                <Button size="sm" onClick={() => accept()}>
-                    <Check />
-                </Button>
-                <Button size="sm" onClick={() => deny()} variant="destructive">
-                    <X />
-                </Button>
-            </TableCell>
-        </TableRow>
-    );
-}
-
-function RenderConfirmed({ data: { organisation } }: { data: Data }) {
-    return (
-        <TableRow>
-            <TableCell>
-                <Avatar
-                    size="small"
-                    profile={organisation as unknown as Organisation}
-                />
-            </TableCell>
-            <TableCell>{organisation.name}</TableCell>
-            <TableCell>{organisation.email}</TableCell>
-            <TableCell className="space-x-3">
-                <Link
-                    className={buttonVariants({
-                        size: 'sm',
-                    })}
-                    href={`/organisation/${organisation.slug}/settings`}
-                >
-                    <Settings2 />
-                </Link>
-            </TableCell>
-        </TableRow>
+        <div className="flex flex-grow flex-col gap-12 pt-6">
+            <div className="flex items-center justify-between pb-6">
+                <h1 className="text-3xl font-bold">{t('title')}</h1>
+                <CreateOrganisation refetch={refetch} />
+            </div>
+            <OrganisationTable
+                isLoading={isPending}
+                organisations={organisations?.confirmed ?? {}}
+                unconfirmed={organisations?.unconfirmed ?? {}}
+                acceptInvitation={acceptInvitation}
+                denyInvitation={denyInvitation}
+                caption={
+                    organisations ? (
+                        <>
+                            <b>{t('table.caption.count')}:</b>{' '}
+                            {Object.values(organisations.confirmed).length +
+                                Object.values(organisations.unconfirmed).length}
+                        </>
+                    ) : undefined
+                }
+            />
+        </div>
     );
 }
 
@@ -292,34 +189,34 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
     );
 }
 
-const Data = z.object({
-    edge: record('manages'),
-    organisation: OrganisationSafeParse.extend({
-        part_of: OrganisationSafeParse.optional().nullable(),
-    }),
-});
-
-type Data = z.infer<typeof Data>;
-
 function useData() {
     const surreal = useSurreal();
     return useQuery({
         queryKey: ['organisations'],
         queryFn: async () => {
-            const result = await surreal.query<[Data[], Data[]]>(/* surql */ `
-                SELECT out.* as organisation, id as edge
-                    FROM $auth->manages[?confirmed] 
-                    FETCH organisation.part_of.*;
+            const result = await surreal.query<
+                [
+                    Record<string, Organisation>,
+                    Record<string, OrganisationSafeParse>,
+                ]
+            >(/* surql */ `
+                object::from_entries((
+                    SELECT VALUE [<string> id, out.*]
+                        FROM $auth->manages[?confirmed] 
+                        FETCH organisation.part_of.*
+                ));
 
-                SELECT out.* as organisation, id as edge
-                    FROM $auth->manages[?!confirmed] 
-                    FETCH organisation.part_of.*;          
+                object::from_entries((
+                    SELECT VALUE [<string> id, out.*]
+                        FROM $auth->manages[?!confirmed] 
+                        FETCH organisation.part_of.*
+                ));       
             `);
 
             if (!result?.[0] || !result?.[1]) return null;
             return {
-                confirmed: z.array(Data).parse(result[0]),
-                unconfirmed: z.array(Data).parse(result[1]),
+                confirmed: z.record(Organisation).parse(result[0]),
+                unconfirmed: z.record(OrganisationSafeParse).parse(result[1]),
             };
         },
     });

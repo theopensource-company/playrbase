@@ -121,7 +121,7 @@ function RenderCredential({
                 <DateTooltip date={credential.created} />
             </TableCell>
             <TableCell>
-                <DateTooltip date={credential.created} />
+                <DateTooltip date={credential.updated} />
             </TableCell>
             <TableCell className="flex justify-end gap-4">
                 <EditCredential credential={credential} refetch={refetch} />

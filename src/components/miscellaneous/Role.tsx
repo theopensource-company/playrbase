@@ -42,7 +42,7 @@ export function SelectRole({
                 <SelectItem value="owner">
                     <div className="flex flex-col text-white">
                         <RoleName role="owner" />
-                        <span className="max-w-sm text-sm text-muted-foreground">
+                        <span className="max-w-xs text-sm text-muted-foreground">
                             <RoleDescription role="owner" />
                         </span>
                     </div>
@@ -50,7 +50,7 @@ export function SelectRole({
                 <SelectItem value="administrator">
                     <div className="flex flex-col text-white">
                         <RoleName role="administrator" />
-                        <span className="max-w-sm text-sm text-muted-foreground">
+                        <span className="max-w-xs text-sm text-muted-foreground">
                             <RoleDescription role="administrator" />
                         </span>
                     </div>
@@ -58,7 +58,7 @@ export function SelectRole({
                 <SelectItem value="event_manager">
                     <div className="flex flex-col text-white">
                         <RoleName role="event_manager" />
-                        <span className="max-w-sm text-sm text-muted-foreground">
+                        <span className="max-w-xs text-sm text-muted-foreground">
                             <RoleDescription role="event_manager" />
                         </span>
                     </div>
@@ -66,7 +66,7 @@ export function SelectRole({
                 <SelectItem value="event_viewer">
                     <div className="flex flex-col text-white">
                         <RoleName role="event_viewer" />
-                        <span className="max-w-sm text-sm text-muted-foreground">
+                        <span className="max-w-xs text-sm text-muted-foreground">
                             <RoleDescription role="event_viewer" />
                         </span>
                     </div>

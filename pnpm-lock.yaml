@@ -158,6 +158,9 @@ dependencies:
   typescript:
     specifier: 5.2.2
     version: 5.2.2
+  vaul:
+    specifier: ^0.8.0
+    version: 0.8.0(@types/react-dom@18.2.14)(@types/react@18.2.34)(react-dom@18.2.0)(react@18.2.0)
   zod:
     specifier: ^3.22.4
     version: 3.22.4
@@ -8441,6 +8444,20 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
     dev: true
+
+  /vaul@0.8.0(@types/react-dom@18.2.14)(@types/react@18.2.34)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-9nUU2jIObJvJZxeQU1oVr/syKo5XqbRoOMoTEt0hHlWify4QZFlqTh6QSN/yxoKzNrMeEQzxbc3XC/vkPLOIqw==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    dependencies:
+      '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.2.14)(@types/react@18.2.34)(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+    dev: false
 
   /vscode-json-languageservice@4.2.1:
     resolution: {integrity: sha512-xGmv9QIWs2H8obGbWg+sIPI/3/pFgj/5OWBhNzs00BkYQ9UaB2F6JJaGB/2/YOZJ3BvLXQTC4Q7muqU25QgAhA==}

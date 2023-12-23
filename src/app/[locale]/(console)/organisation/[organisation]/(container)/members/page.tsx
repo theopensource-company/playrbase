@@ -31,7 +31,7 @@ import { useSurreal } from '@/lib/Surreal';
 import { record } from '@/lib/zod';
 import { Link } from '@/locales/navigation';
 import { Organisation } from '@/schema/resources/organisation';
-import { User, UserAsRelatedUser } from '@/schema/resources/user';
+import { User, UserAnonymous } from '@/schema/resources/user';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
@@ -356,7 +356,7 @@ function InvitedManager({
                 {user.name}{' '}
                 <Badge className="ml-3">{t('pending-invite')}</Badge>
             </TableCell>
-            <TableCell>{user.email}</TableCell>
+            <TableCell />
             <TableCell>
                 {!canManage ? (
                     role
@@ -513,7 +513,7 @@ const Data = Organisation.extend({
 type Data = z.infer<typeof Data>;
 
 const Invited = z.object({
-    user: UserAsRelatedUser,
+    user: UserAnonymous,
     edge: record('manages'),
     role: z.union([
         z.literal('owner'),
@@ -529,6 +529,8 @@ function useData(slug: Organisation['slug']) {
     const surreal = useSurreal();
     return useQuery({
         queryKey: ['organisation', 'members', slug],
+        retry: false,
+        throwOnError: true,
         queryFn: async () => {
             const result = await surreal.query<[null[], Invited[], Data]>(
                 /* surql */ `

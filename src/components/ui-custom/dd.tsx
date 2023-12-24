@@ -65,7 +65,9 @@ export function DDContent({
     if (isMobile)
         return (
             <DrawerContent {...props}>
-                <div className="px-8 pb-6 pt-4">{children}</div>
+                <div className="mx-8 mb-6 mt-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
+                    {children}
+                </div>
             </DrawerContent>
         );
 

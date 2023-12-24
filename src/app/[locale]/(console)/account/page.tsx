@@ -164,6 +164,7 @@ function EditName() {
                                     id="name"
                                     placeholder={user?.name}
                                     className="col-span-3"
+                                    autoFocus
                                     {...register('name')}
                                 />
                             )}
@@ -267,6 +268,7 @@ function EditEmail() {
                                         type="email"
                                         placeholder={user?.email}
                                         className="col-span-3"
+                                        autoFocus
                                         {...register('email')}
                                     />
                                 )}

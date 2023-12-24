@@ -168,6 +168,7 @@ function DangerZone({ organisation }: { organisation: Organisation }) {
                                     </Label>
                                     <Input
                                         id="name_delete"
+                                        autoFocus
                                         autoComplete="off"
                                         {...register('name')}
                                     />

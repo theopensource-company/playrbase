@@ -182,6 +182,7 @@ function EditCredential({
                             placeholder={credential.name}
                             defaultValue={credential.name}
                             maxLength={Schema.shape.name.maxLength ?? undefined}
+                            autoFocus
                             autoComplete="off"
                             {...register('name')}
                         />
@@ -264,6 +265,7 @@ function DeleteCredential({
                         </Label>
                         <Input
                             id="name_delete"
+                            autoFocus
                             autoComplete="off"
                             {...register('name')}
                         />

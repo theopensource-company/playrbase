@@ -64,7 +64,11 @@ export default async function RootLayout({
                         timeZone="Europe/Amsterdam"
                     >
                         <Providers>
-                            <div className="flex min-h-screen flex-col">
+                            <div
+                                // eslint-disable-next-line react/no-unknown-property
+                                vaul-drawer-wrapper=""
+                                className="flex min-h-screen flex-col"
+                            >
                                 {children}
                             </div>
                         </Providers>

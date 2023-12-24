@@ -29,7 +29,7 @@ import { Separator } from '../ui/separator';
 
 export function DD(props: Parameters<typeof Dialog>[0]) {
     const isMobile = useIsMobileState();
-    if (isMobile) return <Drawer {...props} />;
+    if (isMobile) return <Drawer shouldScaleBackground {...props} />;
     return <Dialog {...props} />;
 }
 

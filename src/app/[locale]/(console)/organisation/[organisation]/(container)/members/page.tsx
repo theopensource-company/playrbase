@@ -337,7 +337,7 @@ function InvitedManager({
             <TableCell>
                 <Avatar profile={user as User} size="small" />
             </TableCell>
-            <TableCell className="whitespace-nowrap">
+            <TableCell>
                 {user.name}
                 <Badge className="ml-3 whitespace-nowrap">
                     {t('pending-invite')}

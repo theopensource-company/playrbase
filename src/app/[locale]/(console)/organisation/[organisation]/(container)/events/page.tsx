@@ -12,9 +12,9 @@ import {
     useEventSelector,
 } from '@/components/logic/EventSelector';
 import { Pagination, usePagination } from '@/components/logic/Pagination';
+import { DD, DDContent, DDFooter, DDTrigger } from '@/components/ui-custom/dd';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -79,7 +79,7 @@ export default function Account() {
                     <h1 className="pb-6 text-3xl font-semibold">
                         {t('title')}
                     </h1>
-                    <CreateOrganisation
+                    <CreateEvent
                         refetch={refetch}
                         organiser={organisation.id}
                     />
@@ -144,7 +144,7 @@ export default function Account() {
     );
 }
 
-function CreateOrganisation({
+function CreateEvent({
     refetch,
     organiser,
 }: {
@@ -212,17 +212,17 @@ function CreateOrganisation({
     );
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+        <DD open={open} onOpenChange={setOpen}>
+            <DDTrigger asChild>
                 <Button>
                     {t('trigger')}
                     <Plus className="ml-2 h-6 w-6" />
                 </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
+            </DDTrigger>
+            <DDContent className="max-w-2xl">
                 <form onSubmit={handler}>
                     <h3 className="mb-4 text-2xl font-bold">{t('title')}</h3>
-                    <div className="mb-8 mt-6 grid gap-16 sm:grid-cols-2">
+                    <div className="mb-3 mt-6 grid gap-12 sm:grid-cols-2 sm:gap-16">
                         <div className="space-y-6">
                             <div className="space-y-3">
                                 <Label htmlFor="name">
@@ -312,18 +312,20 @@ function CreateOrganisation({
                             canManage
                         />
                     </div>
-                    <div className="mt-3">
+                    <DDFooter>
                         <Button disabled={!isValid}>
                             <Plus className="mr-2 h-4 w-4" />
                             {t('submit')}
                         </Button>
-                    </div>
-                    {errors?.root && !isSubmitSuccessful && (
-                        <p className="text-red-600">{errors.root.message}</p>
-                    )}
+                        {errors?.root && !isSubmitSuccessful && (
+                            <p className="text-red-600">
+                                {errors.root.message}
+                            </p>
+                        )}
+                    </DDFooter>
                 </form>
-            </DialogContent>
-        </Dialog>
+            </DDContent>
+        </DD>
     );
 }
 

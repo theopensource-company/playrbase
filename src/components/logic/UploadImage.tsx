@@ -1,7 +1,5 @@
 import { useAuth } from '@/lib/auth';
-import { useIsMobileState } from '@/lib/scrolled';
 import { cn } from '@/lib/utils';
-import { Dialog } from '@radix-ui/react-dialog';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { MouseEvent, useCallback, useEffect, useState } from 'react';
@@ -13,26 +11,16 @@ import ReactCrop, {
     makeAspectCrop,
 } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
+import {
+    DD,
+    DDContent,
+    DDDescription,
+    DDFooter,
+    DDHeader,
+    DDTitle,
+    DDTrigger,
+} from '../ui-custom/dd';
 import { Button } from '../ui/button';
-import {
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '../ui/dialog';
-import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
-} from '../ui/drawer';
-import { Separator } from '../ui/separator';
 import { Skeleton } from '../ui/skeleton';
 
 export default function UploadImage({
@@ -49,7 +37,6 @@ export default function UploadImage({
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState(false);
     const { loading, user, refreshUser } = useAuth();
-    const isMobile = useIsMobileState();
     const t = useTranslations('components.logic.upload-image');
 
     // FIXME: Nasty workaround to force react-image-crop to reexecute the "onComplete" function by unrendering and rerendering the whole component.
@@ -138,111 +125,21 @@ export default function UploadImage({
         }
     }, [isOpen, isLoading, setUploaded, setBlob]);
 
-    if (isMobile)
-        return (
-            <Drawer open={isOpen} onOpenChange={setIsOpen}>
-                <DrawerTrigger asChild>
-                    {loading ? (
-                        <Skeleton className="h-10 w-20" />
-                    ) : (
-                        <Button>{t('trigger')}</Button>
-                    )}
-                </DrawerTrigger>
-                <DrawerContent>
-                    <div className="overflow-y-auto px-8 pb-6 pt-4">
-                        <DrawerHeader>
-                            <DrawerTitle>{title}</DrawerTitle>
-                            <DrawerDescription>{description}</DrawerDescription>
-                        </DrawerHeader>
-                        <input {...getInputProps()} />
-                        <div className="relative mb-1 mt-6">
-                            {!uploaded ? (
-                                <div
-                                    onClick={open}
-                                    className="flex aspect-video w-full cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-muted-foreground border-white"
-                                >
-                                    <p className="text-muted-foreground">
-                                        {t('empty.drop')}
-                                    </p>
-                                </div>
-                            ) : (
-                                <div className="flex w-full items-center justify-center">
-                                    {refresh && (
-                                        <CropProfilePicture
-                                            file={uploaded}
-                                            setBlob={setBlob}
-                                        />
-                                    )}
-                                </div>
-                            )}
-                            <div
-                                className={cn(
-                                    'absolute left-0 top-0 flex h-full w-full items-center justify-center rounded-lg bg-primary-foreground transition-opacity',
-                                    isLoading
-                                        ? 'opacity-[85%]'
-                                        : 'pointer-events-none opacity-0'
-                                )}
-                            >
-                                <Loader2
-                                    size={200}
-                                    className="w-[10%] min-w-[45px] animate-spin"
-                                />
-                            </div>
-                        </div>
-
-                        <DrawerFooter className="flex flex-col gap-8 pt-8">
-                            <Separator orientation="horizontal" />
-                            <div className="flex flex-col gap-4">
-                                {user && intent in user && (
-                                    <Button
-                                        onClick={removePicture}
-                                        disabled={isLoading}
-                                        variant="destructive"
-                                    >
-                                        {t('dialog.remove')}
-                                    </Button>
-                                )}
-                                {uploaded && (
-                                    <>
-                                        <Button
-                                            onClick={open}
-                                            disabled={isLoading}
-                                        >
-                                            {t('dialog.change')}
-                                        </Button>
-                                        <Button
-                                            onClick={saveImage}
-                                            disabled={isLoading}
-                                        >
-                                            {t('dialog.save')}
-                                        </Button>
-                                    </>
-                                )}
-                                <DrawerClose className="pt-2">
-                                    Cancel
-                                </DrawerClose>
-                            </div>
-                        </DrawerFooter>
-                    </div>
-                </DrawerContent>
-            </Drawer>
-        );
-
     return (
         <div {...getRootProps()}>
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogTrigger asChild>
+            <DD open={isOpen} onOpenChange={setIsOpen}>
+                <DDTrigger asChild>
                     {loading ? (
                         <Skeleton className="h-10 w-20" />
                     ) : (
                         <Button>{t('trigger')}</Button>
                     )}
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>{title}</DialogTitle>
-                        <DialogDescription>{description}</DialogDescription>
-                    </DialogHeader>
+                </DDTrigger>
+                <DDContent>
+                    <DDHeader>
+                        <DDTitle>{title}</DDTitle>
+                        <DDDescription>{description}</DDDescription>
+                    </DDHeader>
                     <input {...getInputProps()} />
                     <div className="relative mb-1 mt-6">
                         {!uploaded ? (
@@ -280,7 +177,7 @@ export default function UploadImage({
                     </div>
 
                     {((user && intent in user) || uploaded) && (
-                        <DialogFooter className="pt-3">
+                        <DDFooter>
                             {user && intent in user && (
                                 <Button
                                     onClick={removePicture}
@@ -303,10 +200,10 @@ export default function UploadImage({
                                     </Button>
                                 </>
                             )}
-                        </DialogFooter>
+                        </DDFooter>
                     )}
-                </DialogContent>
-            </Dialog>
+                </DDContent>
+            </DD>
         </div>
     );
 }

@@ -6,17 +6,10 @@ import Container from '@/components/layout/Container';
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { UserSelector, useUserSelector } from '@/components/logic/UserSelector';
 import { RoleName, SelectRole } from '@/components/miscellaneous/Role';
+import { DD, DDContent, DDFooter, DDTrigger } from '@/components/ui-custom/dd';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerTrigger,
-} from '@/components/ui/drawer';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
     Table,
@@ -29,12 +22,10 @@ import {
 } from '@/components/ui/table';
 import { useSurreal } from '@/lib/Surreal';
 import { Role } from '@/lib/role';
-import { useIsMobileState } from '@/lib/scrolled';
 import { record } from '@/lib/zod';
 import { Link } from '@/locales/navigation';
 import { Organisation } from '@/schema/resources/organisation';
 import { User, UserAnonymous } from '@/schema/resources/user';
-import { DialogClose } from '@radix-ui/react-dialog';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
 import { ArrowRight, Loader2, Mail, MailX, Plus, Trash2 } from 'lucide-react';
@@ -260,16 +251,16 @@ function ListManager({
                 ) : isDeletingManager ? (
                     <Skeleton className="h-10 w-14" />
                 ) : (
-                    <Dialog>
-                        <DialogTrigger asChild>
+                    <DD>
+                        <DDTrigger asChild>
                             <Button
                                 variant="destructive"
                                 disabled={!canDeleteOwner && role == 'owner'}
                             >
                                 <Trash2 />
                             </Button>
-                        </DialogTrigger>
-                        <DialogContent>
+                        </DDTrigger>
+                        <DDContent>
                             <h3 className="text-2xl font-bold">
                                 {t.rich('actions.remove-dialog.title', {
                                     name: () => name,
@@ -288,15 +279,7 @@ function ListManager({
                                     }
                                 />
                             </div>
-                            <div className="flex justify-end gap-4">
-                                <DialogClose>
-                                    <Button
-                                        variant="outline"
-                                        disabled={isDeletingManager}
-                                    >
-                                        {t('actions.remove-dialog.cancel')}
-                                    </Button>
-                                </DialogClose>
+                            <DDFooter closeDisabled={isDeletingManager}>
                                 <Button
                                     variant="destructive"
                                     onClick={() => deleteManager()}
@@ -307,9 +290,9 @@ function ListManager({
                                     )}
                                     {t('actions.remove-dialog.submit')}
                                 </Button>
-                            </div>
-                        </DialogContent>
-                    </Dialog>
+                            </DDFooter>
+                        </DDContent>
+                    </DD>
                 )}
             </TableCell>
         </TableRow>
@@ -399,7 +382,6 @@ function AddMember({
     const [role, setRole] = useState<Role>('event_viewer');
     const [open, setOpen] = useState(false);
     const t = useTranslations('pages.console.organisation.members.add_member');
-    const isMobile = useIsMobileState();
 
     const { mutateAsync, error } = useMutation({
         mutationKey: ['manages', 'invite'],
@@ -415,72 +397,15 @@ function AddMember({
         },
     });
 
-    if (isMobile)
-        return (
-            <Drawer open={open} onOpenChange={setOpen}>
-                <DrawerTrigger asChild>
-                    <Button>
-                        {t('trigger')}
-                        <Plus className="ml-2 h-6 w-6" />
-                    </Button>
-                </DrawerTrigger>
-                <DrawerContent>
-                    <div className="p-8 pb-12">
-                        <h3 className="mb-4 text-2xl font-bold">
-                            {' '}
-                            {t('title')}
-                        </h3>
-                        <div className="space-y-6">
-                            <UserSelector
-                                user={user}
-                                setUser={setUser}
-                                autoFocus
-                                autoComplete="off"
-                            />
-
-                            <div className="space-y-3">
-                                <Label htmlFor="role"> {t('role.label')}</Label>
-                                <SelectRole
-                                    onRoleUpdate={setRole}
-                                    role={role}
-                                    className="w-[200px]"
-                                />
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-10 pt-10">
-                            <Separator orientation="horizontal" />
-                            <div className="flex flex-col gap-6">
-                                <Button
-                                    disabled={!user || !role}
-                                    onClick={() => {
-                                        mutateAsync().then(() => {
-                                            setUser(undefined);
-                                            setRole('event_viewer');
-                                            setOpen(false);
-                                        });
-                                    }}
-                                >
-                                    <Mail className="mr-2 h-4 w-4" />
-                                    {t('submit')}
-                                </Button>
-                                <DrawerClose>Cancel</DrawerClose>
-                            </div>
-                        </div>
-                        {!!error && <p>{(error as Error).message}</p>}
-                    </div>
-                </DrawerContent>
-            </Drawer>
-        );
-
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+        <DD open={open} onOpenChange={setOpen}>
+            <DDTrigger asChild>
                 <Button>
                     {t('trigger')}
                     <Plus className="ml-2 h-6 w-6" />
                 </Button>
-            </DialogTrigger>
-            <DialogContent>
+            </DDTrigger>
+            <DDContent>
                 <h3 className="mb-4 text-2xl font-bold"> {t('title')}</h3>
                 <div className="space-y-6">
                     <UserSelector
@@ -499,7 +424,7 @@ function AddMember({
                         />
                     </div>
                 </div>
-                <div className="mt-3">
+                <DDFooter>
                     <Button
                         disabled={!user || !role}
                         onClick={() => {
@@ -513,10 +438,10 @@ function AddMember({
                         <Mail className="mr-2 h-4 w-4" />
                         {t('submit')}
                     </Button>
-                </div>
-                {!!error && <p>{(error as Error).message}</p>}
-            </DialogContent>
-        </Dialog>
+                    {!!error && <p>{(error as Error).message}</p>}
+                </DDFooter>
+            </DDContent>
+        </DD>
     );
 }
 

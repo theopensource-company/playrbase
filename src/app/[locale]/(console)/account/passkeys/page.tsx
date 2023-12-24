@@ -2,15 +2,16 @@
 
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
-import { Button, buttonVariants } from '@/components/ui/button';
 import {
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+    DD,
+    DDContent,
+    DDDescription,
+    DDFooter,
+    DDHeader,
+    DDTitle,
+    DDTrigger,
+} from '@/components/ui-custom/dd';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -28,7 +29,6 @@ import { useFeatureFlags } from '@/lib/featureFlags';
 import { Link } from '@/locales/navigation';
 import { Credential } from '@/schema/resources/credential';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DialogClose } from '@radix-ui/react-dialog';
 import { useQuery } from '@tanstack/react-query';
 import { AlertOctagon, Loader2, Pencil, Plus, Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -163,19 +163,19 @@ function EditCredential({
     });
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+        <DD open={open} onOpenChange={setOpen}>
+            <DDTrigger asChild>
                 <Button size="sm">
                     <Pencil className="h-4 w-4" />
                 </Button>
-            </DialogTrigger>
-            <DialogContent>
+            </DDTrigger>
+            <DDContent>
                 <form onSubmit={handler}>
-                    <CardHeader>
-                        <CardTitle>{t('title')}</CardTitle>
-                        <CardDescription>{t('description')}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
+                    <DDHeader>
+                        <DDTitle>{t('title')}</DDTitle>
+                        <DDDescription>{t('description')}</DDDescription>
+                    </DDHeader>
+                    <div className="space-y-4 py-6">
                         <Label htmlFor="name">{t('fields.name.label')}</Label>
                         <Input
                             id="name"
@@ -190,8 +190,8 @@ function EditCredential({
                                 {errors.name.message}
                             </p>
                         )}
-                    </CardContent>
-                    <CardFooter>
+                    </div>
+                    <DDFooter>
                         <Button disabled={!isValid || isSubmitting}>
                             {isSubmitting && (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -203,10 +203,10 @@ function EditCredential({
                                 {errors.root.message}
                             </p>
                         )}
-                    </CardFooter>
+                    </DDFooter>
                 </form>
-            </DialogContent>
-        </Dialog>
+            </DDContent>
+        </DD>
     );
 }
 
@@ -240,24 +240,24 @@ function DeleteCredential({
     });
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>
+        <DD>
+            <DDTrigger asChild>
                 <Button size="sm" variant="destructive">
                     <Trash className="h-4 w-4" />
                 </Button>
-            </DialogTrigger>
-            <DialogContent>
+            </DDTrigger>
+            <DDContent>
                 <form onSubmit={handler}>
-                    <CardHeader>
-                        <CardTitle>{t('title')}</CardTitle>
-                        <CardDescription>
+                    <DDHeader>
+                        <DDTitle>{t('title')}</DDTitle>
+                        <DDDescription>
                             {t.rich('description', {
                                 b: (children) => <b>{children}</b>,
                                 br: () => <br />,
                             })}
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex flex-col gap-2 pt-1">
+                        </DDDescription>
+                    </DDHeader>
+                    <div className="flex flex-col gap-4 py-3">
                         <Label htmlFor="name_delete">
                             <b>{t('repeat')}:</b>{' '}
                             <i className="select-none">{credential.name}</i>
@@ -267,32 +267,25 @@ function DeleteCredential({
                             autoComplete="off"
                             {...register('name')}
                         />
-                    </CardContent>
-                    <CardFooter>
-                        <div className="flex items-center gap-4">
-                            <DialogClose asChild>
-                                <Button variant="outline" type="button">
-                                    {t('cancel')}
-                                </Button>
-                            </DialogClose>
-                            <Button variant="destructive" disabled={!isValid}>
-                                {isSubmitting ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <AlertOctagon className="mr-2 h-4 w-4" />
-                                )}
-                                {t('submit')}
-                            </Button>
-                        </div>
+                    </div>
+                    <DDFooter>
+                        <Button variant="destructive" disabled={!isValid}>
+                            {isSubmitting ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <AlertOctagon className="mr-2 h-4 w-4" />
+                            )}
+                            {t('submit')}
+                        </Button>
                         {errors?.root && (
                             <p className="text-red-600">
                                 {errors.root.message}
                             </p>
                         )}
-                    </CardFooter>
+                    </DDFooter>
                 </form>
-            </DialogContent>
-        </Dialog>
+            </DDContent>
+        </DD>
     );
 }
 

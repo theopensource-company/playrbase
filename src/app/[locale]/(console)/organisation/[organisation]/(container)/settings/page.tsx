@@ -3,8 +3,8 @@
 import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { EditorBox, refetchWrapper } from '@/components/logic/EditorBox';
+import { DD, DDContent, DDFooter, DDTrigger } from '@/components/ui-custom/dd';
 import { Button } from '@/components/ui/button';
-import { DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -15,7 +15,6 @@ import { useSurreal } from '@/lib/Surreal';
 import { useRouter } from '@/locales/navigation';
 import { Organisation } from '@/schema/resources/organisation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Dialog, DialogClose } from '@radix-ui/react-dialog';
 import { AlertOctagon, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
@@ -135,8 +134,8 @@ function DangerZone({ organisation }: { organisation: Organisation }) {
                 </p>
             </div>
             <div className="flex items-center gap-4">
-                <Dialog>
-                    <DialogTrigger asChild>
+                <DD>
+                    <DDTrigger asChild>
                         <Button
                             variant="destructive"
                             className="opacity-70 transition-all hover:opacity-100"
@@ -144,8 +143,8 @@ function DangerZone({ organisation }: { organisation: Organisation }) {
                             <AlertOctagon className="mr-2 h-4 w-4" />
                             {t('dialog.trigger')}
                         </Button>
-                    </DialogTrigger>
-                    <DialogContent>
+                    </DDTrigger>
+                    <DDContent>
                         <form onSubmit={handler}>
                             <h2 className="mb-4 text-2xl font-bold">
                                 {t.rich('dialog.title', {
@@ -188,12 +187,7 @@ function DangerZone({ organisation }: { organisation: Organisation }) {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-4">
-                                <DialogClose asChild>
-                                    <Button variant="outline" type="button">
-                                        {t('dialog.cancel')}
-                                    </Button>
-                                </DialogClose>
+                            <DDFooter>
                                 <Button
                                     variant="destructive"
                                     disabled={!isValid}
@@ -205,15 +199,15 @@ function DangerZone({ organisation }: { organisation: Organisation }) {
                                     )}
                                     {t('dialog.submit')}
                                 </Button>
-                            </div>
-                            {errors?.root && (
-                                <p className="text-red-600">
-                                    {errors.root.message}
-                                </p>
-                            )}
+                                {errors?.root && (
+                                    <p className="text-red-600">
+                                        {errors.root.message}
+                                    </p>
+                                )}
+                            </DDFooter>
                         </form>
-                    </DialogContent>
-                </Dialog>
+                    </DDContent>
+                </DD>
             </div>
         </div>
     );

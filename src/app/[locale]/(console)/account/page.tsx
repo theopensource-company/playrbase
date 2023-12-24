@@ -3,16 +3,16 @@
 import { Avatar } from '@/components/cards/avatar';
 import { Profile } from '@/components/cards/profile';
 import UploadImage from '@/components/logic/UploadImage';
-import { Button } from '@/components/ui/button';
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+    DD,
+    DDContent,
+    DDDescription,
+    DDFooter,
+    DDHeader,
+    DDTitle,
+    DDTrigger,
+} from '@/components/ui-custom/dd';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -138,22 +138,20 @@ function EditName() {
     });
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+        <DD open={open} onOpenChange={setOpen}>
+            <DDTrigger asChild>
                 {loading ? (
                     <Skeleton className="h-10 w-20" />
                 ) : (
                     <Button>{t('trigger')}</Button>
                 )}
-            </DialogTrigger>
-            <DialogContent>
+            </DDTrigger>
+            <DDContent>
                 <form onSubmit={handler}>
-                    <DialogHeader>
-                        <DialogTitle>{t('title')}</DialogTitle>
-                        <DialogDescription>
-                            {t('description')}
-                        </DialogDescription>
-                    </DialogHeader>
+                    <DDHeader>
+                        <DDTitle>{t('title')}</DDTitle>
+                        <DDDescription>{t('description')}</DDDescription>
+                    </DDHeader>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="name" className="text-right">
@@ -176,12 +174,12 @@ function EditName() {
                             </p>
                         )}
                     </div>
-                    <DialogFooter>
+                    <DDFooter>
                         <Button type="submit">{t('submit')}</Button>
-                    </DialogFooter>
+                    </DDFooter>
                 </form>
-            </DialogContent>
-        </Dialog>
+            </DDContent>
+        </DD>
     );
 }
 
@@ -229,37 +227,33 @@ function EditEmail() {
     }, [open, emailSent, setEmailSent]);
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+        <DD open={open} onOpenChange={setOpen}>
+            <DDTrigger asChild>
                 {loading ? (
                     <Skeleton className="h-10 w-20" />
                 ) : (
                     <Button>{t('trigger')}</Button>
                 )}
-            </DialogTrigger>
-            <DialogContent>
+            </DDTrigger>
+            <DDContent>
                 {emailSent ? (
                     <>
-                        <DialogHeader>
-                            <DialogTitle>{t('sent.title')}</DialogTitle>
-                            <DialogDescription>
+                        <DDHeader>
+                            <DDTitle>{t('sent.title')}</DDTitle>
+                            <DDDescription>
                                 {t('sent.description')}
-                            </DialogDescription>
-                        </DialogHeader>
-                        <DialogFooter>
-                            <Button onClick={() => setOpen(false)}>
-                                {t('sent.close')}
-                            </Button>
-                        </DialogFooter>
+                            </DDDescription>
+                        </DDHeader>
+                        <DDFooter closeText={t('sent.close')} />
                     </>
                 ) : (
                     <form onSubmit={handler}>
-                        <DialogHeader>
-                            <DialogTitle>{t('form.title')}</DialogTitle>
-                            <DialogDescription>
+                        <DDHeader>
+                            <DDTitle>{t('form.title')}</DDTitle>
+                            <DDDescription>
                                 {t('form.description')}
-                            </DialogDescription>
-                        </DialogHeader>
+                            </DDDescription>
+                        </DDHeader>
                         <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="email" className="text-right">
@@ -283,12 +277,12 @@ function EditEmail() {
                                 </p>
                             )}
                         </div>
-                        <DialogFooter>
+                        <DDFooter>
                             <Button type="submit">{t('form.submit')}</Button>
-                        </DialogFooter>
+                        </DDFooter>
                     </form>
                 )}
-            </DialogContent>
-        </Dialog>
+            </DDContent>
+        </DD>
     );
 }

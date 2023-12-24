@@ -55,8 +55,8 @@ export default function Account() {
                 <TinyOrgName name={organisation.name} />
                 <h1 className="pb-6 text-3xl font-semibold">{t('title')}</h1>
             </div>
-            <div className="grid grid-cols-3 gap-16">
-                <div className="col-span-2 space-y-12">
+            <div className="grid grid-cols-1 gap-16 xl:grid-cols-3">
+                <div className="space-y-12 xl:col-span-2">
                     <div className="space-y-6">
                         <div className="flex justify-between gap-8">
                             <h2 className="text-xl font-semibold">Events</h2>
@@ -72,7 +72,7 @@ export default function Account() {
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
                         </div>
-                        <div className="rounded border">
+                        <div className="overflow-x-auto rounded border">
                             <EventTable
                                 organisation_slug={slug}
                                 events={events}
@@ -101,7 +101,7 @@ export default function Account() {
                                     <ArrowRight className="ml-2 h-4 w-4" />
                                 </Link>
                             </div>
-                            <div className="rounded border">
+                            <div className="overflow-x-auto rounded border">
                                 <OrganisationTable organisations={nested} />
                             </div>
                         </div>

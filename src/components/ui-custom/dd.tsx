@@ -59,19 +59,30 @@ export function DDClose(props: Parameters<typeof DialogClose>[0]) {
 
 export function DDContent({
     children,
+    className,
     ...props
 }: Parameters<typeof DrawerContent>[0]) {
     const isMobile = useIsMobileState();
     if (isMobile)
         return (
-            <DrawerContent {...props}>
+            <DrawerContent
+                {...props}
+                className={cn('will-change-transform', className)}
+            >
                 <div className="mx-8 mb-6 mt-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
                     {children}
                 </div>
             </DrawerContent>
         );
 
-    return <DialogContent {...props}>{children}</DialogContent>;
+    return (
+        <DialogContent
+            className={cn('will-change-transform', className)}
+            {...props}
+        >
+            {children}
+        </DialogContent>
+    );
 }
 
 export function DDHeader(props: Parameters<typeof DialogHeader>[0]) {

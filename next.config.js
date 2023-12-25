@@ -1,3 +1,4 @@
+import million from 'million/compiler';
 import withNextIntlFactory from 'next-intl/plugin';
 const withNextIntl = withNextIntlFactory('./src/locales/index.ts');
 
@@ -13,4 +14,4 @@ const nextConfig = withNextIntl({
     },
 });
 
-export default nextConfig;
+export default million.next(nextConfig, { auto: { rsc: true } });

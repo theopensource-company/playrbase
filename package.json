@@ -53,6 +53,7 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "lucide-react": "^0.292.0",
+    "million": "^2.6.4",
     "next": "14.0.1",
     "next-intl": "^3.0.0-beta.9",
     "prettier-plugin-organize-imports": "^3.2.3",

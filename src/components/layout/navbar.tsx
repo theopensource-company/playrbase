@@ -231,7 +231,7 @@ const Links = ({
                                 </div>
                                 <NavigationMenuPrimitive.Trigger asChild>
                                     <Button
-                                        className="data-[state:open]:bg-muted bg-transparent px-2 py-1 m-0 text-foreground hover:bg-accent focus:bg-transparent focus:hover:bg-accent active:bg-muted"
+                                        className="data-[state:open]:bg-muted m-0 bg-transparent px-2 py-1 text-foreground hover:bg-accent focus:bg-transparent focus:hover:bg-accent active:bg-muted"
                                         {...hoverOptions}
                                     >
                                         <ChevronsUpDown className="w-4" />

@@ -15,7 +15,15 @@ import { useScrolledContext, useScrolledState } from '@/lib/scrolled.tsx';
 import { cn } from '@/lib/utils.ts';
 import { Language, languageEntries } from '@/locales/languages.ts';
 import { Link, usePathname } from '@/locales/navigation.ts';
-import { ChevronRightSquare, Languages, LogOut, Menu } from 'lucide-react';
+import { Actor } from '@/schema/resources/actor.ts';
+import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
+import {
+    ChevronRightSquare,
+    ChevronsUpDown,
+    Languages,
+    LogOut,
+    Menu,
+} from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import React, {
@@ -30,6 +38,7 @@ import React, {
 import ReactCountryFlag from 'react-country-flag';
 import * as portals from 'react-reverse-portal';
 import LogoFull from '../../assets/LogoFull.svg';
+import { Avatar } from '../cards/avatar.tsx';
 import { Profile } from '../cards/profile.tsx';
 import { Button } from '../ui/button.tsx';
 import { Skeleton } from '../ui/skeleton.tsx';
@@ -61,7 +70,13 @@ export function NavbarProvider({ children }: { children?: ReactNode }) {
     );
 }
 
-export function Navbar({ children }: { children?: ReactNode }) {
+export function Navbar({
+    children,
+    actor,
+}: {
+    children?: ReactNode;
+    actor?: Actor;
+}) {
     const [onClient, setOnClient] = useState(false);
     const portal = useContext(NavbarContext);
 
@@ -70,10 +85,20 @@ export function Navbar({ children }: { children?: ReactNode }) {
     }, []);
 
     if (!portal || !onClient) return null;
-    return <portals.OutPortal node={portal}>{children}</portals.OutPortal>;
+    return (
+        <portals.OutPortal node={portal} actor={actor}>
+            {children}
+        </portals.OutPortal>
+    );
 }
 
-export const RenderNavbar = ({ children }: { children?: ReactNode }) => {
+export const RenderNavbar = ({
+    children,
+    actor,
+}: {
+    children?: ReactNode;
+    actor?: Actor;
+}) => {
     const scrolled = useScrolledState();
     const [featureFlags] = useFeatureFlags();
     const [open, setOpen] = useState(false);
@@ -82,7 +107,13 @@ export const RenderNavbar = ({ children }: { children?: ReactNode }) => {
     // localStorage.setItem('playrbase_fflag_devTools', 'true')
     // Then reload page
 
-    const links = <Links devTools={featureFlags.devTools} setOpen={setOpen} />;
+    const links = (
+        <Links
+            devTools={featureFlags.devTools}
+            setOpen={setOpen}
+            actor={actor}
+        />
+    );
 
     return (
         <div
@@ -139,9 +170,11 @@ export const RenderNavbar = ({ children }: { children?: ReactNode }) => {
 
 const Links = ({
     devTools,
+    actor,
     setOpen,
 }: {
     devTools: boolean;
+    actor?: Actor;
     setOpen: (open: boolean) => void;
 }) => {
     const { loading, user } = useAuth();
@@ -187,13 +220,24 @@ const Links = ({
                         <Skeleton className="h-10 w-24" />
                     ) : user ? (
                         <>
-                            <NavigationMenuTrigger
-                                className="data-[state:open]:bg-muted bg-transparent hover:bg-accent focus:bg-transparent focus:hover:bg-accent active:bg-muted"
-                                {...hoverOptions}
-                            >
-                                <ChevronRightSquare className="mr-2 md:hidden" />
-                                {user.name.split(' ')[0]}
-                            </NavigationMenuTrigger>
+                            <div className="flex gap-2">
+                                <div className="flex items-center gap-1 text-sm">
+                                    <Avatar
+                                        profile={actor ?? user}
+                                        size="tiny"
+                                        className="mr-2"
+                                    />
+                                    <span>{actor?.name ?? user.name}</span>
+                                </div>
+                                <NavigationMenuPrimitive.Trigger asChild>
+                                    <Button
+                                        className="data-[state:open]:bg-muted bg-transparent px-2 py-1 m-0 text-foreground hover:bg-accent focus:bg-transparent focus:hover:bg-accent active:bg-muted"
+                                        {...hoverOptions}
+                                    >
+                                        <ChevronsUpDown className="w-4" />
+                                    </Button>
+                                </NavigationMenuPrimitive.Trigger>
+                            </div>
                             <NavigationMenuContent {...hoverOptions}>
                                 <AccountOptions />
                             </NavigationMenuContent>

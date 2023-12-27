@@ -309,7 +309,6 @@ const AccountOptions = ({ actor }: { actor?: Actor }) => {
                         ({ id }) => id != actor.id
                     );
                     data.organisations.unshift(actor as Organisation);
-                    console.log(data.organisations);
                     if (data.organisations.length > 3) data.organisations.pop();
                 }
 
@@ -343,7 +342,7 @@ const AccountOptions = ({ actor }: { actor?: Actor }) => {
                             navigationMenuTriggerStyle(),
                             'w-full justify-start px-2 py-6 max-sm:bg-muted',
                             thisActor.id == actor?.id && 'ring-2 ring-accent'
-                            )}
+                        )}
                     >
                         <Profile
                             profile={thisActor}

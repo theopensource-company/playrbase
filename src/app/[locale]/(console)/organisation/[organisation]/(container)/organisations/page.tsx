@@ -1,6 +1,7 @@
 'use client';
 
 import { OrganisationTable } from '@/components/data/organisations/table';
+import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { useSurreal } from '@/lib/Surreal';
 import { Organisation } from '@/schema/resources/organisation';
 import { useQuery } from '@tanstack/react-query';
@@ -8,6 +9,7 @@ import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React from 'react';
 import { z } from 'zod';
+import { PageTitle } from '../../components/PageTitle';
 
 export default function Organisations() {
     const params = useParams();
@@ -16,13 +18,15 @@ export default function Organisations() {
         : params.organisation;
 
     const { data, isPending } = useData({ slug });
-    const t = useTranslations('pages.console.account.organisations');
+    const t = useTranslations('pages.console.organisation.organisations');
 
-    const nested = data?.nested ?? [];
+    if (!data?.organisation) return <NotFoundScreen text={t('not_found')} />;
+    const nested = data.nested ?? [];
+    const organisation = data.organisation;
 
     return (
         <div className="flex flex-grow flex-col gap-12 pt-6">
-            <h1 className="pb-6 text-3xl font-bold">{t('title')}</h1>
+            <PageTitle organisation={organisation} title={t('title')} />
 
             <OrganisationTable
                 isLoading={isPending}

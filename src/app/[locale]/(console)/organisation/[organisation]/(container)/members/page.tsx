@@ -33,7 +33,7 @@ import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { z } from 'zod';
-import { TinyOrgName } from '../../TinyOrgName';
+import { PageTitle } from '../../components/PageTitle';
 
 export default function Account() {
     const params = useParams();
@@ -43,8 +43,9 @@ export default function Account() {
     const { isPending, data, refetch } = useData(slug);
     const t = useTranslations('pages.console.organisation.members');
 
-    const organisation = data?.organisation;
-    const invited_members = data?.invited_members;
+    if (!data?.organisation) return <NotFoundScreen text={t('not_found')} />;
+    const organisation = data.organisation;
+    const invited_members = data.invited_members;
 
     // Split the managers out per organisation,
     // store managers for the current org under the '__' key
@@ -66,18 +67,17 @@ export default function Account() {
         </Container>
     ) : organisation ? (
         <div className="flex flex-grow flex-col pt-6">
-            <div>
-                <TinyOrgName name={organisation.name} />
-                <div className="flex items-center justify-between pb-6">
-                    <h1 className="text-3xl font-semibold">{t('title')}</h1>
-                    {organisation.can_manage && (
-                        <AddMember
-                            organisation={organisation.id}
-                            refresh={refetch}
-                        />
-                    )}
-                </div>
-            </div>
+            <PageTitle
+                organisation={organisation as unknown as Organisation}
+                title={t('title')}
+            >
+                {organisation.can_manage && (
+                    <AddMember
+                        organisation={organisation.id}
+                        refresh={refetch}
+                    />
+                )}
+            </PageTitle>
             <div className="space-y-20">
                 {Object.entries(perOrg).map(([key, managers]) => (
                     <ListManagers

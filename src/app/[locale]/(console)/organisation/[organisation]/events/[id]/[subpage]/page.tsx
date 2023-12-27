@@ -15,7 +15,7 @@ import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React from 'react';
 import { z } from 'zod';
-import { TinyOrgName } from '../../../TinyOrgName';
+import { TinyOrgName } from '../../../components/TinyOrgName';
 import { EventOverviewTab } from './overview';
 import { EventSettingsTab } from './settings';
 

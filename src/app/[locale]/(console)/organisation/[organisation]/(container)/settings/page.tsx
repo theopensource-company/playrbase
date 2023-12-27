@@ -23,7 +23,7 @@ import { useParams } from 'next/navigation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { TinyOrgName } from '../../TinyOrgName';
+import { PageTitle } from '../../components/PageTitle';
 
 export default function Account() {
     const params = useParams();
@@ -47,10 +47,7 @@ export default function Account() {
         <LoaderOverlay />
     ) : organisation ? (
         <div className="flex max-w-2xl flex-grow flex-col gap-6 pt-6">
-            <div>
-                <TinyOrgName name={organisation.name} />
-                <h1 className="pb-6 text-3xl font-semibold">{t('title')}</h1>
-            </div>
+            <PageTitle organisation={organisation} title={t('title')} />
             <div className="flex w-full items-center justify-between gap-16 rounded-lg border p-6">
                 <div className="flex flex-col gap-6">
                     <div className="space-y-2">

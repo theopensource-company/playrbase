@@ -237,7 +237,12 @@
       },
       "organisations": {
         "title": "Organisations",
-        "not_found": "Organisation not found"
+        "not_found": "Organisation not found",
+        "table": {
+          "caption": {
+            "count": "Count"
+          }
+        }
       }
     }
   },

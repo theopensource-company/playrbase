@@ -237,7 +237,12 @@
       },
       "organisations": {
         "not_found": "Organisatie niet gevonden",
-        "title": "Organisaties"
+        "title": "Organisaties",
+        "table": {
+          "caption": {
+            "count": "Aantal"
+          }
+        }
       }
     }
   },

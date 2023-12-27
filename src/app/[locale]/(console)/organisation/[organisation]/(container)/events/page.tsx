@@ -44,7 +44,7 @@ import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { TinyOrgName } from '../../TinyOrgName';
+import { PageTitle } from '../../components/PageTitle';
 
 export default function Account() {
     const params = useParams();
@@ -73,18 +73,9 @@ export default function Account() {
 
     return (
         <div className="flex flex-grow flex-col gap-6 pt-6">
-            <div>
-                <TinyOrgName name={organisation.name} />
-                <div className="flex items-center justify-between gap-4">
-                    <h1 className="pb-6 text-3xl font-semibold">
-                        {t('title')}
-                    </h1>
-                    <CreateEvent
-                        refetch={refetch}
-                        organiser={organisation.id}
-                    />
-                </div>
-            </div>
+            <PageTitle organisation={organisation} title={t('title')}>
+                <CreateEvent refetch={refetch} organiser={organisation.id} />
+            </PageTitle>
             <div className="flex justify-start gap-4 pb-2">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>

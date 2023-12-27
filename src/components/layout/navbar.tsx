@@ -9,19 +9,23 @@ import {
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu.tsx';
+import { useSurreal } from '@/lib/Surreal.tsx';
 import { useAuth } from '@/lib/auth';
 import { useFeatureFlags } from '@/lib/featureFlags.tsx';
 import { useScrolledContext, useScrolledState } from '@/lib/scrolled.tsx';
 import { cn } from '@/lib/utils.ts';
 import { Language, languageEntries } from '@/locales/languages.ts';
 import { Link, usePathname } from '@/locales/navigation.ts';
-import { Actor } from '@/schema/resources/actor.ts';
+import { Actor, linkToActorOverview } from '@/schema/resources/actor.ts';
+import { Organisation } from '@/schema/resources/organisation.ts';
+import { Team } from '@/schema/resources/team.ts';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
+import { useQuery } from '@tanstack/react-query';
 import {
     ChevronRightSquare,
     ChevronsUpDown,
     Languages,
-    LogOut,
+    // LogOut,
     Menu,
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
@@ -37,8 +41,8 @@ import React, {
 } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import * as portals from 'react-reverse-portal';
+import { z } from 'zod';
 import LogoFull from '../../assets/LogoFull.svg';
-import { Avatar } from '../cards/avatar.tsx';
 import { Profile } from '../cards/profile.tsx';
 import { Button } from '../ui/button.tsx';
 import { Skeleton } from '../ui/skeleton.tsx';
@@ -215,20 +219,22 @@ const Links = ({
             onValueChange={setState}
         >
             <NavigationMenuList className="flex flex-col items-start gap-4 space-x-0 max-md:py-4 md:flex-row md:items-center">
-                <NavigationMenuItem>
+                <NavigationMenuItem className="mr-2">
                     {loading ? (
-                        <Skeleton className="h-10 w-24" />
+                        <div className="flex">
+                            <Profile loading size="extra-tiny" noSub />
+                            <Skeleton className="h-8 w-6" />
+                        </div>
                     ) : user ? (
                         <>
-                            <div className="flex gap-2">
-                                <div className="flex items-center gap-1 text-sm">
-                                    <Avatar
+                            <div className="flex items-center">
+                                <Link href={linkToActorOverview(actor ?? user)}>
+                                    <Profile
                                         profile={actor ?? user}
-                                        size="tiny"
-                                        className="mr-2"
+                                        size="extra-tiny"
+                                        noSub
                                     />
-                                    <span>{actor?.name ?? user.name}</span>
-                                </div>
+                                </Link>
                                 <NavigationMenuPrimitive.Trigger asChild>
                                     <Button
                                         className="data-[state:open]:bg-muted m-0 bg-transparent px-2 py-1 text-foreground hover:bg-accent focus:bg-transparent focus:hover:bg-accent active:bg-muted"
@@ -239,7 +245,7 @@ const Links = ({
                                 </NavigationMenuPrimitive.Trigger>
                             </div>
                             <NavigationMenuContent {...hoverOptions}>
-                                <AccountOptions />
+                                <AccountOptions actor={actor} />
                             </NavigationMenuContent>
                         </>
                     ) : (
@@ -278,35 +284,110 @@ const Links = ({
     );
 };
 
-const AccountOptions = () => {
-    const { user, loading, signout } = useAuth();
-    const t = useTranslations('components.layout.navbar.account-options');
+const AccountOptions = ({ actor }: { actor?: Actor }) => {
+    // const t = useTranslations('components.layout.navbar.account-options');
+    const surreal = useSurreal();
+    const { user, loading: userLoading } = useAuth();
+    const { data, isLoading: dataLoading } = useQuery({
+        queryKey: ['navbar-actor-switcher'],
+        queryFn: async function () {
+            const [orgs, teams] = await surreal.query<
+                [Organisation[], Team[]]
+            >(/* surrealql */ `
+                    SELECT * FROM organisation WHERE part_of = NONE LIMIT 3;
+                    SELECT * FROM team LIMIT 3;
+                `);
+
+            const data = {
+                organisations: z.array(Organisation).parse(orgs),
+                teams: z.array(Team).parse(teams),
+            };
+
+            if (actor) {
+                if (actor.type == 'organisation') {
+                    data.organisations = data.organisations.filter(
+                        ({ id }) => id != actor.id
+                    );
+                    data.organisations.unshift(actor as Organisation);
+                    console.log(data.organisations);
+                    if (data.organisations.length > 3) data.organisations.pop();
+                }
+
+                if (actor.type == 'team') {
+                    data.teams = data.teams.filter(({ id }) => id != actor.id);
+                    data.teams.unshift(actor as Team);
+                    if (data.teams.length > 3) data.teams.pop();
+                }
+            }
+
+            return data;
+        },
+    });
+
+    const loading = userLoading || dataLoading;
+    if (!loading && (!data || !user)) return <p>An error occurred</p>;
+    const organisations = data?.organisations ?? [];
+    const teams = data?.teams ?? [];
+
+    function LinkActor({ actor: thisActor }: { actor: Actor }) {
+        return (
+            <NavigationMenuItem className="w-full">
+                <Link
+                    href={linkToActorOverview(thisActor)}
+                    className="w-full"
+                    legacyBehavior
+                    passHref
+                >
+                    <NavigationMenuLink
+                        className={cn(
+                            navigationMenuTriggerStyle(),
+                            'w-full justify-start px-2 py-6 max-sm:bg-muted',
+                            thisActor.id == actor?.id && 'ring-2 ring-accent'
+                            )}
+                    >
+                        <Profile
+                            profile={thisActor}
+                            loading={loading}
+                            size="tiny"
+                        />
+                    </NavigationMenuLink>
+                </Link>
+            </NavigationMenuItem>
+        );
+    }
 
     return (
         user && (
-            <ul className="grid gap-6 p-6">
-                <NavigationMenuItem>
-                    <Link href="/account" legacyBehavior passHref>
-                        <NavigationMenuLink
-                            className={cn(
-                                navigationMenuTriggerStyle(),
-                                'h-18 max-sm:bg-muted'
-                            )}
-                        >
-                            <Profile
-                                profile={user}
-                                loading={loading}
-                                size="small"
-                            />
-                        </NavigationMenuLink>
-                    </Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem asChild>
+            <ul className="space-y-6 p-2">
+                <div className="space-y-2">
+                    <LinkActor actor={user} />
+                    {organisations.length > 0 && (
+                        <div className="space-y-1">
+                            <span className="ml-2 text-xs text-muted-foreground">
+                                Organisations
+                            </span>{' '}
+                            {organisations.map((org) => (
+                                <LinkActor key={org.id} actor={org} />
+                            ))}
+                        </div>
+                    )}
+                    {teams.length > 0 && (
+                        <div className="space-y-1">
+                            <span className="ml-2 text-xs text-muted-foreground">
+                                Teams
+                            </span>{' '}
+                            {teams.map((team) => (
+                                <LinkActor key={team.id} actor={team} />
+                            ))}
+                        </div>
+                    )}
+                </div>
+                {/* <NavigationMenuItem asChild>
                     <Button variant="destructive" onClick={signout}>
                         <LogOut className="mr-2" size={18} />
                         {t('signout')}
                     </Button>
-                </NavigationMenuItem>
+                </NavigationMenuItem> */}
             </ul>
         )
     );

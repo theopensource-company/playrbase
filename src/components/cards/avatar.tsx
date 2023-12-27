@@ -1,7 +1,8 @@
 import { cn } from '@/lib/utils';
 import { Profile, unknownProfile } from '@/schema/resources/profile';
+import { Building, Users } from 'lucide-react';
 import Image from 'next/image';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
     AvatarFallback,
     AvatarImage,
@@ -24,19 +25,48 @@ export function Avatar({
 }: {
     profile?: Profile | null;
     loading?: boolean;
-    size?: 'tiny' | 'small' | 'normal' | 'big' | 'huge';
+    size?: 'extra-tiny' | 'tiny' | 'small' | 'normal' | 'big' | 'huge';
     renderBadge?: boolean;
     className?: string;
 }) {
     profile = profile ?? unknownProfile;
     const avatarFallback = avatarFallbackByName(profile.name);
     const avatarSize = {
+        'extra-tiny': 'h-6 w-6 text-xs',
         tiny: 'h-8 w-8 text-md',
         small: 'h-10 w-10 text-lg',
         normal: 'h-12 w-12 text-xl',
         big: 'h-14 w-14 text-2xl',
         huge: 'h-20 w-20 text-4xl',
     }[size ?? 'normal'];
+
+    function Badge({ icon, text }: { icon: ReactNode; text: string }) {
+        return (
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <div
+                            className={cn(
+                                'absolute -bottom-1 -right-1 aspect-square rounded-full bg-background transition-colors group-hover:bg-accent',
+                                ['big', 'huge'].includes(size as string)
+                                    ? 'w-[45%] p-1.5'
+                                    : size == 'extra-tiny'
+                                    ? 'w-2/3 p-1'
+                                    : size == 'tiny'
+                                    ? 'w-3/5 p-1'
+                                    : 'w-1/2 p-1'
+                            )}
+                        >
+                            {icon}
+                        </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>{text}</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        );
+    }
 
     return loading ? (
         <Skeleton
@@ -66,33 +96,32 @@ export function Avatar({
                     {avatarFallback}
                 </AvatarFallback>
             </RenderAvatar>
-            {renderBadge && 'type' in profile && profile.type == 'admin' && (
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <div
-                                className={cn(
-                                    'absolute -bottom-1 -right-1 aspect-square rounded-full bg-background transition-colors group-hover:bg-accent',
-                                    ['big', 'huge'].includes(size as string)
-                                        ? 'w-[45%] p-1.5'
-                                        : 'w-1/2 p-1'
-                                )}
-                            >
-                                <Image
-                                    src="/favicon.ico"
-                                    alt="Playrbase Logo"
-                                    width="50"
-                                    height="50"
-                                    className="h-full w-full text-white"
-                                />
-                            </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Platform admin</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
-            )}
+            {renderBadge && 'type' in profile ? (
+                profile.type == 'admin' ? (
+                    <Badge
+                        text="Platform admin"
+                        icon={
+                            <Image
+                                src="/favicon.ico"
+                                alt="Playrbase Logo"
+                                width="50"
+                                height="50"
+                                className="h-full w-full text-white"
+                            />
+                        }
+                    />
+                ) : profile.type == 'organisation' ? (
+                    <Badge
+                        text="Organisation"
+                        icon={<Building className="h-full w-full" />}
+                    />
+                ) : profile.type == 'team' ? (
+                    <Badge
+                        text="Team"
+                        icon={<Users className="h-full w-full" />}
+                    />
+                ) : undefined
+            ) : undefined}
         </div>
     );
 }

@@ -44,7 +44,7 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
 
     return (
         <>
-            <Navbar>
+            <Navbar actor={organisation ?? undefined}>
                 <NavbarSubLinks baseUrl={`/organisation/${slug}`}>
                     <NavbarSubLink>
                         <ArrowLeft />

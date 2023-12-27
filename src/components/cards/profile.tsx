@@ -16,7 +16,7 @@ export function Profile({
 }: {
     profile?: TProfile | null;
     loading?: boolean;
-    size?: 'tiny' | 'small' | 'normal' | 'big';
+    size?: 'extra-tiny' | 'tiny' | 'small' | 'normal' | 'big';
     noSub?: boolean;
     customSub?: ReactNode | string;
 }) {
@@ -27,20 +27,43 @@ export function Profile({
         <div
             className={cn(
                 'flex items-center',
-                size == 'tiny' ? 'space-x-3' : 'space-x-4'
+                size == 'tiny' || size == 'extra-tiny'
+                    ? 'space-x-3'
+                    : 'space-x-4'
             )}
         >
             <Avatar profile={profile} loading={loading} size={size} />
             {loading ? (
-                <div className="min-w-[150px] space-y-2 pr-4">
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-[80%]" />
+                <div
+                    className={cn(
+                        'min-w-[100px] space-y-2',
+                        size == 'tiny' || size == 'extra-tiny' ? 'pr-3' : 'pr-4'
+                    )}
+                >
+                    {size == 'tiny' || size == 'extra-tiny' ? (
+                        <>
+                            <Skeleton
+                                className={cn('w-full', noSub ? 'h-4' : 'h-3')}
+                            />
+                            {!noSub && <Skeleton className="h-2 w-[80%]" />}
+                        </>
+                    ) : (
+                        <>
+                            <Skeleton className="h-4 w-full" />
+                            {!noSub && <Skeleton className="h-3 w-[80%]" />}
+                        </>
+                    )}
                 </div>
             ) : (
-                <div className="min-w-[150px] pr-4">
+                <div
+                    className={cn(
+                        size == 'tiny' || size == 'extra-tiny' ? 'pr-3' : 'pr-4'
+                    )}
+                >
                     <h2
                         className={cn(
                             'text-foreground',
+                            size == 'extra-tiny' && 'text-sm',
                             noSub ? 'font-semibold' : 'font-bold'
                         )}
                     >

@@ -1,8 +1,10 @@
 'use client';
 
+import { Avatar } from '@/components/cards/avatar';
 import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { EditorBox, refetchWrapper } from '@/components/logic/EditorBox';
+import UploadImage from '@/components/logic/UploadImage';
 import { DD, DDContent, DDFooter, DDTrigger } from '@/components/ui-custom/dd';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -48,6 +50,29 @@ export default function Account() {
             <div>
                 <TinyOrgName name={organisation.name} />
                 <h1 className="pb-6 text-3xl font-semibold">{t('title')}</h1>
+            </div>
+            <div className="flex w-full items-center justify-between gap-16 rounded-lg border p-6">
+                <div className="flex flex-col gap-6">
+                    <div className="space-y-2">
+                        <h2 className="text-xl font-bold">Organisation Logo</h2>
+                        <p>
+                            This is the public logo of your organisation, shown
+                            all throughout Playrbase.
+                        </p>
+                    </div>
+                    <UploadImage
+                        intent="logo"
+                        actor={organisation}
+                        triggerRefresh={refetch}
+                        title={'change logo'}
+                        description={'cjamge'}
+                    />
+                </div>
+                <Avatar
+                    profile={organisation}
+                    renderBadge={false}
+                    size="huge"
+                />
             </div>
             <EditorBox
                 title={t('name.title')}

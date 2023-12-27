@@ -1,3 +1,5 @@
+import { record } from '@/lib/zod';
+import { Organisation } from '@/schema/resources/organisation';
 import { s3 } from '@api/lib/s3';
 import { surreal } from '@api/lib/surreal';
 import { extractUserTokenFromRequest } from '@api/lib/token';
@@ -7,12 +9,56 @@ import { NextRequest, NextResponse } from 'next/server';
 import sharp from 'sharp';
 import { z } from 'zod';
 
-const Intent = z.literal('profile_picture');
+const Intent = z.union([
+    z.literal('profile_picture'),
+    z.literal('logo'),
+    z.literal('banner'),
+]);
+type Intent = z.infer<typeof Intent>;
+
 const sizeByIntent = {
     profile_picture: 128,
     logo: 512,
     banner: 2048,
 };
+
+async function findValidTarget({
+    intent,
+    target,
+    user,
+}: {
+    intent: Intent;
+    target?: string;
+    user: string;
+}) {
+    if (!target) {
+        if (intent == 'profile_picture') return user;
+    } else {
+        if (target.startsWith('organisation:')) {
+            if (!['logo', 'banner'].includes(intent as string)) return;
+            const [res] = await surreal.query<[Organisation | null]>(
+                /* surrealql */ `
+                    SELECT id FROM ONLY type::thing('organisation', $target) WHERE type::thing('user', $user) IN managers[?role IN ['owner', 'administrator']].user;
+                `,
+                { target, user }
+            );
+
+            return res?.id;
+        }
+
+        if (target.startsWith('team:')) {
+            if (!['logo', 'banner'].includes(intent as string)) return;
+            const [res] = await surreal.query<[Organisation | null]>(
+                /* surrealql */ `
+                    SELECT id FROM ONLY type::thing('team', $target) WHERE type::thing('user', $user) IN players
+                `,
+                { target, user }
+            );
+
+            return res?.id;
+        }
+    }
+}
 
 export async function PUT(req: NextRequest) {
     const { decoded: token } = extractUserTokenFromRequest(req);
@@ -37,7 +83,19 @@ export async function PUT(req: NextRequest) {
         );
     }
 
-    const target = token.ID;
+    const target = await findValidTarget({
+        intent,
+        target: record()
+            .optional()
+            .parse(formData.get('target') ?? undefined),
+        user: token.ID,
+    });
+    if (!target) {
+        return NextResponse.json(
+            { success: false, error: 'invalid_target' },
+            { status: 400 }
+        );
+    }
 
     const file = formData.get('file');
     if (!(file instanceof Blob || file instanceof File)) {
@@ -114,11 +172,28 @@ export async function DELETE(req: NextRequest) {
         );
     }
 
-    const target = token.ID;
-
-    await surreal.merge(target, {
-        [intent]: null,
+    const target = await findValidTarget({
+        intent,
+        target: record()
+            .optional()
+            .parse(body.target ?? undefined),
+        user: token.ID,
     });
+    if (!target) {
+        return NextResponse.json(
+            { success: false, error: 'invalid_target' },
+            { status: 400 }
+        );
+    }
+
+    await surreal.query(
+        /* surrealql */ `
+        UPDATE type::thing($target) MERGE {
+            "${intent}": NONE
+        }
+    `,
+        { target }
+    );
 
     return NextResponse.json({
         success: true,

@@ -1,5 +1,6 @@
 'use client';
 
+import { Avatar } from '@/components/cards/avatar';
 import { Profile } from '@/components/cards/profile';
 import { EventTable } from '@/components/data/events/table';
 import { OrganisationTable } from '@/components/data/organisations/table';
@@ -51,9 +52,12 @@ export default function Account() {
 
     return (
         <div className="flex flex-grow flex-col gap-6 pt-6">
-            <div>
-                <TinyOrgName name={organisation.name} />
-                <h1 className="pb-6 text-3xl font-semibold">{t('title')}</h1>
+            <div className="flex items-center gap-6 pb-6">
+                <Avatar profile={organisation} renderBadge={false} size="big" />
+                <div>
+                    <TinyOrgName name={organisation.name} />
+                    <h1 className="text-3xl font-semibold">{t('title')}</h1>
+                </div>
             </div>
             <div className="grid grid-cols-1 gap-16 xl:grid-cols-3">
                 <div className="space-y-12 xl:col-span-2">

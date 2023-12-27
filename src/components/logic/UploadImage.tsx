@@ -1,8 +1,14 @@
-import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
+import { Actor } from '@/schema/resources/actor';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import React, { MouseEvent, useCallback, useEffect, useState } from 'react';
+import React, {
+    MouseEvent,
+    ReactNode,
+    useCallback,
+    useEffect,
+    useState,
+} from 'react';
 import { useDropzone } from 'react-dropzone';
 import ReactCrop, {
     Crop,
@@ -25,18 +31,25 @@ import { Skeleton } from '../ui/skeleton';
 
 export default function UploadImage({
     intent,
+    actor,
     title,
     description,
+    trigger,
+    triggerRefresh,
+    loading,
 }: {
-    intent: 'profile_picture';
+    intent: 'profile_picture' | 'logo' | 'banner';
+    actor: Actor;
     title: string;
     description: string;
+    trigger?: ReactNode;
+    triggerRefresh?: () => unknown;
+    loading?: boolean;
 }) {
     const [uploaded, setUploaded] = useState<File | null>(null);
     const [blob, setBlob] = useState<Blob | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState(false);
-    const { loading, user, refreshUser } = useAuth();
     const t = useTranslations('components.logic.upload-image');
 
     // FIXME: Nasty workaround to force react-image-crop to reexecute the "onComplete" function by unrendering and rerendering the whole component.
@@ -69,6 +82,7 @@ export default function UploadImage({
             const data = new FormData();
             data.append('file', blob, 'profilepicture.png');
             data.append('intent', intent);
+            if (actor?.type != 'user') data.append('target', actor.id);
 
             const res = await fetch('/api/picture', {
                 method: 'PUT',
@@ -85,7 +99,7 @@ export default function UploadImage({
 
             if (success) {
                 setIsOpen(false);
-                refreshUser();
+                triggerRefresh?.();
                 setTimeout(() => {
                     setBlob(null);
                     setUploaded(null);
@@ -105,11 +119,12 @@ export default function UploadImage({
             },
             body: JSON.stringify({
                 intent,
+                target: actor?.type != 'user' ? actor.id : undefined,
             }),
         });
 
         setIsOpen(false);
-        refreshUser();
+        triggerRefresh?.();
 
         setTimeout(() => {
             setBlob(null);
@@ -129,7 +144,9 @@ export default function UploadImage({
         <div {...getRootProps()}>
             <DD open={isOpen} onOpenChange={setIsOpen}>
                 <DDTrigger asChild>
-                    {loading ? (
+                    {trigger ? (
+                        trigger
+                    ) : loading ? (
                         <Skeleton className="h-10 w-20" />
                     ) : (
                         <Button>{t('trigger')}</Button>
@@ -176,9 +193,9 @@ export default function UploadImage({
                         </div>
                     </div>
 
-                    {((user && intent in user) || uploaded) && (
+                    {((actor && intent in actor) || uploaded) && (
                         <DDFooter>
-                            {user && intent in user && (
+                            {actor && intent in actor && (
                                 <Button
                                     onClick={removePicture}
                                     disabled={isLoading}

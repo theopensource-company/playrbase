@@ -26,6 +26,7 @@ import {
 import { useSurreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
 import { fullname } from '@/lib/zod';
+import { Actor } from '@/schema/resources/actor';
 import { Admin } from '@/schema/resources/admin';
 import { User } from '@/schema/resources/user';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,7 +36,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export default function Account() {
-    const { loading, user } = useAuth();
+    const { loading, user, refreshUser } = useAuth();
     const t = useTranslations('pages.console.account.index');
 
     return (
@@ -57,6 +58,9 @@ export default function Account() {
                             </TableCell>
                             <TableCell align="right">
                                 <UploadImage
+                                    actor={user as Actor}
+                                    loading={loading}
+                                    triggerRefresh={refreshUser}
                                     intent="profile_picture"
                                     title={t('picture.uploader.title')}
                                     description={t(

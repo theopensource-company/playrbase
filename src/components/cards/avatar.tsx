@@ -89,6 +89,8 @@ export function Avatar({
                     src={
                         'profile_picture' in profile
                             ? (profile.profile_picture as string)
+                            : 'logo' in profile
+                            ? (profile.logo as string)
                             : undefined
                     }
                 />

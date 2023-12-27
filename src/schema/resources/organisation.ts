@@ -7,9 +7,9 @@ const organisation = /* surrealql */ `
             FOR select FULL
             FOR create WHERE $scope = 'user'
             FOR update WHERE 
-                $scope = 'user' && managers[WHERE role IN ["owner", "adminstrator"]].user CONTAINS $auth.id
+                managers[WHERE role IN ["owner", "adminstrator"]].user CONTAINS $auth.id
             FOR delete WHERE 
-                $scope = 'user' && managers[WHERE role = "owner" OR (role = "adminstrator" AND org != NONE)].user CONTAINS $auth.id;
+                managers[WHERE role = "owner" OR (role = "adminstrator" AND org != NONE)].user CONTAINS $auth.id;
 
     DEFINE FIELD name               ON organisation TYPE string
         ASSERT string::len($value) > 0 && string::len($value) <= 32;
@@ -39,7 +39,7 @@ const organisation = /* surrealql */ `
         DEFAULT "free"
         VALUE IF $scope { $before OR 'free' } ELSE { $value }
         PERMISSIONS 
-            FOR select WHERE $scope = 'user' && managers.*.user CONTAINS $auth.id
+            FOR select WHERE managers.*.user CONTAINS $auth.id
             FOR update NONE;
 
     -- ABOUT RECURSIVE NESTING OF ORGANISATIONS
@@ -83,7 +83,7 @@ const organisation = /* surrealql */ `
 
     DEFINE FIELD created            ON organisation TYPE datetime VALUE $before OR time::now()    DEFAULT time::now();
     DEFINE FIELD updated            ON organisation TYPE datetime VALUE time::now()               DEFAULT time::now()
-        PERMISSIONS FOR select WHERE $scope = 'user' && managers.*.user CONTAINS $auth.id;
+        PERMISSIONS FOR select WHERE managers.*.user CONTAINS $auth.id;
 
     DEFINE INDEX unique_slug        ON organisation FIELDS slug UNIQUE;
 `;

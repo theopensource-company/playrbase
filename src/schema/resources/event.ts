@@ -7,16 +7,10 @@ const event = /* surrealql */ `
             FOR select WHERE $scope = 'admin' 
                 OR (discoverable = true && published = true)
                 OR (published = true && id = $event_id)
-                OR (
-                    $scope = 'user' && 
-                    (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers.*.user CONTAINS $auth.id)[0]
-                )
+                OR (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers.*.user CONTAINS $auth.id)[0]
             FOR create, update, delete WHERE 
                 $scope = 'admin'
-                OR (
-                    $scope = 'user' && 
-                    (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers[WHERE role IN ['owner', 'administrator', 'event_manager']].user CONTAINS $auth.id)[0]
-                );
+                OR (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers[WHERE role IN ['owner', 'administrator', 'event_manager']].user CONTAINS $auth.id)[0];
 
     DEFINE FIELD name                       ON event TYPE string;
     DEFINE FIELD description                ON event TYPE string;

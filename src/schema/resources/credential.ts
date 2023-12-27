@@ -4,7 +4,7 @@ import { record } from '../../lib/zod.ts';
 const credential = /* surrealql */ `
     DEFINE TABLE credential SCHEMAFULL
         PERMISSIONS
-            FOR select, update, delete WHERE user = $auth;
+            FOR select, update, delete WHERE $scope = 'user' AND user = $auth;
 
     DEFINE FIELD user ON credential TYPE record<user> VALUE $before OR $value;
     DEFINE FIELD name ON credential TYPE string ASSERT string::len($value) >= 1 && string::len($value) <= 64;

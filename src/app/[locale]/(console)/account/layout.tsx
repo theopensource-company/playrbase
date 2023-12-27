@@ -7,12 +7,14 @@ import {
     NavbarSubLink,
     NavbarSubLinks,
 } from '@/components/layout/navbar';
+import { useAuth } from '@/lib/auth';
 import { useFeatureFlags } from '@/lib/featureFlags';
 import { useTranslations } from 'next-intl';
 import React, { ReactNode } from 'react';
 
 export default function ConsoleLayout({ children }: { children: ReactNode }) {
     const [featureFlags] = useFeatureFlags();
+    const { user } = useAuth();
     const t = useTranslations('pages.console.account');
 
     return (
@@ -28,6 +30,11 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
                     <NavbarSubLink link="organisations">
                         {t('organisations.title')}
                     </NavbarSubLink>
+                    {user && 'api_access' in user && user.api_access && (
+                        <NavbarSubLink link="api-access">
+                            API Access
+                        </NavbarSubLink>
+                    )}
                 </NavbarSubLinks>
             </Navbar>
             <Container className="flex flex-grow flex-col pb-24 pt-8">

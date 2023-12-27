@@ -7,7 +7,7 @@ const team = /* surrealql */ `
             FOR select FULL
             FOR create WHERE $scope = 'user'
             FOR update, delete 
-                WHERE $auth.id IN players.*;
+                WHERE $scope = 'user' AND $auth.id IN players.*;
 
     DEFINE FIELD name           ON team TYPE string ASSERT string::len($value) > 0;
     DEFINE FIELD description    ON team TYPE option<string>;

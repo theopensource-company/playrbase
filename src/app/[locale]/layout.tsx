@@ -2,6 +2,7 @@ import { Metadata, Viewport } from 'next';
 
 import React from 'react';
 
+import { Toaster } from '@/components/ui/sonner';
 import { siteConfig } from '@/config/site';
 import { fontSans } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
@@ -71,6 +72,7 @@ export default async function RootLayout({
                             >
                                 {children}
                             </div>
+                            <Toaster />
                         </Providers>
                     </NextIntlClientProvider>
                 </body>

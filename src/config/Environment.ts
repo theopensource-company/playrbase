@@ -15,10 +15,10 @@ export const parseValueFromString = (v: string) => {
     return lower === 'true'
         ? true
         : lower === 'false'
-        ? false
-        : !v || isNaN(+v)
-        ? v
-        : parseInt(v);
+          ? false
+          : !v || isNaN(+v)
+            ? v
+            : parseInt(v);
 };
 
 /////////////////////////////////////

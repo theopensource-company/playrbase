@@ -51,10 +51,10 @@ export function Avatar({
                                 ['big', 'huge'].includes(size as string)
                                     ? 'w-[45%] p-1.5'
                                     : size == 'extra-tiny'
-                                    ? 'w-2/3 p-1'
-                                    : size == 'tiny'
-                                    ? 'w-3/5 p-1'
-                                    : 'w-1/2 p-1'
+                                      ? 'w-2/3 p-1'
+                                      : size == 'tiny'
+                                        ? 'w-3/5 p-1'
+                                        : 'w-1/2 p-1'
                             )}
                         >
                             {icon}
@@ -90,8 +90,8 @@ export function Avatar({
                         'profile_picture' in profile
                             ? (profile.profile_picture as string)
                             : 'logo' in profile
-                            ? (profile.logo as string)
-                            : undefined
+                              ? (profile.logo as string)
+                              : undefined
                     }
                 />
                 <AvatarFallback className="bg-transparent">

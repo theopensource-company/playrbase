@@ -134,8 +134,8 @@ export const RenderNavbar = ({
                             ? 'mt-2 md:h-14'
                             : 'md:h-16'
                         : children
-                        ? 'mb-1 mt-3 md:h-24'
-                        : 'md:h-36'
+                          ? 'mb-1 mt-3 md:h-24'
+                          : 'md:h-36'
                 )}
             >
                 <div className="flex items-center justify-between max-md:my-4 max-md:w-full">

@@ -8,11 +8,11 @@ export function record<
         !val
             ? '([A-Za-z0-9_]+|`(\\\\`|[^`])+`|⟨(\\\\⟨|\\\\⟩|[^⟨⟩])+⟩)'
             : /^[A-Za-z0-9_]+$/.test(val)
-            ? val
-            : `(\`${val.replaceAll(
-                  /(?<!\\)(`)/g,
-                  '\\\\$1'
-              )}\`|⟨${val.replaceAll(/(?<!\\)(⟨|⟩)/g, '\\\\$1')}⟩)`;
+              ? val
+              : `(\`${val.replaceAll(
+                    /(?<!\\)(`)/g,
+                    '\\\\$1'
+                )}\`|⟨${val.replaceAll(/(?<!\\)(⟨|⟩)/g, '\\\\$1')}⟩)`;
 
     const regex = (table?: Table, id?: Id) =>
         new RegExp(`^${group(table)}:${group(id)}$`);

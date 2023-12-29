@@ -230,7 +230,68 @@
       },
       "events": {
         "title": "Events",
-        "not_found": "Organisation not found"
+        "not_found": "Organisation not found",
+        "filters": {
+          "trigger": "Filters",
+          "menu-label": "Filters",
+          "hosted-by": {
+            "title": "Hosted By",
+            "options": {
+              "undefined": "Any organisation",
+              "true": "This organisation",
+              "false": "Other organisation"
+            }
+          },
+          "published": {
+            "title": "Published",
+            "options": {
+              "undefined": "No preference",
+              "true": "Published",
+              "false": "Not published"
+            }
+          },
+          "discoverable": {
+            "title": "Discoverable",
+            "options": {
+              "undefined": "No preference",
+              "true": "Discoverable",
+              "false": "Not discoverable"
+            }
+          }
+        },
+        "new": {
+          "title": "New event",
+          "trigger": "New event",
+          "toast": {
+            "creating-event": "Creating event",
+            "created-event": "Created event",
+            "buttons": {
+              "view": "View"
+            }
+          },
+          "errors": {
+            "failed-create-event": "Failed to create event: {error}"
+          },
+          "fields": {
+            "name": {
+              "label": "Name"
+            },
+            "description": {
+              "label": "Description"
+            },
+            "discoverable": {
+              "label": "Discoverable"
+            },
+            "published": {
+              "label": "Published"
+            },
+            "tournament": {
+              "label": "Part of tournament",
+              "placeholder": "Tournament name"
+            }
+          },
+          "submit": "Create event"
+        }
       },
       "members": {
         "title": "Members",

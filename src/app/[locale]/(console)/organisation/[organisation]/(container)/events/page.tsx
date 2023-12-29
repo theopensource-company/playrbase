@@ -34,6 +34,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useSurreal } from '@/lib/Surreal';
+import { useRouter } from '@/locales/navigation';
 import { Event } from '@/schema/resources/event';
 import { Organisation } from '@/schema/resources/organisation';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -43,6 +44,7 @@ import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { PageTitle } from '../../components/PageTitle';
 
@@ -74,26 +76,31 @@ export default function Account() {
     return (
         <div className="flex flex-grow flex-col gap-6 pt-6">
             <PageTitle organisation={organisation} title={t('title')}>
-                <CreateEvent refetch={refetch} organiser={organisation.id} />
+                <CreateEvent refetch={refetch} organiser={organisation} />
             </PageTitle>
             <div className="flex justify-start gap-4 pb-2">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline">
-                            <Filter className="mr-2 h-4 w-4" /> Filters
+                            <Filter className="mr-2 h-4 w-4" />
+                            {t('filters.trigger')}
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        <DropdownMenuLabel>Filters</DropdownMenuLabel>
+                        <DropdownMenuLabel>
+                            {t('filters.menu-label')}
+                        </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuOptionalBoolean
                             value={rootForOrg}
                             onValueChange={setRootForOrg}
-                            title="Hosted By"
+                            title={t('filters.hosted-by.title')}
                             options={{
-                                undefined: 'Any organisation',
-                                true: 'This organisation',
-                                false: 'Other organisation',
+                                undefined: t(
+                                    'filters.hosted-by.options.undefined'
+                                ),
+                                true: t('filters.hosted-by.options.true'),
+                                false: t('filters.hosted-by.options.false'),
                             }}
                         />
                         <DropdownMenuSeparator />
@@ -101,21 +108,29 @@ export default function Account() {
                             <DropdownMenuOptionalBoolean
                                 value={published}
                                 onValueChange={setPublished}
-                                title="Published"
+                                title={t('filters.published.title')}
                                 options={{
-                                    undefined: 'No preference',
-                                    true: 'Published',
-                                    false: 'Not published',
+                                    undefined: t(
+                                        'filters.published.options.undefined'
+                                    ),
+                                    true: t('filters.published.options.true'),
+                                    false: t('filters.published.options.false'),
                                 }}
                             />
                             <DropdownMenuOptionalBoolean
                                 value={discoverable}
                                 onValueChange={setDiscoverable}
-                                title="Discoverable"
+                                title={t('filters.discoverable.title')}
                                 options={{
-                                    undefined: 'No preference',
-                                    true: 'Discoverable',
-                                    false: 'Not discoverable',
+                                    undefined: t(
+                                        'filters.discoverable.options.undefined'
+                                    ),
+                                    true: t(
+                                        'filters.discoverable.options.true'
+                                    ),
+                                    false: t(
+                                        'filters.discoverable.options.false'
+                                    ),
                                 }}
                             />
                         </DropdownMenuGroup>
@@ -140,12 +155,13 @@ function CreateEvent({
     organiser,
 }: {
     refetch: () => unknown;
-    organiser: Organisation['id'];
+    organiser: Organisation;
 }) {
     const surreal = useSurreal();
+    const router = useRouter();
     const [tournament, setTournament] = useEventSelector();
     const [open, setOpen] = useState(false);
-    const t = useTranslations('pages.console.account.organisations.new');
+    const t = useTranslations('pages.console.organisation.events.new');
 
     const Schema = Event.pick({
         name: true,
@@ -172,33 +188,54 @@ function CreateEvent({
 
     const handler = handleSubmit(
         async ({ name, description, category, discoverable, published }) => {
-            // TODO set to correct type, not important for the moment
-            await surreal.query<[Event]>(
-                /* surql */ `
-                    CREATE ONLY event CONTENT {
-                        name: $name,
-                        description: $description,
-                        category: $category,
-                        discoverable: $discoverable,
-                        published: $published,
-                        tournament: $tournament,
-                        organiser: $organiser,
-                    };
-                `,
-                {
-                    name,
-                    description,
-                    category,
-                    discoverable,
-                    published,
-                    tournament,
-                    organiser,
-                }
-            );
+            const result = (async () => {
+                const [event] = await surreal.query<[Event]>(
+                    /* surql */ `
+                        CREATE ONLY event CONTENT {
+                            name: $name,
+                            description: $description,
+                            category: $category,
+                            discoverable: $discoverable,
+                            published: $published,
+                            tournament: $tournament,
+                            organiser: $organiser,
+                        };
+                    `,
+                    {
+                        name,
+                        description,
+                        category,
+                        discoverable,
+                        published,
+                        tournament,
+                        organiser: organiser.id,
+                    }
+                );
 
-            refetch();
-            setTournament(undefined);
-            setOpen(false);
+                await refetch();
+                setTournament(undefined);
+                setOpen(false);
+
+                return event;
+            })();
+
+            await toast.promise(result, {
+                loading: t('toast.creating-event'),
+                success: t('toast.created-event'),
+                error: (e) =>
+                    t('errors.failed-create-event', { error: e.message }),
+                action: {
+                    label: t('toast.buttons.view'),
+                    onClick: () =>
+                        result.then(({ id }) =>
+                            router.push(
+                                `/organisation/${
+                                    organiser.slug
+                                }/event/${id.slice(6)}`
+                            )
+                        ),
+                },
+            });
         }
     );
 
@@ -235,34 +272,38 @@ function CreateEvent({
                                     </p>
                                 )}
                             </div>
-                            {tournament ? (
-                                <p>from tournament</p>
-                            ) : (
-                                <div className="space-y-3">
-                                    <Label htmlFor="category">Category</Label>
-                                    <Select>
-                                        <SelectTrigger
-                                            id="category"
-                                            {...register('category')}
-                                        >
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="baseball">
-                                                Baseball
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    {errors?.description &&
-                                        !isSubmitSuccessful && (
-                                            <p className="text-red-600">
-                                                {errors.description.message}
-                                            </p>
-                                        )}
-                                </div>
-                            )}
                             <div className="space-y-3">
-                                <Label htmlFor="email">Description</Label>
+                                <Label htmlFor="category">Category</Label>
+                                {tournament ? (
+                                    <p>from tournament</p>
+                                ) : (
+                                    <>
+                                        <Select>
+                                            <SelectTrigger
+                                                id="category"
+                                                {...register('category')}
+                                            >
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="baseball">
+                                                    Baseball
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        {errors?.description &&
+                                            !isSubmitSuccessful && (
+                                                <p className="text-red-600">
+                                                    {errors.description.message}
+                                                </p>
+                                            )}
+                                    </>
+                                )}
+                            </div>
+                            <div className="space-y-3">
+                                <Label htmlFor="email">
+                                    {t('fields.description.label')}
+                                </Label>
                                 <Textarea
                                     id="email"
                                     {...register('description')}
@@ -282,7 +323,7 @@ function CreateEvent({
                                         {...register('discoverable')}
                                     />
                                     <Label htmlFor="discoverable">
-                                        Discoverable
+                                        {t('fields.discoverable.label')}
                                     </Label>
                                 </div>
                                 <div className="flex items-center gap-1">
@@ -290,15 +331,17 @@ function CreateEvent({
                                         id="published"
                                         {...register('published')}
                                     />
-                                    <Label htmlFor="published">Published</Label>
+                                    <Label htmlFor="published">
+                                        {t('fields.published.label')}
+                                    </Label>
                                 </div>
                             </div>
                         </div>
                         <EventSelector
                             event={tournament}
                             setEvent={setTournament}
-                            label="Part of tournament"
-                            placeholder="Tournament name"
+                            label={t('fields.tournament.label')}
+                            placeholder={t('fields.tournament.placeholder')}
                             autoComplete="off"
                             canManage
                         />

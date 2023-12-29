@@ -41,12 +41,12 @@ export default async function RootLayout({
     children,
     params,
 }: RootLayoutProps) {
-    let messages = {};
+    let importedLocale = {};
     const locale = useLocale();
     if (params.locale !== locale) {
         notFound();
     } else {
-        messages = (await importLocale({ locale })).messages;
+        importedLocale = await importLocale({ locale });
     }
 
     return (
@@ -59,11 +59,7 @@ export default async function RootLayout({
                         fontSans.variable
                     )}
                 >
-                    <NextIntlClientProvider
-                        locale={locale}
-                        messages={messages}
-                        timeZone="Europe/Amsterdam"
-                    >
+                    <NextIntlClientProvider locale={locale} {...importedLocale}>
                         <Providers>
                             <div
                                 // eslint-disable-next-line react/no-unknown-property

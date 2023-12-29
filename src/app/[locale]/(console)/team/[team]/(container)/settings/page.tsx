@@ -109,11 +109,7 @@ function DangerZone({ team }: { team: Team }) {
         <div className="flex w-full flex-col gap-6 rounded-lg border border-red-600 border-opacity-40 p-6">
             <div className="space-y-2">
                 <h2 className="text-xl font-bold">{t('title')}</h2>
-                <p>
-                    {t.rich('description', {
-                        b: (children) => <b>{children}</b>,
-                    })}
-                </p>
+                <p>{t.rich('description')}</p>
             </div>
             <div className="flex items-center gap-4">
                 <DD>
@@ -129,16 +125,11 @@ function DangerZone({ team }: { team: Team }) {
                     <DDContent>
                         <form onSubmit={handler}>
                             <h2 className="mb-4 text-2xl font-bold">
-                                {t.rich('dialog.title', {
-                                    org: () => team.name,
+                                {t('dialog.title', {
+                                    org: team.name,
                                 })}
                             </h2>
-                            <p>
-                                {t.rich('dialog.description', {
-                                    b: (children) => <b>{children}</b>,
-                                    br: () => <br />,
-                                })}
-                            </p>
+                            <p>{t.rich('dialog.description')}</p>
 
                             <div className="mb-5 mt-3 space-y-5">
                                 <div className="space-y-3">

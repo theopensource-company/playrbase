@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useSurreal } from '@/lib/Surreal';
 import { useTranslations } from 'next-intl';
-import React, { ReactNode, createRef, useCallback, useState } from 'react';
+import React, { createRef, useCallback, useState } from 'react';
 
 export default function Devtools_Query() {
     const surreal = useSurreal();
@@ -28,11 +28,7 @@ export default function Devtools_Query() {
                 <h1 className="items-center text-4xl font-bold">
                     {t('title')}
                 </h1>
-                <p className="mt-4">
-                    {t.rich('warning', {
-                        b: (children: ReactNode) => <b>{children}</b>,
-                    })}
-                </p>
+                <p className="mt-4">{t.rich('warning')}</p>
             </div>
             <div className="flex flex-col items-center gap-8">
                 <Textarea

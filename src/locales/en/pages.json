@@ -57,6 +57,17 @@
       },
       "organisations": {
         "title": "Organisations",
+        "toast": {
+          "accepting-invite": "Accepting invite",
+          "accepted-invite": "Accepted invite",
+          "denying-invite": "Denying invite",
+          "denied-invite": "Denied invite"
+        },
+        "errors": {
+          "no-unconfirmed-edge": "Could not find unconfirmed edge",
+          "accept-failed": "Failed to accept invite: {error}",
+          "deny-failed": "Failed to deny invite: {error}"
+        },
         "table": {
           "caption": {
             "count": "Count"
@@ -74,6 +85,16 @@
         "new": {
           "trigger": "New organisation",
           "title": "New organisation",
+          "toast": {
+            "creating-organisation": "Creating organisation",
+            "created-organisation": "Created organisation",
+            "buttons": {
+              "view": "View"
+            }
+          },
+          "errors": {
+            "create-organisation-failed": "Failed to create organisation: {error}"
+          },
           "fields": {
             "name": {
               "label": "Name"
@@ -85,6 +106,53 @@
             "selector": {
               "label": "Part of organisation",
               "placeholder": "Name or Email"
+            }
+          },
+          "submit": "Create"
+        }
+      },
+      "teams": {
+        "title": "Teams",
+        "toast": {
+          "accepting-invite": "Accepting invite",
+          "accepted-invite": "Accepted invite",
+          "denying-invite": "Denying invite",
+          "denied-invite": "Denied invite"
+        },
+        "errors": {
+          "no-unconfirmed-edge": "Could not find unconfirmed edge",
+          "accept-failed": "Failed to accept invite: {error}",
+          "deny-failed": "Failed to deny invite: {error}"
+        },
+        "table": {
+          "caption": {
+            "count": "Count"
+          },
+          "columns": {
+            "name": "Name",
+            "actions": "Actions"
+          },
+          "body": {
+            "invitations": "Invitations",
+            "confirmed": "Confirmed"
+          }
+        },
+        "new": {
+          "trigger": "New team",
+          "title": "New team",
+          "toast": {
+            "creating-team": "Creating team",
+            "created-team": "Created team",
+            "buttons": {
+              "view": "View"
+            }
+          },
+          "errors": {
+            "create-team-failed": "Failed to create team: {error}"
+          },
+          "fields": {
+            "name": {
+              "label": "Name"
             }
           },
           "submit": "Create"
@@ -107,6 +175,13 @@
         "edit": {
           "title": "Edit Passkey",
           "description": "Change the name of your passkey",
+          "toast": {
+            "updating-passkey": "Updating Passkey",
+            "updated-passkey": "Updated Passkey"
+          },
+          "errors": {
+            "failed-updating-passkey": "Failed to update Passkey: {error}"
+          },
           "fields": {
             "name": {
               "label": "Passkey Name"
@@ -117,10 +192,35 @@
         "delete": {
           "title": "Delete Passkey",
           "description": "Deleting this passkey will <b>permanently</b> disallow access to Playrbase via this Passkey. <br></br><br></br> To confirm the deletion, please repeat the Passkey's name",
+          "toast": {
+            "deleting-passkey": "Deleting Passkey",
+            "deleted-passkey": "Deleted Passkey"
+          },
+          "errors": {
+            "failed-deleting-passkey": "Failed to delete Passkey: {error}"
+          },
           "repeat": "Repeat",
           "cancel": "Cancel",
           "submit": "Permanently delete"
         }
+      },
+      "api_access": {
+        "title": "API Access",
+        "toast": {
+          "submitting": "Generating API Key",
+          "success": "Generated API Key",
+          "copied": "Copied the token to your clipboard"
+        },
+        "errors": {
+          "no_access": "You do not have access to generate an API Key.",
+          "request_failed": "API Key request failed: {error}"
+        },
+        "warning": "API Keys give access to administrate organisations and events according to the permissions of the user who generated it. They expire 30 days after generation. <br></br><br></br> It is currently <b>NOT POSSIBLE</b> to rotate a key after it is generate, as it is stateless. To prevent unwanted usage after potential theft, the owner's account currently needs to be removed",
+        "button": {
+          "generate": "Generate API Key",
+          "copy": "Copy to Clipboard"
+        },
+        "token-kind": "SurrealDB Token"
       }
     },
     "organisation": {
@@ -136,7 +236,7 @@
         "title": "Members",
         "not_found": "Organisation not found",
         "list_managers": {
-          "title": "From <org></org>",
+          "title": "From {org}",
           "table": {
             "caption": {
               "count": "Count"
@@ -159,9 +259,9 @@
             }
           },
           "actions": {
-            "via": "Via <org></org>",
+            "via": "Via {org}",
             "remove-dialog": {
-              "title": "Remove <name></name>",
+              "title": "Remove {name}",
               "description": "Are you sure that you want to remove this manager?",
               "cancel": "Cancel",
               "submit": "Remove"
@@ -227,7 +327,7 @@
           "description": "Deleting this organisation will <b>permanently</b> remove all details about this organisation, all events, and other related data. This action <b>cannot be reversed!</b>",
           "dialog": {
             "trigger": "Delete organisation",
-            "title": "Delete <org></org>",
+            "title": "Delete {org}",
             "description": "Deleting this organisation will <b>permanently</b> remove all details about this organisation, all events, and other related data. This action <b>cannot be reversed!</b> <br></br><br></br> To confirm the deletion, please repeat the organisation's name and email address",
             "repeat": "Repeat",
             "cancel": "Cancel",

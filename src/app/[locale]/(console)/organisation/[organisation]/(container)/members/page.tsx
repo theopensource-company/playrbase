@@ -120,8 +120,8 @@ function ListManagers({
         <div>
             {organisation && (
                 <h2 className="pb-6 text-2xl font-semibold">
-                    {t.rich('title', {
-                        org: () => organisation.name,
+                    {t('title', {
+                        org: organisation.name,
                     })}
                 </h2>
             )}
@@ -243,8 +243,8 @@ function ListManager({
                         className={buttonVariants({ variant: 'outline' })}
                         href={`/organisation/${org.slug}/members`}
                     >
-                        {t.rich('actions.via', {
-                            org: () => org.name,
+                        {t('actions.via', {
+                            org: org.name,
                         })}
                         <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
@@ -262,8 +262,8 @@ function ListManager({
                         </DDTrigger>
                         <DDContent>
                             <h3 className="text-2xl font-bold">
-                                {t.rich('actions.remove-dialog.title', {
-                                    name: () => name,
+                                {t('actions.remove-dialog.title', {
+                                    name,
                                 })}
                             </h3>
                             <p>{t('actions.remove-dialog.description')}</p>

@@ -34,6 +34,7 @@ import { AlertOctagon, Loader2, Pencil, Plus, Trash } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 export default function Account() {
@@ -156,11 +157,21 @@ function EditCredential({
         resolver: zodResolver(Schema),
     });
 
-    const handler = handleSubmit(async ({ name }) => {
-        await surreal.merge(credential.id, { name });
-        refetch();
-        setOpen(false);
-    });
+    const handler = handleSubmit(({ name }) =>
+        toast.promise(
+            async () => {
+                await surreal.merge(credential.id, { name });
+                await refetch();
+                setOpen(false);
+            },
+            {
+                loading: t('toast.updating-passkey'),
+                success: t('toast.updated-passkey'),
+                error: (e) =>
+                    t('errors.failed-updating-passkey', { error: e.message }),
+            }
+        )
+    );
 
     return (
         <DD open={open} onOpenChange={setOpen}>
@@ -235,10 +246,22 @@ function DeleteCredential({
         resolver: zodResolver(Schema),
     });
 
-    const handler = handleSubmit(async () => {
-        await surreal.query(/* surql */ `DELETE $id`, { id: credential.id });
-        refetch();
-    });
+    const handler = handleSubmit(() =>
+        toast.promise(
+            async () => {
+                await surreal.query(/* surql */ `DELETE $id`, {
+                    id: credential.id,
+                });
+                await refetch();
+            },
+            {
+                loading: t('toast.deleting-passkey'),
+                success: t('toast.deleted-passkey'),
+                error: (e) =>
+                    t('errors.failed-deleting-passkey', { error: e.message }),
+            }
+        )
+    );
 
     return (
         <DD>
@@ -251,12 +274,7 @@ function DeleteCredential({
                 <form onSubmit={handler}>
                     <DDHeader>
                         <DDTitle>{t('title')}</DDTitle>
-                        <DDDescription>
-                            {t.rich('description', {
-                                b: (children) => <b>{children}</b>,
-                                br: () => <br />,
-                            })}
-                        </DDDescription>
+                        <DDDescription>{t.rich('description')}</DDDescription>
                     </DDHeader>
                     <div className="flex flex-col gap-4 py-3">
                         <Label htmlFor="name_delete">

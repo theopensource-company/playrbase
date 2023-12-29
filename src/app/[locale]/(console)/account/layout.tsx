@@ -33,7 +33,7 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
                     </NavbarSubLink>
                     {user && 'api_access' in user && user.api_access && (
                         <NavbarSubLink link="api-access">
-                            API Access
+                            {t('api_access.title')}
                         </NavbarSubLink>
                     )}
                 </NavbarSubLinks>

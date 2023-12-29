@@ -168,8 +168,8 @@ function ListPlayer({
                         </DDTrigger>
                         <DDContent>
                             <h3 className="text-2xl font-bold">
-                                {t.rich('actions.remove-dialog.title', {
-                                    name: () => player.name,
+                                {t('actions.remove-dialog.title', {
+                                    name: player.name,
                                 })}
                             </h3>
                             <p>{t('actions.remove-dialog.description')}</p>

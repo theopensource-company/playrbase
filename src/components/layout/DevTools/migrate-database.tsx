@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 export default function Devtools_MigrateDatabase() {
     const [logs, setLogs] = useState('');
@@ -20,11 +20,7 @@ export default function Devtools_MigrateDatabase() {
     return (
         <div>
             <h1 className="items-center text-4xl font-bold">{t('title')}</h1>
-            <p className="mb-8 mt-4">
-                {t.rich('warning', {
-                    b: (children: ReactNode) => <b>{children}</b>,
-                })}
-            </p>
+            <p className="mb-8 mt-4">{t.rich('warning')}</p>
 
             {logs && (
                 <p className="mb-10 whitespace-break-spaces rounded-lg bg-accent px-6 py-5 font-mono">

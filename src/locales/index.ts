@@ -1,4 +1,5 @@
 import { getRequestConfig } from 'next-intl/server';
+import { defaultTranslationValues } from './defaultTranslationValues';
 
 type RequestConfig = Awaited<
     ReturnType<Parameters<typeof getRequestConfig>[0]>
@@ -13,6 +14,7 @@ export async function importLocale({ locale }: GetRequestConfigParams) {
     return {
         messages: { ...l },
         timeZone: 'Europe/Amsterdam',
+        defaultTranslationValues,
     } satisfies RequestConfig;
 }
 

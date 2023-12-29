@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useSurreal } from '@/lib/Surreal';
+import { useRouter } from '@/locales/navigation';
 import {
     Organisation,
     OrganisationSafeParse,
@@ -20,6 +21,7 @@ import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 export default function Account() {
@@ -35,20 +37,39 @@ export default function Account() {
     const { mutateAsync: acceptInvitation } = useMutation({
         mutationKey: ['manages', 'accept-invite'],
         async mutationFn(id: Organisation['id']) {
-            const edge = findUnconfirmedEdge(id);
-            if (!edge) throw new Error('Could not find unconfirmed edge');
-            await surreal.merge(edge, { confirmed: true });
-            refetch();
+            await toast.promise(
+                async () => {
+                    const edge = findUnconfirmedEdge(id);
+                    if (!edge) throw new Error(t('errors.no-unconfirmed-edge'));
+                    await surreal.merge(edge, { confirmed: true });
+                    await refetch();
+                },
+                {
+                    loading: t('toast.accepting-invite'),
+                    success: t('toast.accepted-invite'),
+                    error: (e) =>
+                        t('errors.accept-failed', { error: e.message }),
+                }
+            );
         },
     });
 
     const { mutateAsync: denyInvitation } = useMutation({
         mutationKey: ['manages', 'deny-invite'],
         async mutationFn(id: Organisation['id']) {
-            const edge = findUnconfirmedEdge(id);
-            if (!edge) throw new Error('Could not find unconfirmed edge');
-            await surreal.delete(edge);
-            refetch();
+            await toast.promise(
+                async () => {
+                    const edge = findUnconfirmedEdge(id);
+                    if (!edge) throw new Error(t('errors.no-unconfirmed-edge'));
+                    await surreal.delete(edge);
+                    await refetch();
+                },
+                {
+                    loading: t('toast.denying-invite'),
+                    success: t('toast.denied-invite'),
+                    error: (e) => t('errors.deny-failed', { error: e.message }),
+                }
+            );
         },
     });
 
@@ -80,6 +101,7 @@ export default function Account() {
 
 function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
     const surreal = useSurreal();
+    const router = useRouter();
     const [partOf, setPartOf] = useOrganisationSelector();
     const [open, setOpen] = useState(false);
     const t = useTranslations('pages.console.account.organisations.new');
@@ -100,21 +122,39 @@ function CreateOrganisation({ refetch }: { refetch: () => unknown }) {
     });
 
     const handler = handleSubmit(async ({ name, email }) => {
-        // TODO set to correct type, not important for the moment
-        await surreal.query<[Organisation]>(
-            /* surql */ `
-            CREATE ONLY organisation CONTENT {
-                name: $name,
-                email: $email,
-                part_of: $part_of,
-            };
-        `,
-            { name, email, part_of: partOf }
-        );
+        const result = (async () => {
+            const [org] = await surreal.query<[Organisation]>(
+                /* surql */ `
+                CREATE ONLY organisation CONTENT {
+                    name: $name,
+                    email: $email,
+                    part_of: $part_of,
+                };
+            `,
+                { name, email, part_of: partOf }
+            );
 
-        refetch();
-        setPartOf(undefined);
-        setOpen(false);
+            await refetch();
+            setPartOf(undefined);
+            setOpen(false);
+            return org;
+        })();
+
+        await toast.promise(result, {
+            loading: t('toast.creating-organisation'),
+            success: t('toast.created-organisation'),
+            error: (e) =>
+                t('errors.create-organisation-failed', {
+                    error: e.message,
+                }),
+            action: {
+                label: t('toast.buttons.view'),
+                onClick: () =>
+                    result.then(({ slug }) =>
+                        router.push(`/organisation/${slug}/overview`)
+                    ),
+            },
+        });
     });
 
     return (

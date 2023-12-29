@@ -35,7 +35,17 @@
           },
           "submit": "Maken",
           "title": "Nieuwe organisatie",
-          "trigger": "Nieuwe organisatie"
+          "trigger": "Nieuwe organisatie",
+          "errors": {
+            "create-organisation-failed": "Kon organisatie niet maken: {error}"
+          },
+          "toast": {
+            "created-organisation": "Organisatie aangemaakt",
+            "creating-organisation": "Organisatie aan het maken",
+            "buttons": {
+              "view": "Bekijken"
+            }
+          }
         },
         "table": {
           "body": {
@@ -51,7 +61,18 @@
             "name": "Naam"
           }
         },
-        "title": "Organisaties"
+        "title": "Organisaties",
+        "errors": {
+          "accept-failed": "Kon uitnodiging niet accepteren: {error}",
+          "deny-failed": "Kon uitnodiging niet weigeren: {error}",
+          "no-unconfirmed-edge": "Kon geen onbevestigde edge vinden"
+        },
+        "toast": {
+          "accepted-invite": "Uitnodiging geaccepteerd",
+          "accepting-invite": "Uitnodiging aan het accepteren",
+          "denied-invite": "Uitnodiging geweigerd",
+          "denying-invite": "Uitnodiging aan het weigeren"
+        }
       },
       "passkeys": {
         "create": "Passkey aanmaken",
@@ -60,7 +81,14 @@
           "description": "Het verwijderen van deze passkey zal <b>permanent</b> toegang weigeren tot Playrbase met deze Passkey. <br></br><br></br> Herhaal de naam van de Passkey om de verwijdering te bevestigen",
           "repeat": "Herhaal",
           "submit": "Permanent verwijderen",
-          "title": "Passkey verwijderen"
+          "title": "Passkey verwijderen",
+          "errors": {
+            "failed-deleting-passkey": "Kon Passkey niet verwijderen: {error}"
+          },
+          "toast": {
+            "deleted-passkey": "Passkey is verwijderd",
+            "deleting-passkey": "Passkey aan het verwijderen"
+          }
         },
         "edit": {
           "description": "Verander de naam van je passkey",
@@ -70,7 +98,14 @@
             }
           },
           "submit": "Naam opslaan",
-          "title": "Passkey aanpassen"
+          "title": "Passkey aanpassen",
+          "errors": {
+            "failed-updating-passkey": "Kon Passkey niet wijzigen: {error}"
+          },
+          "toast": {
+            "updated-passkey": "Passkey is gewijzigd",
+            "updating-passkey": "Passkey aan het wijzigen"
+          }
         },
         "empty": "Er zijn geen Passkeys gekoppeld aan je account. Maak eentje aan met de bovenstaande knop!",
         "table": {
@@ -121,6 +156,71 @@
           }
         },
         "title": "Account"
+      },
+      "api_access": {
+        "button": {
+          "copy": "Kopieer naar klembord",
+          "generate": "Genereer API Sleutel"
+        },
+        "errors": {
+          "no_access": "U heeft geen toegang om een API-sleutel te genereren.",
+          "request_failed": "API-sleutelverzoek mislukt: {error}"
+        },
+        "title": "API Toegang",
+        "toast": {
+          "copied": "Het token is naar uw klembord gekopieerd",
+          "submitting": "API-sleutel aan het genereren",
+          "success": "API-sleutel is gegenereerd"
+        },
+        "token-kind": "SurrealDB Token",
+        "warning": "API-sleutels geven toegang tot het beheren van organisaties en evenementen volgens de machtigingen van de gebruiker die deze heeft gegenereerd. Ze vervallen 30 dagen na generatie. <br></br><br></br> Het is momenteel <b>NIET MOGELIJK</b> om een sleutel te roteren nadat deze is gegenereerd, omdat deze stateless is. Om ongewenst gebruik na mogelijke diefstal te voorkomen, moet momenteel het account van de eigenaar worden verwijderd"
+      },
+      "teams": {
+        "errors": {
+          "accept-failed": "Kon uitnodiging niet accepteren: {error}",
+          "deny-failed": "Kon uitnodiging niet weigeren: {error}",
+          "no-unconfirmed-edge": "Kon geen onbevestigde edge vinden"
+        },
+        "new": {
+          "errors": {
+            "create-team-failed": "Kon team niet maken: {error}"
+          },
+          "fields": {
+            "name": {
+              "label": "Naam"
+            }
+          },
+          "submit": "Maken",
+          "title": "Nieuw team",
+          "toast": {
+            "buttons": {
+              "view": "Bekijken"
+            },
+            "created-team": "Team aangemaakt",
+            "creating-team": "Team aanmaken"
+          },
+          "trigger": "Nieuw team"
+        },
+        "table": {
+          "body": {
+            "confirmed": "Bevestigd",
+            "invitations": "Uitgenodigd"
+          },
+          "caption": {
+            "count": "Aantal"
+          },
+          "columns": {
+            "actions": "Acties",
+            "name": "Naam"
+          }
+        },
+        "title": "Teams",
+        "toast": {
+          "accepted-invite": "Uitnodiging geaccepteerd",
+          "accepting-invite": "Uitnodiging aan het accepteren",
+          "denied-invite": "Uitnodiging geweigerd",
+          "denying-invite": "Uitnodiging aan het weigeren"
+        }
       }
     },
     "organisation": {
@@ -162,9 +262,9 @@
               "cancel": "Annuleren",
               "description": "Weet je zeker dat je deze beheerder wilt verwijderen?",
               "submit": "Verwijderen",
-              "title": "Verwijder <name></name>"
+              "title": "Verwijder {name}"
             },
-            "via": "Via <org></org>"
+            "via": "Via {org}"
           },
           "role": {
             "placeholder": "Rol",
@@ -187,7 +287,7 @@
               "role": "Rol"
             }
           },
-          "title": "Via <org></org>"
+          "title": "Via {org}"
         },
         "not_found": "Organisatie niet gevonden",
         "title": "Leden"
@@ -225,7 +325,7 @@
             "description": "Het verwijderen van deze organisatie zal <b>permanent</b> alle gegevens over deze organisatie, alle evenementen, en andere gerelateerde informatie verwijderen. Deze actie <b>kan niet worden teruggedraaid!</b> <br></br><br></br> Herhaal de naam en het e-mailadres van de organisatie om de verwijdering te bevestigen",
             "repeat": "Herhaal",
             "submit": "Permanent verwijderen",
-            "title": "Verwijder <org></org>",
+            "title": "Verwijder {org}",
             "trigger": "Verwijder organisatie"
           },
           "description": "Het verwijderen van deze organisatie zal <b>permanent</b> alle gegevens over deze organisatie, alle evenementen, en andere gerelateerde informatie verwijderen. Deze actie <b>kan niet worden teruggedraaid!</b>"

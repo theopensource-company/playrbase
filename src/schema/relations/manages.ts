@@ -37,4 +37,14 @@ const log = /* surrealql */ `
     };
 `;
 
-export default [manages, log].join('\n\n');
+const verify_nonempty_organisation_after_deletion = /* surrealql */ `
+    DEFINE EVENT verify_nonempty_organisation_after_deletion ON manages WHEN $event = "DELETE" THEN {
+        IF $before.out.id && array::len($before.out.managers[?role="owner"]) == 0 {
+            THROW "Organisation must have at least 1 owner, remove it instead."
+        };
+    };
+`;
+
+export default [manages, log, verify_nonempty_organisation_after_deletion].join(
+    '\n\n'
+);

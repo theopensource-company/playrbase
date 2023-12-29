@@ -2,8 +2,8 @@ import { z } from 'zod';
 import { Admin } from './admin';
 import { Event } from './event';
 import { Organisation, OrganisationSafeParse } from './organisation';
-import { Team } from './team';
-import { User } from './user';
+import { Team, TeamAnonymous } from './team';
+import { User, UserAnonymous, UserAsRelatedUser } from './user';
 
 export const FakeProfile = z.object({
     id: z.undefined(),
@@ -19,10 +19,13 @@ export type FakeProfile = z.infer<typeof FakeProfile>;
 
 export const Profile = z.union([
     User,
+    UserAnonymous,
+    UserAsRelatedUser,
     Admin,
     Organisation,
     OrganisationSafeParse,
     Team,
+    TeamAnonymous,
     Event,
     FakeProfile,
 ]);

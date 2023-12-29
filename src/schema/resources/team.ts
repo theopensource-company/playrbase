@@ -25,6 +25,7 @@ const team = /* surrealql */ `
         PERMISSIONS
             FOR update WHERE $scope = 'admin';
 
+    DEFINE FIELD slug           ON team VALUE meta::id(id);
     DEFINE FIELD type           ON team VALUE meta::tb(id) DEFAULT meta::tb(id);
     DEFINE FIELD created_by     ON team TYPE record<user>
         DEFAULT $auth.id
@@ -43,6 +44,7 @@ export const Team = z.object({
     players: z.array(record('user')),
     logo: z.string().optional(),
     banner: z.string().optional(),
+    slug: z.string(),
     type: z.literal('team'),
     created: z.coerce.date(),
     updated: z.coerce.date(),

@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { record } from '../../lib/zod.ts';
+
 const plays_in = /* surrealql */ `
     DEFINE TABLE plays_in SCHEMAFULL
         PERMISSIONS
@@ -25,6 +28,17 @@ const plays_in = /* surrealql */ `
     DEFINE INDEX unique_relation ON plays_in COLUMNS in, out UNIQUE;
 `;
 
+export const PlaysIn = z.object({
+    id: record('plays_in'),
+    in: record('user'),
+    out: record('team'),
+    confirmed: z.boolean(),
+    created: z.coerce.date(),
+    updated: z.coerce.date(),
+});
+
+export type PlaysIn = z.infer<typeof PlaysIn>;
+
 const log = /* surrealql */ `
     DEFINE EVENT log ON plays_in THEN {
         LET $fields = ["confirmed"];
@@ -35,9 +49,20 @@ const log = /* surrealql */ `
 const verify_registrations_after_deletion = /* surrealql */ `
     DEFINE EVENT verify_registrations_after_deletion ON plays_in WHEN $event = "DELETE" THEN {
         UPDATE ($before.out->attends || []);
-    }
+    };
 `;
 
-export default [plays_in, log, verify_registrations_after_deletion].join(
-    '\n\n'
-);
+const verify_nonempty_team_after_deletion = /* surrealql */ `
+    DEFINE EVENT verify_nonempty_team_after_deletion ON plays_in WHEN $event = "DELETE" THEN {
+        IF $before.out.id && array::len($before.out.players) == 0 {
+            THROW "Team cannot be empty, remove it instead."
+        };
+    };
+`;
+
+export default [
+    plays_in,
+    log,
+    verify_registrations_after_deletion,
+    verify_nonempty_team_after_deletion,
+].join('\n\n');

@@ -15,9 +15,6 @@ const event = /* surrealql */ `
     DEFINE FIELD name                       ON event TYPE string;
     DEFINE FIELD description                ON event TYPE string;
     DEFINE FIELD banner                     ON event TYPE option<string>;
-    DEFINE FIELD category                   ON event TYPE string 
-        ASSERT $value IN ['baseball']
-        VALUE (SELECT VALUE category FROM ONLY $parent.tournament) OR $before OR $value;
 
     DEFINE FIELD start                      ON event TYPE option<datetime>;
     DEFINE FIELD end                        ON event TYPE option<datetime>;
@@ -51,7 +48,6 @@ export const Event = z.object({
     name: z.string(),
     description: z.string(),
     banner: z.string().optional(),
-    category: z.literal('baseball'),
 
     start: z.coerce.date().optional(),
     end: z.coerce.date().optional(),

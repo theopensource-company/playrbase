@@ -25,13 +25,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useSurreal } from '@/lib/Surreal';
 import { useRouter } from '@/locales/navigation';
@@ -166,7 +159,6 @@ function CreateEvent({
     const Schema = Event.pick({
         name: true,
         description: true,
-        category: true,
         discoverable: true,
         published: true,
     });
@@ -180,21 +172,19 @@ function CreateEvent({
     } = useForm<Schema>({
         resolver: zodResolver(Schema),
         defaultValues: {
-            category: 'baseball',
             discoverable: true,
             published: false,
         },
     });
 
     const handler = handleSubmit(
-        async ({ name, description, category, discoverable, published }) => {
+        async ({ name, description, discoverable, published }) => {
             const result = (async () => {
                 const [event] = await surreal.query<[Event]>(
                     /* surql */ `
                         CREATE ONLY event CONTENT {
                             name: $name,
                             description: $description,
-                            category: $category,
                             discoverable: $discoverable,
                             published: $published,
                             tournament: $tournament,
@@ -204,7 +194,6 @@ function CreateEvent({
                     {
                         name,
                         description,
-                        category,
                         discoverable,
                         published,
                         tournament,
@@ -270,34 +259,6 @@ function CreateEvent({
                                     <p className="text-red-600">
                                         {errors.name.message}
                                     </p>
-                                )}
-                            </div>
-                            <div className="space-y-3">
-                                <Label htmlFor="category">Category</Label>
-                                {tournament ? (
-                                    <p>from tournament</p>
-                                ) : (
-                                    <>
-                                        <Select>
-                                            <SelectTrigger
-                                                id="category"
-                                                {...register('category')}
-                                            >
-                                                <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="baseball">
-                                                    Baseball
-                                                </SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        {errors?.description &&
-                                            !isSubmitSuccessful && (
-                                                <p className="text-red-600">
-                                                    {errors.description.message}
-                                                </p>
-                                            )}
-                                    </>
                                 )}
                             </div>
                             <div className="space-y-3">

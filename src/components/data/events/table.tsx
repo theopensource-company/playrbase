@@ -31,7 +31,6 @@ import React, { ReactNode } from 'react';
 
 export type EventTableColumns = {
     name?: boolean;
-    category?: boolean;
     start?: boolean;
     end?: boolean;
     published?: boolean;
@@ -59,7 +58,6 @@ export function EventTable({
             <TableHeader>
                 <TableRow>
                     {doRenderCol('name') && <TableHead>Name</TableHead>}
-                    {doRenderCol('category') && <TableHead>Category</TableHead>}
                     {doRenderCol('start') && <TableHead>Start</TableHead>}
                     {doRenderCol('end') && <TableHead>End</TableHead>}
                     {doRenderCol('published') && (
@@ -83,9 +81,6 @@ export function EventTable({
                         <TableRow key={event.id}>
                             {doRenderCol('name') && (
                                 <TableCell>{event.name}</TableCell>
-                            )}
-                            {doRenderCol('category') && (
-                                <TableCell>{event.category}</TableCell>
                             )}
                             {doRenderCol('start') && (
                                 <TableCell>

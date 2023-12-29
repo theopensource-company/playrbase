@@ -226,7 +226,28 @@
     "organisation": {
       "overview": {
         "title": "Overzicht",
-        "not_found": "Organisatie niet gevonden"
+        "not_found": "Organisatie niet gevonden",
+        "section": {
+          "events": {
+            "go-to": "Ga naar evenementen",
+            "title": "Evenementen",
+            "view-all": "Bekijk alle {count} evenementen"
+          },
+          "members": {
+            "go-to": "Ga naar leden",
+            "title": "Leden",
+            "view-all": "Bekijk alle {count} leden"
+          },
+          "nested": {
+            "go-to": "Ga naar organisaties",
+            "title": "Onderliggende organisaties",
+            "view-all": "Bekijk alle {count} organisaties"
+          },
+          "partof": {
+            "title": "Onderdeel van",
+            "visit": "Bezoek {org}"
+          }
+        }
       },
       "members": {
         "add_member": {
@@ -242,7 +263,14 @@
           },
           "submit": "Verstuur uitnodiging",
           "title": "Gebruiker uitnodigen",
-          "trigger": "Lid toevoegen"
+          "trigger": "Lid toevoegen",
+          "errors": {
+            "failed-add-member": "Kon lid niet toevoegen: {error}"
+          },
+          "toast": {
+            "added-member": "Lid toegevoegd",
+            "adding-member": "Lid aan het toevoegen"
+          }
         },
         "invited_manager": {
           "pending-invite": "Openstaande uitnodiging",
@@ -254,6 +282,16 @@
               "event_viewer": "Evenement Kijker",
               "owner": "Eigenaar"
             }
+          },
+          "errors": {
+            "failed-revoke-invite": "Kon uitnodiging niet intrekken: {error}",
+            "failed-update-role": "Kon rol niet wijzigen: {error}"
+          },
+          "toast": {
+            "revoked-invite": "Uitnodiging ingetrokken",
+            "revoking-invite": "Uitnodiging aan het intrekken",
+            "updated-role": "Rol gewijzigd",
+            "updating-role": "Rol aan het wijzigen"
           }
         },
         "list_manager": {
@@ -274,6 +312,16 @@
               "event_viewer": "Evenement Kijker",
               "owner": "Eigenaar"
             }
+          },
+          "errors": {
+            "failed-remove-member": "Kon lid niet verwijderen: {error}",
+            "failed-update-role": "Kon rol niet wijzigen: {error}"
+          },
+          "toast": {
+            "removed-member": "Lid verwijderd",
+            "removing-member": "Lid aan het verwijderen",
+            "updated-role": "Rol gewijzigd",
+            "updating-role": "Rol aan het wijzigen"
           }
         },
         "list_managers": {
@@ -329,6 +377,10 @@
             "trigger": "Verwijder organisatie"
           },
           "description": "Het verwijderen van deze organisatie zal <b>permanent</b> alle gegevens over deze organisatie, alle evenementen, en andere gerelateerde informatie verwijderen. Deze actie <b>kan niet worden teruggedraaid!</b>"
+        },
+        "logo": {
+          "description": "Dit is het publieke logo van je organisatie, die wordt getoond door heel Playrbase.",
+          "title": "Organisatie logo"
         }
       },
       "events": {

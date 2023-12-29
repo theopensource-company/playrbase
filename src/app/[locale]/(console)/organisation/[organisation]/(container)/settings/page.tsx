@@ -51,18 +51,15 @@ export default function Account() {
             <div className="flex w-full items-center justify-between gap-16 rounded-lg border p-6">
                 <div className="flex flex-col gap-6">
                     <div className="space-y-2">
-                        <h2 className="text-xl font-bold">Organisation Logo</h2>
-                        <p>
-                            This is the public logo of your organisation, shown
-                            all throughout Playrbase.
-                        </p>
+                        <h2 className="text-xl font-bold">{t('logo.title')}</h2>
+                        <p>{t('logo.description')}</p>
                     </div>
                     <UploadImage
                         intent="logo"
                         actor={organisation}
                         triggerRefresh={refetch}
-                        title={'change logo'}
-                        description={'cjamge'}
+                        title={t('logo.title')}
+                        description={t('logo.description')}
                     />
                 </div>
                 <Avatar

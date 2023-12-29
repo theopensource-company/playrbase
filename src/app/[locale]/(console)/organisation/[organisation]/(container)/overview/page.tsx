@@ -56,7 +56,9 @@ export default function Account() {
                 <div className="space-y-12 xl:col-span-2">
                     <div className="space-y-6">
                         <div className="flex justify-between gap-8">
-                            <h2 className="text-xl font-semibold">Events</h2>
+                            <h2 className="text-xl font-semibold">
+                                {t('section.events.title')}
+                            </h2>
                             <Link
                                 href={`/organisation/${slug}/events`}
                                 className={buttonVariants({
@@ -64,8 +66,10 @@ export default function Account() {
                                 })}
                             >
                                 {event_count >= 6
-                                    ? `View all ${event_count} events`
-                                    : 'View all events'}
+                                    ? t('section.events.view-all', {
+                                          count: event_count,
+                                      })
+                                    : t('section.events.go-to')}
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
                         </div>
@@ -84,7 +88,7 @@ export default function Account() {
                         <div className="space-y-6">
                             <div className="flex justify-between gap-8">
                                 <h2 className="text-xl font-semibold">
-                                    Nested organisations
+                                    {t('section.nested.title')}
                                 </h2>
                                 <Link
                                     href={`/organisation/${slug}/nested`}
@@ -93,8 +97,10 @@ export default function Account() {
                                     })}
                                 >
                                     {nested_count >= 6
-                                        ? `View all ${nested_count} organisations`
-                                        : 'View all organisations'}
+                                        ? t('section.nested.view-all', {
+                                              count: nested_count,
+                                          })
+                                        : t('section.nested.go-to')}
                                     <ArrowRight className="ml-2 h-4 w-4" />
                                 </Link>
                             </div>
@@ -109,7 +115,7 @@ export default function Account() {
                         <div className="space-y-6">
                             <div className="flex items-center justify-between gap-8">
                                 <h2 className="text-xl font-semibold">
-                                    Part of
+                                    {t('section.partof.title')}
                                 </h2>
                                 <Link
                                     href={`/organisation/${part_of.slug}/overview`}
@@ -117,7 +123,9 @@ export default function Account() {
                                         variant: 'outline',
                                     })}
                                 >
-                                    Visit {part_of.name}{' '}
+                                    {t('section.partof.visit', {
+                                        org: part_of.name,
+                                    })}
                                     <ArrowRight className="ml-2 h-4 w-4" />
                                 </Link>
                             </div>
@@ -128,7 +136,9 @@ export default function Account() {
                     )}
                     <div className="space-y-6">
                         <div className="flex items-center justify-between gap-8">
-                            <h2 className="text-xl font-semibold">Members</h2>
+                            <h2 className="text-xl font-semibold">
+                                {t('section.members.title')}
+                            </h2>
                             <Link
                                 href={`/organisation/${slug}/members`}
                                 className={buttonVariants({
@@ -136,8 +146,10 @@ export default function Account() {
                                 })}
                             >
                                 {manager_count >= 6
-                                    ? `View all ${manager_count} members`
-                                    : 'View all members'}
+                                    ? t('section.members.view-all', {
+                                          count: manager_count,
+                                      })
+                                    : t('section.members.go-to')}
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
                         </div>

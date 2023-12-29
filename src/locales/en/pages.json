@@ -226,7 +226,28 @@
     "organisation": {
       "overview": {
         "title": "Overview",
-        "not_found": "Organisation not found"
+        "not_found": "Organisation not found",
+        "section": {
+          "events": {
+            "title": "Events",
+            "view-all": "View all {count} events",
+            "go-to": "Go to events"
+          },
+          "nested": {
+            "title": "Nested organisations",
+            "view-all": "View all {count} organisations",
+            "go-to": "Go to organisations"
+          },
+          "partof": {
+            "title": "Part of",
+            "visit": "Visit {org}"
+          },
+          "members": {
+            "title": "Members",
+            "view-all": "View all {count} members",
+            "go-to": "Go to members"
+          }
+        }
       },
       "events": {
         "title": "Events",
@@ -310,6 +331,16 @@
           }
         },
         "list_manager": {
+          "toast": {
+            "updating-role": "Updating role",
+            "updated-role": "Updated role",
+            "removing-member": "Removing member",
+            "removed-member": "Removed member"
+          },
+          "errors": {
+            "failed-update-role": "Failed to update role: {error}",
+            "failed-remove-member": "Failed to remove member: {error}"
+          },
           "role": {
             "placeholder": "Role",
             "roles": {
@@ -331,6 +362,16 @@
         },
         "invited_manager": {
           "pending-invite": "Pending invite",
+          "toast": {
+            "updating-role": "Updating role",
+            "updated-role": "Updated role",
+            "revoking-invite": "Revoking invite",
+            "revoked-invite": "Revoked invite"
+          },
+          "errors": {
+            "failed-update-role": "Failed to update role: {error}",
+            "failed-revoke-invite": "Failed to revoke invite: {error}"
+          },
           "role": {
             "placeholder": "Role",
             "roles": {
@@ -344,6 +385,13 @@
         "add_member": {
           "trigger": "Add member",
           "title": "Invite user",
+          "toast": {
+            "adding-member": "Adding member",
+            "added-member": "Added member"
+          },
+          "errors": {
+            "failed-add-member": "Failed to add member: {error}"
+          },
           "role": {
             "label": "Role",
             "placeholder": "Role",
@@ -360,6 +408,10 @@
       "settings": {
         "title": "Settings",
         "not_found": "Organisation not found",
+        "logo": {
+          "title": "Organisation logo",
+          "description": "This is the public logo of your organisation, shown all throughout Playrbase."
+        },
         "name": {
           "title": "Organisation name",
           "description": "This is the public name of your organisation, shown all throughout Playrbase.",

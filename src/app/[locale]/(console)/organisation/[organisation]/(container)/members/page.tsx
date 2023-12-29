@@ -32,6 +32,7 @@ import { ArrowRight, Loader2, Mail, MailX, Plus, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { PageTitle } from '../../components/PageTitle';
 
@@ -188,22 +189,42 @@ function ListManager({
 
     const { mutate: updateRole, isPending: isUpdatingRole } = useMutation({
         mutationKey: ['organisation', 'update-role', edge],
-        mutationFn: async (role: Organisation['managers'][number]['role']) => {
-            await surreal.merge(edge, {
-                role,
-            });
+        mutationFn: async (role: Organisation['managers'][number]['role']) =>
+            toast.promise(
+                async () => {
+                    await surreal.merge(edge, {
+                        role,
+                    });
 
-            await refresh();
-        },
+                    await refresh();
+                },
+                {
+                    loading: t('toast.updating-role'),
+                    success: t('toast.updated-role'),
+                    error: (e) =>
+                        t('errors.failed-update-role', { error: e.message }),
+                }
+            ),
     });
 
     const { mutate: deleteManager, isPending: isDeletingManager } = useMutation(
         {
             mutationKey: ['organisation', 'delete-manager', edge],
-            mutationFn: async () => {
-                await surreal.delete(edge);
-                await refresh();
-            },
+            mutationFn: async () =>
+                toast.promise(
+                    async () => {
+                        await surreal.delete(edge);
+                        await refresh();
+                    },
+                    {
+                        loading: t('toast.removing-member'),
+                        success: t('toast.removed-member'),
+                        error: (e) =>
+                            t('errors.failed-remove-member', {
+                                error: e.message,
+                            }),
+                    }
+                ),
         }
     );
 
@@ -315,21 +336,39 @@ function InvitedManager({
 
     const { mutate: updateRole, isPending: isUpdatingRole } = useMutation({
         mutationKey: ['organisation', 'update-role', edge],
-        mutationFn: async (role: Organisation['managers'][number]['role']) => {
-            await surreal.merge(edge, {
-                role,
-            });
+        mutationFn: async (role: Organisation['managers'][number]['role']) =>
+            toast.promise(
+                async () => {
+                    await surreal.merge(edge, {
+                        role,
+                    });
 
-            await refresh();
-        },
+                    await refresh();
+                },
+                {
+                    loading: t('toast.updating-role'),
+                    success: t('toast.updated-role'),
+                    error: (e) =>
+                        t('errors.failed-update-role', { error: e.message }),
+                }
+            ),
     });
 
     const { mutate: revokeInvite, isPending: isRevokingInvite } = useMutation({
         mutationKey: ['organisation', 'revoke-invite', edge],
-        mutationFn: async () => {
-            await surreal.delete(edge);
-            await refresh();
-        },
+        mutationFn: async () =>
+            toast.promise(
+                async () => {
+                    await surreal.delete(edge);
+                    await refresh();
+                },
+                {
+                    loading: t('toast.revoking-invite'),
+                    success: t('toast.revoked-invite'),
+                    error: (e) =>
+                        t('errors.failed-revoke-invite', { error: e.message }),
+                }
+            ),
     });
 
     return (
@@ -386,14 +425,23 @@ function AddMember({
     const { mutateAsync, error } = useMutation({
         mutationKey: ['manages', 'invite'],
         async mutationFn() {
-            // TODO set to correct type, not important for the moment
-            await surreal.query<[string[]]>(
-                /* surql */ `
-                RELATE $user->manages->$organisation SET role = $role
-            `,
-                { user, role, organisation }
+            toast.promise(
+                async () => {
+                    await surreal.query<[string[]]>(
+                        /* surql */ `
+                        RELATE $user->manages->$organisation SET role = $role
+                    `,
+                        { user, role, organisation }
+                    );
+                    await refresh();
+                },
+                {
+                    loading: t('toast.adding-member'),
+                    success: t('toast.added-member'),
+                    error: (e) =>
+                        t('errors.failed-add-member', { error: e.message }),
+                }
             );
-            refresh();
         },
     });
 

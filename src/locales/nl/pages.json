@@ -478,7 +478,16 @@
         "user": "Gebruiker"
       },
       "tagline": "op PlayrBase console",
-      "title": "Inloggen"
+      "title": "Inloggen",
+      "options": {
+        "label": "Opties",
+        "passkey-auto-poke": {
+          "false": "Vraag nooit om Passkey",
+          "label": "Vragen om Passkey",
+          "true": "Vraag altijd om Passkey",
+          "undefined": "Automatisch inschakelen na gebruik"
+        }
+      }
     },
     "create-profile": {
       "button": {

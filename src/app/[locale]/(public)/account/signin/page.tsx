@@ -273,16 +273,16 @@ export default function Signin() {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuLabel>Options</DropdownMenuLabel>
+                    <DropdownMenuLabel>{t('options.label')}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuOptionalBoolean
                         value={autoPoke}
                         onValueChange={setAutoPoke}
-                        title="Prompt for Passkey"
+                        title={t('options.passkey-auto-poke.label')}
                         options={{
-                            undefined: 'Automatically enable once used',
-                            false: 'Never prompt for Passkey',
-                            true: 'Always prompt for Passkey',
+                            undefined: t('options.passkey-auto-poke.undefined'),
+                            false: t('options.passkey-auto-poke.false'),
+                            true: t('options.passkey-auto-poke.true'),
                         }}
                     />
                 </DropdownMenuContent>

@@ -1,6 +1,6 @@
 import { client } from '@passwordless-id/webauthn';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 import { useSurreal } from './Surreal';
 import { useAuth } from './auth';
@@ -59,11 +59,32 @@ export function useWebAuthnAvailable() {
     return available;
 }
 
+export function useAutoPoke() {
+    const [autoPoke, setAutoPoke] = useState(false);
+
+    const updatePreference = useCallback(
+        (autoPoke: boolean, persist = true) => {
+            setAutoPoke(autoPoke);
+            if (persist && typeof window !== 'undefined') {
+                localStorage.setItem('auto-poke', autoPoke.toString());
+            }
+        },
+        [setAutoPoke]
+    );
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const state = localStorage.getItem('auto-poke');
+            setAutoPoke(state == 'true');
+        }
+    }, [setAutoPoke]);
+
+    return [autoPoke, updatePreference] as const;
+}
+
 export function useRegisterPasskey() {
     const [featureFlags] = useFeatureFlags();
-    const [didPoke, setDidPoke] = useState(false);
     const { user, loading: userLoading } = useAuth();
-    const ready = useReadyAfter(10);
 
     const {
         isPending: isRegistering,
@@ -127,18 +148,12 @@ export function useRegisterPasskey() {
     });
 
     const loading = userLoading || isRegistering;
-
-    useEffect(() => {
-        if (ready && !loading && user && !didPoke) {
-            register();
-            setDidPoke(true);
-        }
-    }, [ready, loading, user, register, didPoke, setDidPoke]);
-
     return { loading, register, passkey };
 }
 
-export function usePasskeyAuthentication() {
+export function usePasskeyAuthentication({
+    autoPoke,
+}: { autoPoke?: boolean } = {}) {
     const [featureFlags] = useFeatureFlags();
     const [didPoke, setDidPoke] = useState(false);
     const { refreshUser } = useAuth();
@@ -215,11 +230,11 @@ export function usePasskeyAuthentication() {
     });
 
     useEffect(() => {
-        if (ready && !loading && !didPoke) {
+        if (ready && autoPoke && !loading && !didPoke) {
             authenticate();
             setDidPoke(true);
         }
-    }, [ready, loading, authenticate, didPoke, setDidPoke]);
+    }, [ready, autoPoke, loading, authenticate, didPoke, setDidPoke]);
 
     return { loading, authenticate, passkey };
 }

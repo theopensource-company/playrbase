@@ -21,7 +21,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useFeatureFlags } from '@/lib/featureFlags';
 import { cn } from '@/lib/utils';
-import { usePasskeyAuthentication } from '@/lib/webauthn';
+import { useAutoPoke, usePasskeyAuthentication } from '@/lib/webauthn';
 import { useRouter } from '@/locales/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronsUpDown, Info, KeyRound, Loader2, XCircle } from 'lucide-react';
@@ -44,11 +44,13 @@ export default function Signin() {
             (localStorage.getItem('signin.default-scope') as scope)) ||
         'user';
 
+    const [autoPoke, setAutoPoke] = useAutoPoke();
+
     const {
         loading: passkeyLoading,
         authenticate: tryPasskey,
         passkey,
-    } = usePasskeyAuthentication();
+    } = usePasskeyAuthentication({ autoPoke });
     const [featureFlags] = useFeatureFlags();
     const router = useRouter();
     const [navigating, setNavigating] = useState(false);
@@ -223,7 +225,10 @@ export default function Signin() {
                                 <Button
                                     type="button"
                                     className={passkey ? ' bg-green-500' : ''}
-                                    onClick={() => tryPasskey()}
+                                    onClick={() => {
+                                        tryPasskey();
+                                        setAutoPoke(true);
+                                    }}
                                     variant={passkey ? 'default' : 'outline'}
                                     disabled={passkeyLoading}
                                 >

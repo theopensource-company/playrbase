@@ -1,8 +1,8 @@
+import { EventEditor, useEventEditor } from '@/components/data/events/editor';
 import { useUpdateEvent } from '@/lib/Queries/Event';
 import { promiseTimeout } from '@/lib/utils';
 import { Event } from '@/schema/resources/event';
 import React, { useCallback } from 'react';
-import { EventEditor } from '../../../components/event-editor';
 
 export function EventSettingsTab({
     event,
@@ -12,7 +12,6 @@ export function EventSettingsTab({
     refetch: () => unknown;
 }) {
     const { mutateAsync } = useUpdateEvent(event.id);
-
     const onSubmit = useCallback(
         async (payload: Partial<Event>) => {
             return promiseTimeout(
@@ -23,5 +22,10 @@ export function EventSettingsTab({
         [mutateAsync, refetch]
     );
 
-    return <EventEditor defaultValues={event} onSubmit={onSubmit} />;
+    const eventEditor = useEventEditor({
+        defaultValues: event,
+        onSubmit: onSubmit,
+    });
+
+    return <EventEditor {...eventEditor} />;
 }

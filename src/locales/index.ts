@@ -1,3 +1,4 @@
+import deepmerge from 'deepmerge';
 import { getRequestConfig } from 'next-intl/server';
 import { defaultTranslationValues } from './defaultTranslationValues';
 
@@ -11,8 +12,11 @@ type GetRequestConfigParams = Parameters<
 
 export async function importLocale({ locale }: GetRequestConfigParams) {
     const l = (await import(`./${locale}`)) ?? {};
+    const fallback = await import(`./en/index`);
+    const messages = deepmerge(fallback, l);
+
     return {
-        messages: { ...l },
+        messages,
         timeZone: 'Europe/Amsterdam',
         defaultTranslationValues,
     } satisfies RequestConfig;

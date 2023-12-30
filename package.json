@@ -48,6 +48,7 @@
     "cmdk": "^0.2.0",
     "date-fns": "^3.0.6",
     "dayjs": "^1.11.10",
+    "deepmerge": "^4.3.1",
     "dotenv": "^16.3.1",
     "eslint": "8.56.0",
     "jsonwebtoken": "^9.0.2",

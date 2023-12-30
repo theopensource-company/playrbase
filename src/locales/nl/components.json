@@ -180,5 +180,74 @@
         "placeholder": "Selecteer een rol"
       }
     }
+  },
+  "data": {
+    "events": {
+      "create": {
+        "errors": {
+          "failed-create-event": "Kon evenement niet maken: {error}"
+        },
+        "fields": {
+          "description": {
+            "description": "De beschrijving van het evenement die overal in Playrbase wordt getoond",
+            "label": "Beschrijving"
+          },
+          "discoverable": {
+            "description": "Is dit evenement openbaar vindbaar in Playrbase",
+            "label": "Vindbaarheid"
+          },
+          "name": {
+            "description": "De naam van het evenement dat overal in Playrbase wordt weergegeven",
+            "label": "Naam"
+          },
+          "published": {
+            "description": "Is dit evenement gepubliceerd voor niet-organisatieleden",
+            "label": "Publiciteit"
+          },
+          "tournament": {
+            "label": "Onderdeel van tournament",
+            "placeholder": "Tournament naam"
+          }
+        },
+        "submit": "Maak evenement",
+        "title": "Nieuw evenement",
+        "toast": {
+          "buttons": {
+            "view": "Bekijken"
+          },
+          "created-event": "Evenement aangemaakt",
+          "creating-event": "Evenement aan het maken"
+        },
+        "trigger": "Nieuw evenement"
+      },
+      "filters": {
+        "discoverable": {
+          "options": {
+            "false": "Niet vindbaar",
+            "true": "Vindbaar",
+            "undefined": "Geen voorkeur"
+          },
+          "title": "Vindbaarheid"
+        },
+        "hosted-by": {
+          "options": {
+            "false": "Andere organisatie",
+            "true": "Deze organisatie",
+            "undefined": "Geen voorkeur"
+          },
+          "title": "Georganiseerd door"
+        },
+        "menu-label": "Filters",
+        "published": {
+          "options": {
+            "false": "Niet gepubliceerd",
+            "true": "Gepubliceerd",
+            "undefined": "Geen voorkeur"
+          },
+          "title": "Publiciteit"
+        },
+        "trigger": "Filters"
+      }
+    }
   }
 }

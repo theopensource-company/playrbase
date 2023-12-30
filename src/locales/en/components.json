@@ -180,5 +180,74 @@
         "placeholder": "Select a role"
       }
     }
+  },
+  "data": {
+    "events": {
+      "create": {
+        "title": "New event",
+        "trigger": "New event",
+        "toast": {
+          "creating-event": "Creating event",
+          "created-event": "Created event",
+          "buttons": {
+            "view": "View"
+          }
+        },
+        "errors": {
+          "failed-create-event": "Failed to create event: {error}"
+        },
+        "fields": {
+          "name": {
+            "label": "Name",
+            "description": "The name of the event that will be shown throughout Playrbase"
+          },
+          "description": {
+            "label": "Description",
+            "description": "The description of the event that will be shown throughout Playrbase"
+          },
+          "tournament": {
+            "label": "Part of tournament",
+            "placeholder": "Tournament name"
+          },
+          "discoverable": {
+            "label": "Discoverable",
+            "description": "Is this event is publicly listed throughout Playrbase"
+          },
+          "published": {
+            "label": "Published",
+            "description": "Is this event is published for non-organisational members"
+          }
+        },
+        "submit": "Create event"
+      },
+      "filters": {
+        "trigger": "Filters",
+        "menu-label": "Filters",
+        "hosted-by": {
+          "title": "Hosted By",
+          "options": {
+            "undefined": "No preference",
+            "true": "This organisation",
+            "false": "Other organisation"
+          }
+        },
+        "published": {
+          "title": "Published",
+          "options": {
+            "undefined": "No preference",
+            "true": "Published",
+            "false": "Not published"
+          }
+        },
+        "discoverable": {
+          "title": "Discoverable",
+          "options": {
+            "undefined": "No preference",
+            "true": "Discoverable",
+            "false": "Not discoverable"
+          }
+        }
+      }
+    }
   }
 }

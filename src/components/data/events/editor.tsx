@@ -16,10 +16,10 @@ import { Event } from '@/schema/resources/event';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const Schema = Event.pick({
+export const EventEditorSchema = Event.pick({
     name: true,
     description: true,
     start: true,
@@ -29,20 +29,30 @@ const Schema = Event.pick({
     options: true,
 });
 
-type Schema = z.infer<typeof Schema>;
+export type EventEditorSchema = z.infer<typeof EventEditorSchema>;
 
-export function EventEditor({
+export function useEventEditor({
     defaultValues,
     onSubmit,
 }: {
     defaultValues: Partial<Event>;
-    onSubmit: (payload: Schema) => Promise<unknown>;
+    onSubmit: (payload: EventEditorSchema) => Promise<unknown>;
 }) {
-    const form = useForm<Schema>({
-        resolver: zodResolver(Schema),
+    const form = useForm<EventEditorSchema>({
+        resolver: zodResolver(EventEditorSchema),
         defaultValues,
     });
 
+    return { form, onSubmit };
+}
+
+export function EventEditor({
+    form,
+    onSubmit,
+}: {
+    form: UseFormReturn<EventEditorSchema>;
+    onSubmit: (payload: EventEditorSchema) => Promise<unknown>;
+}) {
     return (
         <Form {...form}>
             <form
@@ -57,13 +67,13 @@ export function EventEditor({
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} autoComplete="off" />
-                                    </FormControl>
                                     <FormDescription>
                                         The name of the event that will be shown
                                         throughout Playrbase
                                     </FormDescription>
+                                    <FormControl>
+                                        <Input {...field} autoComplete="off" />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -74,13 +84,13 @@ export function EventEditor({
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Description</FormLabel>
-                                    <FormControl>
-                                        <Textarea {...field} rows={6} />
-                                    </FormControl>
                                     <FormDescription>
                                         The description of the event that will
                                         be shown throughout Playrbase
                                     </FormDescription>
+                                    <FormControl>
+                                        <Textarea {...field} rows={6} />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}

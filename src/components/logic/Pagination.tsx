@@ -13,8 +13,13 @@ import React, {
     useState,
 } from 'react';
 import { Button } from '../ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '../ui/select';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '../ui/tooltip';
 
 export function usePagination({
     defaultPageSize,
@@ -72,38 +77,42 @@ export function Pagination({
     return (
         <div className="flex items-center gap-10">
             <div className="flex items-center gap-4">
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                            disabled={isFirst}
-                            onClick={first}
-                        >
-                            <ChevronsLeft size={20} />
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                        {t('buttons.first.popover')}
-                    </PopoverContent>
-                </Popover>
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                            disabled={isFirst}
-                            onClick={previous}
-                        >
-                            <ChevronLeft size={20} />
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                        {t('buttons.previous.popover')}
-                    </PopoverContent>
-                </Popover>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                disabled={isFirst}
+                                onClick={first}
+                            >
+                                <ChevronsLeft size={20} />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            {t('buttons.first.popover')}
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                disabled={isFirst}
+                                onClick={previous}
+                            >
+                                <ChevronLeft size={20} />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            {t('buttons.previous.popover')}
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
 
                 <span className="text-sm">
                     {t.rich('page', {
@@ -112,34 +121,42 @@ export function Pagination({
                     })}
                 </span>
 
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                            disabled={isLast}
-                            onClick={next}
-                        >
-                            <ChevronRight size={20} />
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent>{t('buttons.next.popover')}</PopoverContent>
-                </Popover>
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                            disabled={isLast}
-                            onClick={last}
-                        >
-                            <ChevronsRight size={20} />
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent>{t('buttons.last.popover')}</PopoverContent>
-                </Popover>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                disabled={isLast}
+                                onClick={next}
+                            >
+                                <ChevronRight size={20} />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            {t('buttons.next.popover')}
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                disabled={isLast}
+                                onClick={last}
+                            >
+                                <ChevronsRight size={20} />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            {t('buttons.last.popover')}
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
             </div>
             <Select
                 value={pageSize.toString()}

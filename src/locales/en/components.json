@@ -146,6 +146,31 @@
           "no-permissions": "No permissions"
         }
       }
+    },
+    "pagination": {
+      "buttons": {
+        "first": {
+          "popover": "First page"
+        },
+        "previous": {
+          "popover": "Previous page"
+        },
+        "next": {
+          "popover": "Next page"
+        },
+        "last": {
+          "popover": "Last page"
+        }
+      },
+      "page": "Page {page} - {total}",
+      "size": "Size: {size}",
+      "sizes": {
+        "5": "5",
+        "10": "10",
+        "25": "25",
+        "50": "50",
+        "100": "100"
+      }
     }
   },
   "layout": {
@@ -247,6 +272,160 @@
             "false": "Not discoverable"
           }
         }
+      },
+      "table": {
+        "columns": {
+          "name": "Name",
+          "start": "Start",
+          "end": "End",
+          "published": "Published",
+          "discoverable": "Discoverable",
+          "created": "Created",
+          "updated": "Updated"
+        },
+        "row": {
+          "actions": {
+            "manage": "Manage",
+            "more-options": {
+              "label": "More options",
+              "settings": "Settings"
+            }
+          }
+        },
+        "empty": "No events found"
+      },
+      "editor": {
+        "fields": {
+          "__category": {
+            "optional-settings": "Optional settings"
+          },
+          "name": {
+            "label": "Name",
+            "description": "The name of the event that will be shown throughout Playrbase"
+          },
+          "description": {
+            "label": "Description",
+            "description": "The description of the event that will be shown throughout Playrbase"
+          },
+          "discoverable": {
+            "label": "Discoverable",
+            "description": "Is this event is publicly listed throughout Playrbase"
+          },
+          "published": {
+            "label": "Published",
+            "description": "Is this event is published for non-organisational members"
+          },
+          "manual-approval": {
+            "label": "Manual approval",
+            "description": "Players who signup for this event need to be manually approved"
+          },
+          "duration": {
+            "label": "Event duration",
+            "description": "When does this event start and end",
+            "fields": {
+              "start": {
+                "label": "Start",
+                "clear": "Clear"
+              },
+              "end": {
+                "label": "End",
+                "clear": "Clear"
+              }
+            }
+          },
+          "player-count": {
+            "label": "Number of players",
+            "description": "Controls the minimum and maximum amount of players per signup",
+            "fields": {
+              "minimum": {
+                "label": "Minimum",
+                "clear": "Clear"
+              },
+              "maximum": {
+                "label": "Maximum",
+                "clear": "Clear"
+              }
+            }
+          },
+          "player-age": {
+            "label": "Player age",
+            "description": "Controls the minimum and maximum age that players need to be to join the event",
+            "fields": {
+              "minimum": {
+                "label": "Minimum",
+                "clear": "Clear"
+              },
+              "maximum": {
+                "label": "Maximum",
+                "clear": "Clear"
+              }
+            }
+          }
+        },
+        "button": {
+          "save": "Save changes"
+        }
+      }
+    },
+    "teams": {
+      "table": {
+        "columns": {
+          "name": "Name",
+          "description": "Description",
+          "created": "Created",
+          "updated": "Updated"
+        },
+        "empty": "No teams found",
+        "confirmed": {
+          "actions": {
+            "manage": "Manage",
+            "more-options": {
+              "label": "More options",
+              "settings": "Settings"
+            }
+          }
+        },
+        "unconfirmed": {
+          "actions": {
+            "accept": "Accept Invitation",
+            "deny": "Deny Invitation",
+            "badge-no-actions": "Invitation not yet accepted"
+          }
+        }
+      }
+    },
+    "organisations": {
+      "table": {
+        "columns": {
+          "name": "Name",
+          "email": "Email",
+          "created": "Created",
+          "updated": "Updated"
+        },
+        "empty": "No organisations found",
+        "confirmed": {
+          "actions": {
+            "manage": "Manage",
+            "more-options": {
+              "label": "More options",
+              "settings": "Settings"
+            }
+          }
+        },
+        "unconfirmed": {
+          "actions": {
+            "accept": "Accept Invitation",
+            "deny": "Deny Invitation",
+            "badge-no-actions": "Invitation not yet accepted"
+          }
+        }
+      }
+    }
+  },
+  "ui-custom": {
+    "dd": {
+      "footer": {
+        "button-close": "Cancel"
       }
     }
   }

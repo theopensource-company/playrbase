@@ -15,6 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Event } from '@/schema/resources/event';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -53,6 +54,7 @@ export function EventEditor({
     form: UseFormReturn<EventEditorSchema>;
     onSubmit: (payload: EventEditorSchema) => Promise<unknown>;
 }) {
+    const t = useTranslations('components.data.events.editor');
     return (
         <Form {...form}>
             <form
@@ -66,10 +68,11 @@ export function EventEditor({
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name</FormLabel>
+                                    <FormLabel>
+                                        {t('fields.name.label')}
+                                    </FormLabel>
                                     <FormDescription>
-                                        The name of the event that will be shown
-                                        throughout Playrbase
+                                        {t('fields.name.description')}
                                     </FormDescription>
                                     <FormControl>
                                         <Input {...field} autoComplete="off" />
@@ -83,10 +86,11 @@ export function EventEditor({
                             name="description"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Description</FormLabel>
+                                    <FormLabel>
+                                        {t('fields.description.label')}
+                                    </FormLabel>
                                     <FormDescription>
-                                        The description of the event that will
-                                        be shown throughout Playrbase
+                                        {t('fields.description.description')}
                                     </FormDescription>
                                     <FormControl>
                                         <Textarea {...field} rows={6} />
@@ -107,10 +111,13 @@ export function EventEditor({
                                         />
                                     </FormControl>
                                     <div className="space-y-1 leading-none">
-                                        <FormLabel>Discoverable</FormLabel>
+                                        <FormLabel>
+                                            {t('fields.discoverable.label')}
+                                        </FormLabel>
                                         <FormDescription>
-                                            Is this event is publicly listed
-                                            throughout Playrbase
+                                            {t(
+                                                'fields.discoverable.description'
+                                            )}
                                         </FormDescription>
                                     </div>
                                 </FormItem>
@@ -128,10 +135,11 @@ export function EventEditor({
                                         />
                                     </FormControl>
                                     <div className="space-y-1 leading-none">
-                                        <FormLabel>Published</FormLabel>
+                                        <FormLabel>
+                                            {t('fields.published.label')}
+                                        </FormLabel>
                                         <FormDescription>
-                                            Is this event is published for
-                                            non-organisational members
+                                            {t('fields.published.description')}
                                         </FormDescription>
                                     </div>
                                 </FormItem>
@@ -149,10 +157,13 @@ export function EventEditor({
                                         />
                                     </FormControl>
                                     <div className="space-y-1 leading-none">
-                                        <FormLabel>Manual approval</FormLabel>
+                                        <FormLabel>
+                                            {t('fields.manual-approval.label')}
+                                        </FormLabel>
                                         <FormDescription>
-                                            Members who signup for this event
-                                            need to be manually approved
+                                            {t(
+                                                'fields.manual-approval.description'
+                                            )}
                                         </FormDescription>
                                     </div>
                                 </FormItem>
@@ -160,11 +171,13 @@ export function EventEditor({
                         />
                     </div>
                     <div className="flex flex-col gap-8">
-                        <h3 className="text-lg font-bold">Optional settings</h3>
+                        <h3 className="text-lg font-bold">
+                            {t('fields.__category.optional-settings')}
+                        </h3>
                         <div className="rounded-md border p-4">
-                            <FormLabel>Event duration</FormLabel>
+                            <FormLabel>{t('fields.duration.label')}</FormLabel>
                             <FormDescription>
-                                When does this event start and end
+                                {t('fields.duration.description')}
                             </FormDescription>
                             <div className="mt-4 flex gap-6">
                                 <FormField
@@ -173,7 +186,11 @@ export function EventEditor({
                                     render={({ field }) => (
                                         <FormItem className="w-full">
                                             <div className="flex w-full items-center justify-between gap-2">
-                                                <FormLabel>Start</FormLabel>
+                                                <FormLabel>
+                                                    {t(
+                                                        'fields.duration.fields.start.label'
+                                                    )}
+                                                </FormLabel>
                                                 <Button
                                                     size="sm"
                                                     variant="ghost"
@@ -189,7 +206,9 @@ export function EventEditor({
                                                         );
                                                     }}
                                                 >
-                                                    Clear
+                                                    {t(
+                                                        'fields.duration.fields.start.clear'
+                                                    )}
                                                 </Button>
                                             </div>
                                             <DateTimePickerField
@@ -206,7 +225,11 @@ export function EventEditor({
                                     render={({ field }) => (
                                         <FormItem className="w-full">
                                             <div className="flex w-full items-center justify-between gap-2">
-                                                <FormLabel>End</FormLabel>
+                                                <FormLabel>
+                                                    {t(
+                                                        'fields.duration.fields.end.label'
+                                                    )}
+                                                </FormLabel>
                                                 <Button
                                                     size="sm"
                                                     variant="ghost"
@@ -219,7 +242,9 @@ export function EventEditor({
                                                         )
                                                     }
                                                 >
-                                                    Clear
+                                                    {t(
+                                                        'fields.duration.fields.end.clear'
+                                                    )}
                                                 </Button>
                                             </div>
                                             <DateTimePickerField
@@ -234,10 +259,11 @@ export function EventEditor({
                         </div>
 
                         <div className="rounded-md border p-4">
-                            <FormLabel>Number of players</FormLabel>
+                            <FormLabel>
+                                {t('fields.player-count.label')}
+                            </FormLabel>
                             <FormDescription>
-                                Controls the minimum and maximum amount of
-                                players per signup
+                                {t('fields.player-count.description')}
                             </FormDescription>
                             <div className="mt-4 flex gap-6">
                                 <FormField
@@ -246,7 +272,11 @@ export function EventEditor({
                                     render={({ field }) => (
                                         <FormItem className="w-full">
                                             <div className="flex w-full items-center justify-between gap-2">
-                                                <FormLabel>Minimum</FormLabel>
+                                                <FormLabel>
+                                                    {t(
+                                                        'fields.player-count.fields.minimum.label'
+                                                    )}
+                                                </FormLabel>
                                                 <Button
                                                     size="sm"
                                                     variant="ghost"
@@ -262,7 +292,9 @@ export function EventEditor({
                                                         );
                                                     }}
                                                 >
-                                                    Clear
+                                                    {t(
+                                                        'fields.player-count.fields.minimum.clear'
+                                                    )}
                                                 </Button>
                                             </div>
                                             <FormControl>
@@ -282,7 +314,11 @@ export function EventEditor({
                                     render={({ field }) => (
                                         <FormItem className="w-full">
                                             <div className="flex w-full items-center justify-between gap-2">
-                                                <FormLabel>Maximum</FormLabel>
+                                                <FormLabel>
+                                                    {t(
+                                                        'fields.player-count.fields.maximum.label'
+                                                    )}
+                                                </FormLabel>
                                                 <Button
                                                     size="sm"
                                                     variant="ghost"
@@ -298,7 +334,9 @@ export function EventEditor({
                                                         );
                                                     }}
                                                 >
-                                                    Clear
+                                                    {t(
+                                                        'fields.player-count.fields.maximum.clear'
+                                                    )}
                                                 </Button>
                                             </div>
                                             <FormControl>
@@ -316,10 +354,11 @@ export function EventEditor({
                         </div>
 
                         <div className="rounded-md border p-4">
-                            <FormLabel>Player age</FormLabel>
+                            <FormLabel>
+                                {t('fields.player-age.label')}
+                            </FormLabel>
                             <FormDescription>
-                                Controls the minimum and maximum age that
-                                players need to be to join the event
+                                {t('fields.player-age.description')}
                             </FormDescription>
                             <div className="mt-4 flex gap-6">
                                 <FormField
@@ -328,7 +367,11 @@ export function EventEditor({
                                     render={({ field }) => (
                                         <FormItem className="w-full">
                                             <div className="flex w-full items-center justify-between gap-2">
-                                                <FormLabel>Minimum</FormLabel>
+                                                <FormLabel>
+                                                    {t(
+                                                        'fields.player-age.fields.minimum.label'
+                                                    )}
+                                                </FormLabel>
                                                 <Button
                                                     size="sm"
                                                     variant="ghost"
@@ -344,7 +387,9 @@ export function EventEditor({
                                                         );
                                                     }}
                                                 >
-                                                    Clear
+                                                    {t(
+                                                        'fields.player-age.fields.minimum.clear'
+                                                    )}
                                                 </Button>
                                             </div>
                                             <FormControl>
@@ -364,7 +409,11 @@ export function EventEditor({
                                     render={({ field }) => (
                                         <FormItem className="w-full">
                                             <div className="flex w-full items-center justify-between gap-2">
-                                                <FormLabel>Maximum</FormLabel>
+                                                <FormLabel>
+                                                    {t(
+                                                        'fields.player-age.fields.maximum.label'
+                                                    )}
+                                                </FormLabel>
                                                 <Button
                                                     size="sm"
                                                     variant="ghost"
@@ -380,7 +429,9 @@ export function EventEditor({
                                                         );
                                                     }}
                                                 >
-                                                    Clear
+                                                    {t(
+                                                        'fields.player-age.fields.maximum.clear'
+                                                    )}
                                                 </Button>
                                             </div>
                                             <FormControl>
@@ -409,7 +460,7 @@ export function EventEditor({
                         {form.formState.isSubmitting && (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         )}
-                        Save changes
+                        {t('button.save')}
                     </Button>
                 </div>
             </form>

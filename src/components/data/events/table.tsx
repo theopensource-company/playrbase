@@ -27,6 +27,7 @@ import {
     Wrench,
     X,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import React, { ReactNode } from 'react';
 
 export type EventTableColumns = {
@@ -36,6 +37,7 @@ export type EventTableColumns = {
     published?: boolean;
     discoverable?: boolean;
     created?: boolean;
+    updated?: boolean;
     actions?: boolean;
 };
 
@@ -50,6 +52,7 @@ export function EventTable({
     columns?: EventTableColumns;
     caption?: ReactNode;
 }) {
+    const t = useTranslations('components.data.events.table');
     const doRenderCol = (col: keyof EventTableColumns) =>
         columns?.[col] ?? true;
 
@@ -57,16 +60,27 @@ export function EventTable({
         <Table>
             <TableHeader>
                 <TableRow>
-                    {doRenderCol('name') && <TableHead>Name</TableHead>}
-                    {doRenderCol('start') && <TableHead>Start</TableHead>}
-                    {doRenderCol('end') && <TableHead>End</TableHead>}
+                    {doRenderCol('name') && (
+                        <TableHead>{t('columns.name')}</TableHead>
+                    )}
+                    {doRenderCol('start') && (
+                        <TableHead>{t('columns.start')}</TableHead>
+                    )}
+                    {doRenderCol('end') && (
+                        <TableHead>{t('columns.end')}</TableHead>
+                    )}
                     {doRenderCol('published') && (
-                        <TableHead>Published</TableHead>
+                        <TableHead>{t('columns.published')}</TableHead>
                     )}
                     {doRenderCol('discoverable') && (
-                        <TableHead>Discoverable</TableHead>
+                        <TableHead>{t('columns.discoverable')}</TableHead>
                     )}
-                    {doRenderCol('created') && <TableHead>Created</TableHead>}
+                    {doRenderCol('created') && (
+                        <TableHead>{t('columns.created')}</TableHead>
+                    )}
+                    {doRenderCol('updated') && (
+                        <TableHead>{t('columns.updated')}</TableHead>
+                    )}
                     {doRenderCol('actions') && <TableHead />}
                 </TableRow>
             </TableHeader>
@@ -119,6 +133,13 @@ export function EventTable({
                                     <DateTooltip date={event.created} />
                                 </TableCell>
                             )}
+                            {doRenderCol('updated') && (
+                                <TableCell>
+                                    {event.updated && (
+                                        <DateTooltip date={event.updated} />
+                                    )}
+                                </TableCell>
+                            )}
                             {doRenderCol('actions') && (
                                 <TableCell className="flex items-center justify-end gap-4">
                                     <Link
@@ -127,7 +148,7 @@ export function EventTable({
                                             size: 'sm',
                                         })}
                                     >
-                                        Manage{' '}
+                                        {t('row.actions.manage')}
                                         <ArrowRight
                                             size={18}
                                             className="ml-2"
@@ -141,7 +162,9 @@ export function EventTable({
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent className="w-44">
                                             <DropdownMenuLabel>
-                                                More options
+                                                {t(
+                                                    'row.actions.more-options.label'
+                                                )}
                                             </DropdownMenuLabel>
                                             <DropdownMenuSeparator />
                                             <Link href={url('settings')}>
@@ -150,7 +173,9 @@ export function EventTable({
                                                         size={18}
                                                         className="mr-2 h-4 w-4"
                                                     />
-                                                    Settings
+                                                    {t(
+                                                        'row.actions.more-options.settings'
+                                                    )}
                                                 </DropdownMenuItem>
                                             </Link>
                                         </DropdownMenuContent>
@@ -164,7 +189,7 @@ export function EventTable({
             {events?.length == 0 ? (
                 <TableCaption className="my-12">
                     <div className="flex items-center justify-center gap-1">
-                        <FileSearch className="h-4 w-4" /> No events found
+                        <FileSearch className="h-4 w-4" /> {t('empty')}
                     </div>
                 </TableCaption>
             ) : (

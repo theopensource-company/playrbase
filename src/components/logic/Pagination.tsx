@@ -4,6 +4,7 @@ import {
     ChevronsLeft,
     ChevronsRight,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import React, {
     Dispatch,
     SetStateAction,
@@ -12,13 +13,8 @@ import React, {
     useState,
 } from 'react';
 import { Button } from '../ui/button';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '../ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Select, SelectContent, SelectItem, SelectTrigger } from '../ui/select';
 
 export function usePagination({
     defaultPageSize,
@@ -48,6 +44,7 @@ export function Pagination({
         setPageSize: Dispatch<SetStateAction<number>>;
     };
 }) {
+    const t = useTranslations('components.logic.pagination');
     const numPages = Math.ceil(count / pageSize);
     const isFirst = page == 1;
     const isLast = page == numPages;
@@ -75,62 +72,88 @@ export function Pagination({
     return (
         <div className="flex items-center gap-10">
             <div className="flex items-center gap-4">
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6"
-                    disabled={isFirst}
-                    onClick={first}
-                >
-                    <ChevronsLeft size={20} />
-                </Button>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6"
-                    disabled={isFirst}
-                    onClick={previous}
-                >
-                    <ChevronLeft size={20} />
-                </Button>
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            disabled={isFirst}
+                            onClick={first}
+                        >
+                            <ChevronsLeft size={20} />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                        {t('buttons.first.popover')}
+                    </PopoverContent>
+                </Popover>
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            disabled={isFirst}
+                            onClick={previous}
+                        >
+                            <ChevronLeft size={20} />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                        {t('buttons.previous.popover')}
+                    </PopoverContent>
+                </Popover>
 
                 <span className="text-sm">
-                    Page {page} - {numPages}
+                    {t.rich('page', {
+                        page,
+                        total: numPages,
+                    })}
                 </span>
 
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6"
-                    disabled={isLast}
-                    onClick={next}
-                >
-                    <ChevronRight size={20} />
-                </Button>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6"
-                    disabled={isLast}
-                    onClick={last}
-                >
-                    <ChevronsRight size={20} />
-                </Button>
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            disabled={isLast}
+                            onClick={next}
+                        >
+                            <ChevronRight size={20} />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>{t('buttons.next.popover')}</PopoverContent>
+                </Popover>
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            disabled={isLast}
+                            onClick={last}
+                        >
+                            <ChevronsRight size={20} />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>{t('buttons.last.popover')}</PopoverContent>
+                </Popover>
             </div>
             <Select
                 value={pageSize.toString()}
                 onValueChange={(v) => setPageSize(Number.parseInt(v))}
             >
-                <SelectTrigger className="flex-[0] gap-2">
-                    <span className="whitespace-nowrap">Size: </span>
-                    <SelectValue prefix="Page size:" />
+                <SelectTrigger className="flex-[0] gap-2 whitespace-nowrap">
+                    {t.rich('size', { size: pageSize })}
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="5">5</SelectItem>
-                    <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="25">25</SelectItem>
-                    <SelectItem value="50">50</SelectItem>
-                    <SelectItem value="100">100</SelectItem>
+                    <SelectItem value="5">{t('sizes.5')}</SelectItem>
+                    <SelectItem value="10">{t('sizes.10')}</SelectItem>
+                    <SelectItem value="25">{t('sizes.25')}</SelectItem>
+                    <SelectItem value="50">{t('sizes.50')}</SelectItem>
+                    <SelectItem value="100">{t('sizes.100')}</SelectItem>
                 </SelectContent>
             </Select>
         </div>

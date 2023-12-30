@@ -1,5 +1,6 @@
 import { useIsMobileState } from '@/lib/scrolled';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import {
     Dialog,
@@ -101,6 +102,7 @@ export function DDFooter({
     closeText?: string;
     closeDisabled?: boolean;
 }) {
+    const t = useTranslations('components.ui-custom.dd.footer');
     const isMobile = useIsMobileState();
     if (isMobile)
         return (
@@ -111,7 +113,7 @@ export function DDFooter({
                 <div className="flex flex-col gap-4">
                     {children}
                     <DrawerClose className="pt-2" disabled={closeDisabled}>
-                        {closeText ?? 'Cancel'}
+                        {closeText ?? t('button-close')}
                     </DrawerClose>
                 </div>
             </DrawerFooter>

@@ -34,6 +34,7 @@ import {
     Wrench,
     X,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import React, { ReactNode } from 'react';
 
 export type OrganisationTableColumns = {
@@ -64,6 +65,7 @@ export function OrganisationTable({
     denyInvitation?: (id: Organisation['id']) => Promise<unknown>;
     isLoading?: boolean;
 }) {
+    const t = useTranslations('components.data.organisations.table');
     const doRenderCol = doRenderColFactory(columns);
 
     const unconfirmedMappable = Array.isArray(unconfirmed)
@@ -79,10 +81,18 @@ export function OrganisationTable({
             <TableHeader>
                 <TableRow>
                     {doRenderCol('avatar') && count > 0 && <TableHead />}
-                    {doRenderCol('name') && <TableHead>Name</TableHead>}
-                    {doRenderCol('email') && <TableHead>Email</TableHead>}
-                    {doRenderCol('created') && <TableHead>Created</TableHead>}
-                    {doRenderCol('updated') && <TableHead>Updated</TableHead>}
+                    {doRenderCol('name') && (
+                        <TableHead>{t('columns.name')}</TableHead>
+                    )}
+                    {doRenderCol('email') && (
+                        <TableHead>{t('columns.email')}</TableHead>
+                    )}
+                    {doRenderCol('created') && (
+                        <TableHead>{t('columns.created')}</TableHead>
+                    )}
+                    {doRenderCol('updated') && (
+                        <TableHead>{t('columns.updated')}</TableHead>
+                    )}
                     {doRenderCol('actions') && count > 0 && <TableHead />}
                 </TableRow>
             </TableHeader>
@@ -117,8 +127,7 @@ export function OrganisationTable({
             {count == 0 ? (
                 <TableCaption className="my-12">
                     <div className="flex items-center justify-center gap-1">
-                        <FileSearch className="h-4 w-4" /> No organisations
-                        found
+                        <FileSearch className="h-4 w-4" /> {t('empty')}
                     </div>
                 </TableCaption>
             ) : (
@@ -177,6 +186,7 @@ function RenderConfirmed({
     columns?: OrganisationTableColumns;
     organisation: Organisation;
 }) {
+    const t = useTranslations('components.data.organisations.table.confirmed');
     const doRenderCol = doRenderColFactory(columns);
     const url = (page: string) => `/organisation/${organisation.slug}/${page}`;
 
@@ -209,7 +219,8 @@ function RenderConfirmed({
                             size: 'sm',
                         })}
                     >
-                        Manage <ArrowRight size={18} className="ml-2" />
+                        {t('actions.manage')}{' '}
+                        <ArrowRight size={18} className="ml-2" />
                     </Link>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -218,7 +229,9 @@ function RenderConfirmed({
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-44">
-                            <DropdownMenuLabel>More options</DropdownMenuLabel>
+                            <DropdownMenuLabel>
+                                {t('actions.more-options.label')}
+                            </DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <Link href={url('settings')}>
                                 <DropdownMenuItem className="hover:cursor-pointer">
@@ -226,7 +239,7 @@ function RenderConfirmed({
                                         size={18}
                                         className="mr-2 h-4 w-4"
                                     />
-                                    Settings
+                                    {t('actions.more-options.settings')}
                                 </DropdownMenuItem>
                             </Link>
                         </DropdownMenuContent>
@@ -248,6 +261,9 @@ function RenderUnconfirmed({
     acceptInvitation?: (id: Organisation['id']) => Promise<unknown>;
     denyInvitation?: (id: Organisation['id']) => Promise<unknown>;
 }) {
+    const t = useTranslations(
+        'components.data.organisations.table.unconfirmed'
+    );
     const doRenderCol = doRenderColFactory(columns);
 
     return (
@@ -274,7 +290,7 @@ function RenderUnconfirmed({
                             onClick={() => acceptInvitation(organisation.id)}
                             size="sm"
                         >
-                            Accept Invitation{' '}
+                            {t('actions.accept')}
                             <Check size={18} className="ml-2" />
                         </Button>
                     )}
@@ -284,7 +300,7 @@ function RenderUnconfirmed({
                             size={acceptInvitation ? 'sm' : 'icon'}
                             variant="destructive"
                         >
-                            {!acceptInvitation && 'Accept Invitation '}
+                            {!acceptInvitation && t('actions.deny')}
                             <X
                                 size={18}
                                 className={!acceptInvitation ? 'ml-2' : ''}
@@ -292,7 +308,7 @@ function RenderUnconfirmed({
                         </Button>
                     )}
                     {!acceptInvitation && !denyInvitation && (
-                        <Badge>Invitation not yet accepted</Badge>
+                        <Badge>{t('actions.badge-no-actions')}</Badge>
                     )}
                 </TableCell>
             )}

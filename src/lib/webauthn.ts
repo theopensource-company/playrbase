@@ -1,6 +1,6 @@
 import { client } from '@passwordless-id/webauthn';
 import { useMutation } from '@tanstack/react-query';
-import { useCallback, useEffect, useState } from 'react';
+import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 import { useSurreal } from './Surreal';
 import { useAuth } from './auth';
@@ -60,22 +60,28 @@ export function useWebAuthnAvailable() {
 }
 
 export function useAutoPoke() {
-    const [autoPoke, setAutoPoke] = useState(false);
+    const [autoPoke, setAutoPoke] = useState<boolean | undefined>();
 
     const updatePreference = useCallback(
-        (autoPoke: boolean, persist = true) => {
-            setAutoPoke(autoPoke);
+        (newValue: SetStateAction<boolean | undefined>, persist = true) => {
+            const value =
+                typeof newValue == 'function' ? newValue(autoPoke) : newValue;
+            setAutoPoke(value);
             if (persist && typeof window !== 'undefined') {
-                localStorage.setItem('auto-poke', autoPoke.toString());
+                if (typeof value == 'undefined') {
+                    localStorage.removeItem('auto-poke');
+                } else {
+                    localStorage.setItem('auto-poke', value.toString());
+                }
             }
         },
-        [setAutoPoke]
+        [autoPoke, setAutoPoke]
     );
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const state = localStorage.getItem('auto-poke');
-            setAutoPoke(state == 'true');
+            setAutoPoke(state == null ? undefined : state == 'true');
         }
     }, [setAutoPoke]);
 

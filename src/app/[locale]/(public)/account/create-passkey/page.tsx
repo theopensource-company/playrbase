@@ -69,14 +69,14 @@ function CreatePasskey({
 }: Pick<ReturnType<typeof useRegisterPasskey>, 'loading' | 'register'> & {
     signup?: boolean;
 }) {
-    const [_, setAutoPoke] = useAutoPoke();
+    const [autoPoke, setAutoPoke] = useAutoPoke();
     const t = useTranslations('pages.account.create-passkey.pre');
     return (
         <CardFooter className="space-x-4">
             <Button
                 onClick={() => {
                     register();
-                    setAutoPoke(true);
+                    if (autoPoke !== false) setAutoPoke(true);
                 }}
                 disabled={loading}
             >

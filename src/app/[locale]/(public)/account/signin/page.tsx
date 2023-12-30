@@ -1,6 +1,7 @@
 'use client';
 
 import Container from '@/components/layout/Container';
+import { DropdownMenuOptionalBoolean } from '@/components/logic/DropdownMenuOptionalBoolean';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -13,8 +14,10 @@ import {
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuLabel,
     DropdownMenuRadioGroup,
     DropdownMenuRadioItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
@@ -24,7 +27,14 @@ import { cn } from '@/lib/utils';
 import { useAutoPoke, usePasskeyAuthentication } from '@/lib/webauthn';
 import { useRouter } from '@/locales/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ChevronsUpDown, Info, KeyRound, Loader2, XCircle } from 'lucide-react';
+import {
+    ChevronsUpDown,
+    Cog,
+    Info,
+    KeyRound,
+    Loader2,
+    XCircle,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -124,126 +134,159 @@ export default function Signin() {
     });
 
     return (
-        <Container className="flex flex-grow flex-col items-center justify-center">
-            <form
-                className="flex flex-col items-center gap-8"
-                onSubmit={handler}
-            >
-                <Card className="flex min-w-[400px] flex-col">
-                    <CardHeader className="flex flex-row justify-between gap-24">
-                        <div>
-                            <CardTitle className="text-3xl font-bold">
-                                {t('title')}
-                            </CardTitle>
-                            <CardDescription>{t('tagline')}</CardDescription>
-                        </div>
-                        {!passkey && (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        className="capitalize"
-                                        role="combobox"
-                                        disabled={passkeyLoading}
-                                    >
-                                        {t(`scope.${scope}`)}
-                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-56">
-                                    <DropdownMenuRadioGroup
-                                        value={scope}
-                                        onValueChange={(s) =>
-                                            setScope(s as scope)
-                                        }
-                                    >
-                                        <DropdownMenuRadioItem value="user">
-                                            {t('scope.user')}
-                                        </DropdownMenuRadioItem>
-                                        <DropdownMenuRadioItem value="admin">
-                                            {t('scope.admin')}
-                                        </DropdownMenuRadioItem>
-                                    </DropdownMenuRadioGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        )}
-                    </CardHeader>
-                    <CardContent>
-                        {!passkey ? (
-                            <Input
-                                className="mt-2"
-                                placeholder={t('input.email.placeholder')}
-                                disabled={!!passkey || passkeyLoading}
-                                {...register('identifier')}
-                            />
-                        ) : (
-                            <div className="space-y-1">
-                                <Label className="opacity-60">
-                                    {t('input.passkey.label')}
-                                </Label>
-                                <div className="text-md flex items-center justify-between rounded-md border px-4 py-3">
-                                    <div className="flex items-center gap-2.5">
-                                        <KeyRound className="h-5 w-5" />{' '}
-                                        {passkey.name}
+        <>
+            <Container className="flex flex-grow flex-col items-center justify-center">
+                <form
+                    className="flex flex-col items-center gap-8"
+                    onSubmit={handler}
+                >
+                    <Card className="flex min-w-[400px] flex-col">
+                        <CardHeader className="flex flex-row justify-between gap-24">
+                            <div>
+                                <CardTitle className="text-3xl font-bold">
+                                    {t('title')}
+                                </CardTitle>
+                                <CardDescription>
+                                    {t('tagline')}
+                                </CardDescription>
+                            </div>
+                            {!passkey && (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            className="capitalize"
+                                            role="combobox"
+                                            disabled={passkeyLoading}
+                                        >
+                                            {t(`scope.${scope}`)}
+                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-56">
+                                        <DropdownMenuRadioGroup
+                                            value={scope}
+                                            onValueChange={(s) =>
+                                                setScope(s as scope)
+                                            }
+                                        >
+                                            <DropdownMenuRadioItem value="user">
+                                                {t('scope.user')}
+                                            </DropdownMenuRadioItem>
+                                            <DropdownMenuRadioItem value="admin">
+                                                {t('scope.admin')}
+                                            </DropdownMenuRadioItem>
+                                        </DropdownMenuRadioGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )}
+                        </CardHeader>
+                        <CardContent>
+                            {!passkey ? (
+                                <Input
+                                    className="mt-2"
+                                    placeholder={t('input.email.placeholder')}
+                                    disabled={!!passkey || passkeyLoading}
+                                    {...register('identifier')}
+                                />
+                            ) : (
+                                <div className="space-y-1">
+                                    <Label className="opacity-60">
+                                        {t('input.passkey.label')}
+                                    </Label>
+                                    <div className="text-md flex items-center justify-between rounded-md border px-4 py-3">
+                                        <div className="flex items-center gap-2.5">
+                                            <KeyRound className="h-5 w-5" />{' '}
+                                            {passkey.name}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
 
-                        <div className="h-4 pt-2">
-                            {status.message && (
-                                <p
-                                    className={cn(
-                                        'flex items-center gap-1.5 pl-1 text-sm text-muted-foreground',
-                                        status.error && 'text-red-700'
-                                    )}
-                                >
-                                    {status.loading ? (
-                                        <Loader2
-                                            size={16}
-                                            className="animate-spin"
-                                        />
-                                    ) : status.error ? (
-                                        <XCircle size={16} />
-                                    ) : (
-                                        <Info size={16} />
-                                    )}
-                                    {status.message}
-                                </p>
-                            )}
-                        </div>
-                    </CardContent>
-                    {!passkey && (
-                        <CardFooter className="space-x-4">
-                            <Button
-                                type="submit"
-                                disabled={!!passkey || passkeyLoading}
-                            >
-                                {t('button.continue')}
-                            </Button>
-                            {featureFlags.passkeys && (
+                            <div className="h-4 pt-2">
+                                {status.message && (
+                                    <p
+                                        className={cn(
+                                            'flex items-center gap-1.5 pl-1 text-sm text-muted-foreground',
+                                            status.error && 'text-red-700'
+                                        )}
+                                    >
+                                        {status.loading ? (
+                                            <Loader2
+                                                size={16}
+                                                className="animate-spin"
+                                            />
+                                        ) : status.error ? (
+                                            <XCircle size={16} />
+                                        ) : (
+                                            <Info size={16} />
+                                        )}
+                                        {status.message}
+                                    </p>
+                                )}
+                            </div>
+                        </CardContent>
+                        {!passkey && (
+                            <CardFooter className="space-x-4">
                                 <Button
-                                    type="button"
-                                    className={passkey ? ' bg-green-500' : ''}
-                                    onClick={() => {
-                                        tryPasskey();
-                                        setAutoPoke(true);
-                                    }}
-                                    variant={passkey ? 'default' : 'outline'}
-                                    disabled={passkeyLoading}
+                                    type="submit"
+                                    disabled={!!passkey || passkeyLoading}
                                 >
-                                    {passkeyLoading ? (
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    ) : (
-                                        <KeyRound className="mr-2 h-4 w-4" />
-                                    )}
-                                    {t('button.passkey')}
+                                    {t('button.continue')}
                                 </Button>
-                            )}
-                        </CardFooter>
-                    )}
-                </Card>
-            </form>
-        </Container>
+                                {featureFlags.passkeys && (
+                                    <Button
+                                        type="button"
+                                        className={
+                                            passkey ? ' bg-green-500' : ''
+                                        }
+                                        onClick={() => {
+                                            tryPasskey();
+                                            if (autoPoke !== false)
+                                                setAutoPoke(true);
+                                        }}
+                                        variant={
+                                            passkey ? 'default' : 'outline'
+                                        }
+                                        disabled={passkeyLoading}
+                                    >
+                                        {passkeyLoading ? (
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        ) : (
+                                            <KeyRound className="mr-2 h-4 w-4" />
+                                        )}
+                                        {t('button.passkey')}
+                                    </Button>
+                                )}
+                            </CardFooter>
+                        )}
+                    </Card>
+                </form>
+            </Container>
+            <DropdownMenu>
+                <DropdownMenuTrigger
+                    asChild
+                    className="fixed bottom-0 right-0 m-8"
+                >
+                    <Button size="icon" variant="outline">
+                        <Cog className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuLabel>Options</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuOptionalBoolean
+                        value={autoPoke}
+                        onValueChange={setAutoPoke}
+                        title="Prompt for Passkey"
+                        options={{
+                            undefined: 'Automatically enable once used',
+                            false: 'Never prompt for Passkey',
+                            true: 'Always prompt for Passkey',
+                        }}
+                    />
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </>
     );
 }

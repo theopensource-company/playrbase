@@ -99,9 +99,9 @@ export function useSubmitCreateEvent({
                 onClick: () =>
                     result.then(({ id }) =>
                         router.push(
-                            `/organisation/${organiser.slug}/event/${id.slice(
+                            `/organisation/${organiser.slug}/events/${id.slice(
                                 6
-                            )}`
+                            )}/overview`
                         )
                     ),
             },
@@ -131,7 +131,14 @@ export function RenderCreateEvent({
             </DDTrigger>
             <DDContent className="max-w-2xl">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <form
+                        onSubmit={form.handleSubmit(async (data) => {
+                            const result = await onSubmit(data);
+                            setOpen(false);
+                            form.reset();
+                            return result;
+                        })}
+                    >
                         <h3 className="mb-4 text-2xl font-bold">
                             {t('title')}
                         </h3>

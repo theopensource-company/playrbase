@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label';
 import { useSurreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
 import { useFeatureFlags } from '@/lib/featureFlags';
-import { useRegisterPasskey } from '@/lib/webauthn';
+import { useAutoPoke, useRegisterPasskey } from '@/lib/webauthn';
 import { Link, useRouter } from '@/locales/navigation';
 import { Credential } from '@/schema/resources/credential';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -69,10 +69,17 @@ function CreatePasskey({
 }: Pick<ReturnType<typeof useRegisterPasskey>, 'loading' | 'register'> & {
     signup?: boolean;
 }) {
+    const [autoPoke, setAutoPoke] = useAutoPoke();
     const t = useTranslations('pages.account.create-passkey.pre');
     return (
         <CardFooter className="space-x-4">
-            <Button onClick={() => register()} disabled={loading}>
+            <Button
+                onClick={() => {
+                    register();
+                    if (autoPoke !== false) setAutoPoke(true);
+                }}
+                disabled={loading}
+            >
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {t('trigger')}
             </Button>

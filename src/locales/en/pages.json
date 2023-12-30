@@ -478,6 +478,15 @@
       "button": {
         "continue": "Continue",
         "passkey": "Passkey"
+      },
+      "options": {
+        "label": "Options",
+        "passkey-auto-poke": {
+          "label": "Prompt for Passkey",
+          "undefined": "Automatically enable once used",
+          "false": "Never prompt for Passkey",
+          "true": "Always prompt for Passkey"
+        }
       }
     },
     "create-profile": {

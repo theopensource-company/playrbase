@@ -284,6 +284,37 @@ const Links = ({
     );
 };
 
+function LinkActor({
+    actor,
+    profile,
+    loading,
+}: {
+    actor?: Actor;
+    profile: Actor;
+    loading?: boolean;
+}) {
+    return (
+        <NavigationMenuItem className="w-full">
+            <Link
+                href={linkToActorOverview(profile)}
+                className="w-full"
+                legacyBehavior
+                passHref
+            >
+                <NavigationMenuLink
+                    className={cn(
+                        navigationMenuTriggerStyle(),
+                        'w-full justify-start px-2 py-6 max-sm:bg-muted',
+                        profile.id == actor?.id && 'ring-2 ring-accent'
+                    )}
+                >
+                    <Profile profile={profile} loading={loading} size="tiny" />
+                </NavigationMenuLink>
+            </Link>
+        </NavigationMenuItem>
+    );
+}
+
 const AccountOptions = ({ actor }: { actor?: Actor }) => {
     // const t = useTranslations('components.layout.navbar.account-options');
     const surreal = useSurreal();
@@ -328,45 +359,23 @@ const AccountOptions = ({ actor }: { actor?: Actor }) => {
     const organisations = data?.organisations ?? [];
     const teams = data?.teams ?? [];
 
-    function LinkActor({ actor: thisActor }: { actor: Actor }) {
-        return (
-            <NavigationMenuItem className="w-full">
-                <Link
-                    href={linkToActorOverview(thisActor)}
-                    className="w-full"
-                    legacyBehavior
-                    passHref
-                >
-                    <NavigationMenuLink
-                        className={cn(
-                            navigationMenuTriggerStyle(),
-                            'w-full justify-start px-2 py-6 max-sm:bg-muted',
-                            thisActor.id == actor?.id && 'ring-2 ring-accent'
-                        )}
-                    >
-                        <Profile
-                            profile={thisActor}
-                            loading={loading}
-                            size="tiny"
-                        />
-                    </NavigationMenuLink>
-                </Link>
-            </NavigationMenuItem>
-        );
-    }
-
     return (
         user && (
             <ul className="space-y-6 p-2">
                 <div className="space-y-2">
-                    <LinkActor actor={user} />
+                    <LinkActor loading={loading} actor={actor} profile={user} />
                     {organisations.length > 0 && (
                         <div className="space-y-1">
                             <span className="ml-2 text-xs text-muted-foreground">
                                 Organisations
                             </span>{' '}
                             {organisations.map((org) => (
-                                <LinkActor key={org.id} actor={org} />
+                                <LinkActor
+                                    key={org.id}
+                                    loading={loading}
+                                    actor={actor}
+                                    profile={org}
+                                />
                             ))}
                         </div>
                     )}
@@ -376,7 +385,12 @@ const AccountOptions = ({ actor }: { actor?: Actor }) => {
                                 Teams
                             </span>{' '}
                             {teams.map((team) => (
-                                <LinkActor key={team.id} actor={team} />
+                                <LinkActor
+                                    key={team.id}
+                                    loading={loading}
+                                    actor={actor}
+                                    profile={team}
+                                />
                             ))}
                         </div>
                     )}

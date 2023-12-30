@@ -111,5 +111,11 @@
     "bufferutil": "^4.0.8",
     "react-hook-form": "^7.41.2",
     "utf-8-validate": "^6.0.3"
+  },
+  "pnpm": {
+    "supportedArchitectures": {
+      "os": ["current"],
+      "cpu": ["x64", "arm64"]
+    }
   }
 }

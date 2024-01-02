@@ -130,6 +130,10 @@ export default function Signin() {
         }
     });
 
+    useEffect(() => {
+        if (passkey && autoPoke !== false) setAutoPoke(true);
+    }, [passkey, autoPoke, setAutoPoke]);
+
     const handler = handleSubmit(async ({ identifier }) => {
         setStatus({ message: 'Loading', loading: true });
 
@@ -265,11 +269,7 @@ export default function Signin() {
                                         className={
                                             passkey ? ' bg-green-500' : ''
                                         }
-                                        onClick={() => {
-                                            tryPasskey();
-                                            if (autoPoke !== false)
-                                                setAutoPoke(true);
-                                        }}
+                                        onClick={() => tryPasskey()}
                                         variant={
                                             passkey ? 'default' : 'outline'
                                         }

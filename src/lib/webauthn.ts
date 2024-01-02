@@ -188,6 +188,7 @@ export function usePasskeyAuthentication({
                 .authenticate([], challenge)
                 .catch(() => false);
 
+            setDidPoke(true);
             if (!authentication) return null;
 
             const { name } = await fetch('/api/auth/passkey/authenticate', {

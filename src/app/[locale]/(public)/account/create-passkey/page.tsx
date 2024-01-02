@@ -23,7 +23,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -34,7 +34,12 @@ export default function Page() {
     const followup = signup ? searchParams.get('followup') : undefined;
     const [featureFlags] = useFeatureFlags();
     const t = useTranslations('pages.account.create-passkey');
+    const [autoPoke, setAutoPoke] = useAutoPoke();
     useAuth({ authRequired: true });
+
+    useEffect(() => {
+        if (passkey && autoPoke !== false) setAutoPoke(true);
+    }, [passkey, autoPoke, setAutoPoke]);
 
     return featureFlags.passkeys ? (
         <Container className="flex flex-grow flex-col items-center justify-center">
@@ -73,17 +78,10 @@ function CreatePasskey({
     followup?: string;
     signup?: boolean;
 }) {
-    const [autoPoke, setAutoPoke] = useAutoPoke();
     const t = useTranslations('pages.account.create-passkey.pre');
     return (
         <CardFooter className="space-x-4">
-            <Button
-                onClick={() => {
-                    register();
-                    if (autoPoke !== false) setAutoPoke(true);
-                }}
-                disabled={loading}
-            >
+            <Button onClick={() => register()} disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {t('trigger')}
             </Button>

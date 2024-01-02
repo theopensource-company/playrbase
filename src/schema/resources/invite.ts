@@ -48,7 +48,7 @@ export type Invite = z.infer<typeof Invite>;
 const enfore_unique_index = /* surrealql */ `
     DEFINE EVENT enfore_unique_index ON invite THEN {
         IF type::is::record(origin) {
-            UPDATE invite WHERE origin = $value.origin.email;
+            UPDATE invite WHERE origin = $value.origin.email AND target = $value.target;
         };
     };
 `;

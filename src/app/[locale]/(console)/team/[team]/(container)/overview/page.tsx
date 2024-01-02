@@ -39,7 +39,7 @@ export default function Account() {
                         <div className="flex justify-between gap-8">
                             <h2 className="text-xl font-semibold">Events</h2>
                             <Link
-                                href={`/organisation/${slug}/events`}
+                                href={`/team/${slug}/events`}
                                 className={buttonVariants({
                                     variant: 'outline',
                                 })}
@@ -67,7 +67,7 @@ export default function Account() {
                         <div className="flex items-center justify-between gap-8">
                             <h2 className="text-xl font-semibold">Members</h2>
                             <Link
-                                href={`/organisation/${slug}/members`}
+                                href={`/team/${slug}/members`}
                                 className={buttonVariants({
                                     variant: 'outline',
                                 })}

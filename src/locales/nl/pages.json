@@ -72,6 +72,13 @@
           "accepting-invite": "Uitnodiging aan het accepteren",
           "denied-invite": "Uitnodiging geweigerd",
           "denying-invite": "Uitnodiging aan het weigeren"
+        },
+        "invite-popup": {
+          "accept": "Uitnodiging accepteren",
+          "close": "Sluiten",
+          "deny": "Uitnodiging weigeren",
+          "description": "Je bent uitgenodigd tot een organisatie",
+          "title": "Uitnodiging organisatie"
         }
       },
       "passkeys": {
@@ -220,6 +227,13 @@
           "accepting-invite": "Uitnodiging aan het accepteren",
           "denied-invite": "Uitnodiging geweigerd",
           "denying-invite": "Uitnodiging aan het weigeren"
+        },
+        "invite-popup": {
+          "accept": "Uitnodiging accepteren",
+          "close": "Sluiten",
+          "deny": "Uitnodiging weigeren",
+          "description": "Je bent uitgenodigd tot een team",
+          "title": "Uitnodiging team"
         }
       }
     },
@@ -265,11 +279,11 @@
           "title": "Gebruiker uitnodigen",
           "trigger": "Lid toevoegen",
           "errors": {
-            "failed-add-member": "Kon lid niet toevoegen: {error}"
+            "failed-add-member": "Kon lid niet uitnodigen: {error}"
           },
           "toast": {
-            "added-member": "Lid toegevoegd",
-            "adding-member": "Lid aan het toevoegen"
+            "added-member": "Lid uitgenodigd",
+            "adding-member": "Uitnodiging aan het versturen"
           }
         },
         "invited_manager": {

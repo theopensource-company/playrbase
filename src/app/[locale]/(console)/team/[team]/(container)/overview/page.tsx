@@ -141,8 +141,6 @@ function useData({ slug }: { slug: Team['slug'] }) {
                 }
             );
 
-            console.log(result);
-
             if (
                 !result?.[1] ||
                 !result?.[2] ||

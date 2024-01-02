@@ -1,11 +1,20 @@
 'use client';
 
+import { Profile } from '@/components/cards/profile';
 import { OrganisationTable } from '@/components/data/organisations/table';
 import {
     OrganisationSelector,
     useOrganisationSelector,
 } from '@/components/logic/OrganisationSelector';
-import { DD, DDContent, DDFooter, DDTrigger } from '@/components/ui-custom/dd';
+import {
+    DD,
+    DDContent,
+    DDDescription,
+    DDFooter,
+    DDHeader,
+    DDTitle,
+    DDTrigger,
+} from '@/components/ui-custom/dd';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,6 +28,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -27,8 +37,13 @@ import { z } from 'zod';
 export default function Account() {
     const { data: organisations, isPending, refetch } = useData();
     const t = useTranslations('pages.console.account.organisations');
+    const searchParams = useSearchParams();
+    const invite_id = searchParams.get('invite_id');
+    const invite_popup =
+        (!!invite_id && organisations?.unconfirmed?.[`invite:${invite_id}`]) ||
+        undefined;
 
-    function findUnconfirmedEdge(id: Organisation['id']) {
+    function findInvite(id: Organisation['id']) {
         const obj = organisations?.unconfirmed ?? {};
         return Object.keys(obj).find((k) => obj[k].id === id);
     }
@@ -36,12 +51,15 @@ export default function Account() {
     const surreal = useSurreal();
     const { mutateAsync: acceptInvitation } = useMutation({
         mutationKey: ['manages', 'accept-invite'],
-        async mutationFn(id: Organisation['id']) {
+        async mutationFn(organisation: Organisation['id']) {
             await toast.promise(
                 async () => {
-                    const edge = findUnconfirmedEdge(id);
-                    if (!edge) throw new Error(t('errors.no-unconfirmed-edge'));
-                    await surreal.merge(edge, { confirmed: true });
+                    await surreal.query(
+                        /* surrealql */ `
+                            RELATE $auth->manages->$organisation;
+                        `,
+                        { organisation }
+                    );
                     await refetch();
                 },
                 {
@@ -59,7 +77,7 @@ export default function Account() {
         async mutationFn(id: Organisation['id']) {
             await toast.promise(
                 async () => {
-                    const edge = findUnconfirmedEdge(id);
+                    const edge = findInvite(id);
                     if (!edge) throw new Error(t('errors.no-unconfirmed-edge'));
                     await surreal.delete(edge);
                     await refetch();
@@ -95,7 +113,54 @@ export default function Account() {
                     ) : undefined
                 }
             />
+            {invite_popup && (
+                <InvitePopup
+                    organisation={invite_popup}
+                    acceptInvitation={acceptInvitation}
+                    denyInvitation={denyInvitation}
+                />
+            )}
         </div>
+    );
+}
+
+function InvitePopup({
+    organisation,
+    acceptInvitation,
+    denyInvitation,
+}: {
+    organisation: OrganisationSafeParse;
+    acceptInvitation: (id: Organisation['id']) => Promise<unknown>;
+    denyInvitation: (id: Organisation['id']) => Promise<unknown>;
+}) {
+    const [open, setOpen] = useState(true);
+    const t = useTranslations(
+        'pages.console.account.organisations.invite-popup'
+    );
+
+    return (
+        <DD open={open} onOpenChange={setOpen}>
+            <DDContent>
+                <DDHeader>
+                    <DDTitle>{t('title')}</DDTitle>
+                    <DDDescription>{t('description')}</DDDescription>
+                </DDHeader>
+                <div className="mt-4 rounded-lg border p-3">
+                    <Profile profile={organisation} />
+                </div>
+                <DDFooter closeText={t('close')}>
+                    <Button onClick={() => acceptInvitation(organisation.id)}>
+                        {t('accept')}
+                    </Button>
+                    <Button
+                        onClick={() => denyInvitation(organisation.id)}
+                        variant="destructive"
+                    >
+                        {t('deny')}
+                    </Button>
+                </DDFooter>
+            </DDContent>
+        </DD>
     );
 }
 
@@ -244,15 +309,14 @@ function useData() {
             >(/* surql */ `
                 object::from_entries((
                     SELECT VALUE [<string> id, out.*]
-                        FROM $auth->manages[?confirmed] 
+                        FROM $auth->manages
                         FETCH organisation.part_of.*
                 ));
 
                 object::from_entries((
-                    SELECT VALUE [<string> id, out.*]
-                        FROM $auth->manages[?!confirmed] 
-                        FETCH organisation.part_of.*
-                ));       
+                    SELECT VALUE [<string> id, target.*]
+                        FROM invite WHERE origin = $auth AND meta::tb(target) == 'organisation'
+                ));
             `);
 
             if (!result?.[0] || !result?.[1]) return null;

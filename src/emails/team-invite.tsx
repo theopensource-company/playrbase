@@ -15,25 +15,29 @@ import {
 } from '@react-email/components';
 import * as React from 'react';
 
-interface AuthMagicLinkEmailProps {
-    token: string;
-    followup?: string;
+interface TeamInviteEmailProps {
+    invite_id: string;
+    invited_by: string;
+    team: string;
+    email: string;
 }
 
 const baseUrl = process.env.PLAYRBASE_ENV_ORIGIN ?? 'http://localhost:13000';
 
-export const AuthMagicLinkEmail = ({
-    token = 'this-is-a-demo-token',
-    followup,
-}: AuthMagicLinkEmailProps) => {
-    const params = new URLSearchParams({ token });
-    if (followup) params.set('followup', followup);
-    const url = new URL(baseUrl + `/api/auth/magic-link?` + params).toString();
-
+export const TeamInviteEmail = ({
+    invite_id = 'this-is-a-demo-invite-id',
+    invited_by = 'John Doe',
+    team = 'Some Demo Team',
+    email = 'john@doe.org',
+}: TeamInviteEmailProps) => {
+    const followup = `/account/teams?` + new URLSearchParams({ invite_id });
+    const url = new URL(
+        baseUrl + `/account/signin?` + new URLSearchParams({ email, followup })
+    ).toString();
     return (
         <Html lang="en" dir="ltr">
             <Head>
-                <title>Your sign in link for PlayrBase</title>
+                <title>Playrbase Team invite</title>
                 <Font
                     fontFamily="Inter"
                     fallbackFontFamily="Arial"
@@ -45,7 +49,9 @@ export const AuthMagicLinkEmail = ({
                     fontStyle="normal"
                 />
             </Head>
-            <Preview>Your sign in link for PlayrBase</Preview>
+            <Preview>
+                {invited_by} invited you to join their team on Playrbase!
+            </Preview>
             <Body style={main}>
                 <Container style={container}>
                     <Img
@@ -54,15 +60,14 @@ export const AuthMagicLinkEmail = ({
                         alt="PlayrBase"
                         style={logo}
                     />
-                    <Heading style={heading}>
-                        Your PlayrBase sign in link
-                    </Heading>
+                    <Heading style={heading}>Playrbase Team invite</Heading>
                     <Text style={paragraph}>
-                        The following link will be valid for 30 minutes.
+                        {invited_by} invited you to join the {team} team on
+                        Playrbase.
                     </Text>
                     <Section style={buttonContainer}>
                         <Button style={button} href={url}>
-                            Continue to PlayrBase
+                            Accept Invitation
                         </Button>
                     </Section>
                     <Hr style={line} />
@@ -81,7 +86,7 @@ export const AuthMagicLinkEmail = ({
     );
 };
 
-export default AuthMagicLinkEmail;
+export default TeamInviteEmail;
 
 // Styles
 

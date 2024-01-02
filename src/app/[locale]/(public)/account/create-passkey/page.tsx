@@ -31,6 +31,7 @@ export default function Page() {
     const { loading, register, passkey } = useRegisterPasskey();
     const searchParams = useSearchParams();
     const signup = [...searchParams.keys()].includes('signup');
+    const followup = signup ? searchParams.get('followup') : undefined;
     const [featureFlags] = useFeatureFlags();
     const t = useTranslations('pages.account.create-passkey');
     useAuth({ authRequired: true });
@@ -49,6 +50,7 @@ export default function Page() {
                         <UpdateName passkey={passkey} signup={signup} />
                     ) : (
                         <CreatePasskey
+                            followup={followup ?? undefined}
                             loading={loading}
                             register={register}
                             signup={signup}
@@ -63,10 +65,12 @@ export default function Page() {
 }
 
 function CreatePasskey({
+    followup,
     loading,
     register,
     signup,
 }: Pick<ReturnType<typeof useRegisterPasskey>, 'loading' | 'register'> & {
+    followup?: string;
     signup?: boolean;
 }) {
     const [autoPoke, setAutoPoke] = useAutoPoke();
@@ -84,7 +88,7 @@ function CreatePasskey({
                 {t('trigger')}
             </Button>
             <Link
-                href={signup ? '/account' : '/account/passkeys'}
+                href={signup ? followup ?? '/account' : '/account/passkeys'}
                 className={buttonVariants({
                     variant: 'outline',
                 })}

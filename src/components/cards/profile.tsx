@@ -21,7 +21,9 @@ export function Profile({
     customSub?: ReactNode | string;
 }) {
     profile = profile ?? unknownProfile;
-    const sub = customSub || ('email' in profile && profile.email);
+    const sub = (
+        <ProfileSub profile={profile} customSub={customSub} noSub={noSub} />
+    );
 
     return (
         <div
@@ -43,14 +45,14 @@ export function Profile({
                     {size == 'tiny' || size == 'extra-tiny' ? (
                         <>
                             <Skeleton
-                                className={cn('w-full', noSub ? 'h-4' : 'h-3')}
+                                className={cn('w-full', sub ? 'h-3' : 'h-4')}
                             />
-                            {!noSub && <Skeleton className="h-2 w-[80%]" />}
+                            {sub && <Skeleton className="h-2 w-[80%]" />}
                         </>
                     ) : (
                         <>
                             <Skeleton className="h-4 w-full" />
-                            {!noSub && <Skeleton className="h-3 w-[80%]" />}
+                            {sub && <Skeleton className="h-3 w-[80%]" />}
                         </>
                     )}
                 </div>
@@ -67,13 +69,35 @@ export function Profile({
                             noSub ? 'font-semibold' : 'font-bold'
                         )}
                     >
-                        {profile.name}
+                        <ProfileName profile={profile} />
                     </h2>
-                    {!noSub && sub && (
+                    {sub && (
                         <p className="text-xs text-muted-foreground">{sub}</p>
                     )}
                 </div>
             )}
         </div>
+    );
+}
+
+export function ProfileName({ profile }: { profile?: TProfile | null }) {
+    profile = profile ?? unknownProfile;
+    return profile.type == 'email' ? profile.email : profile.name;
+}
+
+export function ProfileSub({
+    profile,
+    noSub,
+    customSub,
+}: {
+    profile?: TProfile | null;
+    noSub?: boolean;
+    customSub?: ReactNode | string;
+}) {
+    profile = profile ?? unknownProfile;
+    if (noSub) return;
+    return (
+        customSub ||
+        (profile.type != 'email' && 'email' in profile && profile.email)
     );
 }

@@ -1,7 +1,16 @@
 'use client';
 
+import { Profile } from '@/components/cards/profile';
 import { TeamTable } from '@/components/data/teams/table';
-import { DD, DDContent, DDFooter, DDTrigger } from '@/components/ui-custom/dd';
+import {
+    DD,
+    DDContent,
+    DDDescription,
+    DDFooter,
+    DDHeader,
+    DDTitle,
+    DDTrigger,
+} from '@/components/ui-custom/dd';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,6 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -20,8 +30,13 @@ import { z } from 'zod';
 export default function Teams() {
     const { data: teams, isPending, refetch } = useData();
     const t = useTranslations('pages.console.account.teams');
+    const searchParams = useSearchParams();
+    const invite_id = searchParams.get('invite_id');
+    const invite_popup =
+        (!!invite_id && teams?.unconfirmed?.[`invite:${invite_id}`]) ||
+        undefined;
 
-    function findUnconfirmedEdge(id: Team['id']) {
+    function findInvite(id: Team['id']) {
         const obj = teams?.unconfirmed ?? {};
         return Object.keys(obj).find((k) => obj[k].id === id);
     }
@@ -29,12 +44,15 @@ export default function Teams() {
     const surreal = useSurreal();
     const { mutateAsync: acceptInvitation } = useMutation({
         mutationKey: ['plays_in', 'accept-invite'],
-        async mutationFn(id: Team['id']) {
+        async mutationFn(team: Team['id']) {
             await toast.promise(
                 async () => {
-                    const edge = findUnconfirmedEdge(id);
-                    if (!edge) throw new Error(t('errors.no-unconfirmed-edge'));
-                    await surreal.merge(edge, { confirmed: true });
+                    await surreal.query(
+                        /* surrealql */ `
+                            RELATE $auth->plays_in->$team;
+                        `,
+                        { team }
+                    );
                     await refetch();
                 },
                 {
@@ -52,9 +70,10 @@ export default function Teams() {
         async mutationFn(id: Team['id']) {
             await toast.promise(
                 async () => {
-                    const edge = findUnconfirmedEdge(id);
-                    if (!edge) throw new Error(t('errors.no-unconfirmed-edge'));
-                    await surreal.delete(edge);
+                    const invite = findInvite(id);
+                    if (!invite)
+                        throw new Error(t('errors.no-unconfirmed-edge'));
+                    await surreal.delete(invite);
                     await refetch();
                 },
                 {
@@ -88,7 +107,51 @@ export default function Teams() {
                     ) : undefined
                 }
             />
+            {invite_popup && (
+                <InvitePopup
+                    team={invite_popup}
+                    acceptInvitation={acceptInvitation}
+                    denyInvitation={denyInvitation}
+                />
+            )}
         </div>
+    );
+}
+
+function InvitePopup({
+    team,
+    acceptInvitation,
+    denyInvitation,
+}: {
+    team: TeamAnonymous;
+    acceptInvitation: (id: Team['id']) => Promise<unknown>;
+    denyInvitation: (id: Team['id']) => Promise<unknown>;
+}) {
+    const [open, setOpen] = useState(true);
+    const t = useTranslations('pages.console.account.teams.invite-popup');
+    return (
+        <DD open={open} onOpenChange={setOpen}>
+            <DDContent>
+                <DDHeader>
+                    <DDTitle>{t('title')}</DDTitle>
+                    <DDDescription>{t('description')}</DDDescription>
+                </DDHeader>
+                <div className="mt-4 rounded-lg border p-3">
+                    <Profile profile={team} />
+                </div>
+                <DDFooter closeText={t('close')}>
+                    <Button onClick={() => acceptInvitation(team.id)}>
+                        {t('accept')}
+                    </Button>
+                    <Button
+                        onClick={() => denyInvitation(team.id)}
+                        variant="destructive"
+                    >
+                        {t('deny')}
+                    </Button>
+                </DDFooter>
+            </DDContent>
+        </DD>
     );
 }
 
@@ -203,12 +266,12 @@ function useData() {
             >(/* surql */ `
                 object::from_entries((
                     SELECT VALUE [<string> id, out.*]
-                        FROM $auth->plays_in[?confirmed] 
+                        FROM $auth->plays_in
                 ));
 
                 object::from_entries((
-                    SELECT VALUE [<string> id, out.*]
-                        FROM $auth->plays_in[?!confirmed] 
+                    SELECT VALUE [<string> id, target.*]
+                        FROM invite WHERE origin = $auth AND meta::tb(target) == 'team'
                 ));       
             `);
 

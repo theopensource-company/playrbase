@@ -36,7 +36,9 @@ type Schema = z.infer<typeof Schema>;
 export default function CreateProfile() {
     const surreal = useSurreal();
     const router = useRouter();
-    const token = z.string().parse(useSearchParams().get('token'));
+    const searchParams = useSearchParams();
+    const token = z.string().parse(searchParams.get('token'));
+    const followup = z.string().optional().parse(searchParams.get('followup'));
     const { refreshUser } = useAuth();
     const decoded = jwt.decode(token);
     const webAuthnAvailable = useWebAuthnAvailable();
@@ -96,10 +98,14 @@ export default function CreateProfile() {
                 .authenticate(res.token)
                 .then(() => {
                     refreshUser();
+                    const params = new URLSearchParams();
+                    params.set('signup', '');
+                    if (followup) params.set('followup', followup);
+
                     router.push(
                         featureFlags.passkeys && webAuthnAvailable
-                            ? '/account/create-passkey?signup'
-                            : '/account'
+                            ? `/account/create-passkey?${params}`
+                            : followup ?? '/account'
                     );
                 })
                 .catch((e) => {

@@ -39,6 +39,8 @@ const event = /* surrealql */ `
     DEFINE FIELD options.max_age            ON event TYPE option<number>;
     DEFINE FIELD options.manual_approval    ON event TYPE option<bool>;
 
+    DEFINE FIELD type                       ON event VALUE meta::tb(id) DEFAULT meta::tb(id);
+
     DEFINE FIELD created                    ON event TYPE datetime VALUE $before OR time::now() DEFAULT time::now();
     DEFINE FIELD updated                    ON event TYPE datetime VALUE time::now()            DEFAULT time::now();
 `;
@@ -65,6 +67,8 @@ export const Event = z.object({
         max_age: z.number().optional(),
         manual_approval: z.boolean().optional(),
     }),
+
+    type: z.literal('event').default('event'),
 
     created: z.coerce.date(),
     updated: z.coerce.date(),

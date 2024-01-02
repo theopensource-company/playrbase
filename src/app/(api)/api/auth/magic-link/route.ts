@@ -12,10 +12,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 export async function POST(req: NextRequest) {
-    const { identifier, scope } = z
+    const { identifier, scope, followup } = z
         .object({
             identifier: z.string().email(),
             scope: z.union([z.literal('admin'), z.literal('user')]),
+            followup: z.string().optional(),
         })
         .parse(await req.json());
 
@@ -49,10 +50,10 @@ export async function POST(req: NextRequest) {
             from: 'noreply@playrbase.app',
             to: email,
             subject: 'PlayrBase signin link',
-            text: render(AuthMagicLinkEmail({ token }), {
+            text: render(AuthMagicLinkEmail({ token, followup }), {
                 plainText: true,
             }),
-            html: render(AuthMagicLinkEmail({ token })),
+            html: render(AuthMagicLinkEmail({ token, followup })),
         });
     }
 
@@ -60,7 +61,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-    const token = z.string().parse(new URL(req.url).searchParams.get('token'));
+    const searchParams = new URL(req.url).searchParams;
+    const token = z.string().parse(searchParams.get('token'));
+    const followup = z.string().parse(searchParams.get('followup'));
     const decoded = await verifyEmailVerificationToken(token);
 
     if (!decoded) {
@@ -72,9 +75,9 @@ export async function GET(req: NextRequest) {
 
     const isEmail = z.string().email().safeParse(decoded.subject).success;
     if (isEmail) {
-        const url = `/account/create-profile?${new URLSearchParams({
-            token,
-        })}`;
+        const params = new URLSearchParams({ token });
+        if (followup) params.set('followup', followup);
+        const url = `/account/create-profile?${params}`;
 
         return new NextResponse(`Success! Redirecting to ${url}`, {
             status: 302,
@@ -105,13 +108,16 @@ export async function GET(req: NextRequest) {
         secure: req.nextUrl.protocol !== 'http:',
     });
 
-    return new NextResponse('Success! Redirecting to /account', {
-        status: 302,
-        headers: {
-            Location: '/account',
-            'Set-Cookie': header,
-        },
-    });
+    return new NextResponse(
+        `Success! Redirecting to ${followup || '/account'}`,
+        {
+            status: 302,
+            headers: {
+                Location: followup || '/account',
+                'Set-Cookie': header,
+            },
+        }
+    );
 }
 
 export async function PUT(req: NextRequest) {

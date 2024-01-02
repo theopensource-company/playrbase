@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { record } from '../../lib/zod.ts';
+import { record, role } from '../../lib/zod.ts';
 
 const organisation = /* surrealql */ `
     DEFINE TABLE organisation SCHEMAFULL
@@ -63,7 +63,7 @@ const organisation = /* surrealql */ `
     DEFINE FIELD managers           ON organisation
         VALUE <future> {
             -- Find all confirmed managers of this org
-            LET $local = SELECT <-manages[?confirmed] AS managers FROM ONLY $parent.id;
+            LET $local = SELECT <-manages AS managers FROM ONLY $parent.id;
             -- Grab the role and user ID
             LET $local = SELECT role, in AS user, id as edge FROM $local.managers;
 
@@ -108,12 +108,7 @@ export const Organisation = z.object({
     managers: z.array(
         z.object({
             user: record('user'),
-            role: z.union([
-                z.literal('owner'),
-                z.literal('administrator'),
-                z.literal('event_manager'),
-                z.literal('event_viewer'),
-            ]),
+            role,
             edge: record('manages'),
             org: record('organisation').optional(),
         })

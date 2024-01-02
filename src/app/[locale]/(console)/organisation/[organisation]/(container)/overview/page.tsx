@@ -9,6 +9,7 @@ import { RoleName } from '@/components/miscellaneous/Role';
 import { buttonVariants } from '@/components/ui/button';
 import { useSurreal } from '@/lib/Surreal';
 import { sort_roles } from '@/lib/role';
+import { role } from '@/lib/zod';
 import { Link } from '@/locales/navigation';
 import { Event } from '@/schema/resources/event';
 import {
@@ -175,12 +176,7 @@ export default function Account() {
 }
 
 const OrgCanManage = Organisation.extend({
-    role: z.union([
-        z.literal('owner'),
-        z.literal('administrator'),
-        z.literal('event_manager'),
-        z.literal('event_viewer'),
-    ]),
+    role,
 });
 
 type OrgCanManage = z.infer<typeof OrgCanManage>;
@@ -190,14 +186,7 @@ const ListedManager = User.pick({
     name: true,
     profile_picture: true,
 }).extend({
-    roles: z.array(
-        z.union([
-            z.literal('owner'),
-            z.literal('administrator'),
-            z.literal('event_manager'),
-            z.literal('event_viewer'),
-        ])
-    ),
+    roles: z.array(role),
 });
 
 type ListedManager = z.infer<typeof ListedManager>;

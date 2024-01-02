@@ -1,10 +1,13 @@
 'use client';
 
 import { Avatar } from '@/components/cards/avatar';
-import { Profile } from '@/components/cards/profile';
+import { Profile, ProfileName } from '@/components/cards/profile';
 import Container from '@/components/layout/Container';
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
-import { UserSelector, useUserSelector } from '@/components/logic/UserSelector';
+import {
+    UserEmailSelector,
+    useUserEmailSelector,
+} from '@/components/logic/UserEmailSelector';
 import { RoleName, SelectRole } from '@/components/miscellaneous/Role';
 import { DD, DDContent, DDFooter, DDTrigger } from '@/components/ui-custom/dd';
 import { Badge } from '@/components/ui/badge';
@@ -22,9 +25,11 @@ import {
 } from '@/components/ui/table';
 import { useSurreal } from '@/lib/Surreal';
 import { Role } from '@/lib/role';
-import { record } from '@/lib/zod';
+import { record, role } from '@/lib/zod';
 import { Link } from '@/locales/navigation';
+import { Invite } from '@/schema/resources/invite';
 import { Organisation } from '@/schema/resources/organisation';
+import { Profile as TProfile } from '@/schema/resources/profile';
 import { User, UserAnonymous } from '@/schema/resources/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
@@ -144,7 +149,7 @@ function ListManagers({
                     <TableBody>
                         {invites?.map((invite) => (
                             <InvitedManager
-                                key={invite.edge}
+                                key={invite.id}
                                 invite={invite}
                                 canManage={canManage}
                                 refresh={refresh}
@@ -321,7 +326,7 @@ function ListManager({
 }
 
 function InvitedManager({
-    invite: { user, role, edge },
+    invite: { origin, role, id },
     canManage,
     refresh,
 }: {
@@ -335,13 +340,19 @@ function InvitedManager({
     );
 
     const { mutate: updateRole, isPending: isUpdatingRole } = useMutation({
-        mutationKey: ['organisation', 'update-role', edge],
+        mutationKey: ['organisation', 'update-role', id],
         mutationFn: async (role: Organisation['managers'][number]['role']) =>
             toast.promise(
                 async () => {
-                    await surreal.merge(edge, {
-                        role,
-                    });
+                    await surreal.query(
+                        /* surrealql */ `
+                        UPDATE type::thing('invite', $id) SET role = $role;
+                    `,
+                        {
+                            id,
+                            role,
+                        }
+                    );
 
                     await refresh();
                 },
@@ -355,11 +366,11 @@ function InvitedManager({
     });
 
     const { mutate: revokeInvite, isPending: isRevokingInvite } = useMutation({
-        mutationKey: ['organisation', 'revoke-invite', edge],
+        mutationKey: ['organisation', 'revoke-invite', id],
         mutationFn: async () =>
             toast.promise(
                 async () => {
-                    await surreal.delete(edge);
+                    await surreal.delete(id);
                     await refresh();
                 },
                 {
@@ -371,13 +382,16 @@ function InvitedManager({
             ),
     });
 
+    const profile: TProfile =
+        typeof origin == 'string' ? { email: origin, type: 'email' } : origin;
+
     return (
         <TableRow>
             <TableCell>
-                <Avatar profile={user as User} size="small" />
+                <Avatar profile={profile} size="small" />
             </TableCell>
             <TableCell>
-                {user.name}
+                <ProfileName profile={profile} />
                 <Badge className="ml-3 whitespace-nowrap">
                     {t('pending-invite')}
                 </Badge>
@@ -416,8 +430,7 @@ function AddMember({
     organisation: Organisation['id'];
     refresh: () => unknown;
 }) {
-    const surreal = useSurreal();
-    const [user, setUser] = useUserSelector();
+    const [user, setUser] = useUserEmailSelector();
     const [role, setRole] = useState<Role>('event_viewer');
     const [open, setOpen] = useState(false);
     const t = useTranslations('pages.console.organisation.members.add_member');
@@ -427,12 +440,17 @@ function AddMember({
         async mutationFn() {
             toast.promise(
                 async () => {
-                    await surreal.query<[string[]]>(
-                        /* surql */ `
-                        RELATE $user->manages->$organisation SET role = $role
-                    `,
-                        { user, role, organisation }
-                    );
+                    await fetch('/api/invite', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            origin: user,
+                            target: organisation,
+                            role,
+                        }),
+                    });
                     await refresh();
                 },
                 {
@@ -456,7 +474,7 @@ function AddMember({
             <DDContent>
                 <h3 className="mb-4 text-2xl font-bold"> {t('title')}</h3>
                 <div className="space-y-6">
-                    <UserSelector
+                    <UserEmailSelector
                         user={user}
                         setUser={setUser}
                         autoFocus
@@ -503,12 +521,7 @@ const Data = Organisation.extend({
                 email: true,
                 profile_picture: true,
             }),
-            role: z.union([
-                z.literal('owner'),
-                z.literal('administrator'),
-                z.literal('event_manager'),
-                z.literal('event_viewer'),
-            ]),
+            role,
             edge: record('manages'),
             org: Organisation.optional(),
         })
@@ -517,15 +530,9 @@ const Data = Organisation.extend({
 
 type Data = z.infer<typeof Data>;
 
-const Invited = z.object({
-    user: UserAnonymous,
-    edge: record('manages'),
-    role: z.union([
-        z.literal('owner'),
-        z.literal('administrator'),
-        z.literal('event_manager'),
-        z.literal('event_viewer'),
-    ]),
+const Invited = Invite.extend({
+    origin: z.union([UserAnonymous, z.string().email()]),
+    role,
 });
 
 type Invited = z.infer<typeof Invited>;
@@ -549,8 +556,10 @@ function useData(slug: Organisation['slug']) {
                             managers.*.user.*, 
                             managers.*.org.name;
 
-                    SELECT in.* as user, id as edge, role
-                        FROM $org.id<-manages[?!confirmed];
+                    SELECT 
+                        *,
+                        (origin.* ?? origin) as origin
+                    FROM invite WHERE target = $org.id;
 
                     $org;  
                 `,

@@ -325,8 +325,8 @@ const AccountOptions = ({ actor }: { actor?: Actor }) => {
             const [orgs, teams] = await surreal.query<
                 [Organisation[], Team[]]
             >(/* surrealql */ `
-                    SELECT * FROM $auth->manages[?confirmed]->organisation WHERE part_of = NONE LIMIT 3;
-                    SELECT * FROM $auth->plays_in[?confirmed]->team LIMIT 3;
+                    SELECT * FROM $auth->manages->organisation WHERE part_of = NONE LIMIT 3;
+                    SELECT * FROM $auth->plays_in->team LIMIT 3;
                 `);
 
             const data = {

@@ -14,7 +14,7 @@ const team = /* surrealql */ `
     DEFINE FIELD players        ON team
         VALUE <future> {
             -- Find all confirmed players of this team
-            LET $players = SELECT <-plays_in[?confirmed] AS players FROM ONLY $parent.id;
+            LET $players = SELECT <-plays_in AS players FROM ONLY $parent.id;
             RETURN SELECT VALUE players.*.in FROM ONLY $players;
         };
 

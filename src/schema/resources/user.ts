@@ -82,7 +82,14 @@ const log = /* surrealql */ `
 const removal_cleanup = /* surrealql */ `
     DEFINE EVENT removal_cleanup ON user WHEN $event = "DELETE" THEN {
         DELETE $before->plays_in, $before->attends, $before->manages;
+        DELETE invite WHERE origin = $before.id;
     };
 `;
 
-export default [user, log, removal_cleanup].join('\n\n');
+const convert_invites = /* surrealql */ `
+    DEFINE EVENT convert_invites ON user WHEN $event = "CREATE" THEN {
+        UPDATE invite WHERE origin = $after.email;
+    }; 
+`;
+
+export default [user, log, removal_cleanup, convert_invites].join('\n\n');

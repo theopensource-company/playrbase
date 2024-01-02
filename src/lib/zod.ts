@@ -42,3 +42,10 @@ export function fullname() {
         }
     );
 }
+
+export const role = z.union([
+    z.literal('owner'),
+    z.literal('administrator'),
+    z.literal('event_manager'),
+    z.literal('event_viewer'),
+]);

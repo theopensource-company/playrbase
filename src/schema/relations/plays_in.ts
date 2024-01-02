@@ -8,7 +8,7 @@ const plays_in = /* surrealql */ `
             // - They are an owner at any level
             // - They are an administrator, except for top-level.
             FOR create 
-                WHERE   $auth.id IN out.players.*
+                WHERE   (SELECT VALUE id FROM invite WHERE origin = $auth.id AND $parent.in = $auth.id AND $parent.out = target).id
             FOR update, delete
                 WHERE   $auth.id = in.id
                 OR      $auth.id IN out.players.*
@@ -20,8 +20,6 @@ const plays_in = /* surrealql */ `
     DEFINE FIELD in         ON plays_in TYPE record<user>;
     DEFINE FIELD out        ON plays_in TYPE record<team>;
 
-    DEFINE FIELD confirmed  ON plays_in TYPE bool        DEFAULT false VALUE $before || IF !$auth OR in.id == $auth.id { $value } ELSE { false }; 
-
     DEFINE FIELD created    ON plays_in TYPE datetime    VALUE $before OR time::now()  DEFAULT time::now();
     DEFINE FIELD updated    ON plays_in TYPE datetime    VALUE time::now()             DEFAULT time::now();
 
@@ -32,7 +30,6 @@ export const PlaysIn = z.object({
     id: record('plays_in'),
     in: record('user'),
     out: record('team'),
-    confirmed: z.boolean(),
     created: z.coerce.date(),
     updated: z.coerce.date(),
 });
@@ -60,9 +57,16 @@ const verify_nonempty_team_after_deletion = /* surrealql */ `
     };
 `;
 
+const cleanup_invite = /* surrealql */ `
+    DEFINE EVENT cleanup_invite ON plays_in WHEN $event = "CREATE" THEN {
+        DELETE invite WHERE origin = $value.in AND target = $value.out;
+    }
+`;
+
 export default [
     plays_in,
     log,
     verify_registrations_after_deletion,
     verify_nonempty_team_after_deletion,
+    cleanup_invite,
 ].join('\n\n');

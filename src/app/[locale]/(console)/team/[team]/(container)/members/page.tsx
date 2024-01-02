@@ -1,10 +1,13 @@
 'use client';
 
 import { Avatar } from '@/components/cards/avatar';
-import { Profile } from '@/components/cards/profile';
+import { Profile, ProfileName } from '@/components/cards/profile';
 import Container from '@/components/layout/Container';
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
-import { UserSelector, useUserSelector } from '@/components/logic/UserSelector';
+import {
+    UserEmailSelector,
+    useUserEmailSelector,
+} from '@/components/logic/UserEmailSelector';
 import { DD, DDContent, DDFooter, DDTrigger } from '@/components/ui-custom/dd';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -19,13 +22,10 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useSurreal } from '@/lib/Surreal';
-import { record } from '@/lib/zod';
+import { Invite } from '@/schema/resources/invite';
+import { Profile as TProfile } from '@/schema/resources/profile';
 import { Team } from '@/schema/resources/team';
-import {
-    User,
-    UserAnonymous,
-    UserAsRelatedUser,
-} from '@/schema/resources/user';
+import { UserAnonymous, UserAsRelatedUser } from '@/schema/resources/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Loader2, Mail, MailX, Plus, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -92,14 +92,13 @@ function ListPlayers({
                             <TableHead />
                             <TableHead>{t('table.columns.name')}</TableHead>
                             <TableHead>{t('table.columns.email')}</TableHead>
-                            <TableHead>{t('table.columns.role')}</TableHead>
                             <TableHead align="right" />
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {invites?.map((invite) => (
                             <InvitedPlayer
-                                key={invite.edge}
+                                key={invite.id}
                                 invite={invite}
                                 refresh={refresh}
                             />
@@ -197,7 +196,7 @@ function ListPlayer({
 }
 
 function InvitedPlayer({
-    invite: { user, edge },
+    invite: { origin, id },
     refresh,
 }: {
     invite: Invited;
@@ -209,20 +208,23 @@ function InvitedPlayer({
     );
 
     const { mutate: revokeInvite, isPending: isRevokingInvite } = useMutation({
-        mutationKey: ['team', 'revoke-invite', edge],
+        mutationKey: ['team', 'revoke-invite', id],
         mutationFn: async () => {
-            await surreal.delete(edge);
+            await surreal.delete(id);
             await refresh();
         },
     });
 
+    const profile: TProfile =
+        typeof origin == 'string' ? { email: origin, type: 'email' } : origin;
+
     return (
         <TableRow>
             <TableCell>
-                <Avatar profile={user as User} size="small" />
+                <Avatar profile={profile} size="small" />
             </TableCell>
             <TableCell>
-                {user.name}
+                <ProfileName profile={profile} />
                 <Badge className="ml-3 whitespace-nowrap">
                     {t('pending-invite')}
                 </Badge>
@@ -248,21 +250,24 @@ function AddMember({
     team: Team['id'];
     refresh: () => unknown;
 }) {
-    const surreal = useSurreal();
-    const [user, setUser] = useUserSelector();
+    const [user, setUser] = useUserEmailSelector();
     const [open, setOpen] = useState(false);
     const t = useTranslations('pages.console.organisation.members.add_member');
 
     const { mutateAsync, error } = useMutation({
-        mutationKey: ['plays_in', 'invite'],
+        mutationKey: ['team', 'invite-member'],
         async mutationFn() {
-            // TODO set to correct type, not important for the moment
-            await surreal.query<[string[]]>(
-                /* surql */ `
-                RELATE $user->plays_in->$team
-            `,
-                { user, team }
-            );
+            await fetch('/api/invite', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    origin: user,
+                    target: team,
+                }),
+            });
+
             refresh();
         },
     });
@@ -278,7 +283,7 @@ function AddMember({
             <DDContent>
                 <h3 className="mb-4 text-2xl font-bold"> {t('title')}</h3>
                 <div className="space-y-6">
-                    <UserSelector
+                    <UserEmailSelector
                         user={user}
                         setUser={setUser}
                         autoFocus
@@ -311,9 +316,8 @@ const Data = Team.extend({
 
 type Data = z.infer<typeof Data>;
 
-const Invited = z.object({
-    user: UserAnonymous,
-    edge: record('plays_in'),
+const Invited = Invite.extend({
+    origin: z.union([UserAnonymous, z.string().email()]),
 });
 
 type Invited = z.infer<typeof Invited>;
@@ -333,8 +337,10 @@ function useData(slug: Team['slug']) {
                         FETCH 
                             players.*;
 
-                    SELECT in.* as user, id as edge
-                        FROM $team.id<-plays_in[?!confirmed];
+                    SELECT 
+                        *,
+                        (origin.* ?? origin) as origin
+                    FROM invite WHERE target = $team.id;
 
                     $team;  
                 `,

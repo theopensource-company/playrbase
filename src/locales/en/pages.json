@@ -82,6 +82,13 @@
             "confirmed": "Confirmed"
           }
         },
+        "invite-popup": {
+          "title": "Organisation invitation",
+          "description": "You have been invited to an organisation",
+          "accept": "Accept Invitation",
+          "deny": "Deny Invitation",
+          "close": "Close"
+        },
         "new": {
           "trigger": "New organisation",
           "title": "New organisation",
@@ -136,6 +143,13 @@
             "invitations": "Invitations",
             "confirmed": "Confirmed"
           }
+        },
+        "invite-popup": {
+          "title": "Team invitation",
+          "description": "You have been invited to a team",
+          "accept": "Accept Invitation",
+          "deny": "Deny Invitation",
+          "close": "Close"
         },
         "new": {
           "trigger": "New team",
@@ -386,11 +400,11 @@
           "trigger": "Add member",
           "title": "Invite user",
           "toast": {
-            "adding-member": "Adding member",
-            "added-member": "Added member"
+            "adding-member": "Sending invite",
+            "added-member": "Invited member"
           },
           "errors": {
-            "failed-add-member": "Failed to add member: {error}"
+            "failed-add-member": "Failed to invite member: {error}"
           },
           "role": {
             "label": "Role",

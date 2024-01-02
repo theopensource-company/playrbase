@@ -8,6 +8,7 @@ export { default as auth } from './resources/auth.ts';
 export { default as challenge } from './resources/challenge.ts';
 export { default as credential } from './resources/credential.ts';
 export { default as event } from './resources/event.ts';
+export { default as invite } from './resources/invite.ts';
 export { default as log } from './resources/log.ts';
 export { default as organisation } from './resources/organisation.ts';
 export { default as team } from './resources/team.ts';

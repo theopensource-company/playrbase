@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Profile, unknownProfile } from '@/schema/resources/profile';
-import { Building, Users } from 'lucide-react';
+import { Building, MailPlus, Users } from 'lucide-react';
 import Image from 'next/image';
 import React, { ReactNode } from 'react';
 import {
@@ -30,7 +30,9 @@ export function Avatar({
     className?: string;
 }) {
     profile = profile ?? unknownProfile;
-    const avatarFallback = avatarFallbackByName(profile.name);
+    const avatarFallback = avatarFallbackByName(
+        profile.type == 'email' ? profile.email : profile.name
+    );
     const avatarSize = {
         'extra-tiny': 'h-6 w-6 text-xs',
         tiny: 'h-8 w-8 text-md',
@@ -121,6 +123,11 @@ export function Avatar({
                     <Badge
                         text="Team"
                         icon={<Users className="h-full w-full" />}
+                    />
+                ) : profile.type == 'email' ? (
+                    <Badge
+                        text="Invited user"
+                        icon={<MailPlus className="h-full w-full" />}
                     />
                 ) : undefined
             ) : undefined}

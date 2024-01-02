@@ -1,6 +1,7 @@
 'use client';
 
 import Container from '@/components/layout/Container';
+import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
 import { DropdownMenuOptionalBoolean } from '@/components/logic/DropdownMenuOptionalBoolean';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,6 +23,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/lib/auth';
 import { useFeatureFlags } from '@/lib/featureFlags';
 import { cn } from '@/lib/utils';
 import { useAutoPoke, usePasskeyAuthentication } from '@/lib/webauthn';
@@ -36,6 +38,7 @@ import {
     XCircle,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -63,9 +66,18 @@ export default function Signin() {
     } = usePasskeyAuthentication({ autoPoke });
     const [featureFlags] = useFeatureFlags();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const defaultEmail = searchParams.get('email');
+    const followup = (() => {
+        const raw = searchParams.get('followup');
+        if (!raw) return undefined;
+        return raw.startsWith('/') ? raw : `/${raw}`;
+    })();
+
     const [navigating, setNavigating] = useState(false);
     const t = useTranslations('pages.account.signin');
     const [scope, setScope] = useState<scope>(defaultScope);
+    const { user, loading: userLoading } = useAuth();
     const [status, setStatus] = useState<{
         error?: boolean;
         message?: string;
@@ -102,10 +114,21 @@ export default function Signin() {
         if (!navigating && passkey) {
             setNavigating(true);
             setTimeout(() => {
-                router.push('/account');
+                router.push(followup ?? '/account');
             }, 1000);
         }
-    }, [navigating, passkey, router]);
+    }, [navigating, passkey, router, followup]);
+
+    useEffect(() => {
+        if (
+            defaultEmail &&
+            followup &&
+            !userLoading &&
+            user?.email == defaultEmail
+        ) {
+            router.push(followup);
+        }
+    });
 
     const handler = handleSubmit(async ({ identifier }) => {
         setStatus({ message: 'Loading', loading: true });
@@ -115,7 +138,7 @@ export default function Signin() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ identifier, scope }),
+            body: JSON.stringify({ identifier, scope, followup }),
         });
 
         const res = await raw.json().catch((_e) => ({
@@ -135,6 +158,7 @@ export default function Signin() {
 
     return (
         <>
+            {userLoading && <LoaderOverlay />}
             <Container className="flex flex-grow flex-col items-center justify-center">
                 <form
                     className="flex flex-col items-center gap-8"
@@ -186,6 +210,7 @@ export default function Signin() {
                                 <Input
                                     className="mt-2"
                                     placeholder={t('input.email.placeholder')}
+                                    defaultValue={defaultEmail ?? undefined}
                                     disabled={!!passkey || passkeyLoading}
                                     {...register('identifier')}
                                 />

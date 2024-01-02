@@ -5,7 +5,7 @@ const manages = /* surrealql */ `
             // - They are an owner at any level
             // - They are an administrator, except for top-level.
             FOR create 
-                WHERE   $auth.id IN out.managers[WHERE role = "owner" OR (role = "administrator" AND org != NONE)].user
+                WHERE   (SELECT VALUE id FROM invite WHERE origin = $auth.id AND $auth.id = $parent.in AND $parent.out = target).id
             FOR update, delete
                 WHERE   $auth.id = in.id
                 OR      $auth.id IN out.managers[WHERE role = "owner" OR (role = "administrator" AND org != NONE)].user
@@ -17,10 +17,16 @@ const manages = /* surrealql */ `
     DEFINE FIELD in         ON manages TYPE record<user>;
     DEFINE FIELD out        ON manages TYPE record<organisation>;
 
-    DEFINE FIELD confirmed  ON manages TYPE bool        DEFAULT false VALUE $before || IF !$auth OR in.id == $auth.id { $value } ELSE { false }; 
     DEFINE FIELD public     ON manages TYPE bool        DEFAULT false;
     DEFINE FIELD role       ON manages TYPE string      
         ASSERT $value IN ['owner', 'administrator', 'event_manager', 'event_viewer']
+        DEFAULT (SELECT VALUE role FROM ONLY invite WHERE origin = $parent.in AND target = $parent.out LIMIT 1)
+        VALUE 
+            IF !$before { 
+                RETURN SELECT VALUE role FROM ONLY invite WHERE origin = $parent.in AND target = $parent.out LIMIT 1; 
+            } ELSE { 
+                RETURN $value; 
+            }
         PERMISSIONS
             FOR update WHERE $auth.id IN out.managers[WHERE role = "owner" OR (role = "administrator" AND org != NONE)].user;
 
@@ -45,6 +51,15 @@ const verify_nonempty_organisation_after_deletion = /* surrealql */ `
     };
 `;
 
-export default [manages, log, verify_nonempty_organisation_after_deletion].join(
-    '\n\n'
-);
+const cleanup_invite = /* surrealql */ `
+    DEFINE EVENT cleanup_invite ON manages WHEN $event = "CREATE" THEN {
+        DELETE invite WHERE origin = $value.in AND target = $value.out;
+    }
+`;
+
+export default [
+    manages,
+    log,
+    verify_nonempty_organisation_after_deletion,
+    cleanup_invite,
+].join('\n\n');

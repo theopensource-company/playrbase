@@ -3,14 +3,17 @@
 import Container from '@/components/layout/Container';
 import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
+import { buttonVariants } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSurreal } from '@/lib/Surreal';
 import { useScrolledState } from '@/lib/scrolled';
 import { cn } from '@/lib/utils';
-import { useRouter } from '@/locales/navigation';
+import { Link, useRouter } from '@/locales/navigation';
 import { Event } from '@/schema/resources/event';
 import { Organisation } from '@/schema/resources/organisation';
+import { linkToProfile } from '@/schema/resources/profile';
 import { useQuery } from '@tanstack/react-query';
+import { HomeIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React from 'react';
@@ -42,11 +45,17 @@ export default function Account() {
 
     const { event, organisation } = data;
 
-    function Tab(args: Parameters<typeof TabsTrigger>[0]) {
+    function Tab({ className, ...args }: Parameters<typeof TabsTrigger>[0]) {
         const active = args.value == subpage;
         return (
             <div className="space-y-1">
-                <TabsTrigger {...args} />
+                <TabsTrigger
+                    className={cn(
+                        'hover:bg-accent hover:text-foreground data-[state=active]:hover:bg-accent',
+                        className
+                    )}
+                    {...args}
+                />
                 <div
                     className={cn(
                         'mx-2.5 border-b-2',
@@ -58,7 +67,7 @@ export default function Account() {
     }
 
     return (
-        <div className="flex flex-grow flex-col gap-6 pt-6">
+        <div className="z-10 flex flex-grow flex-col gap-6 pt-6">
             <Container>
                 <TinyOrgName name={organisation.name} />
                 <h1 className="text-3xl font-semibold">{event.name}</h1>
@@ -80,6 +89,20 @@ export default function Account() {
                         )}
                     >
                         <Container className="flex overflow-x-auto px-4 sm:px-12">
+                            <div className="flex items-center pb-1">
+                                <Link
+                                    href={linkToProfile(event, 'public') ?? ''}
+                                    className={cn(
+                                        buttonVariants({
+                                            size: 'sm',
+                                            variant: 'ghost',
+                                        }),
+                                        'h-8 px-2.5 py-2'
+                                    )}
+                                >
+                                    <HomeIcon size={16} />
+                                </Link>
+                            </div>
                             <Tab value="overview">Overview</Tab>
                             <Tab value="players">Players</Tab>
                             <Tab value="events">Events</Tab>

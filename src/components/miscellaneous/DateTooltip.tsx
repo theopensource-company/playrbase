@@ -20,7 +20,9 @@ export function DateTooltip({ date }: { date: Date }) {
             <Tooltip delayDuration={200}>
                 <TooltipTrigger asChild>
                     <span>
-                        {dayjs.duration(dayjs(date).diff()).humanize(true)}
+                        {date.getTime() > new Date().getTime()
+                            ? dayjs(date).format('ll')
+                            : dayjs.duration(dayjs(date).diff()).humanize(true)}
                     </span>
                 </TooltipTrigger>
                 <TooltipContent>

@@ -29,7 +29,6 @@ import {
     Menu,
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import Image from 'next/image';
 import React, {
     ReactNode,
     createContext,
@@ -140,13 +139,13 @@ export const RenderNavbar = ({
             >
                 <div className="flex items-center justify-between max-md:my-4 max-md:w-full">
                     <Link href="/">
-                        <Image
-                            src={LogoFull}
-                            alt="Logo"
+                        <LogoFull
                             className={cn(
-                                'w-min transition-height',
+                                'max-w-min transition-height',
                                 scrolled ? 'h-9' : 'h-10 sm:h-12'
                             )}
+                            viewBox="0 0 7467 2000"
+                            preserveAspectRatio="xMaxYMin meet"
                         />
                     </Link>
                     <Button

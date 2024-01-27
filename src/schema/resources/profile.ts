@@ -43,3 +43,51 @@ export const unknownProfile = {
     name: 'Unknown Profile',
     type: 'unknown',
 } satisfies FakeProfile;
+
+export function linkToProfile(
+    profile: Profile,
+    target?: 'public' | 'manage' | 'settings'
+) {
+    switch (target) {
+        case 'public': {
+            switch (profile.type) {
+                case 'user':
+                    return `/u/${profile.id.slice(5)}`;
+                case 'organisation':
+                    return `/o/${profile.slug}`;
+                case 'team':
+                    return `/t/${profile.id.slice(5)}`;
+                case 'event':
+                    return `/e/${profile.id.slice(6)}`;
+            }
+
+            break;
+        }
+
+        case 'manage': {
+            switch (profile.type) {
+                case 'organisation':
+                    return `/organisation/${profile.slug}/overview`;
+                case 'team':
+                    return `/team/${profile.id.slice(5)}/overview`;
+                case 'event':
+                    return `/e/${profile.id.slice(6)}/manage/overview`;
+            }
+
+            break;
+        }
+
+        case 'settings': {
+            switch (profile.type) {
+                case 'organisation':
+                    return `/organisation/${profile.slug}/settings`;
+                case 'team':
+                    return `/team/${profile.id.slice(5)}/settings`;
+                case 'event':
+                    return `/e/${profile.id.slice(6)}/manage/settings`;
+            }
+
+            break;
+        }
+    }
+}

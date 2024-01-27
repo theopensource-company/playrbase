@@ -7,7 +7,7 @@ const event = /* surrealql */ `
             FOR select WHERE $scope = 'admin' 
                 OR (discoverable = true && published = true)
                 OR (published = true && id = $event_id)
-                OR (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers.*.user CONTAINS $auth.id)[0]
+                OR organiser.managers.*.user CONTAINS user:v2jq7f5kjb24o3yi7et0
             FOR create, update, delete WHERE 
                 $scope = 'admin'
                 OR (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers[WHERE role IN ['owner', 'administrator', 'event_manager']].user CONTAINS $auth.id)[0];
@@ -25,8 +25,12 @@ const event = /* surrealql */ `
     DEFINE FIELD published                  ON event TYPE bool DEFAULT false;
     DEFINE FIELD tournament                 ON event TYPE option<record<event>>;
     DEFINE FIELD is_tournament              ON event VALUE <future> {
-        LET $id = meta::id(id);
-        RETURN !!(SELECT VALUE id FROM event WHERE tournament AND meta::id(tournament) = $id)[0];
+        RETURN IF id {
+            LET $id = meta::id(id);
+            RETURN !!(SELECT VALUE id FROM event WHERE tournament AND meta::id(tournament) = $id)[0];
+        } else {
+            RETURN false;
+        }
     };
 
     DEFINE FIELD root_for_org               ON event 

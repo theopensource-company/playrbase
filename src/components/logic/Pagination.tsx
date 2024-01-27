@@ -40,6 +40,7 @@ export function usePagination({
 export function Pagination({
     count,
     pagination: { page, pageSize, setPage, setPageSize },
+    pageSizeAdjustable,
 }: {
     count: number;
     pagination: {
@@ -48,6 +49,7 @@ export function Pagination({
         setPage: Dispatch<SetStateAction<number>>;
         setPageSize: Dispatch<SetStateAction<number>>;
     };
+    pageSizeAdjustable?: boolean;
 }) {
     const t = useTranslations('components.logic.pagination');
     const numPages = Math.ceil(count / pageSize);
@@ -158,21 +160,23 @@ export function Pagination({
                     </Tooltip>
                 </TooltipProvider>
             </div>
-            <Select
-                value={pageSize.toString()}
-                onValueChange={(v) => setPageSize(Number.parseInt(v))}
-            >
-                <SelectTrigger className="flex-[0] gap-2 whitespace-nowrap">
-                    {t.rich('size', { size: pageSize })}
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="5">{t('sizes.5')}</SelectItem>
-                    <SelectItem value="10">{t('sizes.10')}</SelectItem>
-                    <SelectItem value="25">{t('sizes.25')}</SelectItem>
-                    <SelectItem value="50">{t('sizes.50')}</SelectItem>
-                    <SelectItem value="100">{t('sizes.100')}</SelectItem>
-                </SelectContent>
-            </Select>
+            {pageSizeAdjustable !== false && (
+                <Select
+                    value={pageSize.toString()}
+                    onValueChange={(v) => setPageSize(Number.parseInt(v))}
+                >
+                    <SelectTrigger className="flex-[0] gap-2 whitespace-nowrap">
+                        {t.rich('size', { size: pageSize })}
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="5">{t('sizes.5')}</SelectItem>
+                        <SelectItem value="10">{t('sizes.10')}</SelectItem>
+                        <SelectItem value="25">{t('sizes.25')}</SelectItem>
+                        <SelectItem value="50">{t('sizes.50')}</SelectItem>
+                        <SelectItem value="100">{t('sizes.100')}</SelectItem>
+                    </SelectContent>
+                </Select>
+            )}
         </div>
     );
 }

@@ -1,5 +1,7 @@
 import { cn } from '@/lib/utils';
+import { Link } from '@/locales/navigation';
 import {
+    linkToProfile,
     unknownProfile,
     type Profile as TProfile,
 } from '@/schema/resources/profile';
@@ -13,28 +15,38 @@ export function Profile({
     profile,
     noSub,
     customSub,
+    renderBadge = true,
+    clickable,
 }: {
     profile?: TProfile | null;
     loading?: boolean;
     size?: 'extra-tiny' | 'tiny' | 'small' | 'normal' | 'big';
     noSub?: boolean;
     customSub?: ReactNode | string;
+    renderBadge?: boolean;
+    clickable?: boolean | 'manage' | 'settings';
 }) {
     profile = profile ?? unknownProfile;
     const sub = (
         <ProfileSub profile={profile} customSub={customSub} noSub={noSub} />
     );
 
-    return (
+    const Render = () => (
         <div
             className={cn(
                 'flex items-center',
                 size == 'tiny' || size == 'extra-tiny'
                     ? 'space-x-3'
-                    : 'space-x-4'
+                    : 'space-x-4',
+                clickable && 'group'
             )}
         >
-            <Avatar profile={profile} loading={loading} size={size} />
+            <Avatar
+                profile={profile}
+                loading={loading}
+                size={size}
+                renderBadge={renderBadge}
+            />
             {loading ? (
                 <div
                     className={cn(
@@ -66,18 +78,42 @@ export function Profile({
                         className={cn(
                             'text-foreground',
                             size == 'extra-tiny' && 'text-sm',
-                            noSub ? 'font-semibold' : 'font-bold'
+                            noSub ? 'font-semibold' : 'font-bold',
+                            clickable && 'group-hover:underline'
                         )}
                     >
                         <ProfileName profile={profile} />
                     </h2>
                     {sub && (
-                        <p className="text-xs text-muted-foreground">{sub}</p>
+                        <p
+                            className={cn(
+                                'text-xs text-muted-foreground',
+                                clickable && 'group-hover:underline'
+                            )}
+                        >
+                            {sub}
+                        </p>
                     )}
                 </div>
             )}
         </div>
     );
+
+    if (clickable)
+        return (
+            <Link
+                href={
+                    linkToProfile(
+                        profile,
+                        clickable === true ? 'public' : clickable
+                    ) ?? ''
+                }
+            >
+                <Render />
+            </Link>
+        );
+
+    return <Render />;
 }
 
 export function ProfileName({ profile }: { profile?: TProfile | null }) {

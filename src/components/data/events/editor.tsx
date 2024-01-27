@@ -32,6 +32,21 @@ export const EventEditorSchema = Event.pick({
 
 export type EventEditorSchema = z.infer<typeof EventEditorSchema>;
 
+export const EventEditorSchemaNoUndefined = Event.extend({
+    start: z.union([z.date(), z.literal('')]),
+    end: z.union([z.date(), z.literal('')]),
+    options: Event.shape.options.extend({
+        min_age: z.union([z.coerce.number(), z.literal('')]),
+        max_age: z.union([z.coerce.number(), z.literal('')]),
+        min_pool_size: z.union([z.coerce.number(), z.literal('')]),
+        max_pool_size: z.union([z.coerce.number(), z.literal('')]),
+    }),
+});
+
+export type EventEditorSchemaNoUndefined = z.infer<
+    typeof EventEditorSchemaNoUndefined
+>;
+
 export function useEventEditor({
     defaultValues,
     onSubmit,
@@ -39,9 +54,20 @@ export function useEventEditor({
     defaultValues: Partial<Event>;
     onSubmit: (payload: EventEditorSchema) => Promise<unknown>;
 }) {
-    const form = useForm<EventEditorSchema>({
-        resolver: zodResolver(EventEditorSchema),
-        defaultValues,
+    const form = useForm<EventEditorSchemaNoUndefined>({
+        resolver: zodResolver(EventEditorSchemaNoUndefined),
+        defaultValues: {
+            ...defaultValues,
+            start: defaultValues.start ?? '',
+            end: defaultValues.end ?? '',
+            options: {
+                ...(defaultValues.options ?? {}),
+                min_age: defaultValues.options?.min_age ?? '',
+                max_age: defaultValues.options?.max_age ?? '',
+                min_pool_size: defaultValues.options?.min_pool_size ?? '',
+                max_pool_size: defaultValues.options?.max_pool_size ?? '',
+            },
+        },
     });
 
     return { form, onSubmit };
@@ -51,14 +77,29 @@ export function EventEditor({
     form,
     onSubmit,
 }: {
-    form: UseFormReturn<EventEditorSchema>;
+    form: UseFormReturn<EventEditorSchemaNoUndefined>;
     onSubmit: (payload: EventEditorSchema) => Promise<unknown>;
 }) {
     const t = useTranslations('components.data.events.editor');
     return (
         <Form {...form}>
             <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit((changes) => {
+                    onSubmit({
+                        ...changes,
+                        start: changes.start || undefined,
+                        end: changes.end || undefined,
+                        options: {
+                            ...(changes.options ?? {}),
+                            min_age: changes.options?.min_age || undefined,
+                            max_age: changes.options?.max_age || undefined,
+                            min_pool_size:
+                                changes.options?.min_pool_size || undefined,
+                            max_pool_size:
+                                changes.options?.max_pool_size || undefined,
+                        },
+                    });
+                })}
                 className="flex flex-grow flex-col gap-8 pt-6"
             >
                 <div className="grid gap-8 max-sm:max-w-xl md:grid-cols-2 md:gap-12">
@@ -197,12 +238,10 @@ export function EventEditor({
                                                     className="h-6 p-2 text-sm text-destructive hover:bg-destructive hover:text-destructive-foreground"
                                                     type="button"
                                                     onClick={() => {
-                                                        field.onChange(
-                                                            undefined
-                                                        );
+                                                        field.onChange('');
                                                         form.setValue(
                                                             'start',
-                                                            undefined
+                                                            ''
                                                         );
                                                     }}
                                                 >
@@ -212,7 +251,7 @@ export function EventEditor({
                                                 </Button>
                                             </div>
                                             <DateTimePickerField
-                                                date={field.value}
+                                                date={field.value || undefined}
                                                 setDate={field.onChange}
                                             />
                                             <FormMessage />
@@ -236,10 +275,7 @@ export function EventEditor({
                                                     className="h-6 p-2 text-sm text-destructive hover:bg-destructive hover:text-destructive-foreground"
                                                     type="button"
                                                     onClick={() =>
-                                                        form.setValue(
-                                                            'end',
-                                                            undefined
-                                                        )
+                                                        form.setValue('end', '')
                                                     }
                                                 >
                                                     {t(
@@ -248,7 +284,7 @@ export function EventEditor({
                                                 </Button>
                                             </div>
                                             <DateTimePickerField
-                                                date={field.value}
+                                                date={field.value || undefined}
                                                 setDate={field.onChange}
                                             />
                                             <FormMessage />
@@ -283,12 +319,10 @@ export function EventEditor({
                                                     className="h-6 p-2 text-sm text-destructive hover:bg-destructive hover:text-destructive-foreground"
                                                     type="button"
                                                     onClick={() => {
-                                                        field.onChange(
-                                                            undefined
-                                                        );
+                                                        field.onChange('');
                                                         form.setValue(
                                                             'options.min_pool_size',
-                                                            undefined
+                                                            ''
                                                         );
                                                     }}
                                                 >
@@ -325,12 +359,10 @@ export function EventEditor({
                                                     className="h-6 p-2 text-sm text-destructive hover:bg-destructive hover:text-destructive-foreground"
                                                     type="button"
                                                     onClick={() => {
-                                                        field.onChange(
-                                                            undefined
-                                                        );
+                                                        field.onChange('');
                                                         form.setValue(
                                                             'options.max_pool_size',
-                                                            undefined
+                                                            ''
                                                         );
                                                     }}
                                                 >
@@ -378,12 +410,10 @@ export function EventEditor({
                                                     className="h-6 p-2 text-sm text-destructive hover:bg-destructive hover:text-destructive-foreground"
                                                     type="button"
                                                     onClick={() => {
-                                                        field.onChange(
-                                                            undefined
-                                                        );
+                                                        field.onChange('');
                                                         form.setValue(
                                                             'options.min_age',
-                                                            undefined
+                                                            ''
                                                         );
                                                     }}
                                                 >
@@ -420,12 +450,10 @@ export function EventEditor({
                                                     className="h-6 p-2 text-sm text-destructive hover:bg-destructive hover:text-destructive-foreground"
                                                     type="button"
                                                     onClick={() => {
-                                                        field.onChange(
-                                                            undefined
-                                                        );
+                                                        field.onChange('');
                                                         form.setValue(
                                                             'options.max_age',
-                                                            undefined
+                                                            ''
                                                         );
                                                     }}
                                                 >

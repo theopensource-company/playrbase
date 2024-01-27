@@ -64,8 +64,6 @@ async function createInvite({
         )
         .catch(() => []);
 
-    console.log(res);
-
     const invite = Invite.safeParse(res);
     if (invite.success) {
         return {

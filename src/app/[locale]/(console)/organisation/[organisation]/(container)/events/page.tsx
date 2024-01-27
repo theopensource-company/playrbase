@@ -1,5 +1,6 @@
 'use client';
 
+import { EventGrid } from '@/components/data/events/cards';
 import { CreateEvent } from '@/components/data/events/create';
 import {
     EventFilters,
@@ -11,13 +12,14 @@ import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { Pagination, usePagination } from '@/components/logic/Pagination';
 import { Button } from '@/components/ui/button';
 import { useSurreal } from '@/lib/Surreal';
+import { cn } from '@/lib/utils';
 import { Event } from '@/schema/resources/event';
 import { Organisation } from '@/schema/resources/organisation';
 import { useQuery } from '@tanstack/react-query';
-import { RefreshCw } from 'lucide-react';
+import { LayoutGrid, List, RefreshCw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 import { z } from 'zod';
 import { PageTitle } from '../../components/PageTitle';
 
@@ -27,6 +29,7 @@ export default function Account() {
         ? params.organisation[0]
         : params.organisation;
 
+    const [view, setView] = useState<'table' | 'cards'>('table');
     const eventFilters = useEventFilters();
     const pagination = usePagination();
 
@@ -52,9 +55,49 @@ export default function Account() {
                 <Button variant="outline" size="icon" onClick={() => refetch()}>
                     <RefreshCw size={20} />
                 </Button>
+                <div className="flex h-10 items-center gap-1 rounded-md border px-1">
+                    <Button
+                        onClick={() => setView('table')}
+                        variant="ghost"
+                        size="icon"
+                        className={cn(
+                            'h-8 w-8 rounded-sm',
+                            view == 'table' &&
+                                'bg-accent text-accent-foreground'
+                        )}
+                    >
+                        <List size={18} />
+                    </Button>
+                    <Button
+                        onClick={() => setView('cards')}
+                        variant="ghost"
+                        size="icon"
+                        className={cn(
+                            'h-8 w-8 rounded-sm',
+                            view == 'cards' &&
+                                'bg-accent text-accent-foreground'
+                        )}
+                    >
+                        <LayoutGrid size={18} />
+                    </Button>
+                </div>
             </div>
-            <div className="rounded-md border">
-                <EventTable organisation_slug={slug} events={events ?? []} />
+            <div>
+                {view == 'table' ? (
+                    <div className="rounded-md border">
+                        <EventTable
+                            organisation_slug={slug}
+                            events={events ?? []}
+                        />
+                    </div>
+                ) : (
+                    <EventGrid
+                        organisationSlug={slug}
+                        manageButton
+                        viewButton
+                        events={events ?? []}
+                    />
+                )}
             </div>
             <div className="flex items-center justify-end gap-10 pt-2">
                 <Pagination pagination={pagination} count={count} />

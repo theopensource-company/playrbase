@@ -64,7 +64,7 @@ export default async function RootLayout({
                             <div
                                 // eslint-disable-next-line react/no-unknown-property
                                 vaul-drawer-wrapper=""
-                                className="flex min-h-screen flex-col will-change-transform"
+                                className="flex min-h-screen flex-col"
                             >
                                 {children}
                             </div>

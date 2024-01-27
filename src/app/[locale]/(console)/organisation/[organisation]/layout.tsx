@@ -10,7 +10,7 @@ import { useOrganisation } from '@/lib/Queries/Organisation';
 import { useAuth } from '@/lib/auth';
 import { useRouter } from '@/locales/navigation';
 import { User } from '@/schema/resources/user';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, HomeIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, { ReactNode, useEffect } from 'react';
@@ -46,8 +46,8 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
         <>
             <Navbar actor={organisation ?? undefined}>
                 <NavbarSubLinks baseUrl={`/organisation/${slug}`}>
-                    <NavbarSubLink>
-                        <ArrowLeft />
+                    <NavbarSubLink href={`/o/${slug}`}>
+                        <HomeIcon size={16} />
                     </NavbarSubLink>
                     <NavbarSubLink link="overview">
                         {t('overview.title')}

@@ -48,14 +48,24 @@ export default function Page() {
                         <ProfileName profile={event} />
                     </h1>
                 </div>
-                {event.can_manage && (
-                    <Link
-                        href={linkToProfile(event, 'manage') ?? ''}
-                        className={buttonVariants()}
-                    >
-                        Manage
-                    </Link>
-                )}
+                <div className="flex gap-4">
+                    {event.can_manage && (
+                        <Link
+                            href={linkToProfile(event, 'manage') ?? ''}
+                            className={buttonVariants({ variant: 'outline' })}
+                        >
+                            Manage
+                        </Link>
+                    )}
+                    {event.can_manage && (
+                        <Link
+                            href={`/flow/event-signup/${event.id.slice(6)}`}
+                            className={buttonVariants()}
+                        >
+                            Register
+                        </Link>
+                    )}
+                </div>
             </div>
             <div className="flex flex-col-reverse gap-12 md:flex-row md:gap-16">
                 {events.length > 0 && (

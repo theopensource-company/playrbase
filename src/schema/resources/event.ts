@@ -63,6 +63,7 @@ export const Event = z.object({
     published: z.boolean(),
     tournament: record('event').optional(),
     root_for_org: z.boolean(),
+    is_tournament: z.boolean(),
 
     options: z.object({
         min_pool_size: z.number().optional(),

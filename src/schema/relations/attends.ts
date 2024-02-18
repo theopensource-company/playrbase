@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { record } from '../../lib/zod.ts';
+
 const attends = /* surrealql */ `
     DEFINE TABLE attends SCHEMAFULL
         PERMISSIONS
@@ -62,10 +65,21 @@ const players_validation = /* surrealql */ `
             THROW "Some players are too young in registration " + <string> $value.id;
         };
 
-        IF $max_age && array::len($value.players[?age && age > $min_age]) > 0 {
-            THROW "Some players are too young in registration " + <string> $value.id;
+        IF $max_age && array::len($value.players[?age && age > $max_age]) > 0 {
+            THROW "Some players are too old in registration " + <string> $value.id;
         };
     };
 `;
 
 export default [attends, log, players_validation].join('\n\n');
+
+export const Attends = z.object({
+    id: record('attends'),
+    in: z.union([record('user'), record('team')]),
+    out: record('event'),
+    players: z.array(record('user')),
+    created: z.coerce.date(),
+    updated: z.coerce.date(),
+});
+
+export type Attends = z.infer<typeof Attends>;

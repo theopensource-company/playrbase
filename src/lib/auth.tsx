@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from '@/locales/navigation';
+import { usePathname, useRouter } from '@/locales/navigation';
 import { Admin } from '@/schema/resources/admin';
 import { User } from '@/schema/resources/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -85,12 +85,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth({ authRequired }: { authRequired?: boolean } = {}) {
     const router = useRouter();
+    const pathname = usePathname();
     const state = useContext(AuthContext);
 
     useEffect(() => {
         if (authRequired && !state.loading && !state.user)
-            router.push('/account/signin');
-    }, [authRequired, state, router]);
+            router.push(
+                '/account/signin?' +
+                    new URLSearchParams({
+                        followup: pathname,
+                    })
+            );
+    }, [authRequired, state, router, pathname]);
 
     return state;
 }

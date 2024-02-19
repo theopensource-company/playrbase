@@ -7,14 +7,15 @@ const event = /* surrealql */ `
             FOR select WHERE $scope = 'admin' 
                 OR (discoverable = true && published = true)
                 OR (published = true && id = $event_id)
-                OR organiser.managers.*.user CONTAINS user:v2jq7f5kjb24o3yi7et0
+                OR organiser.managers.*.user CONTAINS $auth
             FOR create, update, delete WHERE 
                 $scope = 'admin'
                 OR (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers[WHERE role IN ['owner', 'administrator', 'event_manager']].user CONTAINS $auth.id)[0];
 
     DEFINE FIELD name                       ON event TYPE string;
     DEFINE FIELD description                ON event TYPE string;
-    DEFINE FIELD banner                     ON event TYPE option<string>;
+    DEFINE FIELD logo                       ON event TYPE option<string> PERMISSIONS FOR update WHERE $scope = 'admin';
+    DEFINE FIELD banner                     ON event TYPE option<string> PERMISSIONS FOR update WHERE $scope = 'admin';
 
     DEFINE FIELD start                      ON event TYPE option<datetime>;
     DEFINE FIELD end                        ON event TYPE option<datetime>;
@@ -36,6 +37,15 @@ const event = /* surrealql */ `
     DEFINE FIELD root_for_org               ON event 
         VALUE !tournament OR (SELECT VALUE organiser FROM ONLY $parent.tournament) != organiser;
 
+    DEFINE FIELD computed                   ON event VALUE <future> {
+        RETURN {
+            description: description OR tournament.computed.description,
+            logo: logo OR tournament.computed.logo,
+            banner: banner OR tournament.computed.banner,
+            tournament: tournament.computed.tournament OR tournament,
+        };
+    };
+
     DEFINE FIELD options                    ON event TYPE object DEFAULT {};
     DEFINE FIELD options.min_pool_size      ON event TYPE option<number>;
     DEFINE FIELD options.max_pool_size      ON event TYPE option<number>;
@@ -53,6 +63,7 @@ export const Event = z.object({
     id: record('event'),
     name: z.string(),
     description: z.string(),
+    logo: z.string().optional(),
     banner: z.string().optional(),
 
     start: z.coerce.date().optional(),
@@ -64,6 +75,13 @@ export const Event = z.object({
     tournament: record('event').optional(),
     root_for_org: z.boolean(),
     is_tournament: z.boolean(),
+
+    computed: z.object({
+        description: z.string(),
+        logo: z.string().nullable(),
+        banner: z.string().nullable(),
+        tournament: record('event').nullable(),
+    }),
 
     options: z.object({
         min_pool_size: z.number().optional(),

@@ -1,3 +1,4 @@
+import { Banner } from '@/components/cards/banner';
 import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
 import { buttonVariants } from '@/components/ui/button';
 import {
@@ -8,7 +9,6 @@ import {
     CarouselPrevious,
 } from '@/components/ui/carousel';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Pattern } from '@/lib/pattern';
 import { cn } from '@/lib/utils';
 import { Link } from '@/locales/navigation';
 import { Event } from '@/schema/resources/event';
@@ -150,16 +150,11 @@ export function EventCard({
 
     return (
         <div className="flex flex-col overflow-hidden rounded border">
-            {loading || !event ? (
-                <div className="h-40 w-full opacity-60">
-                    <Skeleton className="h-40 w-full" />
-                </div>
-            ) : (
-                <Pattern
-                    className="h-40 w-full opacity-40 dark:invert"
-                    input={event.id}
-                />
-            )}
+            <Banner
+                loading={loading}
+                profile={event}
+                className="aspect-auto h-40 w-full"
+            />
             <div className="flex flex-grow flex-col justify-between gap-8 border-t p-6">
                 <div className="flex flex-col justify-between gap-6 sm:flex-row sm:gap-8">
                     <div className="max-w-[48rem] space-y-3">
@@ -173,9 +168,11 @@ export function EventCard({
                                 <h2 className="text-xl font-semibold">
                                     {event.name}
                                 </h2>
-                                <p className="line-clamp-3 overflow-y-hidden text-ellipsis text-sm text-card-foreground/75">
-                                    {event.description || <i>No description</i>}
-                                </p>
+                                {event.description && (
+                                    <p className="line-clamp-3 overflow-y-hidden text-ellipsis text-sm text-card-foreground/75">
+                                        {event.description}
+                                    </p>
+                                )}
                             </>
                         )}
                     </div>

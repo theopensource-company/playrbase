@@ -121,7 +121,7 @@ export const RenderNavbar = ({
     return (
         <div
             className={cn(
-                'fixed left-0 right-0 z-10 backdrop-blur-lg transition-all',
+                'fixed left-0 right-0 z-40 backdrop-blur-lg transition-all',
                 open && 'max-md:h-screen max-md:bg-black'
             )}
         >

@@ -17,6 +17,7 @@ export function Profile({
     customSub,
     renderBadge = true,
     clickable,
+    className,
 }: {
     profile?: TProfile | null;
     loading?: boolean;
@@ -25,6 +26,7 @@ export function Profile({
     customSub?: ReactNode | string;
     renderBadge?: boolean;
     clickable?: boolean | 'manage' | 'settings';
+    className?: string;
 }) {
     profile = profile ?? unknownProfile;
     const sub = (
@@ -38,7 +40,8 @@ export function Profile({
                 size == 'tiny' || size == 'extra-tiny'
                     ? 'space-x-3'
                     : 'space-x-4',
-                clickable && 'group'
+                clickable && 'group',
+                className
             )}
         >
             <Avatar

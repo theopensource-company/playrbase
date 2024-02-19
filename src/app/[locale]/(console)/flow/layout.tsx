@@ -11,7 +11,7 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
     return (
         <>
             <Navbar />
-            <div className="flex flex-grow flex-col pb-24 pt-8">
+            <div className="flex flex-grow flex-col pb-24">
                 <NavbarHeightOffset />
                 {user && children}
                 <LoaderOverlay show={loading || !user} />

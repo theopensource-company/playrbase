@@ -1,6 +1,7 @@
 'use client';
 
 import { Avatar } from '@/components/cards/avatar';
+import { Banner } from '@/components/cards/banner';
 import { Profile } from '@/components/cards/profile';
 import Container from '@/components/layout/Container';
 import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
@@ -66,6 +67,14 @@ export function Render({
     const { event, tournament, self_eligable, teams } = data;
     const router = useRouter();
     const { user } = useAuth({ authRequired: true });
+
+    const eligable = useMemo(
+        () =>
+            [self_eligable && user, ...teams].filter(
+                (a): a is Team | (User & { scope: 'user' }) => !!a
+            ),
+        [teams, self_eligable, user]
+    );
 
     const [actor, setActorInternal] = useQueryState('actor', parseAsString);
     const [players, setPlayers] = useQueryState(
@@ -136,14 +145,6 @@ export function Render({
         [sectionsAvailable, setSection]
     );
 
-    const eligable = useMemo(
-        () =>
-            [self_eligable && user, ...teams].filter(
-                (a): a is Team | (User & { scope: 'user' }) => !!a
-            ),
-        [teams, self_eligable, user]
-    );
-
     useEffect(() => {
         if (event.is_tournament) {
             router.push(linkToProfile(event, 'public') ?? '/');
@@ -151,10 +152,10 @@ export function Render({
     }, [event, router]);
 
     useEffect(() => {
-        if (teams.length == 0 && user) {
-            setActor(user.id);
+        if (eligable.length == 1) {
+            setActor(eligable[0].id);
         }
-    }, [teams, user, setActor]);
+    }, [eligable, setActor]);
 
     useEffect(() => {
         if (!actor && eligable.length == 1) {
@@ -225,32 +226,42 @@ export function Render({
     });
 
     return (
-        <Container className="space-y-12">
-            <div>
+        <div className="space-y-12">
+            <div className="relative w-full">
+                <Banner
+                    profile={event}
+                    className="absolute z-0 aspect-auto h-full w-full rounded-xl"
+                />
                 {tournament && (
-                    <Link
-                        href={`/e/${tournament.id.slice(6)}`}
-                        className="text-sm text-muted-foreground hover:underline"
-                    >
-                        {tournament.name}
-                    </Link>
+                    <div className="absolute left-0 top-0 z-[2] m-5 rounded-lg p-1 pl-2 backdrop-blur-lg">
+                        <Profile
+                            profile={tournament}
+                            size="extra-tiny"
+                            noSub
+                            renderBadge={false}
+                            clickable
+                        />
+                    </div>
                 )}
-                <div className="flex items-center justify-between">
-                    <h1 className="text-3xl font-semibold">
-                        Register for {event.name}
-                    </h1>
-                    <Link
-                        href={`/e/${event.id.slice(6)}`}
-                        className={buttonVariants({ size: 'sm' })}
-                    >
-                        View event
-                    </Link>
+                <div className="relative z-[1] w-full bg-gradient-to-t from-black to-transparent p-6 pb-8 pt-32">
+                    <div className="flex flex-wrap items-center justify-between gap-8">
+                        <h1 className="text-xl font-semibold drop-shadow-2xl md:truncate md:text-2xl">
+                            Register for {event.name}
+                        </h1>
+                        <Link
+                            href={`/e/${event.id.slice(6)}`}
+                            className={buttonVariants({ size: 'sm' })}
+                        >
+                            View event
+                        </Link>
+                    </div>
                 </div>
             </div>
             <Accordion
                 type="single"
                 value={section}
                 onValueChange={attemptSection}
+                className="sm:px-6"
             >
                 <AccordionItem
                     value="actor"
@@ -497,7 +508,7 @@ export function Render({
                     </AccordionContent>
                 </AccordionItem>
             </Accordion>
-        </Container>
+        </div>
     );
 }
 

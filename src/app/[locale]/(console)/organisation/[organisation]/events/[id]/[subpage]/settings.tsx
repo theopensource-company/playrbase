@@ -1,6 +1,8 @@
 import { EventEditor, useEventEditor } from '@/components/data/events/editor';
+import UploadImage from '@/components/logic/UploadImage';
 import { useUpdateEvent } from '@/lib/Queries/Event';
 import { promiseTimeout } from '@/lib/utils';
+import { Actor } from '@/schema/resources/actor';
 import { Event } from '@/schema/resources/event';
 import React, { useCallback } from 'react';
 
@@ -27,5 +29,21 @@ export function EventSettingsTab({
         onSubmit: onSubmit,
     });
 
-    return <EventEditor {...eventEditor} />;
+    return (
+        <div className="space-y-16">
+            <EventEditor {...eventEditor} />
+            <UploadImage
+                intent="logo"
+                actor={event as unknown as Actor}
+                title="Upload Logo"
+                description="Upload Logo"
+            />
+            <UploadImage
+                intent="banner"
+                actor={event as unknown as Actor}
+                title="Upload Banner"
+                description="Upload banner"
+            />
+        </div>
+    );
 }

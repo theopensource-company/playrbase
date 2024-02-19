@@ -1,4 +1,6 @@
+import { Intent, intentProperties } from '@/lib/image';
 import { record } from '@/lib/zod';
+import { Event } from '@/schema/resources/event';
 import { Organisation } from '@/schema/resources/organisation';
 import { s3 } from '@api/lib/s3';
 import { surreal } from '@api/lib/surreal';
@@ -7,20 +9,6 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { Blob, File } from 'buffer';
 import { NextRequest, NextResponse } from 'next/server';
 import sharp from 'sharp';
-import { z } from 'zod';
-
-const Intent = z.union([
-    z.literal('profile_picture'),
-    z.literal('logo'),
-    z.literal('banner'),
-]);
-type Intent = z.infer<typeof Intent>;
-
-const sizeByIntent = {
-    profile_picture: 128,
-    logo: 512,
-    banner: 2048,
-};
 
 async function findValidTarget({
     intent,
@@ -39,6 +27,18 @@ async function findValidTarget({
             const [res] = await surreal.query<[Organisation | null]>(
                 /* surrealql */ `
                     SELECT id FROM ONLY type::thing('organisation', $target) WHERE type::thing('user', $user) IN managers[?role IN ['owner', 'administrator']].user;
+                `,
+                { target, user }
+            );
+
+            return res?.id;
+        }
+
+        if (target.startsWith('event:')) {
+            if (!['logo', 'banner'].includes(intent as string)) return;
+            const [res] = await surreal.query<[Event | null]>(
+                /* surrealql */ `
+                    SELECT id FROM ONLY type::thing('event', $target) WHERE type::thing('user', $user) IN organiser.managers[?role IN ['owner', 'administrator', 'event_manager']].user;
                 `,
                 { target, user }
             );
@@ -106,7 +106,12 @@ export async function PUT(req: NextRequest) {
     }
 
     const compressed = await sharp(await file.arrayBuffer())
-        .resize({ width: sizeByIntent[intent], withoutEnlargement: true })
+        .resize({
+            width: intentProperties[intent].width,
+            height: intentProperties[intent].height,
+            withoutEnlargement: true,
+            fit: 'cover',
+        })
         .webp({ lossless: true })
         .toBuffer();
     const hash = compressed

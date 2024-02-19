@@ -1,6 +1,7 @@
 'use client';
 
 import { Avatar } from '@/components/cards/avatar';
+import { Banner } from '@/components/cards/banner';
 import { Profile, ProfileName } from '@/components/cards/profile';
 import { EventGrid } from '@/components/data/events/cards';
 import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
@@ -10,6 +11,7 @@ import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
 import { buttonVariants } from '@/components/ui/button';
 import { useSurreal } from '@/lib/Surreal';
 import { Link } from '@/locales/navigation';
+import { Attends } from '@/schema/relations/attends';
 import { Event } from '@/schema/resources/event';
 import {
     Organisation,
@@ -17,6 +19,7 @@ import {
 } from '@/schema/resources/organisation';
 import { linkToProfile } from '@/schema/resources/profile';
 import { useQuery } from '@tanstack/react-query';
+import { Check } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { z } from 'zod';
@@ -37,39 +40,85 @@ export default function Page() {
 
     if (!data || !data.event) return <NotFoundScreen text="Event not found" />;
 
-    const { event, organiser, count, events, tournament } = data;
+    const {
+        event,
+        organiser,
+        count,
+        events,
+        tournament,
+        registration,
+        main_tournament,
+    } = data;
 
     return (
-        <div className="flex flex-grow flex-col gap-6">
-            <div className="flex justify-between pb-4">
-                <div className="flex items-center gap-4">
-                    <Avatar profile={event} renderBadge={false} size="big" />
-                    <h1 className="text-2xl font-semibold">
-                        <ProfileName profile={event} />
-                    </h1>
-                </div>
-                <div className="flex gap-4">
-                    {event.can_manage && (
-                        <Link
-                            href={linkToProfile(event, 'manage') ?? ''}
-                            className={buttonVariants({ variant: 'outline' })}
-                        >
-                            Manage
-                        </Link>
-                    )}
-                    {event.can_manage && (
-                        <Link
-                            href={`/flow/event-signup/${event.id.slice(6)}`}
-                            className={buttonVariants()}
-                        >
-                            Register
-                        </Link>
-                    )}
+        <div className="flex flex-grow flex-col gap-12">
+            <div className="relative w-full">
+                <Banner
+                    profile={event}
+                    loading={isPending}
+                    className="absolute z-0 aspect-auto h-full w-full rounded-xl"
+                />
+                {main_tournament && (
+                    <div className="absolute left-0 top-0 z-[2] m-5 rounded-lg p-1 pl-2 backdrop-blur-lg">
+                        <Profile
+                            profile={main_tournament}
+                            size="extra-tiny"
+                            noSub
+                            renderBadge={false}
+                            clickable
+                        />
+                    </div>
+                )}
+                <div className="relative z-[1] flex w-full flex-wrap items-center justify-between gap-8 bg-gradient-to-t from-black to-transparent p-6 pb-8 pt-36">
+                    <div className="flex flex-wrap items-center gap-4">
+                        <Avatar
+                            profile={event}
+                            renderBadge={false}
+                            className="h-10 w-10 md:h-14 md:w-14"
+                        />
+                        <h1 className="text-xl font-semibold md:text-2xl">
+                            <ProfileName profile={event} />
+                        </h1>
+                    </div>
+                    <div className="flex gap-4">
+                        {event.can_manage && (
+                            <Link
+                                href={linkToProfile(event, 'manage') ?? ''}
+                                className={buttonVariants({
+                                    variant: 'outline',
+                                })}
+                            >
+                                Manage
+                            </Link>
+                        )}
+                        {!event.is_tournament && (
+                            <Link
+                                href={`/flow/event-signup/${event.id.slice(6)}`}
+                                className={buttonVariants({
+                                    variant: registration
+                                        ? 'secondary'
+                                        : 'default',
+                                })}
+                                onClick={(e) =>
+                                    registration && e.preventDefault()
+                                }
+                            >
+                                {registration ? (
+                                    <span className="flex items-center gap-2">
+                                        Registered
+                                        <Check size={16} />
+                                    </span>
+                                ) : (
+                                    'Register'
+                                )}
+                            </Link>
+                        )}
+                    </div>
                 </div>
             </div>
-            <div className="flex flex-col-reverse gap-12 md:flex-row md:gap-16">
+            <div className="grid gap-16 md:grid-cols-4 xl:grid-cols-5">
                 {events.length > 0 && (
-                    <div className="flex-[3] space-y-6">
+                    <div className="space-y-6 md:col-span-2 xl:col-span-3">
                         <div className="flex items-center justify-between pb-2">
                             <h2 className="text-2xl font-semibold">Events</h2>
                             <Pagination
@@ -81,8 +130,15 @@ export default function Page() {
                         <EventGrid events={events} viewButton narrow />
                     </div>
                 )}
-                <div className="max-w-2xl flex-[2] space-y-6">
-                    <h2 className="pb-2 text-2xl font-semibold">About</h2>
+                <div className="space-y-6 md:col-span-2">
+                    <h2 className="pb-2 text-2xl font-semibold">
+                        About the {event.is_tournament ? 'tournament' : 'event'}
+                    </h2>
+                    {event.computed.description && (
+                        <p className="text-foreground/75">
+                            {event.computed.description}
+                        </p>
+                    )}
                     {event.start && (
                         <div className="space-y-1">
                             <h3 className="text-md font-semibold">
@@ -103,19 +159,11 @@ export default function Page() {
                             </p>
                         </div>
                     )}
-                    {event.description && (
-                        <div className="space-y-1">
-                            <h3 className="text-md font-semibold">
-                                Description
-                            </h3>
-                            <p className="text-sm text-foreground/75">
-                                {event.description}
-                            </p>
-                        </div>
-                    )}
                     {tournament && (
                         <div className="space-y-3">
-                            <h3 className="text-md font-semibold">Part of</h3>
+                            <h3 className="text-md font-semibold">
+                                Tournament
+                            </h3>
                             <div className="flex flex-col gap-3">
                                 <Profile
                                     key={tournament.id}
@@ -128,18 +176,29 @@ export default function Page() {
                             </div>
                         </div>
                     )}
-                    <div className="space-y-3">
-                        <h3 className="text-md font-semibold">Organiser</h3>
-                        <div className="flex flex-col gap-3">
-                            <Profile
-                                key={organiser.id}
-                                profile={organiser}
-                                size="extra-tiny"
-                                noSub
-                                renderBadge={false}
-                                clickable
-                            />
-                        </div>
+                </div>
+                <div className="space-y-6 md:col-span-2">
+                    <h2 className="pb-2 text-2xl font-semibold">
+                        About the organiser
+                    </h2>
+                    <Profile
+                        profile={organiser}
+                        noSub
+                        renderBadge={false}
+                        size="small"
+                        clickable
+                        className="mt-3"
+                    />
+                    {organiser.description && (
+                        <p className="w-full text-foreground/75">
+                            {organiser.description}
+                        </p>
+                    )}
+                    <div className="space-y-1">
+                        <h3 className="text-md font-semibold">Email address</h3>
+                        <p className="text-sm text-foreground/75">
+                            {organiser.email}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -179,6 +238,8 @@ function useData({
                     EventCanManage,
                     OrganisationSafeParse,
                     Event,
+                    Event,
+                    Attends | null,
                 ]
             >(
                 /* surql */ `
@@ -201,23 +262,29 @@ function useData({
                     $event;
                     SELECT * FROM ONLY $event.organiser;
                     SELECT * FROM ONLY $event.tournament;
+                    SELECT * FROM ONLY $event.computed.tournament;
+                    IF $event && $auth THEN fn::team::find_actor_registration($auth, $event.id) ELSE none END;
                 `,
                 {
                     slug,
                     order,
                     start,
                     limit,
+                    event_id: `event:${slug}`,
                 }
             );
 
             if (!result?.[1] || !result?.[2] || !result?.[3]) return null;
+            console.log(result[6]);
 
             return {
                 event: EventCanManage.parse(result[3]),
                 organiser: OrganisationSafeParse.parse(result[4]),
                 tournament: Event.optional().parse(result[5] ?? undefined),
+                main_tournament: Event.optional().parse(result[6] ?? undefined),
                 count: z.number().parse(result[2][0]?.count ?? 0),
                 events: z.array(Event).parse(result[1]),
+                registration: Attends.optional().parse(result[7] ?? undefined),
             };
         },
     });

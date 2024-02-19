@@ -91,9 +91,11 @@ export function Avatar({
                     src={
                         'profile_picture' in profile
                             ? (profile.profile_picture as string)
-                            : 'logo' in profile
-                              ? (profile.logo as string)
-                              : undefined
+                            : 'computed' in profile
+                              ? (profile.computed.logo as string)
+                              : 'logo' in profile
+                                ? (profile.logo as string)
+                                : undefined
                     }
                 />
                 <AvatarFallback className="bg-transparent">

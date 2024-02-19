@@ -28,7 +28,7 @@ const attends = /* surrealql */ `
         ASSERT array::len($value) > 0
         VALUE {
             LET $players = fn::team::compute_players(in);
-            RETURN $value[?id IN $players]
+            RETURN <set> $value[?id IN $players]
         };
     DEFINE FIELD players.*  ON attends TYPE record<user>;
 
@@ -36,7 +36,6 @@ const attends = /* surrealql */ `
     DEFINE FIELD updated    ON attends TYPE datetime    VALUE time::now()             DEFAULT time::now();
 
     DEFINE INDEX unique_relation ON attends COLUMNS in, out UNIQUE;
-    DEFINE INDEX unique_players ON attends COLUMNS players.* UNIQUE;
 `;
 
 const log = /* surrealql */ `

@@ -1,3 +1,4 @@
+import { Intent, intentProperties } from '@/lib/image';
 import { cn } from '@/lib/utils';
 import { Actor } from '@/schema/resources/actor';
 import { Loader2 } from 'lucide-react';
@@ -38,7 +39,7 @@ export default function UploadImage({
     triggerRefresh,
     loading,
 }: {
-    intent: 'profile_picture' | 'logo' | 'banner';
+    intent: Intent;
     actor: Actor;
     title: string;
     description: string;
@@ -174,6 +175,7 @@ export default function UploadImage({
                                     <CropProfilePicture
                                         file={uploaded}
                                         setBlob={setBlob}
+                                        intent={intent}
                                     />
                                 )}
                             </div>
@@ -228,9 +230,11 @@ export default function UploadImage({
 export function CropProfilePicture({
     file,
     setBlob,
+    intent,
 }: {
     file: File;
     setBlob: (blob: Blob) => void;
+    intent: Intent;
 }) {
     const t = useTranslations('components.logic.upload-image.cropper');
     const [crop, setCrop] = useState<Crop>();
@@ -242,12 +246,14 @@ export function CropProfilePicture({
         height: 0,
     });
 
+    const aspect =
+        intentProperties[intent].width / intentProperties[intent].height;
     const url = URL.createObjectURL(file);
     const img = new Image();
     img.addEventListener('load', function () {
         if (size.width !== this.width && size.height !== this.height) {
             setSize(this);
-            setCrop(centerAspectCrop(this.width, this.height, 1));
+            setCrop(centerAspectCrop(this.width, this.height, aspect));
         }
     });
 
@@ -258,11 +264,11 @@ export function CropProfilePicture({
         <ReactCrop
             crop={crop}
             onChange={(c) => setCrop(c)}
-            aspect={1}
+            aspect={aspect}
             onComplete={async (_, percentage) => {
                 setBlob(await getCroppedImg(img, percentage));
             }}
-            circularCrop={true}
+            circularCrop={intentProperties[intent].round}
             keepSelection={true}
         >
             {/* eslint-disable-next-line @next/next/no-img-element */}

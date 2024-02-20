@@ -19,22 +19,15 @@ export function EventGrid({
     events,
     viewButton,
     manageButton,
-    organisationSlug,
     narrow,
     loading,
 }: {
     events?: Event[];
     viewButton?: boolean;
     manageButton?: boolean;
-    organisationSlug?: string;
     narrow?: boolean;
     loading?: boolean;
 }) {
-    if (manageButton && !organisationSlug)
-        throw new Error(
-            'manageButton requires you to pass an organisationSlug'
-        );
-
     return (
         <div
             className={cn(
@@ -57,7 +50,6 @@ export function EventGrid({
                         event={event}
                         viewButton={viewButton}
                         manageButton={manageButton}
-                        organisationSlug={organisationSlug}
                     />
                 ))
             )}
@@ -69,7 +61,6 @@ export function EventCarousel({
     events,
     viewButton,
     manageButton,
-    organisationSlug,
     narrow,
     carouselControls,
     loading,
@@ -77,16 +68,10 @@ export function EventCarousel({
     events?: Event[];
     viewButton?: boolean;
     manageButton?: boolean;
-    organisationSlug?: string;
     narrow?: boolean;
     carouselControls?: boolean;
     loading?: boolean;
 }) {
-    if (manageButton && !organisationSlug)
-        throw new Error(
-            'manageButton requires you to pass an organisationSlug'
-        );
-
     return (
         <Carousel>
             {carouselControls && <CarouselPrevious />}
@@ -119,7 +104,6 @@ export function EventCarousel({
                                 event={event}
                                 viewButton={viewButton}
                                 manageButton={manageButton}
-                                organisationSlug={organisationSlug}
                             />
                         </CarouselItem>
                     ))
@@ -135,19 +119,12 @@ export function EventCard({
     loading,
     viewButton,
     manageButton,
-    organisationSlug,
 }: {
     event?: Event;
     loading?: boolean;
     viewButton?: boolean;
     manageButton?: boolean;
-    organisationSlug?: string;
 }) {
-    if (!loading && manageButton && !organisationSlug)
-        throw new Error(
-            'manageButton requires you to pass an organisationSlug'
-        );
-
     return (
         <div className="flex flex-col overflow-hidden rounded border">
             <Banner
@@ -259,9 +236,9 @@ export function EventCard({
                             )}
                             {manageButton && (
                                 <Link
-                                    href={`/organisation/${organisationSlug}/events/${event.id.slice(
+                                    href={`/e/${event.id.slice(
                                         6
-                                    )}/overview`}
+                                    )}/manage/overview`}
                                     className={buttonVariants({
                                         size: 'sm',
                                         variant: 'outline',

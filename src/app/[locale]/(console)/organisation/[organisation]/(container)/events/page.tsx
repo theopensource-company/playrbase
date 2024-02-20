@@ -88,12 +88,7 @@ export default function Account() {
                         <EventTable events={events ?? []} />
                     </div>
                 ) : (
-                    <EventGrid
-                        organisationSlug={slug}
-                        manageButton
-                        viewButton
-                        events={events ?? []}
-                    />
+                    <EventGrid manageButton viewButton events={events ?? []} />
                 )}
             </div>
             <div className="flex items-center justify-end gap-10 pt-2">

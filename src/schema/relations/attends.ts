@@ -1,5 +1,8 @@
 import { z } from 'zod';
 import { record } from '../../lib/zod.ts';
+import { Event } from '../resources/event.ts';
+import { Team } from '../resources/team.ts';
+import { User } from '../resources/user.ts';
 
 const attends = /* surrealql */ `
     DEFINE TABLE attends SCHEMAFULL
@@ -84,3 +87,11 @@ export const Attends = z.object({
 });
 
 export type Attends = z.infer<typeof Attends>;
+
+export const RichAttends = Attends.extend({
+    in: z.union([User, Team]),
+    out: Event,
+    players: z.array(User),
+});
+
+export type RichAttends = z.infer<typeof RichAttends>;

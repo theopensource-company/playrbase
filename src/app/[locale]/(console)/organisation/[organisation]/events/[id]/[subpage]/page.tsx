@@ -19,6 +19,7 @@ import { useParams } from 'next/navigation';
 import React from 'react';
 import { z } from 'zod';
 import { TinyOrgName } from '../../../components/TinyOrgName';
+import EventAttendeesTab from './attendees';
 import EventEventsTab from './events';
 import { EventOverviewTab } from './overview';
 import { EventSettingsTab } from './settings';
@@ -40,8 +41,6 @@ export default function Account() {
         slug,
         event_id,
     });
-
-    console.log(data);
 
     if (isPending) return <LoaderOverlay />;
     if (!data?.organisation) return <NotFoundScreen text={t('not_found')} />;
@@ -107,7 +106,7 @@ export default function Account() {
                                 </Link>
                             </div>
                             <Tab value="overview">Overview</Tab>
-                            <Tab value="registrations">Registrations</Tab>
+                            <Tab value="attendees">Attendees</Tab>
                             <Tab value="events">Events</Tab>
                             {organisation.can_manage && (
                                 <Tab
@@ -123,8 +122,8 @@ export default function Account() {
                         <TabsContent value="overview">
                             <EventOverviewTab event={event} />
                         </TabsContent>
-                        <TabsContent value="registrations">
-                            Registrations
+                        <TabsContent value="attendees">
+                            <EventAttendeesTab event={event} />
                         </TabsContent>
                         <TabsContent value="events">
                             <EventEventsTab event={event} />

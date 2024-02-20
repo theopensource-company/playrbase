@@ -18,16 +18,10 @@ import { Organisation } from '@/schema/resources/organisation';
 import { useQuery } from '@tanstack/react-query';
 import { LayoutGrid, List, RefreshCw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { z } from 'zod';
 
 export default function EventEventsTab({ event }: { event: Event }) {
-    const params = useParams();
-    const slug = Array.isArray(params.organisation)
-        ? params.organisation[0]
-        : params.organisation;
-
     const [view, setView] = useState<'table' | 'cards'>('table');
     const eventFilters = useEventFilters();
     const pagination = usePagination();
@@ -95,12 +89,7 @@ export default function EventEventsTab({ event }: { event: Event }) {
                         <EventTable events={events ?? []} />
                     </div>
                 ) : (
-                    <EventGrid
-                        organisationSlug={slug}
-                        manageButton
-                        viewButton
-                        events={events ?? []}
-                    />
+                    <EventGrid manageButton viewButton events={events ?? []} />
                 )}
             </div>
             <div className="flex items-center justify-end gap-10 pt-2">

@@ -42,12 +42,10 @@ export type EventTableColumns = {
 };
 
 export function EventTable({
-    organisation_slug,
     events,
     columns,
     caption,
 }: {
-    organisation_slug: string;
     events: Event[];
     columns?: EventTableColumns;
     caption?: ReactNode;
@@ -87,9 +85,7 @@ export function EventTable({
             <TableBody>
                 {events?.map((event) => {
                     const url = (page: string) =>
-                        `/organisation/${organisation_slug}/events/${event.id.slice(
-                            6
-                        )}/${page}`;
+                        `/e/${event.id.slice(6)}/manage/${page}`;
 
                     return (
                         <TableRow key={event.id}>

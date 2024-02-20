@@ -5,6 +5,7 @@ import { Banner } from '@/components/cards/banner';
 import { Profile } from '@/components/cards/profile';
 import Container from '@/components/layout/Container';
 import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
+import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
 import {
     Accordion,
     AccordionContent,
@@ -29,6 +30,7 @@ import { linkToProfile } from '@/schema/resources/profile';
 import { Team } from '@/schema/resources/team';
 import { User, UserAsRelatedUser } from '@/schema/resources/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { Baby, Clock, Users } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -225,6 +227,29 @@ export function Render({
         },
     });
 
+    const registration_overview = (
+        <div className="space-y-8">
+            <div className="space-y-4">
+                <h2 className="text-1xl font-semibold">Playing as</h2>
+                <Profile profile={actorProfile} size="small" />
+            </div>
+            {!actor?.startsWith('user:') && (
+                <div className="space-y-4">
+                    <h2 className="text-1xl font-semibold">Playing with</h2>
+                    <div className="space-y-2">
+                        {playerProfiles.map((profile, i) => (
+                            <Profile
+                                key={profile?.id ?? i}
+                                profile={profile}
+                                size="small"
+                            />
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+
     return (
         <div className="space-y-12">
             <div className="relative w-full">
@@ -244,10 +269,95 @@ export function Render({
                     </div>
                 )}
                 <div className="relative z-[1] w-full bg-gradient-to-t from-black to-transparent p-6 pb-8 pt-32">
-                    <div className="flex flex-wrap items-center justify-between gap-8">
-                        <h1 className="text-xl font-semibold drop-shadow-2xl md:truncate md:text-2xl">
-                            Register for {event.name}
-                        </h1>
+                    <div className="flex flex-wrap items-end justify-between gap-8">
+                        <div>
+                            <h1 className="text-xl font-semibold drop-shadow-2xl md:truncate md:text-2xl">
+                                Register for {event.name}
+                            </h1>
+                            {(event.start ||
+                                event.end ||
+                                event.options.min_pool_size ||
+                                event.options.max_pool_size ||
+                                event.options.min_age ||
+                                event.options.max_age) && (
+                                <div className="flex flex-col gap-1 pt-2 text-sm opacity-70">
+                                    {event.start && (
+                                        <div className="flex items-center gap-1">
+                                            <Clock size={14} className="mr-1" />
+                                            <DateTooltip date={event.start} />
+                                            {event.end && (
+                                                <>
+                                                    <span>-</span>
+                                                    <DateTooltip
+                                                        date={event.end}
+                                                    />
+                                                </>
+                                            )}
+                                        </div>
+                                    )}
+                                    {(event.options.min_pool_size ||
+                                        event.options.max_pool_size) && (
+                                        <div className="flex items-center gap-1">
+                                            <Users size={14} className="mr-1" />
+                                            {event.options.min_pool_size &&
+                                            event.options.max_pool_size ? (
+                                                <>
+                                                    {
+                                                        event.options
+                                                            .min_pool_size
+                                                    }
+                                                    <span>-</span>
+                                                    {
+                                                        event.options
+                                                            .max_pool_size
+                                                    }
+                                                </>
+                                            ) : event.options.min_pool_size ? (
+                                                <>
+                                                    <span>&gt;</span>
+                                                    {
+                                                        event.options
+                                                            .min_pool_size
+                                                    }
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <span>&lt;</span>
+                                                    {
+                                                        event.options
+                                                            .max_pool_size
+                                                    }
+                                                </>
+                                            )}
+                                        </div>
+                                    )}
+                                    {(event.options.min_age ||
+                                        event.options.max_age) && (
+                                        <div className="flex items-center gap-1">
+                                            <Baby size={14} className="mr-1" />
+                                            {event.options.min_age &&
+                                            event.options.max_age ? (
+                                                <>
+                                                    {event.options.min_age}
+                                                    <span>-</span>
+                                                    {event.options.max_age}
+                                                </>
+                                            ) : event.options.min_age ? (
+                                                <>
+                                                    <span>&gt;</span>
+                                                    {event.options.min_age}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <span>&lt;</span>
+                                                    {event.options.max_age}
+                                                </>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                         <Link
                             href={`/e/${event.id.slice(6)}`}
                             className={buttonVariants({ size: 'sm' })}
@@ -257,257 +367,268 @@ export function Render({
                     </div>
                 </div>
             </div>
-            <Accordion
-                type="single"
-                value={section}
-                onValueChange={attemptSection}
-                className="sm:px-6"
-            >
-                <AccordionItem
-                    value="actor"
-                    disabled={!sectionsAvailable.actor}
-                >
-                    <AccordionTrigger>
-                        <div className="flex items-center gap-4">
-                            1. Who is signin up?
-                            {actor && (
-                                <div className="rounded-md p-1">
-                                    <Profile
-                                        size="extra-tiny"
-                                        renderBadge={false}
-                                        profile={actorProfile}
-                                        noSub
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="space-y-6">
-                        {eligable.length == 0 ? (
+            {confirmation ? (
+                <>
+                    {confirmation.confirmed ? (
+                        <div className="space-y-4">
+                            <h2 className="text-2xl font-semibold">
+                                You&apos;re in! 🎉
+                            </h2>
                             <p>
-                                You are not eligable to sign up for this event.
+                                Your registration is confirmed by the organiser.
+                                Make sure to save the details down below
                             </p>
-                        ) : (
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            <h2 className="text-2xl font-semibold">
+                                Awaiting confirmation
+                            </h2>
+                            <p>
+                                We are waiting for the organiser to confirm your
+                                registration. In the meantime, save the details
+                                down below
+                            </p>
+                        </div>
+                    )}
+                    {registration_overview}
+                </>
+            ) : (
+                <Accordion
+                    type="single"
+                    value={section}
+                    onValueChange={attemptSection}
+                    className="sm:px-6"
+                >
+                    <AccordionItem
+                        value="actor"
+                        disabled={!sectionsAvailable.actor}
+                    >
+                        <AccordionTrigger>
+                            <div className="flex items-center gap-4">
+                                1. Who is signin up?
+                                {actor && (
+                                    <div className="rounded-md p-1">
+                                        <Profile
+                                            size="extra-tiny"
+                                            renderBadge={false}
+                                            profile={actorProfile}
+                                            noSub
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="space-y-6">
+                            {eligable.length == 0 ? (
+                                <p>
+                                    You are not eligable to sign up for this
+                                    event.
+                                </p>
+                            ) : (
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead />
+                                            <TableHead>Name</TableHead>
+                                            <TableHead>Kind</TableHead>
+                                            <TableHead>Actions</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {eligable.map((profile) => (
+                                            <TableRow key={profile.id}>
+                                                <TableCell>
+                                                    <Avatar
+                                                        profile={profile}
+                                                        size="small"
+                                                    />
+                                                </TableCell>
+                                                <TableCell>
+                                                    {profile.name}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {profile.type == 'team'
+                                                        ? 'Team'
+                                                        : 'Your account'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Button
+                                                        size="sm"
+                                                        disabled={
+                                                            profile.id == actor
+                                                        }
+                                                        variant={
+                                                            profile.id == actor
+                                                                ? 'secondary'
+                                                                : 'default'
+                                                        }
+                                                        onClick={() =>
+                                                            setActor(profile.id)
+                                                        }
+                                                    >
+                                                        {profile.id == actor
+                                                            ? 'Selected'
+                                                            : 'Continue'}
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            )}
+                            <Button
+                                size="sm"
+                                disabled={!actor}
+                                onClick={() =>
+                                    setSection(
+                                        eligableTeamPlayers?.length ==
+                                            event.options.min_pool_size
+                                            ? 'confirm'
+                                            : 'players'
+                                    )
+                                }
+                            >
+                                Continue
+                            </Button>
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem
+                        value="players"
+                        disabled={!sectionsAvailable.players}
+                    >
+                        <AccordionTrigger>
+                            <div className="flex select-none items-center gap-4">
+                                2. Who is playing
+                                {(playerProfiles?.length ?? 0) > 0 && (
+                                    <div className="rounded-md p-1">
+                                        {playerProfiles?.length == 1 ? (
+                                            <Profile
+                                                size="extra-tiny"
+                                                renderBadge={false}
+                                                profile={playerProfiles[0]}
+                                                noSub
+                                            />
+                                        ) : (
+                                            <div className="flex -space-x-2">
+                                                {playerProfiles?.map(
+                                                    (profile, i) => (
+                                                        <Avatar
+                                                            key={
+                                                                profile?.id ?? i
+                                                            }
+                                                            profile={profile}
+                                                            className="inline-block"
+                                                            size="extra-tiny"
+                                                        />
+                                                    )
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="space-y-6">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead />
                                         <TableHead>Name</TableHead>
-                                        <TableHead>Kind</TableHead>
+                                        <TableHead>Email</TableHead>
                                         <TableHead>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {eligable.map((profile) => (
-                                        <TableRow key={profile.id}>
-                                            <TableCell>
-                                                <Avatar
-                                                    profile={profile}
-                                                    size="small"
-                                                />
-                                            </TableCell>
-                                            <TableCell>
-                                                {profile.name}
-                                            </TableCell>
-                                            <TableCell>
-                                                {profile.type == 'team'
-                                                    ? 'Team'
-                                                    : 'Your account'}
-                                            </TableCell>
-                                            <TableCell>
-                                                <Button
-                                                    size="sm"
-                                                    disabled={
-                                                        profile.id == actor
-                                                    }
-                                                    variant={
-                                                        profile.id == actor
-                                                            ? 'secondary'
-                                                            : 'default'
-                                                    }
-                                                    onClick={() =>
-                                                        setActor(profile.id)
-                                                    }
-                                                >
-                                                    {profile.id == actor
-                                                        ? 'Selected'
-                                                        : 'Continue'}
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        )}
-                        <Button
-                            size="sm"
-                            disabled={!actor}
-                            onClick={() =>
-                                setSection(
-                                    eligableTeamPlayers?.length ==
-                                        event.options.min_pool_size
-                                        ? 'confirm'
-                                        : 'players'
-                                )
-                            }
-                        >
-                            Continue
-                        </Button>
-                    </AccordionContent>
-                </AccordionItem>
-                <AccordionItem
-                    value="players"
-                    disabled={!sectionsAvailable.players}
-                >
-                    <AccordionTrigger>
-                        <div className="flex select-none items-center gap-4">
-                            2. Who is playing
-                            {(playerProfiles?.length ?? 0) > 0 && (
-                                <div className="rounded-md p-1">
-                                    {playerProfiles?.length == 1 ? (
-                                        <Profile
-                                            size="extra-tiny"
-                                            renderBadge={false}
-                                            profile={playerProfiles[0]}
-                                            noSub
-                                        />
-                                    ) : (
-                                        <div className="flex -space-x-2">
-                                            {playerProfiles?.map(
-                                                (profile, i) => (
-                                                    <Avatar
-                                                        key={profile?.id ?? i}
-                                                        profile={profile}
-                                                        className="inline-block"
-                                                        size="extra-tiny"
-                                                    />
-                                                )
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="space-y-6">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead />
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Email</TableHead>
-                                    <TableHead>Actions</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {eligableTeamPlayers?.map((profile) => {
-                                    const selected = !!players?.find(
-                                        (id) => id == profile.id
-                                    );
-
-                                    const onClick = () =>
-                                        setPlayers(
-                                            selected
-                                                ? players?.filter(
-                                                      (id) => id != profile.id
-                                                  ) ?? []
-                                                : [
-                                                      ...(players ?? []),
-                                                      profile.id,
-                                                  ]
+                                    {eligableTeamPlayers?.map((profile) => {
+                                        const selected = !!players?.find(
+                                            (id) => id == profile.id
                                         );
 
-                                    return (
-                                        <TableRow key={profile.id}>
-                                            <TableCell>
-                                                <Avatar
-                                                    profile={profile}
-                                                    size="small"
-                                                />
-                                            </TableCell>
-                                            <TableCell>
-                                                {profile.name}
-                                            </TableCell>
-                                            <TableCell>
-                                                {profile.email}
-                                            </TableCell>
-                                            <TableCell>
-                                                <Button
-                                                    size="sm"
-                                                    variant={
-                                                        selected
-                                                            ? 'destructive'
-                                                            : 'default'
-                                                    }
-                                                    onClick={onClick}
-                                                >
-                                                    {selected
-                                                        ? 'Remove'
-                                                        : 'Add'}
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                        <Button
-                            size="sm"
-                            disabled={!playersValid}
-                            onClick={() => setSection('confirm')}
-                        >
-                            Continue
-                        </Button>
-                    </AccordionContent>
-                </AccordionItem>
-                <AccordionItem
-                    value="confirm"
-                    className="border-b-0"
-                    disabled={!sectionsAvailable.confirm}
-                >
-                    <AccordionTrigger>3. Confirm registration</AccordionTrigger>
-                    <AccordionContent className="space-y-6">
-                        <p>
-                            Confirm that the details for your registration are
-                            all correct to confirm your registration
-                        </p>
-                        <div className="space-y-8">
-                            <div className="space-y-4">
-                                <h2 className="text-1xl font-semibold">
-                                    Playing as
-                                </h2>
-                                <Profile profile={actorProfile} size="small" />
-                            </div>
-                            {!actor?.startsWith('user:') && (
-                                <div className="space-y-4">
-                                    <h2 className="text-1xl font-semibold">
-                                        Playing with
-                                    </h2>
-                                    <div className="space-y-2">
-                                        {playerProfiles.map((profile, i) => (
-                                            <Profile
-                                                key={profile?.id ?? i}
-                                                profile={profile}
-                                                size="small"
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                        <div className="pt-4">
-                            <Button onClick={() => mutateAsync()}>
-                                Confirm registration
+                                        const onClick = () =>
+                                            setPlayers(
+                                                selected
+                                                    ? players?.filter(
+                                                          (id) =>
+                                                              id != profile.id
+                                                      ) ?? []
+                                                    : [
+                                                          ...(players ?? []),
+                                                          profile.id,
+                                                      ]
+                                            );
+
+                                        return (
+                                            <TableRow key={profile.id}>
+                                                <TableCell>
+                                                    <Avatar
+                                                        profile={profile}
+                                                        size="small"
+                                                    />
+                                                </TableCell>
+                                                <TableCell>
+                                                    {profile.name}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {profile.email}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Button
+                                                        size="sm"
+                                                        variant={
+                                                            selected
+                                                                ? 'destructive'
+                                                                : 'default'
+                                                        }
+                                                        onClick={onClick}
+                                                    >
+                                                        {selected
+                                                            ? 'Remove'
+                                                            : 'Add'}
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                            </Table>
+                            <Button
+                                size="sm"
+                                disabled={!playersValid}
+                                onClick={() => setSection('confirm')}
+                            >
+                                Continue
                             </Button>
-                            {confirmation === false
-                                ? 'Failed to register'
-                                : confirmation
-                                  ? 'Registration confirmed!'
-                                  : null}
-                        </div>
-                    </AccordionContent>
-                </AccordionItem>
-            </Accordion>
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem
+                        value="confirm"
+                        className="border-b-0"
+                        disabled={!sectionsAvailable.confirm}
+                    >
+                        <AccordionTrigger>
+                            3. Confirm registration
+                        </AccordionTrigger>
+                        <AccordionContent className="space-y-6">
+                            <p>
+                                Confirm that the details for your registration
+                                are all correct to confirm your registration
+                            </p>
+                            {registration_overview}
+                            <div className="pt-4">
+                                <Button onClick={() => mutateAsync()}>
+                                    Confirm registration
+                                </Button>
+                                {confirmation === false
+                                    ? 'Failed to register'
+                                    : confirmation
+                                      ? 'Registration confirmed!'
+                                      : null}
+                            </div>
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
+            )}
         </div>
     );
 }

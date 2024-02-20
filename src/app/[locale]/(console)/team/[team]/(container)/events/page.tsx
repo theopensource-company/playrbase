@@ -35,7 +35,7 @@ export default function Account() {
         <div className="flex flex-grow flex-col gap-6 pt-6">
             <PageTitle team={team} title={t('title')} />
             <div className="rounded-md border">
-                <EventTable organisation_slug={slug} events={events ?? []} />
+                <EventTable events={events ?? []} />
             </div>
             <div className="flex items-center justify-end gap-10 pt-2">
                 <Pagination pagination={pagination} count={count} />

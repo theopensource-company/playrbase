@@ -74,7 +74,7 @@ export function Profile({
             ) : (
                 <div
                     className={cn(
-                        size == 'tiny' || size == 'extra-tiny' ? 'pr-3' : 'pr-4'
+                        size == 'tiny' || size == 'extra-tiny' ? 'pr-0' : 'pr-4'
                     )}
                 >
                     <h2

@@ -19,6 +19,7 @@ import { useParams } from 'next/navigation';
 import React from 'react';
 import { z } from 'zod';
 import { TinyOrgName } from '../../../components/TinyOrgName';
+import EventEventsTab from './events';
 import { EventOverviewTab } from './overview';
 import { EventSettingsTab } from './settings';
 
@@ -39,6 +40,8 @@ export default function Account() {
         slug,
         event_id,
     });
+
+    console.log(data);
 
     if (isPending) return <LoaderOverlay />;
     if (!data?.organisation) return <NotFoundScreen text={t('not_found')} />;
@@ -84,7 +87,7 @@ export default function Account() {
                     <TabsList
                         defaultValue="overview"
                         className={cn(
-                            'sticky h-12 w-full justify-start rounded-none border-b bg-background/50 px-0 pb-0 pt-2 backdrop-blur-lg',
+                            'sticky z-[2] h-12 w-full justify-start rounded-none border-b bg-background/50 px-0 pb-0 pt-2 backdrop-blur-lg',
                             scrolled ? 'top-[6.75rem]' : 'top-[8.25rem]'
                         )}
                     >
@@ -104,7 +107,7 @@ export default function Account() {
                                 </Link>
                             </div>
                             <Tab value="overview">Overview</Tab>
-                            <Tab value="players">Players</Tab>
+                            <Tab value="registrations">Registrations</Tab>
                             <Tab value="events">Events</Tab>
                             {organisation.can_manage && (
                                 <Tab
@@ -120,8 +123,12 @@ export default function Account() {
                         <TabsContent value="overview">
                             <EventOverviewTab event={event} />
                         </TabsContent>
-                        <TabsContent value="players">Players</TabsContent>
-                        <TabsContent value="events">Events</TabsContent>
+                        <TabsContent value="registrations">
+                            Registrations
+                        </TabsContent>
+                        <TabsContent value="events">
+                            <EventEventsTab event={event} />
+                        </TabsContent>
                         {organisation.can_manage && (
                             <TabsContent value="settings">
                                 <EventSettingsTab

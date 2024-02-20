@@ -12,7 +12,7 @@ const event = /* surrealql */ `
                 $scope = 'admin'
                 OR (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers[WHERE role IN ['owner', 'administrator', 'event_manager']].user CONTAINS $auth.id)[0];
 
-    DEFINE FIELD name                       ON event TYPE string;
+    DEFINE FIELD name                       ON event TYPE string ASSERT string::len($value) > 0;
     DEFINE FIELD description                ON event TYPE string;
     DEFINE FIELD logo                       ON event TYPE option<string> PERMISSIONS FOR update WHERE $scope = 'admin';
     DEFINE FIELD banner                     ON event TYPE option<string> PERMISSIONS FOR update WHERE $scope = 'admin';
@@ -39,7 +39,7 @@ const event = /* surrealql */ `
 
     DEFINE FIELD computed                   ON event VALUE <future> {
         RETURN {
-            description: description OR tournament.computed.description,
+            description: description OR tournament.computed.description OR "",
             logo: logo OR tournament.computed.logo,
             banner: banner OR tournament.computed.banner,
             tournament: tournament.computed.tournament OR tournament,

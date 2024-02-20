@@ -365,6 +365,85 @@
         "button": {
           "save": "Save changes"
         }
+      },
+      "creator": {
+        "title": "Create event",
+        "fields": {
+          "__category": {
+            "required-settings": "Required settings",
+            "optional-settings": "Optional settings"
+          },
+          "name": {
+            "label": "Name",
+            "description": "The name of the event that will be shown throughout Playrbase"
+          },
+          "description": {
+            "label": "Description",
+            "description": "The description of the event that will be shown throughout Playrbase"
+          },
+          "discoverable": {
+            "label": "Discoverable",
+            "description": "Is this event is publicly listed throughout Playrbase"
+          },
+          "published": {
+            "label": "Published",
+            "description": "Is this event is published for non-organisational members"
+          },
+          "manual-approval": {
+            "label": "Manual approval",
+            "description": "Players who signup for this event need to be manually approved"
+          },
+          "tournament": {
+            "label": "Tournament",
+            "description": "If this event is part of a tournament, configure it here. Cannot be changed afterwards",
+            "placeholder": "Search for a tournaments"
+          },
+          "duration": {
+            "label": "Event duration",
+            "description": "When does this event start and end",
+            "fields": {
+              "start": {
+                "label": "Start",
+                "clear": "Clear"
+              },
+              "end": {
+                "label": "End",
+                "clear": "Clear"
+              }
+            }
+          },
+          "player-count": {
+            "label": "Number of players",
+            "description": "Controls the minimum and maximum amount of players per signup",
+            "fields": {
+              "minimum": {
+                "label": "Minimum",
+                "clear": "Clear"
+              },
+              "maximum": {
+                "label": "Maximum",
+                "clear": "Clear"
+              }
+            }
+          },
+          "player-age": {
+            "label": "Player age",
+            "description": "Controls the minimum and maximum age that players need to be to join the event",
+            "fields": {
+              "minimum": {
+                "label": "Minimum",
+                "clear": "Clear"
+              },
+              "maximum": {
+                "label": "Maximum",
+                "clear": "Clear"
+              }
+            }
+          }
+        },
+        "button": {
+          "save": "Create event"
+        }
       }
     },
     "teams": {

@@ -1,5 +1,6 @@
 'use client';
 
+import { Profile } from '@/components/cards/profile';
 import {
     Navbar,
     NavbarHeightOffset,
@@ -10,7 +11,6 @@ import { useOrganisation } from '@/lib/Queries/Organisation';
 import { useAuth } from '@/lib/auth';
 import { useRouter } from '@/locales/navigation';
 import { User } from '@/schema/resources/user';
-import { ArrowLeft, HomeIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, { ReactNode, useEffect } from 'react';
@@ -47,7 +47,12 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
             <Navbar actor={organisation ?? undefined}>
                 <NavbarSubLinks baseUrl={`/organisation/${slug}`}>
                     <NavbarSubLink href={`/o/${slug}`}>
-                        <HomeIcon size={16} />
+                        <Profile
+                            profile={organisation ?? undefined}
+                            size="extra-tiny"
+                            noSub
+                            renderBadge={false}
+                        />
                     </NavbarSubLink>
                     <NavbarSubLink link="overview">
                         {t('overview.title')}

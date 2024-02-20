@@ -441,6 +441,85 @@
           }
         }
       },
+      "creator": {
+        "title": "Evenement maken",
+        "button": {
+          "save": "Maak evenement"
+        },
+        "fields": {
+          "__category": {
+            "required-settings": "Vereiste instellingen",
+            "optional-settings": "Optionele instellingen"
+          },
+          "description": {
+            "description": "De beschrijving van het evenement die overal in Playrbase wordt getoond",
+            "label": "Beschrijving"
+          },
+          "discoverable": {
+            "description": "Is dit evenement openbaar vindbaar in Playrbase",
+            "label": "Vindbaar"
+          },
+          "tournament": {
+            "label": "Tournament",
+            "description": "Als dit evenement onderdeel van een tournament is, geef dat dan hier aan. Kan later niet aangepast worden",
+            "placeholder": "Zoek naar een tournament"
+          },
+          "duration": {
+            "description": "Wanneer begint en eindigt dit evenement",
+            "fields": {
+              "end": {
+                "clear": "Wissen",
+                "label": "Einde"
+              },
+              "start": {
+                "clear": "Wissen",
+                "label": "Begin"
+              }
+            },
+            "label": "Duur van het evenement"
+          },
+          "manual-approval": {
+            "description": "Spelers die zich aanmelden voor dit evenement moeten handmatig worden goedgekeurd",
+            "label": "Handmatige goedkeuring"
+          },
+          "name": {
+            "description": "De naam van het evenement dat overal in Playrbase wordt weergegeven",
+            "label": "Naam"
+          },
+          "player-age": {
+            "description": "Bepaalt de minimum- en maximumleeftijd die spelers moeten zijn om deel te nemen aan het evenement",
+            "fields": {
+              "maximum": {
+                "clear": "Wissen",
+                "label": "Maximum"
+              },
+              "minimum": {
+                "clear": "Wissen",
+                "label": "Minimum"
+              }
+            },
+            "label": "Speler leeftijd"
+          },
+          "player-count": {
+            "description": "Beheert het minimum- en maximumaantal spelers per aanmelding",
+            "fields": {
+              "maximum": {
+                "clear": "Wisse",
+                "label": "Maximum"
+              },
+              "minimum": {
+                "clear": "Wissen",
+                "label": "Minimum"
+              }
+            },
+            "label": "Hoeveelheid spelers"
+          },
+          "published": {
+            "description": "Is dit evenement gepubliceerd voor niet-organisatieleden",
+            "label": "Gepubliceerd"
+          }
+        }
+      },
       "table": {
         "columns": {
           "created": "Gecreëerd",

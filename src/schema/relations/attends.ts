@@ -36,6 +36,7 @@ const attends = /* surrealql */ `
     DEFINE FIELD updated    ON attends TYPE datetime    VALUE time::now()             DEFAULT time::now();
 
     DEFINE INDEX unique_relation ON attends COLUMNS in, out UNIQUE;
+    DEFINE INDEX player_unique_to_event ON attends COLUMNS out, players.* UNIQUE;
 `;
 
 const log = /* surrealql */ `
@@ -76,6 +77,7 @@ export const Attends = z.object({
     id: record('attends'),
     in: z.union([record('user'), record('team')]),
     out: record('event'),
+    confirmed: z.boolean(),
     players: z.array(record('user')),
     created: z.coerce.date(),
     updated: z.coerce.date(),

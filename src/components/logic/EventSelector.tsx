@@ -26,6 +26,7 @@ export function EventSelector({
     setEvent,
     label,
     placeholder,
+    noLabel,
     autoFocus,
     autoComplete,
     limit = 5,
@@ -36,6 +37,7 @@ export function EventSelector({
     setEvent: Dispatch<SetStateAction<Event['id'] | undefined>>;
     label?: string;
     placeholder?: string;
+    noLabel?: boolean;
     autoFocus?: boolean;
     autoComplete?: string;
     limit?: number;
@@ -51,6 +53,7 @@ export function EventSelector({
     const { data: selected } = useQuery({
         queryKey: ['event', event],
         async queryFn() {
+            console.log(event);
             if (!event) return null;
             const [res] = await surreal.select<Event>(event);
             return res ?? null;
@@ -86,7 +89,7 @@ export function EventSelector({
 
     return (
         <div className="space-y-3">
-            <Label htmlFor="input">{label ?? 'Event name'}</Label>
+            {!noLabel && <Label htmlFor="input">{label ?? 'Event name'}</Label>}
             {event ? (
                 <div className="flex items-center justify-between rounded-md border px-4 py-2">
                     <Profile profile={selected || undefined} size="tiny" />

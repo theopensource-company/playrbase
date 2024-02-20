@@ -76,7 +76,6 @@ export default function Account() {
                         </div>
                         <div className="overflow-x-auto rounded border">
                             <EventTable
-                                organisation_slug={slug}
                                 events={events}
                                 columns={{
                                     published: false,

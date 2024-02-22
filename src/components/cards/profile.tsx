@@ -9,17 +9,7 @@ import React, { ReactNode } from 'react';
 import { Skeleton } from '../ui/skeleton';
 import { Avatar } from './avatar';
 
-export function Profile({
-    loading,
-    size,
-    profile,
-    noSub,
-    customSub,
-    renderBadge = true,
-    clickable,
-    className,
-    noUnderline,
-}: {
+type Props = {
     profile?: TProfile | null;
     loading?: boolean;
     size?: 'extra-tiny' | 'tiny' | 'small' | 'normal' | 'big';
@@ -29,13 +19,43 @@ export function Profile({
     clickable?: boolean | 'manage' | 'settings';
     className?: string;
     noUnderline?: boolean;
-}) {
+};
+
+export function Profile(props: Props) {
+    if (props.clickable && props.profile)
+        return (
+            <Link
+                href={
+                    linkToProfile(
+                        props.profile,
+                        props.clickable === true ? 'public' : props.clickable
+                    ) ?? ''
+                }
+            >
+                <RenderProfile {...props} />
+            </Link>
+        );
+
+    return <RenderProfile {...props} />;
+}
+
+function RenderProfile({
+    loading,
+    size,
+    profile,
+    noSub,
+    customSub,
+    renderBadge = true,
+    clickable,
+    className,
+    noUnderline,
+}: Props) {
     profile = profile ?? unknownProfile;
     const sub = (
         <ProfileSub profile={profile} customSub={customSub} noSub={noSub} />
     );
 
-    const Render = () => (
+    return (
         <div
             className={cn(
                 'flex items-center',
@@ -105,22 +125,6 @@ export function Profile({
             )}
         </div>
     );
-
-    if (clickable)
-        return (
-            <Link
-                href={
-                    linkToProfile(
-                        profile,
-                        clickable === true ? 'public' : clickable
-                    ) ?? ''
-                }
-            >
-                <Render />
-            </Link>
-        );
-
-    return <Render />;
 }
 
 export function ProfileName({ profile }: { profile?: TProfile | null }) {

@@ -721,7 +721,7 @@ function useData({ slug }: { slug: string }) {
 
             return {
                 event: Event.parse(result[3]),
-                tournament: Event.optional().parse(result[4]),
+                tournament: Event.optional().parse(result[4] ?? undefined),
                 teams: z.array(Team).parse(result[5]),
                 registration: RichAttends.optional().parse(
                     result[6] ?? undefined

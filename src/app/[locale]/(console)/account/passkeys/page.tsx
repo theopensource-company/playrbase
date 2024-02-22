@@ -319,7 +319,7 @@ function useData() {
             `);
 
             if (!result?.[0]) return null;
-            return result[0];
+            return z.array(Credential).parse(result[0]);
         },
     });
 }

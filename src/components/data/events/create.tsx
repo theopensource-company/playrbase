@@ -629,15 +629,28 @@ export function useSubmitCreateEvent({
     };
 }
 
-export function RenderCreateEvent({
-    form,
-    onSubmit,
+export function CreateEvent({
+    onSuccess,
+    organiser,
+    defaultValues,
 }: {
-    form: UseFormReturn<EventCreatorSchemaNoUndefined>;
-    onSubmit: (payload: EventCreatorSchema) => Promise<unknown>;
+    onSuccess: () => Promise<unknown>;
+    organiser: Organisation;
+    defaultValues?: Partial<Event>;
 }) {
     const [open, setOpen] = useState(false);
     const t = useTranslations('components.data.events.create');
+    const onSubmit = useSubmitCreateEvent({
+        onSuccess: async () => {
+            setOpen(false);
+            onSuccess();
+        },
+        organiser,
+    });
+    const createEvent = useEventCreator({
+        onSubmit,
+        defaultValues: defaultValues ?? {},
+    });
 
     return (
         <DD open={open} onOpenChange={setOpen}>
@@ -648,25 +661,8 @@ export function RenderCreateEvent({
                 </Button>
             </DDTrigger>
             <DDContent className="max-w-6xl">
-                <EventCreator form={form} onSubmit={onSubmit} />
+                <EventCreator {...createEvent} />
             </DDContent>
         </DD>
     );
-}
-
-export function CreateEvent({
-    onSuccess,
-    organiser,
-    defaultValues,
-}: {
-    onSuccess: () => Promise<unknown>;
-    organiser: Organisation;
-    defaultValues?: Partial<Event>;
-}) {
-    const onSubmit = useSubmitCreateEvent({ onSuccess, organiser });
-    const createEvent = useEventCreator({
-        onSubmit,
-        defaultValues: defaultValues ?? {},
-    });
-    return <RenderCreateEvent {...createEvent} />;
 }

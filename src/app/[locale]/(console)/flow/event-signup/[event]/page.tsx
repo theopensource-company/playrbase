@@ -23,8 +23,9 @@ import {
 } from '@/components/ui/table';
 import { useSurreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
+import { cn } from '@/lib/utils';
 import { Link, useRouter } from '@/locales/navigation';
-import { Attends } from '@/schema/relations/attends';
+import { RichAttends } from '@/schema/relations/attends';
 import { Event } from '@/schema/resources/event';
 import { linkToProfile } from '@/schema/resources/profile';
 import { Team } from '@/schema/resources/team';
@@ -66,16 +67,16 @@ export function Render({
 }: {
     data: Exclude<ReturnType<typeof useData>['data'], undefined>;
 }) {
-    const { event, tournament, self_eligable, teams } = data;
+    const { event, tournament, registration, teams } = data;
     const router = useRouter();
     const { user } = useAuth({ authRequired: true });
 
     const eligable = useMemo(
         () =>
-            [self_eligable && user, ...teams].filter(
+            [!registration && user, ...teams].filter(
                 (a): a is Team | (User & { scope: 'user' }) => !!a
             ),
-        [teams, self_eligable, user]
+        [teams, registration, user]
     );
 
     const [actor, setActorInternal] = useQueryState('actor', parseAsString);
@@ -199,14 +200,15 @@ export function Render({
         ],
         async mutationFn() {
             try {
-                const [_1, _2, _3, result] = await surreal.query<
-                    [null, null, null, [Attends]]
+                const [_1, _2, _3, _4, result] = await surreal.query<
+                    [null, null, null, null, RichAttends]
                 >(
                     /* surql */ `
                         LET $event = <record<event>> $event;
                         LET $actor = <record<team | user>> $actor;
                         LET $players = <array<record<user>>> $players;
-                        RELATE $actor->attends->$event SET players = $players;
+                        LET $confirmation = RELATE $actor->attends->$event SET players = $players;
+                        SELECT * FROM ONLY $confirmation[0].id FETCH in, out, players.*;
                     `,
                     {
                         event: event.id,
@@ -215,7 +217,7 @@ export function Render({
                     }
                 );
 
-                return Attends.parse(result[0]);
+                return RichAttends.parse(result);
             } catch (e) {
                 console.log(e, {
                     event: event.id,
@@ -227,28 +229,7 @@ export function Render({
         },
     });
 
-    const registration_overview = (
-        <div className="space-y-8">
-            <div className="space-y-4">
-                <h2 className="text-1xl font-semibold">Playing as</h2>
-                <Profile profile={actorProfile} size="small" />
-            </div>
-            {!actor?.startsWith('user:') && (
-                <div className="space-y-4">
-                    <h2 className="text-1xl font-semibold">Playing with</h2>
-                    <div className="space-y-2">
-                        {playerProfiles.map((profile, i) => (
-                            <Profile
-                                key={profile?.id ?? i}
-                                profile={profile}
-                                size="small"
-                            />
-                        ))}
-                    </div>
-                </div>
-            )}
-        </div>
-    );
+    const showedConfirmation = registration ?? confirmation ?? false;
 
     return (
         <div className="space-y-12">
@@ -360,16 +341,22 @@ export function Render({
                         </div>
                         <Link
                             href={`/e/${event.id.slice(6)}`}
-                            className={buttonVariants({ size: 'sm' })}
+                            className={cn(
+                                buttonVariants({
+                                    size: 'sm',
+                                    variant: 'ghost',
+                                }),
+                                'bg-white/10 backdrop-blur hover:bg-white/20'
+                            )}
                         >
                             View event
                         </Link>
                     </div>
                 </div>
             </div>
-            {confirmation ? (
+            {showedConfirmation ? (
                 <>
-                    {confirmation.confirmed ? (
+                    {showedConfirmation.confirmed ? (
                         <div className="space-y-4">
                             <h2 className="text-2xl font-semibold">
                                 You&apos;re in! 🎉
@@ -391,7 +378,45 @@ export function Render({
                             </p>
                         </div>
                     )}
-                    {registration_overview}
+                    <div className="space-y-8">
+                        <div className="space-y-4">
+                            <h2 className="text-1xl font-semibold">
+                                Playing as
+                            </h2>
+                            <Profile
+                                profile={showedConfirmation.in}
+                                size="small"
+                            />
+                        </div>
+                        {!showedConfirmation.in.id.startsWith('user:') && (
+                            <div className="space-y-4">
+                                <h2 className="text-1xl font-semibold">
+                                    Playing with
+                                </h2>
+                                <div className="space-y-2">
+                                    {showedConfirmation.players.map(
+                                        (profile) => (
+                                            <Profile
+                                                key={profile.id}
+                                                profile={profile}
+                                                size="small"
+                                            />
+                                        )
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <div>
+                        <Link
+                            className={buttonVariants()}
+                            href={`/e/${event.id.slice(
+                                6
+                            )}/registration/${showedConfirmation.id.slice(8)}`}
+                        >
+                            Manage registration
+                        </Link>
+                    </div>
                 </>
             ) : (
                 <Accordion
@@ -614,7 +639,35 @@ export function Render({
                                 Confirm that the details for your registration
                                 are all correct to confirm your registration
                             </p>
-                            {registration_overview}
+                            <div className="space-y-8">
+                                <div className="space-y-4">
+                                    <h2 className="text-1xl font-semibold">
+                                        Playing as
+                                    </h2>
+                                    <Profile
+                                        profile={actorProfile}
+                                        size="small"
+                                    />
+                                </div>
+                                {!actor?.startsWith('user:') && (
+                                    <div className="space-y-4">
+                                        <h2 className="text-1xl font-semibold">
+                                            Playing with
+                                        </h2>
+                                        <div className="space-y-2">
+                                            {playerProfiles.map(
+                                                (profile, i) => (
+                                                    <Profile
+                                                        key={profile?.id ?? i}
+                                                        profile={profile}
+                                                        size="small"
+                                                    />
+                                                )
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                             <div className="pt-4">
                                 <Button onClick={() => mutateAsync()}>
                                     Confirm registration
@@ -641,7 +694,15 @@ function useData({ slug }: { slug: string }) {
         throwOnError: true,
         queryFn: async () => {
             const result = await surreal.query<
-                [null, null, null, Event, Event | null, Team[], boolean]
+                [
+                    null,
+                    null,
+                    null,
+                    Event,
+                    Event | null,
+                    Team[],
+                    RichAttends | null,
+                ]
             >(
                 /* surql */ `
                     LET $event = SELECT * FROM ONLY type::thing('event', $slug);
@@ -651,7 +712,7 @@ function useData({ slug }: { slug: string }) {
                     $event;
                     $tournament;
                     $teams;
-                    fn::team::eligable_to_play($auth, $event.id);
+                    SELECT * FROM ONLY fn::team::find_actor_registration($auth, $event.id) FETCH in, out, players.*;
                 `,
                 {
                     slug,
@@ -662,7 +723,9 @@ function useData({ slug }: { slug: string }) {
                 event: Event.parse(result[3]),
                 tournament: Event.optional().parse(result[4]),
                 teams: z.array(Team).parse(result[5]),
-                self_eligable: z.boolean().parse(result[6]),
+                registration: RichAttends.optional().parse(
+                    result[6] ?? undefined
+                ),
             };
         },
     });

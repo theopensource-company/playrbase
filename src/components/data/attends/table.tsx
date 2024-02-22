@@ -1,6 +1,7 @@
 import { Avatar } from '@/components/cards/avatar';
 import { Profile } from '@/components/cards/profile';
 import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
+import { buttonVariants } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -10,8 +11,9 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { Link } from '@/locales/navigation';
 import { RichAttends } from '@/schema/relations/attends';
-import { Check, FileSearch, X } from 'lucide-react';
+import { ArrowRight, Check, FileSearch, X } from 'lucide-react';
 import React, { ReactNode } from 'react';
 
 export type AttendsTableColumns = {
@@ -110,19 +112,21 @@ export function AttendsTable({
                             )}
                             {doRenderCol('actions') && (
                                 <TableCell className="flex items-center justify-end gap-4">
-                                    {/* <Link
-                                        href={url('overview')}
+                                    <Link
+                                        href={`/e/${attends.out.id.slice(
+                                            6
+                                        )}/registration/${attends.id.slice(8)}`}
                                         className={buttonVariants({
                                             size: 'sm',
                                         })}
                                     >
-                                        {t('row.actions.manage')}
+                                        View registration
                                         <ArrowRight
                                             size={18}
                                             className="ml-2"
                                         />
                                     </Link>
-                                    <DropdownMenu>
+                                    {/* <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button size="icon" variant="ghost">
                                                 <MoreHorizontal size={20} />

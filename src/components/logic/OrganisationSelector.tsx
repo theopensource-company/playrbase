@@ -17,8 +17,8 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 
-export function useOrganisationSelector() {
-    return useState<Organisation['id']>();
+export function useOrganisationSelector(def?: Organisation['id']) {
+    return useState<Organisation['id'] | undefined>(def);
 }
 
 export function OrganisationSelector({

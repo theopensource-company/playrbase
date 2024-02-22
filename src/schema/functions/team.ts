@@ -43,7 +43,7 @@ const team = /* surrealql */ `
             // Not eligable if any of the checks do not pass
             LET $not_eligable = array::any([
                 ($min_pool_size && array::len($players) < $min_pool_size),
-                ($max_pool_size && array::len($players) < $max_pool_size),
+                ($max_pool_size && array::len($players) > $max_pool_size),
             ]);
 
             RETURN !$not_eligable;

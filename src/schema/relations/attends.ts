@@ -10,9 +10,7 @@ const attends = /* surrealql */ `
             // One can manage other managers if:
             // - They are an owner at any level
             // - They are an administrator, except for top-level.
-            FOR create 
-                WHERE   $auth.id IN fn::team::compute_players(in)
-            FOR update, delete
+            FOR create, update, delete
                 WHERE   $auth.id IN fn::team::compute_players(in)
             FOR select
                 WHERE   $auth.id IN fn::team::compute_players(in)
@@ -60,7 +58,7 @@ const players_validation = /* surrealql */ `
             THROW "Too few players for registration " + <string> $value.id;
         };
 
-        IF $max_pool_size && array::len($value.players) < $max_pool_size {
+        IF $max_pool_size && array::len($value.players) > $max_pool_size {
             THROW "Too many players for registration " + <string> $value.id;
         };
 

@@ -8,7 +8,7 @@
     "debug": "concurrently --names \"playrbs,surreal,minio,minio-setup,devkit,email\" --hide 2,3 \"pnpm dev-next\" \"pnpm dev-surreal\" \"pnpm dev-s3\" \"pnpm dev-s3-create-bucket\" \"pnpm dev-devkit\" \"pnpm dev-email\"",
     "dbonly": "concurrently --names \"playrbs,surreal,minio,minio-setup,devkit,email\" --hide 0,2,3,4,5 \"pnpm dev-next\" \"pnpm dev-surreal\" \"pnpm dev-s3\" \"pnpm dev-s3-create-bucket\" \"pnpm dev-devkit\" \"pnpm dev-email\"",
     "dev-next": "cross-env NODE_ENV=\"development\" next dev -p 13000",
-    "dev-surreal": "surreal start --log debug --auth --allow-guests --user root --pass root --bind 0.0.0.0:13001 file:dev.db",
+    "dev-surreal": "surreal start --log trace --auth --allow-guests --allow-scripting --user root --pass root --bind 0.0.0.0:13001 file:dev.db",
     "dev-s3": "minio server --address=\":13002\" --console-address=\":13003\" ./dev.s3",
     "dev-s3-create-bucket": "sleep 2 && mc alias set local http://127.0.0.1:13002 minioadmin minioadmin && mc admin info local && mc mb --region default local/playrbase-public",
     "dev-devkit": "node --loader ts-node/esm -r dotenv/config ./src/scripts/devkit.ts dotenv_config_path=./.env.local",

@@ -1,5 +1,6 @@
 'use client';
 
+import { CreateOrganisation } from '@/components/data/organisations/create';
 import { OrganisationTable } from '@/components/data/organisations/table';
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { useSurreal } from '@/lib/Surreal';
@@ -17,7 +18,7 @@ export default function Organisations() {
         ? params.organisation[0]
         : params.organisation;
 
-    const { data, isPending } = useData({ slug });
+    const { data, isPending, refetch } = useData({ slug });
     const t = useTranslations('pages.console.organisation.organisations');
 
     if (!data?.organisation) return <NotFoundScreen text={t('not_found')} />;
@@ -26,7 +27,13 @@ export default function Organisations() {
 
     return (
         <div className="flex flex-grow flex-col gap-12 pt-6">
-            <PageTitle organisation={organisation} title={t('title')} />
+            <div className="flex flex-wrap items-center justify-between gap-8">
+                <PageTitle organisation={organisation} title={t('title')} />
+                <CreateOrganisation
+                    refetch={refetch}
+                    defaultPartOf={organisation.id}
+                />
+            </div>
 
             <OrganisationTable
                 isLoading={isPending}

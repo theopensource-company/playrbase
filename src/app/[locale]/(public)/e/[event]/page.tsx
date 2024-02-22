@@ -10,6 +10,7 @@ import { Pagination, usePagination } from '@/components/logic/Pagination';
 import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
 import { buttonVariants } from '@/components/ui/button';
 import { useSurreal } from '@/lib/Surreal';
+import { cn } from '@/lib/utils';
 import { Link } from '@/locales/navigation';
 import { Attends } from '@/schema/relations/attends';
 import { Event } from '@/schema/resources/event';
@@ -59,13 +60,14 @@ export default function Page() {
                     className="absolute z-0 aspect-auto h-full w-full rounded-xl"
                 />
                 {main_tournament && (
-                    <div className="absolute left-0 top-0 z-[2] m-5 rounded-lg p-1 pl-2 backdrop-blur-lg">
+                    <div className="absolute left-0 top-0 z-[2] m-5 rounded-lg bg-white/5 px-2 py-1 backdrop-blur transition-colors hover:bg-white/10">
                         <Profile
                             profile={main_tournament}
                             size="extra-tiny"
                             noSub
                             renderBadge={false}
                             clickable
+                            noUnderline
                         />
                     </div>
                 )}
@@ -84,9 +86,12 @@ export default function Page() {
                         {event.can_manage && (
                             <Link
                                 href={linkToProfile(event, 'manage') ?? ''}
-                                className={buttonVariants({
-                                    variant: 'outline',
-                                })}
+                                className={cn(
+                                    buttonVariants({
+                                        variant: 'ghost',
+                                    }),
+                                    'bg-white/10 backdrop-blur hover:bg-white/20'
+                                )}
                             >
                                 Manage
                             </Link>

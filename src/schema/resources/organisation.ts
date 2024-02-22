@@ -131,7 +131,17 @@ export type OrganisationSafeParse = z.infer<typeof OrganisationSafeParse>;
 const relate_creator = /* surrealql */ `
     DEFINE EVENT relate_creator ON organisation WHEN $event = "CREATE" THEN {
         IF !$value.part_of.id {
-            RELATE ($value.created_by)->manages->($value.id) SET confirmed = true, role = 'owner';
+            LET $origin = $value.created_by;
+            LET $target = $value.id;
+
+            CREATE invite CONTENT {
+                origin: $origin,
+                target: $target,
+                role: 'owner',
+                invited_by: $origin,
+            };
+
+            RELATE $origin->manages->$target;
         };
     };
 `;

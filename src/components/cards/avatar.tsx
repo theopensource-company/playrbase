@@ -73,7 +73,7 @@ export function Avatar({
     return loading ? (
         <Skeleton
             className={cn(
-                'aspect-square rounded-full bg-muted',
+                'aspect-square rounded-full bg-white/10 backdrop-blur',
                 avatarSize,
                 className
             )}
@@ -81,7 +81,7 @@ export function Avatar({
     ) : (
         <div
             className={cn(
-                'relative aspect-square rounded-full bg-muted',
+                'relative aspect-square rounded-full bg-white/10 backdrop-blur',
                 avatarSize,
                 className
             )}

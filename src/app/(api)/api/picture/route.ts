@@ -26,7 +26,7 @@ async function findValidTarget({
             if (!['logo', 'banner'].includes(intent as string)) return;
             const [res] = await surreal.query<[Organisation | null]>(
                 /* surrealql */ `
-                    SELECT id FROM ONLY type::thing('organisation', $target) WHERE type::thing('user', $user) IN managers[?role IN ['owner', 'administrator']].user;
+                    [type::thing('organisation', $target)][?managers[?role IN ['owner', 'administrator']].user CONTAINS type::thing('user', $user)][0].*;
                 `,
                 { target, user }
             );
@@ -38,7 +38,7 @@ async function findValidTarget({
             if (!['logo', 'banner'].includes(intent as string)) return;
             const [res] = await surreal.query<[Event | null]>(
                 /* surrealql */ `
-                    SELECT id FROM ONLY type::thing('event', $target) WHERE type::thing('user', $user) IN organiser.managers[?role IN ['owner', 'administrator', 'event_manager']].user;
+                    [type::thing('event', $target)][?organiser.managers[?role IN ['owner', 'administrator', 'event_manager']].user CONTAINS type::thing('user', $user)][0].*;
                 `,
                 { target, user }
             );
@@ -50,7 +50,7 @@ async function findValidTarget({
             if (!['logo', 'banner'].includes(intent as string)) return;
             const [res] = await surreal.query<[Organisation | null]>(
                 /* surrealql */ `
-                    SELECT id FROM ONLY type::thing('team', $target) WHERE type::thing('user', $user) IN players
+                    [type::thing('team', $target)][?players CONTAINS type::thing('user', $user)][0].*;
                 `,
                 { target, user }
             );

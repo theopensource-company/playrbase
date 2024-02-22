@@ -18,6 +18,7 @@ export function Profile({
     renderBadge = true,
     clickable,
     className,
+    noUnderline,
 }: {
     profile?: TProfile | null;
     loading?: boolean;
@@ -27,6 +28,7 @@ export function Profile({
     renderBadge?: boolean;
     clickable?: boolean | 'manage' | 'settings';
     className?: string;
+    noUnderline?: boolean;
 }) {
     profile = profile ?? unknownProfile;
     const sub = (
@@ -82,7 +84,7 @@ export function Profile({
                             'text-foreground',
                             size == 'extra-tiny' && 'text-sm',
                             noSub ? 'font-semibold' : 'font-bold',
-                            clickable && 'group-hover:underline'
+                            clickable && !noUnderline && 'group-hover:underline'
                         )}
                     >
                         <ProfileName profile={profile} />
@@ -91,7 +93,9 @@ export function Profile({
                         <p
                             className={cn(
                                 'text-xs text-muted-foreground',
-                                clickable && 'group-hover:underline'
+                                clickable &&
+                                    !noUnderline &&
+                                    'group-hover:underline'
                             )}
                         >
                             {sub}

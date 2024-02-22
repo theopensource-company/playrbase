@@ -1,5 +1,6 @@
 'use client';
 
+import { Profile } from '@/components/cards/profile';
 import Container from '@/components/layout/Container';
 import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
@@ -13,7 +14,6 @@ import { Event } from '@/schema/resources/event';
 import { Organisation } from '@/schema/resources/organisation';
 import { linkToProfile } from '@/schema/resources/profile';
 import { useQuery } from '@tanstack/react-query';
-import { HomeIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React from 'react';
@@ -74,8 +74,9 @@ export default function Account() {
                 <TinyOrgName name={organisation.name} />
                 <h1 className="text-3xl font-semibold">{event.name}</h1>
             </Container>
-            <div className="w-full">
+            <div className="flex w-full flex-grow flex-col">
                 <Tabs
+                    className="flex flex-grow flex-col"
                     value={subpage}
                     onValueChange={(v) =>
                         router.push(
@@ -102,7 +103,12 @@ export default function Account() {
                                         'h-8 px-2.5 py-2'
                                     )}
                                 >
-                                    <HomeIcon size={16} />
+                                    <Profile
+                                        profile={event ?? undefined}
+                                        size="extra-tiny"
+                                        noSub
+                                        renderBadge={false}
+                                    />
                                 </Link>
                             </div>
                             <Tab value="overview">Overview</Tab>
@@ -118,7 +124,7 @@ export default function Account() {
                             )}
                         </Container>
                     </TabsList>
-                    <Container>
+                    <Container className="flex flex-grow flex-col">
                         <TabsContent value="overview">
                             <EventOverviewTab event={event} />
                         </TabsContent>
@@ -129,7 +135,10 @@ export default function Account() {
                             <EventEventsTab event={event} />
                         </TabsContent>
                         {organisation.can_manage && (
-                            <TabsContent value="settings">
+                            <TabsContent
+                                value="settings"
+                                className="flex flex-grow flex-col"
+                            >
                                 <EventSettingsTab
                                     event={event}
                                     refetch={refetch}

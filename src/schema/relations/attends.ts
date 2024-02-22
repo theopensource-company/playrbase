@@ -87,7 +87,7 @@ export const Attends = z.object({
 export type Attends = z.infer<typeof Attends>;
 
 export const RichAttends = Attends.extend({
-    in: z.union([User, Team]),
+    in: z.union([UserAsRelatedUser, Team]),
     out: Event,
     players: z.array(UserAsRelatedUser),
 });

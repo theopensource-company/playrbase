@@ -729,6 +729,7 @@ function useData({ slug }: { slug: string }) {
                     result[6] ?? undefined
                 ),
                 self_eligable: !!result[7],
+                event_id: event,
             };
         },
     });
@@ -760,6 +761,7 @@ function useEligablePlayers({
                 {
                     actor,
                     event,
+                    event_id: event,
                 }
             );
 

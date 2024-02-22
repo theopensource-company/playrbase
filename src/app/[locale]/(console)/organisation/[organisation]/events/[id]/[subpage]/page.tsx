@@ -53,7 +53,7 @@ export default function Account() {
             <div className="space-y-1">
                 <TabsTrigger
                     className={cn(
-                        'hover:bg-accent hover:text-foreground data-[state=active]:hover:bg-accent',
+                        'hover:bg-accent hover:text-foreground data-[state=active]:bg-transparent data-[state=active]:hover:bg-accent',
                         className
                     )}
                     {...args}
@@ -87,7 +87,7 @@ export default function Account() {
                     <TabsList
                         defaultValue="overview"
                         className={cn(
-                            'sticky z-[2] h-12 w-full justify-start rounded-none border-b bg-background/50 px-0 pb-0 pt-2 backdrop-blur-lg',
+                            'sticky z-[2] h-12 w-full justify-start rounded-none border-b bg-black/10 px-0 pb-0 pt-2 backdrop-blur-lg',
                             scrolled ? 'top-[6.75rem]' : 'top-[8.25rem]'
                         )}
                     >

@@ -42,7 +42,9 @@ export default function TeamLayout({ children }: { children: ReactNode }) {
                         <ArrowLeft />
                     </NavbarSubLink>
                     <NavbarSubLink link="overview">Overview</NavbarSubLink>
-                    <NavbarSubLink link="events">Events</NavbarSubLink>
+                    <NavbarSubLink link="registrations">
+                        Registrations
+                    </NavbarSubLink>
                     <NavbarSubLink link="members">Members</NavbarSubLink>
                     <NavbarSubLink link="settings">Settings</NavbarSubLink>
                 </NavbarSubLinks>

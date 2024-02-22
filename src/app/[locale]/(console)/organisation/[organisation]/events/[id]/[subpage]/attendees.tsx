@@ -37,7 +37,10 @@ export default function EventAttendeesTab({ event }: { event: Event }) {
                 </Button>
             </div>
             <div className="rounded-md border">
-                <AttendsTable attendees={attendees ?? []} />
+                <AttendsTable
+                    registrations={attendees ?? []}
+                    columns={{ out: false }}
+                />
             </div>
             <div className="flex items-center justify-end gap-10 pt-2">
                 <Pagination pagination={pagination} count={count} />

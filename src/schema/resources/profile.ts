@@ -46,7 +46,7 @@ export const unknownProfile = {
 
 export function linkToProfile(
     profile: Profile,
-    target?: 'public' | 'manage' | 'settings'
+    target?: 'public' | 'manage' | 'registrations' | 'settings'
 ) {
     switch (target) {
         case 'public': {
@@ -72,6 +72,19 @@ export function linkToProfile(
                     return `/team/${profile.id.slice(5)}/overview`;
                 case 'event':
                     return `/e/${profile.id.slice(6)}/manage/overview`;
+            }
+
+            break;
+        }
+
+        case 'registrations': {
+            switch (profile.type) {
+                case 'user':
+                    return `/account/registrations`;
+                case 'team':
+                    return `/team/${profile.id.slice(5)}/registrations`;
+                case 'event':
+                    return `/e/${profile.id.slice(6)}/manage/attendees`;
             }
 
             break;

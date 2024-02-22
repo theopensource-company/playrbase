@@ -28,6 +28,9 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
                         </NavbarSubLink>
                     )}
                     <NavbarSubLink link="teams">Teams</NavbarSubLink>
+                    <NavbarSubLink link="registrations">
+                        Registrations
+                    </NavbarSubLink>
                     <NavbarSubLink link="organisations">
                         {t('organisations.title')}
                     </NavbarSubLink>

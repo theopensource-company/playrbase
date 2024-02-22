@@ -81,7 +81,7 @@ export function Profile({
                 >
                     <h2
                         className={cn(
-                            'text-foreground',
+                            'whitespace-nowrap text-foreground',
                             size == 'extra-tiny' && 'text-sm',
                             noSub ? 'font-semibold' : 'font-bold',
                             clickable && !noUnderline && 'group-hover:underline'

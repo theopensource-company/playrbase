@@ -45,7 +45,7 @@ export function EventSettingsTab({
 
     return (
         <div className="flex flex-grow flex-col justify-between gap-16">
-            <div className="space-y-8 pt-8">
+            <div className="pt-8 md:space-y-8">
                 <div className="relative w-full">
                     <Banner
                         profile={event}

@@ -27,11 +27,11 @@ export type AttendsTableColumns = {
 };
 
 export function AttendsTable({
-    attendees,
+    registrations,
     columns,
     caption,
 }: {
-    attendees: RichAttends[];
+    registrations: RichAttends[];
     columns?: AttendsTableColumns;
     caption?: ReactNode;
 }) {
@@ -54,13 +54,13 @@ export function AttendsTable({
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {attendees?.map((attends) => {
+                {registrations?.map((registration) => {
                     return (
-                        <TableRow key={attends.id}>
+                        <TableRow key={registration.id}>
                             {doRenderCol('in') && (
                                 <TableCell>
                                     <Profile
-                                        profile={attends.in}
+                                        profile={registration.in}
                                         noSub
                                         clickable
                                         size="extra-tiny"
@@ -70,7 +70,7 @@ export function AttendsTable({
                             {doRenderCol('out') && (
                                 <TableCell>
                                     <Profile
-                                        profile={attends.out}
+                                        profile={registration.out}
                                         noSub
                                         clickable
                                         size="extra-tiny"
@@ -79,21 +79,23 @@ export function AttendsTable({
                                 </TableCell>
                             )}
                             {doRenderCol('players') && (
-                                <TableCell className="flex -space-x-2">
-                                    {attends.players
-                                        .slice(0, 5)
-                                        .map((player) => (
-                                            <Avatar
-                                                key={player.id}
-                                                profile={player}
-                                                size="extra-tiny"
-                                            />
-                                        ))}
+                                <TableCell>
+                                    <div className="flex -space-x-2">
+                                        {registration.players
+                                            .slice(0, 5)
+                                            .map((player) => (
+                                                <Avatar
+                                                    key={player.id}
+                                                    profile={player}
+                                                    size="extra-tiny"
+                                                />
+                                            ))}
+                                    </div>
                                 </TableCell>
                             )}
                             {doRenderCol('confirmed') && (
                                 <TableCell>
-                                    {attends.confirmed ? (
+                                    {registration.confirmed ? (
                                         <Check size={20} />
                                     ) : (
                                         <X size={20} />
@@ -102,20 +104,22 @@ export function AttendsTable({
                             )}
                             {doRenderCol('created') && (
                                 <TableCell>
-                                    <DateTooltip date={attends.created} />
+                                    <DateTooltip date={registration.created} />
                                 </TableCell>
                             )}
                             {doRenderCol('updated') && (
                                 <TableCell>
-                                    <DateTooltip date={attends.updated} />
+                                    <DateTooltip date={registration.updated} />
                                 </TableCell>
                             )}
                             {doRenderCol('actions') && (
                                 <TableCell className="flex items-center justify-end gap-4">
                                     <Link
-                                        href={`/e/${attends.out.id.slice(
+                                        href={`/e/${registration.out.id.slice(
                                             6
-                                        )}/registration/${attends.id.slice(8)}`}
+                                        )}/registration/${registration.id.slice(
+                                            8
+                                        )}`}
                                         className={buttonVariants({
                                             size: 'sm',
                                         })}
@@ -158,10 +162,10 @@ export function AttendsTable({
                     );
                 })}
             </TableBody>
-            {attendees?.length == 0 ? (
+            {registrations?.length == 0 ? (
                 <TableCaption className="my-12">
                     <div className="flex items-center justify-center gap-1">
-                        <FileSearch className="h-4 w-4" /> No attendees
+                        <FileSearch className="h-4 w-4" /> No registrations
                     </div>
                 </TableCaption>
             ) : (

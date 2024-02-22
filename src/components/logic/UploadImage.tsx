@@ -19,6 +19,7 @@ import ReactCrop, {
     makeAspectCrop,
 } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
+import { toast } from 'sonner';
 import {
     DD,
     DDContent,
@@ -81,9 +82,15 @@ export default function UploadImage({
         (async (): Promise<true | void> => {
             setIsLoading(true);
 
+            const tid = toast.loading('Compressing image');
+
             const compressed = await imageCompression(blob as File, {
                 maxSizeMB: 5,
                 useWebWorker: true,
+            });
+
+            toast.loading('Uploading image', {
+                id: tid,
             });
 
             const data = new FormData();
@@ -97,9 +104,10 @@ export default function UploadImage({
             }).then((res) => res.json());
 
             if (res.success) {
+                toast.success('Uploaded image!', { id: tid });
                 return true;
             } else {
-                alert(`${t('error.server')}: ${res.error}`);
+                toast.error(`${t('error.server')}: ${res.error}`, { id: tid });
             }
         })().then((success) => {
             setIsLoading(false);

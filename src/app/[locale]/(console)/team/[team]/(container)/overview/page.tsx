@@ -1,13 +1,13 @@
 'use client';
 
 import { Profile } from '@/components/cards/profile';
-import { EventTable } from '@/components/data/events/table';
+import { AttendsTable } from '@/components/data/attends/table';
 import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { buttonVariants } from '@/components/ui/button';
 import { useSurreal } from '@/lib/Surreal';
 import { Link } from '@/locales/navigation';
-import { Event } from '@/schema/resources/event';
+import { RichAttends } from '@/schema/relations/attends';
 import { Team } from '@/schema/resources/team';
 import { User } from '@/schema/resources/user';
 import { useQuery } from '@tanstack/react-query';
@@ -28,7 +28,8 @@ export default function Account() {
     if (isPending) return <LoaderOverlay />;
     if (!data?.team) return <NotFoundScreen text={'Not found'} />;
 
-    const { events, event_count, players, player_count, team } = data;
+    const { registrations, registration_count, players, player_count, team } =
+        data;
 
     return (
         <div className="flex flex-grow flex-col gap-6 pt-6">
@@ -37,25 +38,26 @@ export default function Account() {
                 <div className="space-y-12 xl:col-span-2">
                     <div className="space-y-6">
                         <div className="flex justify-between gap-8">
-                            <h2 className="text-xl font-semibold">Events</h2>
+                            <h2 className="text-xl font-semibold">
+                                Registrations
+                            </h2>
                             <Link
-                                href={`/team/${slug}/events`}
+                                href={`/team/${slug}/registrations`}
                                 className={buttonVariants({
                                     variant: 'outline',
                                 })}
                             >
-                                {event_count >= 6
-                                    ? `View all ${event_count} events`
-                                    : 'View all events'}
+                                {registration_count >= 6
+                                    ? `View all ${registration_count} registrations`
+                                    : 'View all registrations'}
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
                         </div>
                         <div className="overflow-x-auto rounded border">
-                            <EventTable
-                                events={events}
+                            <AttendsTable
+                                registrations={registrations}
                                 columns={{
-                                    published: false,
-                                    discoverable: false,
+                                    in: false,
                                 }}
                             />
                         </div>
@@ -115,7 +117,7 @@ function useData({ slug }: { slug: Team['slug'] }) {
                 [
                     null,
 
-                    Event[],
+                    RichAttends[],
                     { count: number }[],
 
                     ListedMember[],
@@ -127,8 +129,8 @@ function useData({ slug }: { slug: Team['slug'] }) {
                 /* surql */ `
                     LET $team = SELECT * FROM ONLY type::thing('team', $slug);
 
-                    SELECT * FROM $team.id->attends->event LIMIT 5;
-                    SELECT count() FROM $team.id->attends->event GROUP ALL;
+                    SELECT * FROM $team.id->attends LIMIT 5 FETCH in, out, players.*;
+                    SELECT count() FROM $team.id->attends GROUP ALL;
 
                     SELECT id, name, profile_picture FROM $team.players;
                     SELECT count() FROM $team.players GROUP ALL;
@@ -152,8 +154,8 @@ function useData({ slug }: { slug: Team['slug'] }) {
             return {
                 team: Team.parse(result[5]),
 
-                events: z.array(Event).parse(result[1]),
-                event_count: z.number().parse(result[2][0]?.count ?? 0),
+                registrations: z.array(RichAttends).parse(result[1]),
+                registration_count: z.number().parse(result[2][0]?.count ?? 0),
 
                 players: z.array(ListedMember).parse(
                     result[3].map((u) => ({

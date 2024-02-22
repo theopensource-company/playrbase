@@ -62,7 +62,7 @@ export default function Page() {
     );
 }
 
-export function Render({
+function Render({
     data,
 }: {
     data: Exclude<ReturnType<typeof useData>['data'], undefined>;

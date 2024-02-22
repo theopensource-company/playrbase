@@ -91,7 +91,7 @@ export default function Account() {
                                     {t('section.nested.title')}
                                 </h2>
                                 <Link
-                                    href={`/organisation/${slug}/nested`}
+                                    href={`/organisation/${slug}/organisations`}
                                     className={buttonVariants({
                                         variant: 'outline',
                                     })}

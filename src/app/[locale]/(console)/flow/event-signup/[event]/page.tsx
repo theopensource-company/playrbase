@@ -67,16 +67,16 @@ function Render({
 }: {
     data: Exclude<ReturnType<typeof useData>['data'], undefined>;
 }) {
-    const { event, tournament, registration, teams } = data;
+    const { event, tournament, registration, teams, self_eligable } = data;
     const router = useRouter();
     const { user } = useAuth({ authRequired: true });
 
     const eligable = useMemo(
         () =>
-            [!registration && user, ...teams].filter(
+            [self_eligable && user, ...teams].filter(
                 (a): a is Team | (User & { scope: 'user' }) => !!a
             ),
-        [teams, registration, user]
+        [teams, self_eligable, user]
     );
 
     const [actor, setActorInternal] = useQueryState('actor', parseAsString);
@@ -702,6 +702,7 @@ function useData({ slug }: { slug: string }) {
                     Event | null,
                     Team[],
                     RichAttends | null,
+                    boolean,
                 ]
             >(
                 /* surql */ `
@@ -713,6 +714,7 @@ function useData({ slug }: { slug: string }) {
                     $tournament;
                     $teams;
                     SELECT * FROM ONLY fn::team::find_actor_registration($auth, $event.id) FETCH in, out, players.*;
+                    fn::team::eligable_to_play($auth, $event.id);
                 `,
                 {
                     slug,
@@ -726,6 +728,7 @@ function useData({ slug }: { slug: string }) {
                 registration: RichAttends.optional().parse(
                     result[6] ?? undefined
                 ),
+                self_eligable: !!result[7],
             };
         },
     });

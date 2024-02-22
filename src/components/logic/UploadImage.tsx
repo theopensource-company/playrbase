@@ -1,6 +1,7 @@
 import { Intent, intentProperties } from '@/lib/image';
 import { cn } from '@/lib/utils';
 import { Actor } from '@/schema/resources/actor';
+import imageCompression from 'browser-image-compression';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, {
@@ -80,8 +81,13 @@ export default function UploadImage({
         (async (): Promise<true | void> => {
             setIsLoading(true);
 
+            const compressed = await imageCompression(blob as File, {
+                maxSizeMB: 5,
+                useWebWorker: true,
+            });
+
             const data = new FormData();
-            data.append('file', blob, 'profilepicture.png');
+            data.append('file', compressed, 'profilepicture.png');
             data.append('intent', intent);
             if (actor?.type != 'user') data.append('target', actor.id);
 

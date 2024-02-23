@@ -1,44 +1,42 @@
 'use client';
 
-import { EventCarousel } from '@/components/data/events/cards';
-import { useSurreal } from '@/lib/Surreal';
-import { Event } from '@/schema/resources/event';
-import { useQuery } from '@tanstack/react-query';
-import React from 'react';
-import { z } from 'zod';
+import { Button } from '@/components/ui/button';
+import { useFeatureFlags } from '@/lib/featureFlags';
+import { Link } from '@/locales/navigation';
+import { Clock } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import React, { ReactNode } from 'react';
 
 export default function Home() {
-    const { data: events, isLoading } = useData();
+    const t = useTranslations('pages.home');
+    const [featureFlags] = useFeatureFlags();
+    const tint = (children: ReactNode) => (
+        <span className="bg-gradient-to-tr from-blue-400 via-indigo-600 to-purple-400 bg-clip-text text-transparent">
+            {children}
+        </span>
+    );
 
     return (
         <div className="flex flex-grow flex-col justify-center gap-10">
-            <div className="space-y-10">
-                <h2 className="text-4xl font-bold">New events</h2>
-                <EventCarousel
-                    events={events ?? []}
-                    carouselControls
-                    viewButton
-                    loading={isLoading}
-                />
+            <div className="flex flex-col gap-7 text-4xl font-bold sm:text-5xl">
+                <h1>{t.rich('headline.0', { tint })}</h1>
+                <h2>{t.rich('headline.1', { tint })}</h2>
+                <h2>{t.rich('headline.2', { tint })}</h2>
+            </div>
+            <div>
+                {featureFlags.preLaunchPage ? (
+                    <Button disabled>
+                        <Clock className="mr-2 h-4 w-4" />
+                        {t('button.releasing-soon')}
+                    </Button>
+                ) : (
+                    <Button asChild size="lg">
+                        <Link href="/account/signin">
+                            {t('button.get-started')}
+                        </Link>
+                    </Button>
+                )}
             </div>
         </div>
     );
-}
-
-function useData() {
-    const surreal = useSurreal();
-    return useQuery({
-        queryKey: ['home', 'latest-events'],
-        queryFn: async () => {
-            const [result] = await surreal.query<[Event[]]>(/* surql */ `
-                SELECT * FROM event 
-                    WHERE !tournament
-                    ORDER BY created DESC 
-                    LIMIT 10;
-            `);
-
-            if (!result) return null;
-            return z.array(Event).parse(result);
-        },
-    });
 }

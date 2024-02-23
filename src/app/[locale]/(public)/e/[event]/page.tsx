@@ -8,8 +8,9 @@ import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { Pagination, usePagination } from '@/components/logic/Pagination';
 import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
-import { buttonVariants } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { useSurreal } from '@/lib/Surreal';
+import { useShare } from '@/lib/share';
 import { cn } from '@/lib/utils';
 import { Link } from '@/locales/navigation';
 import { Attends } from '@/schema/relations/attends';
@@ -20,6 +21,7 @@ import {
 } from '@/schema/resources/organisation';
 import { linkToProfile } from '@/schema/resources/profile';
 import { useQuery } from '@tanstack/react-query';
+import { Share } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { z } from 'zod';
@@ -27,6 +29,7 @@ import { z } from 'zod';
 export default function Page() {
     const params = useParams();
     const slug = Array.isArray(params.event) ? params.event[0] : params.event;
+    const share = useShare();
 
     const order = useState<'desc' | 'asc'>('desc');
     const pagination = usePagination({ defaultPageSize: 4 });
@@ -81,7 +84,18 @@ export default function Page() {
                             <ProfileName profile={event} />
                         </h1>
                     </div>
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap gap-4">
+                        <Button
+                            variant="ghost"
+                            className="bg-white/10 backdrop-blur hover:bg-white/20"
+                            onClick={() =>
+                                share({
+                                    text: `Checkout ${event.name} by ${organiser.name} on Playrbase`,
+                                })
+                            }
+                        >
+                            <Share size={16} />
+                        </Button>
                         {event.can_manage && (
                             <Link
                                 href={linkToProfile(event, 'manage') ?? ''}

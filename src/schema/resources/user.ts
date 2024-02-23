@@ -16,7 +16,9 @@ const user = /* surrealql */ `
                     id = $auth.id
                     OR email = $email
                     OR (SELECT VALUE id FROM organisation WHERE [$parent.id, $auth.id] ALLINSIDE managers.*.user)[0]
-                    OR (SELECT VALUE id FROM team WHERE [$parent.id, $auth.id] ALLINSIDE players.*)[0];
+                    OR (SELECT VALUE id FROM team WHERE [$parent.id, $auth.id] ALLINSIDE players.*)[0]
+                    OR ((id)->attends->event[?organiser.managers.user CONTAINS $auth.id])[0]
+                    OR ((id)->plays_in->team->attends->event[?organiser.managers.user CONTAINS $auth.id])[0];
 
     DEFINE FIELD type               ON user VALUE meta::tb(id) DEFAULT meta::tb(id);
     DEFINE FIELD api_access         ON user DEFAULT false

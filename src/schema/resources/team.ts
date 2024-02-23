@@ -34,7 +34,9 @@ const team = /* surrealql */ `
 
     DEFINE FIELD created        ON team TYPE datetime VALUE $before OR time::now()    DEFAULT time::now();
     DEFINE FIELD updated        ON team TYPE datetime VALUE time::now()               DEFAULT time::now()
-        PERMISSIONS FOR select WHERE $auth.id IN players.*;
+        PERMISSIONS FOR select WHERE 
+            $auth.id IN players.*
+            OR ((id)->attends->event[?organiser.managers.user CONTAINS $auth.id])[0];
 `;
 
 export const Team = z.object({

@@ -78,7 +78,10 @@ export function DDContent({
 
     return (
         <DialogContent
-            className={cn('will-change-transform', className)}
+            className={cn(
+                'max-h-[95vh] overflow-y-auto will-change-transform',
+                className
+            )}
             {...props}
         >
             {children}

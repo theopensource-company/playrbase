@@ -20,7 +20,6 @@ import {
 } from '@/schema/resources/organisation';
 import { linkToProfile } from '@/schema/resources/profile';
 import { useQuery } from '@tanstack/react-query';
-import { Check } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { z } from 'zod';
@@ -98,24 +97,20 @@ export default function Page() {
                         )}
                         {!event.is_tournament && (
                             <Link
-                                href={`/flow/event-signup/${event.id.slice(6)}`}
-                                className={buttonVariants({
-                                    variant: registration
-                                        ? 'secondary'
-                                        : 'default',
-                                })}
-                                onClick={(e) =>
-                                    registration && e.preventDefault()
+                                href={
+                                    registration
+                                        ? `/e/${slug}/registration/${registration.id.slice(
+                                              8
+                                          )}`
+                                        : `/flow/event-signup/${event.id.slice(
+                                              6
+                                          )}`
                                 }
+                                className={buttonVariants()}
                             >
-                                {registration ? (
-                                    <span className="flex items-center gap-2">
-                                        Registered
-                                        <Check size={16} />
-                                    </span>
-                                ) : (
-                                    'Register'
-                                )}
+                                {registration
+                                    ? 'Manage registration'
+                                    : 'Register'}
                             </Link>
                         )}
                     </div>

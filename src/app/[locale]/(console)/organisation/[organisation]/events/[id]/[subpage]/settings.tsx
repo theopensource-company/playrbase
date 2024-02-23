@@ -18,6 +18,7 @@ import { AlertOctagon, Loader2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 export function EventSettingsTab({
@@ -30,10 +31,19 @@ export function EventSettingsTab({
     const { mutateAsync } = useUpdateEvent(event.id);
     const onSubmit = useCallback(
         async (payload: Partial<Event>) => {
-            return promiseTimeout(
+            const prom = promiseTimeout(
                 mutateAsync(payload).then(() => refetch()),
                 250
             );
+
+            toast.promise(prom, {
+                loading: 'Saving event',
+                success: 'Saved event',
+                error: (e) =>
+                    `Failed to save event: ${'message' in e ? e.message : e}`,
+            });
+
+            return prom;
         },
         [mutateAsync, refetch]
     );

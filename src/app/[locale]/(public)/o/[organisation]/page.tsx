@@ -96,6 +96,7 @@ export default function Page() {
                             <h3 className="text-md font-semibold">Website</h3>
                             <Link
                                 href={organisation.website}
+                                target="_blank"
                                 className="text-sm text-foreground/75"
                             >
                                 {organisation.website}

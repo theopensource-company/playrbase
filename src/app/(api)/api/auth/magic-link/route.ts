@@ -62,8 +62,8 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
     const searchParams = new URL(req.url).searchParams;
-    const token = z.string().parse(searchParams.get('token'));
-    const followup = z.string().parse(searchParams.get('followup'));
+    const token = z.string().default('').parse(searchParams.get('token'));
+    const followup = z.string().nullable().parse(searchParams.get('followup'));
     const decoded = await verifyEmailVerificationToken(token);
 
     if (!decoded) {

@@ -14,6 +14,7 @@ import {
 import { Link } from '@/locales/navigation';
 import { RichAttends } from '@/schema/relations/attends';
 import { ArrowRight, Check, FileSearch, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import React, { ReactNode } from 'react';
 
 export type AttendsTableColumns = {
@@ -35,6 +36,7 @@ export function AttendsTable({
     columns?: AttendsTableColumns;
     caption?: ReactNode;
 }) {
+    const t = useTranslations('components.data.attends.table');
     const doRenderCol = (col: keyof AttendsTableColumns) =>
         columns?.[col] ?? true;
 
@@ -42,14 +44,14 @@ export function AttendsTable({
         <Table>
             <TableHeader>
                 <TableRow>
-                    {doRenderCol('in') && <TableHead>Registrant</TableHead>}
-                    {doRenderCol('out') && <TableHead>Event</TableHead>}
-                    {doRenderCol('players') && <TableHead>Players</TableHead>}
+                    {doRenderCol('in') && <TableHead>{t("columns.registrant")}</TableHead>}
+                    {doRenderCol('out') && <TableHead>{t("columns.event")}</TableHead>}
+                    {doRenderCol('players') && <TableHead>{t("columns.players")}</TableHead>}
                     {doRenderCol('confirmed') && (
-                        <TableHead>Confirmed</TableHead>
+                        <TableHead>{t("columns.confirmed")}</TableHead>
                     )}
-                    {doRenderCol('created') && <TableHead>Created</TableHead>}
-                    {doRenderCol('updated') && <TableHead>Updated</TableHead>}
+                    {doRenderCol('created') && <TableHead>{t("columns.created")}</TableHead>}
+                    {doRenderCol('updated') && <TableHead>{t("columns.updated")}</TableHead>}
                     {doRenderCol('actions') && <TableHead />}
                 </TableRow>
             </TableHeader>
@@ -165,7 +167,7 @@ export function AttendsTable({
             {registrations?.length == 0 ? (
                 <TableCaption className="my-12">
                     <div className="flex items-center justify-center gap-1">
-                        <FileSearch className="h-4 w-4" /> No registrations
+                        <FileSearch className="h-4 w-4" />{t("empty")}
                     </div>
                 </TableCaption>
             ) : (

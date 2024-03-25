@@ -169,11 +169,11 @@ export function Pagination({
                         {t.rich('size', { size: pageSize })}
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="5">{t('sizes.5')}</SelectItem>
-                        <SelectItem value="10">{t('sizes.10')}</SelectItem>
-                        <SelectItem value="25">{t('sizes.25')}</SelectItem>
-                        <SelectItem value="50">{t('sizes.50')}</SelectItem>
-                        <SelectItem value="100">{t('sizes.100')}</SelectItem>
+                        <SelectItem value="5">{t('sizes.s-5')}</SelectItem>
+                        <SelectItem value="10">{t('sizes.s-10')}</SelectItem>
+                        <SelectItem value="25">{t('sizes.s-25')}</SelectItem>
+                        <SelectItem value="50">{t('sizes.s-50')}</SelectItem>
+                        <SelectItem value="100">{t('sizes.s-100')}</SelectItem>
                     </SelectContent>
                 </Select>
             )}

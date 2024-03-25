@@ -27,9 +27,11 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
                             {t('passkeys.title')}
                         </NavbarSubLink>
                     )}
-                    <NavbarSubLink link="teams">Teams</NavbarSubLink>
+                    <NavbarSubLink link="teams">
+                    {t('teams.title')}
+                    </NavbarSubLink>
                     <NavbarSubLink link="registrations">
-                        Registrations
+                    {t('registrations.title')}
                     </NavbarSubLink>
                     <NavbarSubLink link="organisations">
                         {t('organisations.title')}

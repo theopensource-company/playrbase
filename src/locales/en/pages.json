@@ -28,7 +28,7 @@
           }
         },
         "name": {
-          "title": "Change",
+          "title": "Name",
           "dialog": {
             "trigger": "Change",
             "title": "Change your name",
@@ -54,6 +54,9 @@
             }
           }
         }
+      },
+      "registrations": {
+        "title": "Registrations"
       },
       "organisations": {
         "title": "Organisations",

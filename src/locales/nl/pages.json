@@ -235,6 +235,9 @@
           "description": "Je bent uitgenodigd tot een team",
           "title": "Uitnodiging team"
         }
+      },
+      "registrations": {
+        "title": "Registraties"
       }
     },
     "organisation": {

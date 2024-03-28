@@ -21,6 +21,9 @@ const log = /* surrealql */ `
     DEFINE FIELD created                ON log          TYPE datetime 
         VALUE $before OR time::now()
         DEFAULT time::now();
+
+    DEFINE INDEX compound_record        ON log FIELDS record;
+    DEFINE INDEX compound_event         ON log FIELDS event;
 `;
 
 export const Log = z.object({

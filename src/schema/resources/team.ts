@@ -35,6 +35,8 @@ const team = /* surrealql */ `
         PERMISSIONS FOR select WHERE 
             $auth.id IN players.*
             OR ((id)->attends->event[?organiser.managers.user CONTAINS $auth.id])[0];
+
+    DEFINE INDEX compound_players ON team FIELDS players;
 `;
 
 export const Team = z.object({

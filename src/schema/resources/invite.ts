@@ -29,6 +29,7 @@ const user = /* surrealql */ `
     DEFINE FIELD updated        ON invite TYPE datetime VALUE time::now()             DEFAULT time::now();
 
     DEFINE INDEX unique_invite  ON invite COLUMNS origin, target UNIQUE;
+    DEFINE INDEX compound_invited_by ON invite FIELDS invited_by;
 `;
 
 export const Invite = z.object({

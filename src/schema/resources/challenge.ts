@@ -7,6 +7,9 @@ const challenge = /* surrealql */ `
     DEFINE FIELD challenge ON challenge TYPE string VALUE $before OR rand::uuid() DEFAULT rand::uuid();
     DEFINE FIELD user ON challenge TYPE option<record<user>> VALUE $before OR $value;
     DEFINE FIELD created ON challenge TYPE datetime VALUE $before OR time::now() DEFAULT time::now();
+
+    DEFINE INDEX unique_challenge ON challenge FIELDS challenge UNIQUE;
+    DEFINE INDEX compound_user ON challenge FIELDS user;
 `;
 
 export const Challenge = z.object({

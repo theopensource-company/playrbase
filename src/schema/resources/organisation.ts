@@ -75,6 +75,9 @@ const organisation = /* surrealql */ `
         PERMISSIONS FOR select WHERE managers.*.user CONTAINS $auth.id;
 
     DEFINE INDEX unique_slug        ON organisation FIELDS slug UNIQUE;
+    DEFINE INDEX compound_email     ON organisation FIELDS email;
+    DEFINE INDEX compound_part_of   ON organisation FIELDS part_of;
+    DEFINE INDEX compound_managers  ON organisation FIELDS managers;
 `;
 
 export const Organisation = z.object({

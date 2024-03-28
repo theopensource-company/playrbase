@@ -12,6 +12,9 @@ const credential = /* surrealql */ `
     DEFINE FIELD algorithm ON credential TYPE string VALUE $before OR $value ASSERT $value IN ['RS256', 'ES256'];
     DEFINE FIELD created ON credential TYPE datetime VALUE $before OR time::now() DEFAULT time::now();
     DEFINE FIELD updated ON credential TYPE datetime VALUE time::now() DEFAULT time::now();
+
+    DEFINE INDEX compound_user ON credential FIELDS user;
+    DEFINE INDEX unique_name ON credential FIELDS name, user UNIQUE;
 `;
 
 export const Credential = z.object({

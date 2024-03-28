@@ -58,6 +58,9 @@ const event = /* surrealql */ `
 
     DEFINE FIELD created                    ON event TYPE datetime VALUE $before OR time::now() DEFAULT time::now();
     DEFINE FIELD updated                    ON event TYPE datetime VALUE time::now()            DEFAULT time::now();
+
+    DEFINE INDEX compound_organizer ON event FIELDS organiser;
+    DEFINE INDEX compound_tournament ON event FIELDS tournament;
 `;
 
 export const Event = z.object({

@@ -25,7 +25,7 @@ const event = /* surrealql */ `
     DEFINE FIELD discoverable               ON event TYPE bool DEFAULT true;
     DEFINE FIELD published                  ON event TYPE bool DEFAULT false;
     DEFINE FIELD tournament                 ON event TYPE option<record<event>>;
-    DEFINE FIELD is_tournament              ON event VALUE <future> {
+    DEFINE FIELD is_tournament              ON event VALUE {
         RETURN IF id {
             LET $id = meta::id(id);
             RETURN !!(SELECT VALUE id FROM event WHERE tournament AND meta::id(tournament) = $id)[0];
@@ -37,14 +37,15 @@ const event = /* surrealql */ `
     DEFINE FIELD root_for_org               ON event 
         VALUE !tournament OR (SELECT VALUE organiser FROM ONLY $parent.tournament) != organiser;
 
-    DEFINE FIELD computed                   ON event VALUE <future> {
-        RETURN {
-            description: description OR tournament.computed.description OR "",
-            logo: logo OR tournament.computed.logo,
-            banner: banner OR tournament.computed.banner,
-            tournament: tournament.computed.tournament OR tournament,
-        };
-    };
+    DEFINE FIELD computed                   ON event 
+        FLEXIBLE TYPE object
+        DEFAULT {
+            description: "",
+            logo: "",
+            banner: "",
+            tournament: none,
+        } 
+        PERMISSIONS FOR update NONE;
 
     DEFINE FIELD options                    ON event TYPE object DEFAULT {};
     DEFINE FIELD options.min_pool_size      ON event TYPE option<number>;
@@ -114,4 +115,40 @@ const removal_cleanup = /* surrealql */ `
     };
 `;
 
-export default [event, log, removal_cleanup].join('\n\n');
+const update_tournament_status = /* surrealql */ `
+    DEFINE EVENT update_tournament_status ON event WHEN $event IN ["CREATE", "DELETE"] AND $value.tournament THEN {
+        UPDATE $value.tournament;
+    };
+`;
+
+const update_computed_self = /* surrealql */ `
+    DEFINE EVENT update_computed_self ON event WHEN $event = "UPDATE" AND (
+        $before.description != $after.description ||
+        $before.banner != $after.banner ||
+        $before.logo != $after.logo
+    ) THEN {
+        UPDATE $value.id SET computed = fn::recursion::event::computed($this.*);
+    };
+`;
+
+const update_computed_nested = /* surrealql */ `
+    DEFINE EVENT update_computed_nested ON event WHEN $event = "UPDATE" AND $before.computed != $after.computed THEN {
+        UPDATE event SET computed = fn::recursion::event::computed($this.*) WHERE tournament = $value.id;
+    };
+`;
+
+const populate_initial_computed = /* surrealql */ `
+    DEFINE EVENT populate_initial_computed ON event WHEN $event = "CREATE" THEN {
+        UPDATE $value.id SET computed = fn::recursion::event::computed($value.*);
+    };
+`;
+
+export default [
+    event,
+    log,
+    removal_cleanup,
+    update_tournament_status,
+    update_computed_self,
+    update_computed_nested,
+    populate_initial_computed,
+].join('\n\n');

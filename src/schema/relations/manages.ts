@@ -54,7 +54,13 @@ const verify_nonempty_organisation_after_deletion = /* surrealql */ `
 const cleanup_invite = /* surrealql */ `
     DEFINE EVENT cleanup_invite ON manages WHEN $event = "CREATE" THEN {
         DELETE invite WHERE origin = $value.in AND target = $value.out;
-    }
+    };
+`;
+
+const update_organisation_managers = /* surrealql */ `
+    DEFINE EVENT update_organisation_managers ON manages THEN {
+        UPDATE $value.out SET managers = fn::recursion::organisation::managers(id, part_of);
+    };
 `;
 
 export default [
@@ -62,4 +68,5 @@ export default [
     log,
     verify_nonempty_organisation_after_deletion,
     cleanup_invite,
+    update_organisation_managers,
 ].join('\n\n');

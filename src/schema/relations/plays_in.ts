@@ -60,7 +60,13 @@ const verify_nonempty_team_after_deletion = /* surrealql */ `
 const cleanup_invite = /* surrealql */ `
     DEFINE EVENT cleanup_invite ON plays_in WHEN $event = "CREATE" THEN {
         DELETE invite WHERE origin = $value.in AND target = $value.out;
-    }
+    };
+`;
+
+const update_team_players = /* surrealql */ `
+    DEFINE EVENT update_team_players ON plays_in THEN {
+        UPDATE $value.out SET players = fn::recursion::team::players($value.out);
+    };
 `;
 
 export default [
@@ -69,4 +75,5 @@ export default [
     verify_registrations_after_deletion,
     verify_nonempty_team_after_deletion,
     cleanup_invite,
+    update_team_players,
 ].join('\n\n');

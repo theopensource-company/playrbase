@@ -1,4 +1,5 @@
 export { default as fn_log } from './functions/log.ts';
+export { default as fn_recursion } from './functions/recursion.ts';
 export { default as fn_team } from './functions/team.ts';
 export { default as attends } from './relations/attends.ts';
 export { default as manages } from './relations/manages.ts';

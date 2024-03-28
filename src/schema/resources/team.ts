@@ -11,12 +11,10 @@ const team = /* surrealql */ `
 
     DEFINE FIELD name           ON team TYPE string ASSERT string::len($value) > 0;
     DEFINE FIELD description    ON team TYPE option<string>;
-    DEFINE FIELD players        ON team
-        VALUE <future> {
-            -- Find all confirmed players of this team
-            LET $players = SELECT <-plays_in AS players FROM ONLY $parent.id;
-            RETURN SELECT VALUE players.*.in FROM ONLY $players;
-        };
+    DEFINE FIELD players        ON team 
+        TYPE array<record<user>>
+        DEFAULT [] 
+        PERMISSIONS FOR update NONE;
 
     DEFINE FIELD logo           ON team TYPE option<string>
         PERMISSIONS
@@ -79,4 +77,16 @@ const removal_cleanup = /* surrealql */ `
     };
 `;
 
-export default [team, relate_creator, log, removal_cleanup].join('\n\n');
+const populate_initial_players = /* surrealql */ `
+    DEFINE EVENT populate_initial_players ON team WHEN $event = "CREATE" THEN {
+        UPDATE $value.id SET players = fn::recursion::team::players($value.id);
+    };
+`;
+
+export default [
+    team,
+    relate_creator,
+    log,
+    removal_cleanup,
+    populate_initial_players,
+].join('\n\n');

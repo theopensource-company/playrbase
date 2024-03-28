@@ -61,20 +61,9 @@ const organisation = /* surrealql */ `
             FOR update NONE;
 
     DEFINE FIELD managers           ON organisation
-        VALUE <future> {
-            -- Find all confirmed managers of this org
-            LET $local = SELECT <-manages AS managers FROM ONLY $parent.id;
-            -- Grab the role and user ID
-            LET $local = SELECT role, in AS user, id as edge FROM $local.managers;
-
-            -- Select all managers from the org we are a part of, if any
-            LET $inherited = SELECT managers FROM ONLY $parent.part_of.id;
-            -- Add an org field describing from which org these members are inherited, if not already inherited before
-            LET $inherited = SELECT *, org OR $parent.part_of AS org FROM ($inherited.managers || []);
-
-            -- Return the combined result
-            RETURN array::concat($local, $inherited);
-        };
+        FLEXIBLE TYPE array<object>
+        DEFAULT [] 
+        PERMISSIONS FOR update NONE;
     
     DEFINE FIELD created_by         ON organisation TYPE record<user>
         DEFAULT $auth.id
@@ -159,6 +148,23 @@ const removal_cleanup = /* surrealql */ `
     };
 `;
 
-export default [organisation, relate_creator, log, removal_cleanup].join(
-    '\n\n'
-);
+const update_dependant_managers = /* surrealql */ `
+    DEFINE EVENT update_dependant_managers ON organisation WHEN $event = "UPDATE" && $before.managers != $after.managers THEN {
+        UPDATE organisation SET managers = fn::recursion::organisation::managers(id, part_of) WHERE part_of = $value.id;
+    };
+`;
+
+const populate_initial_managers = /* surrealql */ `
+    DEFINE EVENT populate_initial_managers ON organisation WHEN $event = "CREATE" THEN {
+        UPDATE $value.id SET managers = fn::recursion::organisation::managers($value.id, $value.part_of);
+    };
+`;
+
+export default [
+    organisation,
+    relate_creator,
+    log,
+    removal_cleanup,
+    update_dependant_managers,
+    populate_initial_managers,
+].join('\n\n');

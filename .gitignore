@@ -31,3 +31,5 @@ dev.*
 dev.s3
 
 .react-email
+
+testing-locally/

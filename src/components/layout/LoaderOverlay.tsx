@@ -7,7 +7,7 @@ export function LoaderOverlay({ show }: { show?: boolean }) {
     return (
         <Container
             className={cn(
-                'fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-background transition-all',
+                'fixed left-0 top-0 z-50 flex h-screen w-screen !max-w-full items-center justify-center bg-background transition-all',
                 typeof show != 'boolean' || show
                     ? 'pointer-events-all backdrop-blur-sm'
                     : 'pointer-events-none bg-transparent opacity-0 backdrop-blur-none'

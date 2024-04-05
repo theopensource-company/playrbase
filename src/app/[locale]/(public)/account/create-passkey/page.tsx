@@ -44,7 +44,7 @@ export default function Page() {
     return featureFlags.passkeys ? (
         <Container className="flex flex-grow flex-col items-center justify-center">
             <div className="flex flex-col items-center gap-8">
-                <Card className="flex flex-col gap-3">
+                <Card className="flex flex-col gap-3 max-sm:border-none max-sm:px-0">
                     <CardHeader className="w-96 max-w-full">
                         <CardTitle className="text-3xl font-bold">
                             {t('title')}

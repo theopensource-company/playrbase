@@ -16,6 +16,7 @@ const event = /* surrealql */ `
     DEFINE FIELD description                ON event TYPE string;
     DEFINE FIELD logo                       ON event TYPE option<string> PERMISSIONS FOR update WHERE $scope = 'admin';
     DEFINE FIELD banner                     ON event TYPE option<string> PERMISSIONS FOR update WHERE $scope = 'admin';
+    DEFINE FIELD outcome                    ON event TYPE option<string>;
 
     DEFINE FIELD start                      ON event TYPE option<datetime>;
     DEFINE FIELD end                        ON event TYPE option<datetime>;
@@ -44,12 +45,15 @@ const event = /* surrealql */ `
             logo: "",
             banner: "",
             tournament: none,
+            outcome: none,
         } 
         PERMISSIONS FOR update NONE;
 
     DEFINE FIELD options                    ON event TYPE object DEFAULT {};
     DEFINE FIELD options.min_pool_size      ON event TYPE option<number>;
     DEFINE FIELD options.max_pool_size      ON event TYPE option<number>;
+    DEFINE FIELD options.min_team_size      ON event TYPE option<number>;
+    DEFINE FIELD options.max_team_size      ON event TYPE option<number>;
     DEFINE FIELD options.min_age            ON event TYPE option<number>;
     DEFINE FIELD options.max_age            ON event TYPE option<number>;
     DEFINE FIELD options.manual_approval    ON event TYPE option<bool>;
@@ -69,6 +73,7 @@ export const Event = z.object({
     description: z.string(),
     logo: z.string().optional(),
     banner: z.string().optional(),
+    outcome: z.string().optional(),
 
     start: z.coerce.date().optional(),
     end: z.coerce.date().optional(),
@@ -85,11 +90,14 @@ export const Event = z.object({
         logo: z.string().nullable(),
         banner: z.string().nullable(),
         tournament: record('event').nullable(),
+        outcome: z.string().nullable().optional(),
     }),
 
     options: z.object({
         min_pool_size: z.number().optional(),
         max_pool_size: z.number().optional(),
+        min_team_size: z.number().optional(),
+        max_team_size: z.number().optional(),
         min_age: z.number().optional(),
         max_age: z.number().optional(),
         manual_approval: z.boolean().optional(),
@@ -127,6 +135,7 @@ const update_tournament_status = /* surrealql */ `
 const update_computed_self = /* surrealql */ `
     DEFINE EVENT update_computed_self ON event WHEN $event = "UPDATE" AND (
         $before.description != $after.description ||
+        $before.outcome != $after.outcome ||
         $before.banner != $after.banner ||
         $before.logo != $after.logo
     ) THEN {

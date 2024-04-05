@@ -147,6 +147,24 @@
         }
       }
     },
+    "birthdate-selector": {
+      "placeholder": "Selecteer je verjaardag",
+      "dialog-email": {
+        "title": "Ouderlijke verificatie",
+        "description": "Omdat je 16 jaar of jonger bent, hebben we toestemming van een ouder nodig om je account aan te maken. Geef hieronder het e-mailadres van je ouder op om het verificatieproces te starten.",
+        "placeholder": "E-mailadres van ouders",
+        "invalid-email": "Ongeldig e-mailadres",
+        "submit": "Verzoek versturen"
+      },
+      "dialog-confirm": {
+        "title": "Confirmatiecode ingeven",
+        "description": "Je ouder zou binnenkort een e-mail moeten ontvangen met een bevestigingscode. Voer de code hieronder in om zijn goedkeuring te bevestigen.",
+        "invalid-permit": "Code is ongeldig of verlopen",
+        "submit": "Valideren",
+        "cancel": "Annuleren"
+      },
+      "validated": "Je geboortedatum is gevalideerd"
+    },
     "pagination": {
       "buttons": {
         "first": {
@@ -285,6 +303,10 @@
             "description": "De beschrijving van het evenement die overal in Playrbase wordt getoond",
             "label": "Beschrijving"
           },
+          "outcome": {
+            "label": "Uitkomst",
+            "description": "Gebruik dit veldt om resultaten aan de spelers te tonen"
+          },
           "discoverable": {
             "description": "Is dit evenement openbaar vindbaar in Playrbase",
             "label": "Vindbaar"
@@ -329,7 +351,7 @@
             "description": "Beheert het minimum- en maximumaantal spelers per aanmelding",
             "fields": {
               "maximum": {
-                "clear": "Wisse",
+                "clear": "Wissen",
                 "label": "Maximum"
               },
               "minimum": {
@@ -338,6 +360,20 @@
               }
             },
             "label": "Hoeveelheid spelers"
+          },
+          "team-size": {
+            "description": "Dicteert hoeveel spelers een team moet hebben voordat ze zich kunnen aanmelden voor een evenement.",
+            "fields": {
+              "maximum": {
+                "clear": "Wissen",
+                "label": "Maximum"
+              },
+              "minimum": {
+                "clear": "Wissen",
+                "label": "Minimum"
+              }
+            },
+            "label": "Team-grootte"
           },
           "published": {
             "description": "Is dit evenement gepubliceerd voor niet-organisatieleden",

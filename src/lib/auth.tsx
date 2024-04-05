@@ -1,16 +1,13 @@
 'use client';
 
 import { usePathname, useRouter } from '@/locales/navigation';
-import { Admin } from '@/schema/resources/admin';
 import { User } from '@/schema/resources/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { ReactNode, createContext, useContext, useEffect } from 'react';
 import { useSurreal } from './Surreal';
 
-type AnyUser = User | Admin;
-
 export type AuthStore = {
-    user?: (AnyUser & { scope: string }) | null;
+    user?: (User & { scope: string }) | null;
     loading: boolean;
     refreshUser: () => Promise<void>;
     signout: () => Promise<void>;
@@ -36,7 +33,7 @@ export function useCreateAuthState() {
         refetchIntervalInBackground: false,
         async queryFn() {
             const [res] = await surreal.query<
-                [AnyUser & { scope: string }]
+                [User & { scope: string }]
             >(/* surrealql */ `
                 IF $auth THEN 
                     SELECT *, meta::tb(id) AS scope FROM ONLY $auth

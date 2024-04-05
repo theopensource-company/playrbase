@@ -2,6 +2,10 @@
 
 import { Avatar } from '@/components/cards/avatar';
 import { Profile } from '@/components/cards/profile';
+import {
+    BirthdateSelector,
+    useBirthdateSelector,
+} from '@/components/logic/BirthdateSelector';
 import UploadImage from '@/components/logic/UploadImage';
 import {
     DD,
@@ -30,9 +34,12 @@ import { Actor } from '@/schema/resources/actor';
 import { Admin } from '@/schema/resources/admin';
 import { User } from '@/schema/resources/user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import dayjs from 'dayjs';
+import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 export default function Account() {
@@ -93,6 +100,19 @@ export default function Account() {
                             </TableCell>
                             <TableCell align="right">
                                 <EditEmail />
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableHead>{t('birthdate.title')}</TableHead>
+                            <TableCell>
+                                {!loading ? (
+                                    dayjs(user?.birthdate).format('LL')
+                                ) : (
+                                    <Skeleton className="h-4" />
+                                )}
+                            </TableCell>
+                            <TableCell align="right">
+                                <EditBirthdate />
                             </TableCell>
                         </TableRow>
                     </TableBody>
@@ -288,6 +308,92 @@ function EditEmail() {
                         </DDFooter>
                     </form>
                 )}
+            </DDContent>
+        </DD>
+    );
+}
+
+function EditBirthdate() {
+    const [open, setOpen] = useState(false);
+    const { loading, user, refreshUser } = useAuth();
+    const [submitting, setSubmitting] = useState(false);
+    const t = useTranslations('pages.console.account.index.birthdate.dialog');
+
+    const birthdateSelector = useBirthdateSelector({
+        birthdate: user?.birthdate,
+    });
+
+    const { birthdate, isBirthdateReady, birthdatePermit, setBirthdate } =
+        birthdateSelector;
+
+    useEffect(
+        () => user?.birthdate && setBirthdate(user?.birthdate),
+        [user?.birthdate, setBirthdate]
+    );
+
+    const submit = useCallback(async () => {
+        setSubmitting(true);
+
+        const raw = await fetch('/api/birthdate/change', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                birthdate,
+                birthdate_permit: birthdatePermit,
+            }),
+        });
+
+        const { success, error } = await raw.json();
+        if (success) {
+            setOpen(false);
+            setSubmitting(false);
+            setBirthdate(birthdate); // Reset form's state
+            refreshUser();
+        } else {
+            setSubmitting(false);
+            toast.error(t('error') + ': ' + error);
+        }
+    }, [birthdate, birthdatePermit, setBirthdate, refreshUser, t]);
+
+    return (
+        <DD open={open} onOpenChange={setOpen}>
+            <DDTrigger asChild>
+                {loading ? (
+                    <Skeleton className="h-10 w-20" />
+                ) : (
+                    <Button>{t('trigger')}</Button>
+                )}
+            </DDTrigger>
+            <DDContent>
+                <DDHeader>
+                    <DDTitle>{t('form.title')}</DDTitle>
+                    <DDDescription>{t('form.description')}</DDDescription>
+                </DDHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label className="text-right">{t('form.label')}</Label>
+                        {loading ? (
+                            <Skeleton className="col-span-2 h-8" />
+                        ) : (
+                            <div className="col-span-3">
+                                <BirthdateSelector {...birthdateSelector} />
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <DDFooter>
+                    <Button
+                        onClick={submit}
+                        disabled={submitting || !isBirthdateReady}
+                    >
+                        {t('form.submit')}
+                        {submitting && (
+                            <Loader2 className="ml-2 w-4 animate-spin" />
+                        )}
+                    </Button>
+                </DDFooter>
             </DDContent>
         </DD>
     );

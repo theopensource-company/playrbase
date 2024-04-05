@@ -6,6 +6,7 @@ import { EventGrid } from '@/components/data/events/cards';
 import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { Pagination, usePagination } from '@/components/logic/Pagination';
+import { Markdown } from '@/components/miscellaneous/Markdown';
 import { buttonVariants } from '@/components/ui/button';
 import { useSurreal } from '@/lib/Surreal';
 import { role } from '@/lib/zod';
@@ -109,7 +110,7 @@ export default function Page() {
                                 Description
                             </h3>
                             <p className="text-sm text-foreground/75">
-                                {organisation.description}
+                                <Markdown>{organisation.description}</Markdown>
                             </p>
                         </div>
                     )}

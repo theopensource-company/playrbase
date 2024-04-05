@@ -1,6 +1,7 @@
 import { Avatar } from '@/components/cards/avatar';
 import { CutTextTooltip } from '@/components/miscellaneous/CutTextTooltip';
 import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
+import { useMarkdownInline } from '@/components/miscellaneous/Markdown';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
@@ -175,6 +176,11 @@ function RenderLoading({ columns }: { columns?: TeamTableColumns }) {
     );
 }
 
+const Description = ({ children }: { children: string }) => {
+    const text = useMarkdownInline(children);
+    return <CutTextTooltip text={text} maxLength={40} />;
+};
+
 function RenderConfirmed({
     team,
     columns,
@@ -196,7 +202,7 @@ function RenderConfirmed({
             {doRenderCol('name') && <TableCell>{team.name}</TableCell>}
             {doRenderCol('description') && (
                 <TableCell>
-                    <CutTextTooltip text={team.description} maxLength={40} />
+                    <Description>{team.description ?? ''}</Description>
                 </TableCell>
             )}
             {doRenderCol('created') && (
@@ -272,7 +278,7 @@ function RenderUnconfirmed({
             {doRenderCol('name') && <TableCell>{team.name}</TableCell>}
             {doRenderCol('description') && (
                 <TableCell>
-                    <CutTextTooltip text={team.description} maxLength={40} />
+                    <Description>{team.description ?? ''}</Description>
                 </TableCell>
             )}
             {doRenderCol('created') && (

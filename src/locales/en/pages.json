@@ -53,6 +53,19 @@
               "close": "Close"
             }
           }
+        },
+        "birthdate": {
+          "title": "Birthdate",
+          "dialog": {
+            "trigger": "Change",
+            "form": {
+              "title": "Change your birthdate",
+              "description": "Enter your birthdate in the field below and click save to apply changes",
+              "label": "Birthdate",
+              "submit": "Save changes"
+            },
+            "error": "Something went wrong"
+          }
         }
       },
       "registrations": {
@@ -511,9 +524,15 @@
       "tagline": "to complete sign up",
       "input": {
         "name": {
-          "placeholder": "Full name"
+          "label": "Name",
+          "placeholder": "First and Lastname"
+        },
+        "birthdate": {
+          "label": "Birthdate",
+          "description": "Your age may be required to determine if you can play in an event, as per set restrictions by an organiser."
         },
         "email": {
+          "label": "Email address",
           "placeholder": "Email address"
         }
       },

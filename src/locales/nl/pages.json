@@ -131,7 +131,7 @@
         "email": {
           "dialog": {
             "form": {
-              "description": "Voer je e-mailadres in in het onderstaande veld en klik op opslaan om de wijzinging door te voeren ",
+              "description": "Voer je e-mailadres in in het onderstaande veld en klik op opslaan om de wijzinging door te voeren",
               "label": "E-mailadres",
               "submit": "Opslaan",
               "title": "Wijzig je e-mailadres"
@@ -160,6 +160,19 @@
           "uploader": {
             "description": "Upload een nieuw plaatje om je profielfoto te wijzigen",
             "title": "Wijzig je profielfoto"
+          }
+        },
+        "birthdate": {
+          "title": "Geboortedatum",
+          "dialog": {
+            "trigger": "Wijzigen",
+            "form": {
+              "title": "Wijzig je geboortedatum",
+              "description": "Voer je geboortedatum in in het onderstaande veld en klik op opslaan om de wijzinging door te voeren",
+              "label": "Geboortedatum",
+              "submit": "Opslaan"
+            },
+            "error": "Er is iets mis gegaan"
           }
         },
         "title": "Account"
@@ -512,9 +525,15 @@
       },
       "input": {
         "name": {
+          "label": "Naam",
           "placeholder": "Voor- en achternaam"
         },
+        "birthdate": {
+          "label": "Geboortedatum",
+          "description": "Je leeftijd kan gebruikt worden om te bepalen of u aan een evenement kunt deelnemen, volgens de vastgestelde beperkingen van de organisator."
+        },
         "email": {
+          "label": "E-mailadres",
           "placeholder": "E-mailadres"
         }
       },

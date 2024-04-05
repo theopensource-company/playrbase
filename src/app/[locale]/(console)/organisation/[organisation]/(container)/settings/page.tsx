@@ -100,13 +100,12 @@ export default function Account() {
             <EditorBox
                 title={t('description.title')}
                 description={t('description.description')}
-                placeholder={t('description.placeholder')}
                 submit={t('description.submit')}
                 defaultValue={organisation.description}
                 mutate={mutate}
                 Schema={Organisation.pick({ description: true })}
                 field="description"
-                fieldType="textarea"
+                fieldType="richtext"
             />
             <DangerZone organisation={organisation} />
         </div>

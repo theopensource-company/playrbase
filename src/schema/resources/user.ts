@@ -20,6 +20,10 @@ const user = /* surrealql */ `
                     OR ((id)->attends->event[?organiser.managers.user CONTAINS $auth.id])[0]
                     OR ((id)->plays_in->team->attends->event[?organiser.managers.user CONTAINS $auth.id])[0];
 
+    DEFINE FIELD birthdate          ON user TYPE datetime 
+        ASSERT $value < time::now()
+        PERMISSIONS FOR update NONE;
+
     DEFINE FIELD type               ON user VALUE meta::tb(id) DEFAULT meta::tb(id);
     DEFINE FIELD api_access         ON user DEFAULT false
         PERMISSIONS
@@ -39,6 +43,8 @@ const user = /* surrealql */ `
                 $scope = 'admin' 
                 OR id = $auth.id;
 
+    DEFINE FIELD extra              ON user FLEXIBLE TYPE object PERMISSIONS NONE;
+
     DEFINE INDEX email              ON user COLUMNS email UNIQUE;
 `;
 
@@ -46,11 +52,13 @@ export const User = z.object({
     id: record('user'),
     name: fullname(),
     email: z.string().email(),
+    birthdate: z.coerce.date(),
     type: z.literal('user'),
     api_access: z.boolean().default(false),
     profile_picture: z.string().optional(),
     created: z.coerce.date(),
     updated: z.coerce.date(),
+    extra: z.record(z.unknown()).optional().nullable(),
 });
 
 export type User = z.infer<typeof User>;

@@ -8,6 +8,7 @@ import { LoaderOverlay } from '@/components/layout/LoaderOverlay';
 import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { Pagination, usePagination } from '@/components/logic/Pagination';
 import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
+import { Markdown } from '@/components/miscellaneous/Markdown';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { useSurreal } from '@/lib/Surreal';
 import { useShare } from '@/lib/share';
@@ -145,14 +146,19 @@ export default function Page() {
                     </div>
                 )}
                 <div className="space-y-6 md:col-span-2">
-                    <h2 className="pb-2 text-2xl font-semibold">
-                        About the {event.is_tournament ? 'tournament' : 'event'}
-                    </h2>
-                    {event.computed.description && (
-                        <p className="text-foreground/75">
-                            {event.computed.description}
-                        </p>
-                    )}
+                    <div className="space-y-2">
+                        <h2 className="pb-2 text-2xl font-semibold">
+                            About the{' '}
+                            {event.is_tournament ? 'tournament' : 'event'}
+                        </h2>
+                        {event.computed.description && (
+                            <div className="pb-2 text-foreground/75">
+                                <Markdown>
+                                    {event.computed.description}
+                                </Markdown>
+                            </div>
+                        )}
+                    </div>
                     {event.start && (
                         <div className="space-y-1">
                             <h3 className="text-md font-semibold">
@@ -216,6 +222,15 @@ export default function Page() {
                     </div>
                 </div>
             </div>
+
+            {event.computed.outcome && (
+                <div className="space-y-1">
+                    <h2 className="pb-2 text-2xl font-semibold">Outcome</h2>
+                    <div className="pb-2 text-foreground/75">
+                        <Markdown>{event.computed.outcome}</Markdown>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

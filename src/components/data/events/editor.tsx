@@ -1,3 +1,4 @@
+import Editor from '@/components/miscellaneous/Editor';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DateTimePickerField } from '@/components/ui/datetime';
@@ -11,7 +12,6 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Event } from '@/schema/resources/event';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
@@ -23,6 +23,7 @@ import { z } from 'zod';
 export const EventEditorSchema = Event.pick({
     name: true,
     description: true,
+    outcome: true,
     start: true,
     end: true,
     discoverable: true,
@@ -33,6 +34,7 @@ export const EventEditorSchema = Event.pick({
 export type EventEditorSchema = z.infer<typeof EventEditorSchema>;
 
 export const EventEditorSchemaNoUndefined = Event.extend({
+    outcome: z.union([z.literal(''), z.string()]),
     start: z.union([z.date(), z.literal('')]),
     end: z.union([z.date(), z.literal('')]),
     options: Event.shape.options.extend({
@@ -40,6 +42,8 @@ export const EventEditorSchemaNoUndefined = Event.extend({
         max_age: z.union([z.coerce.number(), z.literal('')]),
         min_pool_size: z.union([z.coerce.number(), z.literal('')]),
         max_pool_size: z.union([z.coerce.number(), z.literal('')]),
+        min_team_size: z.union([z.coerce.number(), z.literal('')]),
+        max_team_size: z.union([z.coerce.number(), z.literal('')]),
     }),
 });
 
@@ -58,6 +62,7 @@ export function useEventEditor({
         resolver: zodResolver(EventEditorSchemaNoUndefined),
         defaultValues: {
             ...defaultValues,
+            outcome: defaultValues.outcome ?? '',
             start: defaultValues.start ?? '',
             end: defaultValues.end ?? '',
             options: {
@@ -66,6 +71,8 @@ export function useEventEditor({
                 max_age: defaultValues.options?.max_age ?? '',
                 min_pool_size: defaultValues.options?.min_pool_size ?? '',
                 max_pool_size: defaultValues.options?.max_pool_size ?? '',
+                min_team_size: defaultValues.options?.min_team_size ?? '',
+                max_team_size: defaultValues.options?.max_team_size ?? '',
             },
         },
     });
@@ -87,6 +94,7 @@ export function EventEditor({
                 onSubmit={form.handleSubmit((changes) => {
                     onSubmit({
                         ...changes,
+                        outcome: changes.outcome || undefined,
                         start: changes.start || undefined,
                         end: changes.end || undefined,
                         options: {
@@ -97,6 +105,10 @@ export function EventEditor({
                                 changes.options?.min_pool_size || undefined,
                             max_pool_size:
                                 changes.options?.max_pool_size || undefined,
+                            min_team_size:
+                                changes.options?.min_team_size || undefined,
+                            max_team_size:
+                                changes.options?.max_team_size || undefined,
                         },
                     });
                 })}
@@ -134,7 +146,7 @@ export function EventEditor({
                                         {t('fields.description.description')}
                                     </FormDescription>
                                     <FormControl>
-                                        <Textarea {...field} rows={6} />
+                                        <Editor {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -386,6 +398,95 @@ export function EventEditor({
                         </div>
 
                         <div className="rounded-md border p-4">
+                            <FormLabel>{t('fields.team-size.label')}</FormLabel>
+                            <FormDescription>
+                                {t('fields.team-size.description')}
+                            </FormDescription>
+                            <div className="mt-4 flex gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="options.min_team_size"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full">
+                                            <div className="flex w-full items-center justify-between gap-2">
+                                                <FormLabel>
+                                                    {t(
+                                                        'fields.team-size.fields.minimum.label'
+                                                    )}
+                                                </FormLabel>
+                                                <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    className="h-6 p-2 text-sm text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                                                    type="button"
+                                                    onClick={() => {
+                                                        field.onChange('');
+                                                        form.setValue(
+                                                            'options.min_team_size',
+                                                            ''
+                                                        );
+                                                    }}
+                                                >
+                                                    {t(
+                                                        'fields.team-size.fields.minimum.clear'
+                                                    )}
+                                                </Button>
+                                            </div>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    type="number"
+                                                    min="1"
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="options.max_team_size"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full">
+                                            <div className="flex w-full items-center justify-between gap-2">
+                                                <FormLabel>
+                                                    {t(
+                                                        'fields.team-size.fields.maximum.label'
+                                                    )}
+                                                </FormLabel>
+                                                <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    className="h-6 p-2 text-sm text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                                                    type="button"
+                                                    onClick={() => {
+                                                        field.onChange('');
+                                                        form.setValue(
+                                                            'options.max_team_size',
+                                                            ''
+                                                        );
+                                                    }}
+                                                >
+                                                    {t(
+                                                        'fields.team-size.fields.maximum.clear'
+                                                    )}
+                                                </Button>
+                                            </div>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    type="number"
+                                                    min="1"
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="rounded-md border p-4">
                             <FormLabel>
                                 {t('fields.player-age.label')}
                             </FormLabel>
@@ -477,6 +578,22 @@ export function EventEditor({
                         </div>
                     </div>
                 </div>
+                <FormField
+                    control={form.control}
+                    name="outcome"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>{t('fields.outcome.label')}</FormLabel>
+                            <FormDescription>
+                                {t('fields.outcome.description')}
+                            </FormDescription>
+                            <FormControl>
+                                <Editor {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
                 <div>
                     <Button
                         type="submit"

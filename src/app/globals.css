@@ -84,4 +84,21 @@
   td {
     @apply whitespace-nowrap;
   }
+
+  .markdown h3 { @apply text-2xl font-bold; }
+  .markdown h4 { @apply text-xl font-bold; }
+  .markdown h5 { @apply text-lg font-semibold; }
+  .markdown h6 { @apply font-semibold; }
+
+  .markdown blockquote { 
+    @apply border-l-accent-foreground border-l-4 py-1.5 rounded px-2 bg-white/10;
+  }
+
+  .markdown .mdxeditor-toolbar {
+    @apply bg-transparent border-b-2 border-b-border rounded-none py-2 px-0 mb-0;
+  }
+
+  .markdown .mdxeditor-toolbar span button {
+    @apply bg-transparent border-border border-2 border-solid;
+  }
 }

@@ -70,7 +70,7 @@ export default function Account() {
                 mutate={mutate}
                 Schema={Team.pick({ description: true })}
                 field="description"
-                fieldType="textarea"
+                fieldType="richtext"
             />
             <DangerZone team={team} />
         </div>

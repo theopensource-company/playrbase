@@ -168,7 +168,7 @@ export default function Signin() {
                     className="flex flex-col items-center gap-8"
                     onSubmit={handler}
                 >
-                    <Card className="flex min-w-[400px] flex-col">
+                    <Card className="flex flex-col max-sm:border-none max-sm:px-0">
                         <CardHeader className="flex flex-row justify-between gap-24">
                             <div>
                                 <CardTitle className="text-3xl font-bold">
@@ -178,36 +178,38 @@ export default function Signin() {
                                     {t('tagline')}
                                 </CardDescription>
                             </div>
-                            {!passkey && (
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button
-                                            variant="outline"
-                                            className="capitalize"
-                                            role="combobox"
-                                            disabled={passkeyLoading}
-                                        >
-                                            {t(`scope.${scope}`)}
-                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="w-56">
-                                        <DropdownMenuRadioGroup
-                                            value={scope}
-                                            onValueChange={(s) =>
-                                                setScope(s as scope)
-                                            }
-                                        >
-                                            <DropdownMenuRadioItem value="user">
-                                                {t('scope.user')}
-                                            </DropdownMenuRadioItem>
-                                            <DropdownMenuRadioItem value="admin">
-                                                {t('scope.admin')}
-                                            </DropdownMenuRadioItem>
-                                        </DropdownMenuRadioGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            )}
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        className={cn(
+                                            'capitalize',
+                                            passkey &&
+                                                'pointer-events-none opacity-0'
+                                        )}
+                                        role="combobox"
+                                        disabled={passkeyLoading}
+                                    >
+                                        {t(`scope.${scope}`)}
+                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56">
+                                    <DropdownMenuRadioGroup
+                                        value={scope}
+                                        onValueChange={(s) =>
+                                            setScope(s as scope)
+                                        }
+                                    >
+                                        <DropdownMenuRadioItem value="user">
+                                            {t('scope.user')}
+                                        </DropdownMenuRadioItem>
+                                        <DropdownMenuRadioItem value="admin">
+                                            {t('scope.admin')}
+                                        </DropdownMenuRadioItem>
+                                    </DropdownMenuRadioGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </CardHeader>
                         <CardContent>
                             {!passkey ? (

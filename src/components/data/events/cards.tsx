@@ -1,5 +1,6 @@
 import { Banner } from '@/components/cards/banner';
 import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
+import { MarkdownInline } from '@/components/miscellaneous/Markdown';
 import { buttonVariants } from '@/components/ui/button';
 import {
     Carousel,
@@ -147,7 +148,9 @@ export function EventCard({
                                 </h2>
                                 {event.description && (
                                     <p className="line-clamp-3 overflow-y-hidden text-ellipsis text-sm text-card-foreground/75">
-                                        {event.description}
+                                        <MarkdownInline>
+                                            {event.description}
+                                        </MarkdownInline>
                                     </p>
                                 )}
                             </>

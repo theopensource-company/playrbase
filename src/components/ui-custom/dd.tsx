@@ -28,9 +28,19 @@ import {
 } from '../ui/drawer';
 import { Separator } from '../ui/separator';
 
-export function DD(props: Parameters<typeof Dialog>[0]) {
+export function DD({
+    dismissable,
+    ...props
+}: Parameters<typeof Dialog>[0] & { dismissable?: boolean }) {
     const isMobile = useIsMobileState();
-    if (isMobile) return <Drawer shouldScaleBackground {...props} />;
+    if (isMobile)
+        return (
+            <Drawer
+                shouldScaleBackground
+                {...props}
+                dismissible={dismissable}
+            />
+        );
     return <Dialog {...props} />;
 }
 

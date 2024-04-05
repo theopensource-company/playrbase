@@ -147,6 +147,24 @@
         }
       }
     },
+    "birthdate-selector": {
+      "placeholder": "Pick your birthdate",
+      "dialog-email": {
+        "title": "Parental verification",
+        "description": "Because you are 16 years old or younger, we need an approval from a parent for you to create your account. Please provide the email address of your parent down below to start the verification process.",
+        "placeholder": "Parental email",
+        "invalid-email": "Invalid email",
+        "submit": "Send request"
+      },
+      "dialog-confirm": {
+        "title": "Enter confirmation code",
+        "description": "Your parent should receive an email shortly with a confirmation code, please enter the code down below to confirm their approval.",
+        "invalid-permit": "Code is invalid or has expired",
+        "submit": "Validate",
+        "cancel": "Cancel"
+      },
+      "validated": "Your birthdate was validated"
+    },
     "pagination": {
       "buttons": {
         "first": {
@@ -307,6 +325,10 @@
             "label": "Description",
             "description": "The description of the event that will be shown throughout Playrbase"
           },
+          "outcome": {
+            "label": "Outcome",
+            "description": "Use this field to show results about the event for players"
+          },
           "discoverable": {
             "label": "Discoverable",
             "description": "Is this event is publicly listed throughout Playrbase"
@@ -336,6 +358,20 @@
           "player-count": {
             "label": "Number of players",
             "description": "Controls the minimum and maximum amount of players per signup",
+            "fields": {
+              "minimum": {
+                "label": "Minimum",
+                "clear": "Clear"
+              },
+              "maximum": {
+                "label": "Maximum",
+                "clear": "Clear"
+              }
+            }
+          },
+          "team-size": {
+            "label": "Team size",
+            "description": "Dictates how many players a team must have in total, before being able to signup",
             "fields": {
               "minimum": {
                 "label": "Minimum",

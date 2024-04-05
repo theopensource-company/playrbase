@@ -4,9 +4,11 @@ import AuthMagicLinkEmail from '@/emails/auth-magic-link';
 import { fullname } from '@/lib/zod';
 import { Admin } from '@/schema/resources/admin';
 import { token_secret } from '@/schema/resources/auth';
+import { BirthdatePermit } from '@/schema/resources/birthdate_permit';
 import { User } from '@/schema/resources/user';
 import { surreal } from '@api/lib/surreal';
 import { render } from '@react-email/components';
+import dayjs from 'dayjs';
 import jwt from 'jsonwebtoken';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -121,9 +123,11 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-    const { name, token } = z
+    const { name, birthdate, birthdate_permit, token } = z
         .object({
             name: fullname(),
+            birthdate: z.coerce.date(),
+            birthdate_permit: z.string().length(6).optional(),
             token: z.string(),
         })
         .parse(await req.json());
@@ -152,13 +156,45 @@ export async function PUT(req: NextRequest) {
         );
     }
 
-    const [user] = await surreal.create<User, Pick<User, 'email' | 'name'>>(
-        'user',
-        {
-            email: decoded.subject,
-            name,
-        }
-    );
+    const email = decoded.subject;
+    const extra: Record<string, unknown> = {};
+
+    if (dayjs().diff(birthdate, 'years') <= 16) {
+        if (!birthdate_permit)
+            return NextResponse.json(
+                { success: false, error: 'birthdate_permit_required' },
+                { status: 400 }
+            );
+
+        const [permit] = await surreal.query<[BirthdatePermit | null]>(
+            /* surql */ `SELECT * FROM birthdate_permit WHERE subject = $email AND birthdate = $birthdate AND challenge = $birthdate_permit`,
+            { email, birthdate_permit, birthdate }
+        );
+
+        if (!permit)
+            return NextResponse.json(
+                { success: false, error: 'birthdate_permit_invalid' },
+                { status: 400 }
+            );
+
+        if (dayjs().diff(permit.created, 'minutes') > 30)
+            return NextResponse.json(
+                { success: false, error: 'birthdate_permit_expired' },
+                { status: 400 }
+            );
+
+        extra.parent_email = permit.parent_email;
+    }
+
+    const [user] = await surreal.create<
+        User,
+        Pick<User, 'email' | 'name' | 'birthdate' | 'extra'>
+    >('user', {
+        email,
+        name,
+        birthdate,
+        extra,
+    });
 
     if (!user) {
         return NextResponse.json(
@@ -187,7 +223,7 @@ export async function PUT(req: NextRequest) {
     );
 }
 
-async function verifyEmailVerificationToken(token: string) {
+export async function verifyEmailVerificationToken(token: string) {
     return await new Promise<
         | {
               subject: string;

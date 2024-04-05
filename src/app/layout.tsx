@@ -1,3 +1,4 @@
+import '@mdxeditor/editor/style.css';
 import { ReactNode } from 'react';
 import './globals.css';
 

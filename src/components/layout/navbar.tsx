@@ -29,6 +29,7 @@ import {
     Menu,
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import React, {
     ReactNode,
     createContext,
@@ -407,14 +408,16 @@ const AccountOptions = ({ actor }: { actor?: Actor }) => {
 
 const LanguageOptions = () => {
     const pathname = usePathname();
+    const search = useSearchParams();
     const locale = useLocale();
     const t = useTranslations('languages');
+    const href = `${pathname}?${new URLSearchParams(search).toString()}`;
 
     return (
         <ul className="grid gap-3 p-6">
             {languageEntries.map(([lang, { native, flag }]) => (
                 <NavigationMenuItem key={lang}>
-                    <Link href={pathname} locale={lang} legacyBehavior passHref>
+                    <Link href={href} locale={lang} legacyBehavior passHref>
                         <NavigationMenuLink
                             className={cn(
                                 navigationMenuTriggerStyle(),

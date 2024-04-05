@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 import React, { useId } from 'react';
 import { DefaultValues, Path, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import Editor from '../miscellaneous/Editor';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { FormField } from '../ui/form';
@@ -32,7 +33,7 @@ export function EditorBox<T extends z.AnyZodObject = z.AnyZodObject>({
     mutate: (payload: z.infer<T>) => Promise<unknown>;
     Schema: T;
     field: Path<z.TypeOf<T>>;
-    fieldType?: 'input' | 'textarea' | 'checkbox';
+    fieldType?: 'input' | 'textarea' | 'richtext' | 'checkbox';
 }) {
     const id = useId();
     type Schema = z.infer<typeof Schema>;
@@ -43,6 +44,7 @@ export function EditorBox<T extends z.AnyZodObject = z.AnyZodObject>({
         formState: { errors, isSubmitSuccessful, isValid, isSubmitting },
         reset,
         control,
+        setValue,
     } = useForm<Schema>({
         resolver: zodResolver(Schema),
         defaultValues: {
@@ -81,6 +83,13 @@ export function EditorBox<T extends z.AnyZodObject = z.AnyZodObject>({
                     className="max-w-sm"
                     maxLength={Schema.shape[field].maxLength ?? undefined}
                     rows={8}
+                />
+            ) : fieldType == 'richtext' ? (
+                <Editor
+                    defaultValue={defaultValue}
+                    placeholder={placeholder}
+                    onChange={(v) => setValue(field, v as Schema[typeof field])}
+                    maxLength={Schema.shape[field].maxLength ?? undefined}
                 />
             ) : (
                 <div className="flex items-center gap-2">

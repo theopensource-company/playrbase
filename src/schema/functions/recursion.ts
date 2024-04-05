@@ -7,6 +7,7 @@ const recursion = /* surrealql */ `
             logo: $doc.logo OR $doc.tournament.computed.logo,
             banner: $doc.banner OR $doc.tournament.computed.banner,
             tournament: $doc.tournament.computed.tournament OR $doc.tournament,
+            outcome: $doc.outcome OR $doc.tournament.computed.outcome,
         }
     };
 

@@ -1,6 +1,10 @@
 'use client';
 
 import Container from '@/components/layout/Container';
+import {
+    BirthdateSelector,
+    useBirthdateSelector,
+} from '@/components/logic/BirthdateSelector';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -11,6 +15,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useSurreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
 import { useFeatureFlags } from '@/lib/featureFlags';
@@ -38,11 +43,17 @@ export default function CreateProfile() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const token = z.string().parse(searchParams.get('token'));
-    const followup = z.string().optional().parse(searchParams.get('followup'));
+    const followup = z
+        .string()
+        .optional()
+        .nullable()
+        .parse(searchParams.get('followup'));
     const { refreshUser } = useAuth();
     const decoded = jwt.decode(token);
     const webAuthnAvailable = useWebAuthnAvailable();
     const [featureFlags] = useFeatureFlags();
+    const birthdateSelector = useBirthdateSelector({ token });
+    const { birthdate, birthdatePermit, isBirthdateReady } = birthdateSelector;
 
     const t = useTranslations('pages.account.create-profile');
     const [status, setStatus] = useState<{
@@ -54,7 +65,7 @@ export default function CreateProfile() {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isValid },
     } = useForm<Schema>({
         resolver: zodResolver(Schema),
     });
@@ -85,7 +96,12 @@ export default function CreateProfile() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name, token }),
+            body: JSON.stringify({
+                name,
+                token,
+                birthdate,
+                birthdate_permit: birthdatePermit,
+            }),
         });
 
         const res = await raw.json().catch((_e) => ({
@@ -128,7 +144,7 @@ export default function CreateProfile() {
                 className="flex flex-col items-center gap-8"
                 onSubmit={handler}
             >
-                <Card className="flex flex-col gap-3">
+                <Card className="flex flex-col gap-3 max-sm:border-none max-sm:px-0">
                     <CardHeader className="w-96 max-w-full">
                         <CardTitle className="text-3xl font-bold">
                             {t('title')}
@@ -136,18 +152,40 @@ export default function CreateProfile() {
                         <CardDescription>{t('tagline')}</CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-col gap-2 pt-1">
-                        <Input
-                            placeholder={t('input.name.placeholder')}
-                            {...register('name')}
-                        />
-                        <Input
-                            placeholder={t('input.email.placeholder')}
-                            defaultValue={
-                                (typeof decoded == 'object' && decoded?.sub) ||
-                                ''
-                            }
-                            disabled
-                        />
+                        <div className="max-w-md space-y-4">
+                            <div className="space-y-2">
+                                <Label className="font-bold">
+                                    {t('input.name.label')}
+                                </Label>
+                                <Input
+                                    placeholder={t('input.name.placeholder')}
+                                    {...register('name')}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="font-bold">
+                                    {t('input.birthdate.label')}
+                                </Label>
+                                <p className="text-sm text-muted-foreground">
+                                    {t('input.birthdate.description')}
+                                </p>
+                                <BirthdateSelector {...birthdateSelector} />
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="font-bold">
+                                    {t('input.email.label')}
+                                </Label>
+                                <Input
+                                    placeholder={t('input.email.placeholder')}
+                                    defaultValue={
+                                        (typeof decoded == 'object' &&
+                                            decoded?.sub) ||
+                                        ''
+                                    }
+                                    disabled
+                                />
+                            </div>
+                        </div>
                         <div className="h-4">
                             {status.message && (
                                 <p
@@ -172,7 +210,12 @@ export default function CreateProfile() {
                         </div>
                     </CardContent>
                     <CardFooter>
-                        <Button type="submit">{t('button.continue')}</Button>
+                        <Button
+                            disabled={!isValid || !isBirthdateReady}
+                            type="submit"
+                        >
+                            {t('button.continue')}
+                        </Button>
                     </CardFooter>
                 </Card>
             </form>

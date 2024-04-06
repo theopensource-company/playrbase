@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import { PlayrbaseDefaultAdmin, migrateDatabase } from '../_migratetool.ts';
+import { migrateDatabase } from '../_migratetool.ts';
 
 export const MigrateDatabaseRoute = (app: Express) => {
     app.get('/migrate-database', async (_req, res) => {
@@ -11,10 +11,6 @@ export const MigrateDatabaseRoute = (app: Express) => {
                 SURREAL_DATABASE: 'playrbase-deployment_local',
                 SURREAL_USERNAME: 'root',
                 SURREAL_PASSWORD: 'root',
-                PLAYRBASE_DEFAULT_ADMIN: JSON.stringify({
-                    name: 'Default admin',
-                    email: 'admin@playrbase.local',
-                } satisfies PlayrbaseDefaultAdmin),
             },
             false,
             true,

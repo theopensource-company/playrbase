@@ -493,10 +493,6 @@
     "signin": {
       "title": "Sign in",
       "tagline": "to PlayrBase console",
-      "scope": {
-        "user": "User",
-        "admin": "Platform"
-      },
       "input": {
         "email": {
           "placeholder": "Email address"

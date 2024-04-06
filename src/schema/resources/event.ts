@@ -4,18 +4,17 @@ import { record } from '../../lib/zod.ts';
 const event = /* surrealql */ `
     DEFINE TABLE event SCHEMAFULL
         PERMISSIONS
-            FOR select WHERE $scope = 'admin' 
-                OR (discoverable = true && published = true)
+            FOR select WHERE
+                (discoverable = true && published = true)
                 OR (published = true && id = $event_id)
                 OR organiser.managers.*.user CONTAINS $auth
             FOR create, update, delete WHERE 
-                $scope = 'admin'
-                OR (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers[WHERE role IN ['owner', 'administrator', 'event_manager']].user CONTAINS $auth.id)[0];
+                (SELECT VALUE id FROM organisation WHERE $parent.organiser = id AND managers[WHERE role IN ['owner', 'administrator', 'event_manager']].user CONTAINS $auth.id)[0];
 
     DEFINE FIELD name                       ON event TYPE string ASSERT string::len($value) > 0;
     DEFINE FIELD description                ON event TYPE string;
-    DEFINE FIELD logo                       ON event TYPE option<string> PERMISSIONS FOR update WHERE $scope = 'admin';
-    DEFINE FIELD banner                     ON event TYPE option<string> PERMISSIONS FOR update WHERE $scope = 'admin';
+    DEFINE FIELD logo                       ON event TYPE option<string> PERMISSIONS FOR update NONE;
+    DEFINE FIELD banner                     ON event TYPE option<string> PERMISSIONS FOR update NONE;
     DEFINE FIELD outcome                    ON event TYPE option<string>;
 
     DEFINE FIELD start                      ON event TYPE option<datetime>;

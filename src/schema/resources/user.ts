@@ -28,20 +28,14 @@ const user = /* surrealql */ `
     DEFINE FIELD api_access         ON user DEFAULT false
         PERMISSIONS
             FOR update NONE
-            FOR select WHERE
-                $scope = 'admin' 
-                OR id = $auth;
+            FOR select WHERE id = $auth;
 
     DEFINE FIELD profile_picture    ON user TYPE option<string>
-        PERMISSIONS
-            FOR update WHERE $scope = 'admin';
+        PERMISSIONS FOR update NONE;
             
     DEFINE FIELD created            ON user TYPE datetime VALUE $before OR time::now()  DEFAULT time::now();
     DEFINE FIELD updated            ON user TYPE datetime VALUE time::now()             DEFAULT time::now()
-        PERMISSIONS
-            FOR select WHERE
-                $scope = 'admin' 
-                OR id = $auth.id;
+        PERMISSIONS FOR select WHERE id = $auth.id;
 
     DEFINE FIELD extra              ON user FLEXIBLE TYPE object PERMISSIONS NONE;
 

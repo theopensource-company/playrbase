@@ -16,8 +16,6 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuLabel,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -29,21 +27,12 @@ import { cn } from '@/lib/utils';
 import { useAutoPoke, usePasskeyAuthentication } from '@/lib/webauthn';
 import { useRouter } from '@/locales/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-    ChevronsUpDown,
-    Cog,
-    Info,
-    KeyRound,
-    Loader2,
-    XCircle,
-} from 'lucide-react';
+import { Cog, Info, KeyRound, Loader2, XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
-type scope = 'user' | 'admin';
 
 const Schema = z.object({
     identifier: z.string().email({ message: 'Enter a valid email address!' }),
@@ -52,11 +41,6 @@ const Schema = z.object({
 type Schema = z.infer<typeof Schema>;
 
 export default function Signin() {
-    const defaultScope =
-        (typeof window !== 'undefined' &&
-            (localStorage.getItem('signin.default-scope') as scope)) ||
-        'user';
-
     const [autoPoke, setAutoPoke] = useAutoPoke();
 
     const {
@@ -76,7 +60,6 @@ export default function Signin() {
 
     const [navigating, setNavigating] = useState(false);
     const t = useTranslations('pages.account.signin');
-    const [scope, setScope] = useState<scope>(defaultScope);
     const { user, loading: userLoading } = useAuth();
     const [status, setStatus] = useState<{
         error?: boolean;
@@ -142,7 +125,7 @@ export default function Signin() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ identifier, scope, followup }),
+            body: JSON.stringify({ identifier, followup }),
         });
 
         const res = await raw.json().catch((_e) => ({
@@ -178,38 +161,6 @@ export default function Signin() {
                                     {t('tagline')}
                                 </CardDescription>
                             </div>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        className={cn(
-                                            'capitalize',
-                                            passkey &&
-                                                'pointer-events-none opacity-0'
-                                        )}
-                                        role="combobox"
-                                        disabled={passkeyLoading}
-                                    >
-                                        {t(`scope.${scope}`)}
-                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-56">
-                                    <DropdownMenuRadioGroup
-                                        value={scope}
-                                        onValueChange={(s) =>
-                                            setScope(s as scope)
-                                        }
-                                    >
-                                        <DropdownMenuRadioItem value="user">
-                                            {t('scope.user')}
-                                        </DropdownMenuRadioItem>
-                                        <DropdownMenuRadioItem value="admin">
-                                            {t('scope.admin')}
-                                        </DropdownMenuRadioItem>
-                                    </DropdownMenuRadioGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
                         </CardHeader>
                         <CardContent>
                             {!passkey ? (

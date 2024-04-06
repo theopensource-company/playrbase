@@ -7,9 +7,9 @@ const organisation = /* surrealql */ `
             FOR select FULL
             FOR create WHERE $scope = 'user'
             FOR update WHERE 
-                managers[WHERE role IN ["owner", "adminstrator"]].user CONTAINS $auth.id
+                managers[WHERE role IN ["owner", "administrator"]].user CONTAINS $auth.id
             FOR delete WHERE 
-                managers[WHERE role = "owner" OR (role = "adminstrator" AND org != NONE)].user CONTAINS $auth.id;
+                managers[WHERE role = "owner" OR (role = "administrator" AND org != NONE)].user CONTAINS $auth.id;
 
     DEFINE FIELD name               ON organisation TYPE string
         ASSERT string::len($value) > 0 && string::len($value) <= 32;
@@ -20,11 +20,9 @@ const organisation = /* surrealql */ `
     DEFINE FIELD type               ON organisation VALUE meta::tb(id) DEFAULT meta::tb(id);
 
     DEFINE FIELD logo               ON organisation TYPE option<string>
-        PERMISSIONS
-            FOR update WHERE $scope = 'admin';
+        PERMISSIONS FOR update NONE;
     DEFINE FIELD banner             ON organisation TYPE option<string>
-        PERMISSIONS
-            FOR update WHERE $scope = 'admin';
+        PERMISSIONS FOR update NONE;
     DEFINE FIELD slug               ON organisation TYPE string
         VALUE 
             IF tier IN ["business", "enterprise"] {
@@ -46,7 +44,6 @@ const organisation = /* surrealql */ `
     -- Tested it, utter limit is 16 levels of recursion which is overkill for this scenario :)
     -- There is no usecase for this, nobody will reach this limit
     -- If they do, they break their own management interface.
-    -- It will still work fine for admins because they don't have a subquery in the permission clause :)
 
     DEFINE FIELD part_of            ON organisation TYPE option<record<organisation>>
         VALUE

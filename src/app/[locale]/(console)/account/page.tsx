@@ -31,7 +31,6 @@ import { useSurreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
 import { fullname } from '@/lib/zod';
 import { Actor } from '@/schema/resources/actor';
-import { Admin } from '@/schema/resources/admin';
 import { User } from '@/schema/resources/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
@@ -143,7 +142,7 @@ function EditName() {
     });
 
     const handler = handleSubmit(async ({ name }) => {
-        const result = await surreal.query<[(User | Admin)[]]>(
+        const result = await surreal.query<[User[]]>(
             /* surql */ `
             UPDATE type::thing($auth.id) SET name = $name;
         `,

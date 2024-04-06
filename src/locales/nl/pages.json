@@ -503,10 +503,6 @@
           "label": "Gebruikte Passkey"
         }
       },
-      "scope": {
-        "admin": "Platform",
-        "user": "Gebruiker"
-      },
       "tagline": "op PlayrBase console",
       "title": "Inloggen",
       "options": {

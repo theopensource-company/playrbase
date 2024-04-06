@@ -4,7 +4,7 @@ import { record } from '../../lib/zod.ts';
 const log = /* surrealql */ `
     DEFINE TABLE log SCHEMALESS
         PERMISSIONS
-            FOR select WHERE record = $auth.id OR $scope = 'admin'
+            FOR select WHERE record = $auth.id
             FOR update, delete, create NONE;
 
     DEFINE FIELD record                 ON log          TYPE option<record>;

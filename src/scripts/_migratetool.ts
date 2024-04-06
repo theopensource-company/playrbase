@@ -1,7 +1,6 @@
 import fetch from 'node-fetch';
 import { ExperimentalSurrealHTTP } from 'surrealdb.js';
 import { z } from 'zod';
-import { fullname } from '../lib/zod.ts';
 import * as schemas from '../schema/index.ts';
 
 export const MigrationEnvironment = z.object({
@@ -10,17 +9,9 @@ export const MigrationEnvironment = z.object({
     SURREAL_DATABASE: z.string(),
     SURREAL_USERNAME: z.string(),
     SURREAL_PASSWORD: z.string(),
-    PLAYRBASE_DEFAULT_ADMIN: z.string().optional(),
 });
 
 export type MigrationEnvironment = z.infer<typeof MigrationEnvironment>;
-
-export const PlayrbaseDefaultAdmin = z.object({
-    name: fullname(),
-    email: z.string().email(),
-});
-
-export type PlayrbaseDefaultAdmin = z.infer<typeof PlayrbaseDefaultAdmin>;
 
 export const migrateDatabase = async (
     envRaw: MigrationEnvironment,
@@ -58,26 +49,6 @@ export const migrateDatabase = async (
                 });
             })
         );
-
-        if (env.PLAYRBASE_DEFAULT_ADMIN) {
-            log?.('\nDetected default admin credentials\n');
-
-            try {
-                const user = PlayrbaseDefaultAdmin.parse(
-                    JSON.parse(env.PLAYRBASE_DEFAULT_ADMIN)
-                );
-
-                log?.(' + Setting default admin credentials');
-                await db.create('admin', user).catch((e) => {
-                    log?.(' - ' + e.toString());
-                });
-            } catch (e) {
-                const err = e as Error;
-                log?.(' - ' + err.toString());
-            }
-        } else {
-            log?.('\nNo default admin credentials were found');
-        }
 
         log?.('\nFinished database migrations');
         if (exit) process.exit(0);

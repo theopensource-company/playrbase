@@ -1,7 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Profile, unknownProfile } from '@/schema/resources/profile';
 import { Building, MailPlus, Users } from 'lucide-react';
-import Image from 'next/image';
 import React, { ReactNode } from 'react';
 import {
     AvatarFallback,
@@ -103,20 +102,7 @@ export function Avatar({
                 </AvatarFallback>
             </RenderAvatar>
             {renderBadge && 'type' in profile ? (
-                profile.type == 'admin' ? (
-                    <Badge
-                        text="Platform admin"
-                        icon={
-                            <Image
-                                src="/favicon.ico"
-                                alt="Playrbase Logo"
-                                width="50"
-                                height="50"
-                                className="h-full w-full text-white"
-                            />
-                        }
-                    />
-                ) : profile.type == 'organisation' ? (
+                profile.type == 'organisation' ? (
                     <Badge
                         text="Organisation"
                         icon={<Building className="h-full w-full" />}

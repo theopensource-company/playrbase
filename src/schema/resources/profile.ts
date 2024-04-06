@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { Admin } from './admin';
 import { Event } from './event';
 import { Organisation, OrganisationSafeParse } from './organisation';
 import { Team, TeamAnonymous } from './team';
@@ -28,7 +27,6 @@ export const Profile = z.union([
     User,
     UserAnonymous,
     UserAsRelatedUser,
-    Admin,
     Organisation,
     OrganisationSafeParse,
     Team,

@@ -5,7 +5,6 @@ import {
 } from '@/app/(api)/lib/token';
 import AuthChangeEmailEmail from '@/emails/auth-change-email';
 import AuthRevertChangeEmailEmail from '@/emails/auth-revert-change-email';
-import { Admin } from '@/schema/resources/admin';
 import { token_secret } from '@/schema/resources/auth';
 import { User } from '@/schema/resources/user';
 import { surreal } from '@api/lib/surreal';
@@ -27,11 +26,11 @@ export async function POST(req: NextRequest) {
         .email()
         .parse((await req.json()).email);
 
-    const [res] = await surreal.query<[(User | Admin)[]]>(
+    const [res] = await surreal.query<[User[]]>(
         /* surrealql */ `
-            SELECT * FROM type::table($scope_name) WHERE id = $subject
+            SELECT * FROM type::thing('user', $subject)
         `,
-        { subject: token.ID, scope_name: token.SC, new_email }
+        { subject: token.ID, new_email }
     );
 
     const record = res[0];
@@ -110,10 +109,10 @@ export async function GET(req: NextRequest) {
             { status: 400 }
         );
 
-    const [res] = await surreal.query<[(User | Admin)[]]>(
+    const [res] = await surreal.query<[User[]]>(
         /* surrealql */ `
             BEGIN;
-            LET $record = (SELECT * FROM type::table($scope_name) WHERE id = $subject)[0];
+            LET $record = (SELECT * FROM ONLY type::thing('user', $subject));
             RETURN IF ($record.id) THEN {
                 RETURN UPDATE type::thing($record.id) SET email = $new_email;
             } ELSE RETURN [] END;
@@ -121,7 +120,6 @@ export async function GET(req: NextRequest) {
         `,
         {
             subject: decoded.subject,
-            scope_name: decoded.scope,
             new_email: decoded.new_email,
         }
     );

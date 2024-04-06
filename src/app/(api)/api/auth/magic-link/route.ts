@@ -2,7 +2,6 @@ import { sendEmail } from '@/app/(api)/lib/email';
 import { generateUserToken } from '@/app/(api)/lib/token';
 import AuthMagicLinkEmail from '@/emails/auth-magic-link';
 import { fullname } from '@/lib/zod';
-import { Admin } from '@/schema/resources/admin';
 import { token_secret } from '@/schema/resources/auth';
 import { BirthdatePermit } from '@/schema/resources/birthdate_permit';
 import { User } from '@/schema/resources/user';
@@ -14,24 +13,23 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 export async function POST(req: NextRequest) {
-    const { identifier, scope, followup } = z
+    const { identifier, followup } = z
         .object({
             identifier: z.string().email(),
-            scope: z.union([z.literal('admin'), z.literal('user')]),
             followup: z.string().optional(),
         })
         .parse(await req.json());
 
-    const [res] = await surreal.query<[(User | Admin)[]]>(
+    const [res] = await surreal.query<[User[]]>(
         /* surrealql */ `
-            SELECT * FROM type::table($scope_name) WHERE email = $identifier
+            SELECT * FROM user WHERE email = $identifier
         `,
-        { identifier, scope_name: scope }
+        { identifier }
     );
 
     const record = res[0];
     const email = record?.email || identifier;
-    const sub = record ? record.id : scope == 'user' ? identifier : undefined;
+    const sub = record ? record.id : identifier;
 
     if (sub) {
         const token = jwt.sign(
@@ -40,7 +38,7 @@ export async function POST(req: NextRequest) {
                 iss: 'playrbase.app',
                 aud: 'playrbase.app:verify-email',
                 sub,
-                SC: scope,
+                SC: 'user',
             },
             token_secret,
             {
@@ -89,11 +87,11 @@ export async function GET(req: NextRequest) {
         });
     }
 
-    const [res] = await surreal.query<[(User | Admin)[]]>(
+    const [res] = await surreal.query<[User[]]>(
         /* surrealql */ `
-            SELECT * FROM type::table($scope_name) WHERE id = $subject;
+            SELECT * FROM type::thing('user', $subject);
         `,
-        { subject: decoded.subject, scope_name: decoded.scope }
+        { subject: decoded.subject }
     );
 
     const user = res?.[0];

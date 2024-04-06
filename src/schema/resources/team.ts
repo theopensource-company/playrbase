@@ -17,11 +17,9 @@ const team = /* surrealql */ `
         PERMISSIONS FOR update NONE;
 
     DEFINE FIELD logo           ON team TYPE option<string>
-        PERMISSIONS
-            FOR update WHERE $scope = 'admin';
+        PERMISSIONS FOR update NONE;
     DEFINE FIELD banner         ON team TYPE option<string>
-        PERMISSIONS
-            FOR update WHERE $scope = 'admin';
+        PERMISSIONS FOR update NONE;
 
     DEFINE FIELD slug           ON team VALUE meta::id(id);
     DEFINE FIELD type           ON team VALUE meta::tb(id) DEFAULT meta::tb(id);

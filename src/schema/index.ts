@@ -4,7 +4,6 @@ export { default as fn_team } from './functions/team.ts';
 export { default as attends } from './relations/attends.ts';
 export { default as manages } from './relations/manages.ts';
 export { default as plays_in } from './relations/plays_in.ts';
-export { default as admin } from './resources/admin.ts';
 export { default as auth } from './resources/auth.ts';
 export { default as birthdate_permit } from './resources/birthdate_permit.ts';
 export { default as challenge } from './resources/challenge.ts';

@@ -296,7 +296,7 @@ function useData({
                     $registration;
                     $registration.out.computed.tournament.*;
                     $auth IN $registration.players.id;
-                    $auth IN $registration.out.organiser.managers[?role IN ['owner', 'adminstrator', 'event_manager']].user;
+                    $auth IN $registration.out.organiser.managers[?role IN ['owner', 'administrator', 'event_manager']].user;
                 `,
                 {
                     slug,

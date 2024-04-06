@@ -43,7 +43,7 @@ export const BirthdatePermitEmail = ({
             <Body style={main}>
                 <Container style={container}>
                     <Img
-                        src={`${baseUrl}/LogoFull.svg`}
+                        src={`${baseUrl}/static/logo.png`}
                         height="50"
                         alt={`${brand_name} logo`}
                         style={logo}

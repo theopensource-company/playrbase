@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/navigation-menu.tsx';
 import { useSurreal } from '@/lib/Surreal.tsx';
 import { useAuth } from '@/lib/auth';
+import { brand_name } from '@/lib/branding.ts';
 import { useFeatureFlags } from '@/lib/featureFlags.tsx';
 import { useScrolledContext, useScrolledState } from '@/lib/scrolled.tsx';
 import { cn } from '@/lib/utils.ts';
@@ -19,6 +20,7 @@ import { Link, usePathname } from '@/locales/navigation.ts';
 import { Actor, linkToActorOverview } from '@/schema/resources/actor.ts';
 import { Organisation } from '@/schema/resources/organisation.ts';
 import { Team } from '@/schema/resources/team.ts';
+import LogoLg from '@public/static/logo-lg.png';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -29,6 +31,7 @@ import {
     Menu,
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import React, {
     ReactNode,
@@ -42,7 +45,6 @@ import React, {
 import ReactCountryFlag from 'react-country-flag';
 import * as portals from 'react-reverse-portal';
 import { z } from 'zod';
-import LogoFull from '../../assets/LogoFull.svg';
 import { Profile } from '../cards/profile.tsx';
 import { Button } from '../ui/button.tsx';
 import { Skeleton } from '../ui/skeleton.tsx';
@@ -138,15 +140,15 @@ export const RenderNavbar = ({
                           : 'md:h-36'
                 )}
             >
-                <div className="flex items-center justify-between max-md:my-4 max-md:w-full">
-                    <Link href="/">
-                        <LogoFull
+                <div className="flex max-w-full items-center justify-between max-md:my-4 max-md:w-full">
+                    <Link href="/" className="max-w-min">
+                        <Image
+                            src={LogoLg}
+                            alt={`${brand_name} logo`}
                             className={cn(
                                 'max-w-min transition-height',
                                 scrolled ? 'h-9' : 'h-10 sm:h-12'
                             )}
-                            viewBox="0 0 7467 2000"
-                            preserveAspectRatio="xMaxYMin meet"
                         />
                     </Link>
                     <Button

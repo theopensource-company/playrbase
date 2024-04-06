@@ -39,6 +39,9 @@
       "@email/*": [
         "./src/emails/*"
       ],
+      "@public/*": [
+        "./public/*"
+      ],
     },
     "plugins": [
       {

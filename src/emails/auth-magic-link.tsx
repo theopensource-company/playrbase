@@ -1,3 +1,4 @@
+import { brand_name } from '@/lib/branding';
 import {
     Body,
     Button,
@@ -33,7 +34,7 @@ export const AuthMagicLinkEmail = ({
     return (
         <Html lang="en" dir="ltr">
             <Head>
-                <title>Your sign in link for PlayrBase</title>
+                <title>Your sign in link for {brand_name}</title>
                 <Font
                     fontFamily="Inter"
                     fallbackFontFamily="Arial"
@@ -45,24 +46,24 @@ export const AuthMagicLinkEmail = ({
                     fontStyle="normal"
                 />
             </Head>
-            <Preview>Your sign in link for PlayrBase</Preview>
+            <Preview>Your sign in link for {brand_name}</Preview>
             <Body style={main}>
                 <Container style={container}>
                     <Img
                         src={`${baseUrl}/LogoFull.svg`}
                         height="50"
-                        alt="PlayrBase"
+                        alt={`${brand_name} logo`}
                         style={logo}
                     />
                     <Heading style={heading}>
-                        Your PlayrBase sign in link
+                        Your {brand_name} sign in link
                     </Heading>
                     <Text style={paragraph}>
                         The following link will be valid for 30 minutes.
                     </Text>
                     <Section style={buttonContainer}>
                         <Button style={button} href={url}>
-                            Continue to PlayrBase
+                            Continue to {brand_name}
                         </Button>
                     </Section>
                     <Hr style={line} />

@@ -242,11 +242,11 @@
         "fields": {
           "name": {
             "label": "Name",
-            "description": "The name of the event that will be shown throughout Playrbase"
+            "description": "The name of the event that will be shown throughout {brand_name}"
           },
           "description": {
             "label": "Description",
-            "description": "The description of the event that will be shown throughout Playrbase"
+            "description": "The description of the event that will be shown throughout {brand_name}"
           },
           "tournament": {
             "label": "Part of tournament",
@@ -254,7 +254,7 @@
           },
           "discoverable": {
             "label": "Discoverable",
-            "description": "Is this event is publicly listed throughout Playrbase"
+            "description": "Is this event is publicly listed throughout {brand_name}"
           },
           "published": {
             "label": "Published",
@@ -319,11 +319,11 @@
           },
           "name": {
             "label": "Name",
-            "description": "The name of the event that will be shown throughout Playrbase"
+            "description": "The name of the event that will be shown throughout {brand_name}"
           },
           "description": {
             "label": "Description",
-            "description": "The description of the event that will be shown throughout Playrbase"
+            "description": "The description of the event that will be shown throughout {brand_name}"
           },
           "outcome": {
             "label": "Outcome",
@@ -331,7 +331,7 @@
           },
           "discoverable": {
             "label": "Discoverable",
-            "description": "Is this event is publicly listed throughout Playrbase"
+            "description": "Is this event is publicly listed throughout {brand_name}"
           },
           "published": {
             "label": "Published",
@@ -411,15 +411,15 @@
           },
           "name": {
             "label": "Name",
-            "description": "The name of the event that will be shown throughout Playrbase"
+            "description": "The name of the event that will be shown throughout {brand_name}"
           },
           "description": {
             "label": "Description",
-            "description": "The description of the event that will be shown throughout Playrbase"
+            "description": "The description of the event that will be shown throughout {brand_name}"
           },
           "discoverable": {
             "label": "Discoverable",
-            "description": "Is this event is publicly listed throughout Playrbase"
+            "description": "Is this event is publicly listed throughout {brand_name}"
           },
           "published": {
             "label": "Published",

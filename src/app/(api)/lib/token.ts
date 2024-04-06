@@ -2,6 +2,7 @@ import { token_secret } from '@/schema/resources/auth';
 import jwt from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
 import { sessionLength } from '../config/auth';
+import { issuer } from '../config/env';
 
 export function generateUserToken({
     SC,
@@ -24,9 +25,9 @@ export function generateUserToken({
             SC,
             TK,
             ID,
-            iss: 'playrbase.app',
+            iss: issuer,
             exp: Math.floor(Date.now() / 1000) + maxAge,
-            aud: 'playrbase.app:user-token',
+            aud: `${issuer}:user-token`,
         },
         token_secret,
         {
@@ -65,9 +66,9 @@ export function generateCookieHeader({
 export function validateUserToken(token: string) {
     try {
         const decoded = jwt.verify(token, token_secret, {
-            issuer: 'playrbase.app',
+            issuer,
             algorithms: ['HS512'],
-            audience: 'playrbase.app:user-token',
+            audience: `${issuer}:user-token`,
         });
 
         return decoded;

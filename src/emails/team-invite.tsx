@@ -1,3 +1,4 @@
+import { brand_name } from '@/lib/branding';
 import {
     Body,
     Button,
@@ -37,7 +38,7 @@ export const TeamInviteEmail = ({
     return (
         <Html lang="en" dir="ltr">
             <Head>
-                <title>Playrbase Team invite</title>
+                <title>{brand_name} Team invite</title>
                 <Font
                     fontFamily="Inter"
                     fallbackFontFamily="Arial"
@@ -50,20 +51,20 @@ export const TeamInviteEmail = ({
                 />
             </Head>
             <Preview>
-                {invited_by} invited you to join their team on Playrbase!
+                {invited_by} invited you to join their team on {brand_name}!
             </Preview>
             <Body style={main}>
                 <Container style={container}>
                     <Img
                         src={`${baseUrl}/LogoFull.svg`}
                         height="50"
-                        alt="PlayrBase"
+                        alt={`${brand_name} logo`}
                         style={logo}
                     />
-                    <Heading style={heading}>Playrbase Team invite</Heading>
+                    <Heading style={heading}>{brand_name} Team invite</Heading>
                     <Text style={paragraph}>
                         {invited_by} invited you to join the {team} team on
-                        Playrbase.
+                        {brand_name}.
                     </Text>
                     <Section style={buttonContainer}>
                         <Button style={button} href={url}>

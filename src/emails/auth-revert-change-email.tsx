@@ -1,3 +1,4 @@
+import { brand_name } from '@/lib/branding';
 import {
     Body,
     Button,
@@ -32,7 +33,9 @@ export const AuthRevertChangeEmailEmail = ({
     return (
         <Html lang="en" dir="ltr">
             <Head>
-                <title>The Email for your Playrbase account was changed</title>
+                <title>
+                    The Email for your {brand_name} account was changed
+                </title>
                 <Font
                     fontFamily="Inter"
                     fallbackFontFamily="Arial"
@@ -44,16 +47,20 @@ export const AuthRevertChangeEmailEmail = ({
                     fontStyle="normal"
                 />
             </Head>
-            <Preview>The Email for your Playrbase account was changed</Preview>
+            <Preview>
+                The Email for your {brand_name} account was changed
+            </Preview>
             <Body style={main}>
                 <Container style={container}>
                     <Img
                         src={`${baseUrl}/LogoFull.svg`}
                         height="50"
-                        alt="PlayrBase"
+                        alt={`${brand_name} logo`}
                         style={logo}
                     />
-                    <Heading style={heading}>Changed Playrbase Email</Heading>
+                    <Heading style={heading}>
+                        Changed {brand_name} Email
+                    </Heading>
                     <Text style={paragraph}>
                         If you did not change your Email to {new_email}, then
                         please use the following link within 48 hours to revert

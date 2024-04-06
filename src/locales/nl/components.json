@@ -232,15 +232,15 @@
         },
         "fields": {
           "description": {
-            "description": "De beschrijving van het evenement die overal in Playrbase wordt getoond",
+            "description": "De beschrijving van het evenement die overal in {brand_name} wordt getoond",
             "label": "Beschrijving"
           },
           "discoverable": {
-            "description": "Is dit evenement openbaar vindbaar in Playrbase",
+            "description": "Is dit evenement openbaar vindbaar in {brand_name}",
             "label": "Vindbaar"
           },
           "name": {
-            "description": "De naam van het evenement dat overal in Playrbase wordt weergegeven",
+            "description": "De naam van het evenement dat overal in {brand_name} wordt weergegeven",
             "label": "Naam"
           },
           "published": {
@@ -300,7 +300,7 @@
             "optional-settings": "Optionele instellingen"
           },
           "description": {
-            "description": "De beschrijving van het evenement die overal in Playrbase wordt getoond",
+            "description": "De beschrijving van het evenement die overal in {brand_name} wordt getoond",
             "label": "Beschrijving"
           },
           "outcome": {
@@ -308,7 +308,7 @@
             "description": "Gebruik dit veldt om resultaten aan de spelers te tonen"
           },
           "discoverable": {
-            "description": "Is dit evenement openbaar vindbaar in Playrbase",
+            "description": "Is dit evenement openbaar vindbaar in {brand_name}",
             "label": "Vindbaar"
           },
           "duration": {
@@ -330,7 +330,7 @@
             "label": "Handmatige goedkeuring"
           },
           "name": {
-            "description": "De naam van het evenement dat overal in Playrbase wordt weergegeven",
+            "description": "De naam van het evenement dat overal in {brand_name} wordt weergegeven",
             "label": "Naam"
           },
           "player-age": {
@@ -392,11 +392,11 @@
             "optional-settings": "Optionele instellingen"
           },
           "description": {
-            "description": "De beschrijving van het evenement die overal in Playrbase wordt getoond",
+            "description": "De beschrijving van het evenement die overal in {brand_name} wordt getoond",
             "label": "Beschrijving"
           },
           "discoverable": {
-            "description": "Is dit evenement openbaar vindbaar in Playrbase",
+            "description": "Is dit evenement openbaar vindbaar in {brand_name}",
             "label": "Vindbaar"
           },
           "tournament": {
@@ -423,7 +423,7 @@
             "label": "Handmatige goedkeuring"
           },
           "name": {
-            "description": "De naam van het evenement dat overal in Playrbase wordt weergegeven",
+            "description": "De naam van het evenement dat overal in {brand_name} wordt weergegeven",
             "label": "Naam"
           },
           "player-age": {

@@ -85,7 +85,7 @@
         "create": "Passkey aanmaken",
         "delete": {
           "cancel": "Annuleren",
-          "description": "Het verwijderen van deze passkey zal <b>permanent</b> toegang weigeren tot Playrbase met deze Passkey. <br></br><br></br> Herhaal de naam van de Passkey om de verwijdering te bevestigen",
+          "description": "Het verwijderen van deze passkey zal <b>permanent</b> toegang weigeren tot {brand_name} met deze Passkey. <br></br><br></br> Herhaal de naam van de Passkey om de verwijdering te bevestigen",
           "repeat": "Herhaal",
           "submit": "Permanent verwijderen",
           "title": "Passkey verwijderen",
@@ -374,24 +374,24 @@
         "title": "Instellingen",
         "not_found": "Organisatie niet gevonden",
         "name": {
-          "description": "Dit is de publieke naam van je organisatie, die wordt getoond door heel Playrbase.",
+          "description": "Dit is de publieke naam van je organisatie, die wordt getoond door heel {brand_name}.",
           "title": "Organisatie naam",
           "submit": "Wijziging opslaan"
         },
         "email": {
-          "description": "Dit is het publieke e-mailadres van je organisatie, die wordt getoond door heel Playrbase.",
+          "description": "Dit is het publieke e-mailadres van je organisatie, die wordt getoond door heel {brand_name}.",
           "title": "Organisatie e-mailadres",
           "submit": "Wijziging opslaan",
           "placeholder": "hallo@foo.bar"
         },
         "description": {
-          "description": "Dit is de publieke beschrijving van je organisatie, die wordt getoond door heel Playrbase.",
+          "description": "Dit is de publieke beschrijving van je organisatie, die wordt getoond door heel {brand_name}.",
           "title": "Beschrijving",
           "submit": "Wijziging opslaan",
           "placeholder": "Geef je organisatie een goede omschrijving, zodat anderen kunnen zien hoe jullie te werk gaan."
         },
         "website": {
-          "description": "Dit is de publieke website van je organisatie, die wordt getoond door heel Playrbase.",
+          "description": "Dit is de publieke website van je organisatie, die wordt getoond door heel {brand_name}.",
           "title": "Website",
           "submit": "Wijziging opslaan",
           "placeholder": "https://www.foo.bar"
@@ -409,7 +409,7 @@
           "description": "Het verwijderen van deze organisatie zal <b>permanent</b> alle gegevens over deze organisatie, alle evenementen, en andere gerelateerde informatie verwijderen. Deze actie <b>kan niet worden teruggedraaid!</b>"
         },
         "logo": {
-          "description": "Dit is het publieke logo van je organisatie, die wordt getoond door heel Playrbase.",
+          "description": "Dit is het publieke logo van je organisatie, die wordt getoond door heel {brand_name}.",
           "title": "Organisatie logo"
         }
       },
@@ -503,7 +503,7 @@
           "label": "Gebruikte Passkey"
         }
       },
-      "tagline": "op PlayrBase console",
+      "tagline": "op {brand_name}",
       "title": "Inloggen",
       "options": {
         "label": "Opties",

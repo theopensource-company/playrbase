@@ -1,3 +1,4 @@
+import { email_from } from '@/app/(api)/config/env';
 import { sendEmail } from '@/app/(api)/lib/email';
 import { extractUserTokenFromRequest } from '@/app/(api)/lib/token';
 import BirthdatePermitEmail from '@/emails/birthdate-permit-email';
@@ -9,6 +10,7 @@ import dayjs from 'dayjs';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { verifyEmailVerificationToken } from '../../auth/magic-link/route';
+import { brand_name } from '@/lib/branding';
 
 async function getSubject(req: NextRequest, body: Record<string, unknown>) {
     const { decoded: token } = extractUserTokenFromRequest(req);
@@ -98,9 +100,9 @@ export async function POST(req: NextRequest) {
         );
 
     await sendEmail({
-        from: 'noreply@playrbase.app',
+        from: email_from,
         to: parent_email,
-        subject: 'Child account on Playrbase',
+        subject: `Child account on ${brand_name}`,
         text: render(BirthdatePermitEmail({ challenge: permit.challenge }), {
             plainText: true,
         }),

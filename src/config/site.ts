@@ -1,16 +1,14 @@
+import { brand_description, brand_name } from '@/lib/branding';
+
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-    name: 'PlayrBase',
-    description:
-        'PlayrBase is an all-in-one event and player management solution. Get started for free!',
+    name: brand_name,
+    description: brand_description,
     mainNav: [
         {
             title: 'Home',
             href: '/',
         },
     ],
-    links: {
-        github: 'https://github.com/theopensource-company/playrbase',
-    },
 };

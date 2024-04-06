@@ -11,6 +11,7 @@ import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
 import { Markdown } from '@/components/miscellaneous/Markdown';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { useSurreal } from '@/lib/Surreal';
+import { brand_name } from '@/lib/branding';
 import { useShare } from '@/lib/share';
 import { cn } from '@/lib/utils';
 import { Link } from '@/locales/navigation';
@@ -91,7 +92,7 @@ export default function Page() {
                             className="bg-white/10 backdrop-blur hover:bg-white/20"
                             onClick={() =>
                                 share({
-                                    text: `Checkout ${event.name} by ${organiser.name} on Playrbase`,
+                                    text: `Checkout ${event.name} by ${organiser.name} on ${brand_name}`,
                                 })
                             }
                         >

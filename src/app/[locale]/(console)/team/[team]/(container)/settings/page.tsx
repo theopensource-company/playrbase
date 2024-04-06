@@ -21,6 +21,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { PageTitle } from '../../components/PageTitle';
+import { brand_name } from '@/lib/branding';
 
 export default function Account() {
     const params = useParams();
@@ -40,7 +41,7 @@ export default function Account() {
                         <h2 className="text-xl font-bold">Team Logo</h2>
                         <p>
                             This is the public logo of your team, shown all
-                            throughout Playrbase.
+                            throughout {brand_name}.
                         </p>
                     </div>
                     <UploadImage
@@ -55,7 +56,7 @@ export default function Account() {
             </div>
             <EditorBox
                 title="Team name"
-                description="This is the public name of your team, shown all throughout Playrbase."
+                description={`This is the public name of your team, shown all throughout ${brand_name}.`}
                 submit="Save name"
                 defaultValue={team.name}
                 mutate={mutate}
@@ -64,7 +65,7 @@ export default function Account() {
             />
             <EditorBox
                 title="Team description"
-                description="This is the public description of your team, shown all throughout Playrbase."
+                description={`This is the public description of your team, shown all throughout ${brand_name}.`}
                 submit="Save description"
                 defaultValue={team.description}
                 mutate={mutate}

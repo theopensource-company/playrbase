@@ -1,3 +1,4 @@
+import { brand_name } from '@/lib/branding';
 import {
     Body,
     Button,
@@ -31,7 +32,7 @@ export const AuthChangeEmailEmail = ({
         <Html lang="en" dir="ltr">
             <Head>
                 <title>
-                    Confirm the changed Email for your Playrbase account
+                    Confirm the changed Email for your {brand_name} account
                 </title>
                 <Font
                     fontFamily="Inter"
@@ -45,17 +46,19 @@ export const AuthChangeEmailEmail = ({
                 />
             </Head>
             <Preview>
-                Confirm the changed Email for your Playrbase account
+                Confirm the changed Email for your {brand_name} account
             </Preview>
             <Body style={main}>
                 <Container style={container}>
                     <Img
                         src={`${baseUrl}/LogoFull.svg`}
                         height="50"
-                        alt="PlayrBase"
+                        alt={`${brand_name} logo`}
                         style={logo}
                     />
-                    <Heading style={heading}>Changed Playrbase Email</Heading>
+                    <Heading style={heading}>
+                        Changed {brand_name} Email
+                    </Heading>
                     <Text style={paragraph}>
                         The following link will be valid for 30 minutes.
                     </Text>

@@ -9,7 +9,9 @@ import { User } from '@/schema/resources/user';
 import { render } from '@react-email/components';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { email_from } from '../../config/env';
 import { sendEmail } from '../../lib/email';
+import { brand_name } from '@/lib/branding';
 
 const Body = Invite.pick({
     origin: true,
@@ -118,9 +120,9 @@ export async function POST(req: NextRequest) {
         };
 
         await sendEmail({
-            from: 'noreply@playrbase.app',
+            from: email_from,
             to: invite.target_email,
-            subject: 'PlayrBase Team invite',
+            subject: `${brand_name} Team invite`,
             text: render(TeamInviteEmail(renderProps), {
                 plainText: true,
             }),
@@ -135,9 +137,9 @@ export async function POST(req: NextRequest) {
         };
 
         await sendEmail({
-            from: 'noreply@playrbase.app',
+            from: email_from,
             to: invite.target_email,
-            subject: 'PlayrBase Team invite',
+            subject: `${brand_name} Team invite`,
             text: render(OrganisationInviteEmail(renderProps), {
                 plainText: true,
             }),

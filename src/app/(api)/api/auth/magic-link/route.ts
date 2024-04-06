@@ -1,6 +1,8 @@
+import { email_from, issuer } from '@/app/(api)/config/env';
 import { sendEmail } from '@/app/(api)/lib/email';
 import { generateUserToken } from '@/app/(api)/lib/token';
 import AuthMagicLinkEmail from '@/emails/auth-magic-link';
+import { brand_name } from '@/lib/branding';
 import { fullname } from '@/lib/zod';
 import { token_secret } from '@/schema/resources/auth';
 import { BirthdatePermit } from '@/schema/resources/birthdate_permit';
@@ -35,8 +37,8 @@ export async function POST(req: NextRequest) {
         const token = jwt.sign(
             {
                 exp: Math.floor(Date.now() / 1000) + 60 * 30,
-                iss: 'playrbase.app',
-                aud: 'playrbase.app:verify-email',
+                iss: issuer,
+                aud: `${issuer}:verify-email`,
                 sub,
                 SC: 'user',
             },
@@ -47,9 +49,9 @@ export async function POST(req: NextRequest) {
         );
 
         await sendEmail({
-            from: 'noreply@playrbase.app',
+            from: email_from,
             to: email,
-            subject: 'PlayrBase signin link',
+            subject: `${brand_name} signin link`,
             text: render(AuthMagicLinkEmail({ token, followup }), {
                 plainText: true,
             }),
@@ -233,8 +235,8 @@ export async function verifyEmailVerificationToken(token: string) {
             token,
             token_secret,
             {
-                issuer: 'playrbase.app',
-                audience: 'playrbase.app:verify-email',
+                issuer,
+                audience: `${issuer}:verify-email`,
                 algorithms: ['HS512'],
             },
             (error, decoded) => {

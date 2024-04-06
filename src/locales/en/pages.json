@@ -221,7 +221,7 @@
         },
         "delete": {
           "title": "Delete Passkey",
-          "description": "Deleting this passkey will <b>permanently</b> disallow access to Playrbase via this Passkey. <br></br><br></br> To confirm the deletion, please repeat the Passkey's name",
+          "description": "Deleting this passkey will <b>permanently</b> disallow access to {brand_name} via this Passkey. <br></br><br></br> To confirm the deletion, please repeat the Passkey's name",
           "toast": {
             "deleting-passkey": "Deleting Passkey",
             "deleted-passkey": "Deleted Passkey"
@@ -440,28 +440,28 @@
         "not_found": "Organisation not found",
         "logo": {
           "title": "Organisation logo",
-          "description": "This is the public logo of your organisation, shown all throughout Playrbase."
+          "description": "This is the public logo of your organisation, shown all throughout {brand_name}."
         },
         "name": {
           "title": "Organisation name",
-          "description": "This is the public name of your organisation, shown all throughout Playrbase.",
+          "description": "This is the public name of your organisation, shown all throughout {brand_name}.",
           "submit": "Save changes"
         },
         "email": {
           "title": "Organisation email",
-          "description": "This is the public email of your organisation, shown all throughout Playrbase.",
+          "description": "This is the public email of your organisation, shown all throughout {brand_name}.",
           "placeholder": "hello@foo.bar",
           "submit": "Save changes"
         },
         "website": {
           "title": "Website",
-          "description": "This is the public website of your organisation, shown all throughout Playrbase.",
+          "description": "This is the public website of your organisation, shown all throughout {brand_name}.",
           "placeholder": "https://www.foo.bar",
           "submit": "Save changes"
         },
         "description": {
           "title": "Description",
-          "description": "This is the public description of your organisation, shown all throughout Playrbase.",
+          "description": "This is the public description of your organisation, shown all throughout {brand_name}.",
           "placeholder": "Give your organisation a nice description to give others a look and feel of how you roll.",
           "submit": "Save changes"
         },
@@ -492,7 +492,7 @@
   "account": {
     "signin": {
       "title": "Sign in",
-      "tagline": "to PlayrBase console",
+      "tagline": "to {brand_name}",
       "input": {
         "email": {
           "placeholder": "Email address"

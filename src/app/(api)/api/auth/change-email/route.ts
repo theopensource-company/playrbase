@@ -1,3 +1,4 @@
+import { email_from, issuer } from '@/app/(api)/config/env';
 import { sendEmail } from '@/app/(api)/lib/email';
 import {
     extractUserTokenFromRequest,
@@ -5,6 +6,7 @@ import {
 } from '@/app/(api)/lib/token';
 import AuthChangeEmailEmail from '@/emails/auth-change-email';
 import AuthRevertChangeEmailEmail from '@/emails/auth-revert-change-email';
+import { brand_name } from '@/lib/branding';
 import { token_secret } from '@/schema/resources/auth';
 import { User } from '@/schema/resources/user';
 import { surreal } from '@api/lib/surreal';
@@ -43,8 +45,8 @@ export async function POST(req: NextRequest) {
     const token_verify = jwt.sign(
         {
             exp: Math.floor(Date.now() / 1000) + 60 * 30,
-            iss: 'playrbase.app',
-            aud: 'playrbase.app:change-email',
+            iss: issuer,
+            aud: `${issuer}:change-email`,
             sub: token.ID,
             SC: token.SC,
             email: new_email,
@@ -58,8 +60,8 @@ export async function POST(req: NextRequest) {
     const token_reset = jwt.sign(
         {
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 48,
-            iss: 'playrbase.app',
-            aud: 'playrbase.app:change-email',
+            iss: issuer,
+            aud: `${issuer}:change-email`,
             sub: token.ID,
             SC: token.SC,
             email: record.email,
@@ -72,18 +74,18 @@ export async function POST(req: NextRequest) {
 
     await Promise.all([
         sendEmail({
-            from: 'noreply@playrbase.app',
+            from: email_from,
             to: new_email,
-            subject: 'PlayrBase change email',
+            subject: `${brand_name} change email`,
             text: render(AuthChangeEmailEmail({ token: token_verify }), {
                 plainText: true,
             }),
             html: render(AuthChangeEmailEmail({ token: token_verify })),
         }),
         sendEmail({
-            from: 'noreply@playrbase.app',
+            from: email_from,
             to: record.email,
-            subject: 'PlayrBase change email',
+            subject: `${brand_name} change email`,
             text: render(
                 AuthRevertChangeEmailEmail({ token: token_reset, new_email }),
                 {
@@ -159,8 +161,8 @@ async function verifyChangeEmailToken(token: string) {
             token,
             token_secret,
             {
-                issuer: 'playrbase.app',
-                audience: 'playrbase.app:change-email',
+                issuer,
+                audience: `${issuer}:change-email`,
                 algorithms: ['HS512'],
             },
             (error, decoded) => {

@@ -1,3 +1,4 @@
+import { brand_name } from '@/lib/branding';
 import {
     Body,
     Container,
@@ -24,7 +25,7 @@ export const BirthdatePermitEmail = ({
     return (
         <Html lang="en" dir="ltr">
             <Head>
-                <title>Child account on Playrbase</title>
+                <title>Child account on {brand_name}</title>
                 <Font
                     fontFamily="Inter"
                     fallbackFontFamily="Arial"
@@ -37,23 +38,23 @@ export const BirthdatePermitEmail = ({
                 />
             </Head>
             <Preview>
-                Confirm your child opening an account on Playrbase
+                Confirm your child opening an account on {brand_name}
             </Preview>
             <Body style={main}>
                 <Container style={container}>
                     <Img
                         src={`${baseUrl}/LogoFull.svg`}
                         height="50"
-                        alt="PlayrBase"
+                        alt={`${brand_name} logo`}
                         style={logo}
                     />
                     <Heading style={heading}>
-                        Child account on Playrbase
+                        Child account on {brand_name}
                     </Heading>
                     <Text style={paragraph}>
                         Your child has requested to open an account on
-                        Playrbase. Because they are under the age of 16, we are
-                        required to verify with a parent if this action is
+                        {brand_name}. Because they are under the age of 16, we
+                        are required to verify with a parent if this action is
                         permitted. Let your child enter the following code on
                         their device to confirm your approval.
                     </Text>

@@ -34,7 +34,7 @@ export const AuthRevertChangeEmailEmail = ({
         <Html lang="en" dir="ltr">
             <Head>
                 <title>
-                    The Email for your {brand_name} account was changed
+                    {`The Email for your ${brand_name} account was changed`}
                 </title>
                 <Font
                     fontFamily="Inter"

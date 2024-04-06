@@ -39,7 +39,7 @@ export const OrganisationInviteEmail = ({
     return (
         <Html lang="en" dir="ltr">
             <Head>
-                <title>{brand_name} Organisation invite</title>
+                <title>{`${brand_name} Organisation invite`}</title>
                 <Font
                     fontFamily="Inter"
                     fallbackFontFamily="Arial"

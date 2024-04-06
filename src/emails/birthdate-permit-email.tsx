@@ -25,7 +25,7 @@ export const BirthdatePermitEmail = ({
     return (
         <Html lang="en" dir="ltr">
             <Head>
-                <title>Child account on {brand_name}</title>
+                <title>{`Child account on ${brand_name}`}</title>
                 <Font
                     fontFamily="Inter"
                     fallbackFontFamily="Arial"

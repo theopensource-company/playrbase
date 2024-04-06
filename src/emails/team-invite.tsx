@@ -38,7 +38,7 @@ export const TeamInviteEmail = ({
     return (
         <Html lang="en" dir="ltr">
             <Head>
-                <title>{brand_name} Team invite</title>
+                <title>{`${brand_name} Team invite`}</title>
                 <Font
                     fontFamily="Inter"
                     fallbackFontFamily="Arial"

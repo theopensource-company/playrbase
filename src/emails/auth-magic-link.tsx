@@ -34,7 +34,7 @@ export const AuthMagicLinkEmail = ({
     return (
         <Html lang="en" dir="ltr">
             <Head>
-                <title>Your sign in link for {brand_name}</title>
+                <title>{`Your sign in link for ${brand_name}`}</title>
                 <Font
                     fontFamily="Inter"
                     fallbackFontFamily="Arial"

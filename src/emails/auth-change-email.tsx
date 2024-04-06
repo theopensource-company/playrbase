@@ -32,7 +32,7 @@ export const AuthChangeEmailEmail = ({
         <Html lang="en" dir="ltr">
             <Head>
                 <title>
-                    Confirm the changed Email for your {brand_name} account
+                    {`Confirm the changed Email for your ${brand_name} account`}
                 </title>
                 <Font
                     fontFamily="Inter"

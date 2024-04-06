@@ -105,6 +105,17 @@
         }
       }
     },
+    "location-selector": {
+      "placeholder": "Voer een adres in",
+      "selected": {
+        "button": {
+          "clear": "Wissen"
+        }
+      },
+      "unselected": {
+        "select": "Selecteren"
+      }
+    },
     "upload-image": {
       "cropper": {
         "img-alt": "Gekozen afbeelding"
@@ -378,6 +389,10 @@
           "published": {
             "description": "Is dit evenement gepubliceerd voor niet-organisatieleden",
             "label": "Gepubliceerd"
+          },
+          "location": {
+            "title": "Locatie",
+            "description": "Toon een kaart op de openbare pagina van dit evenement met daarop de locatie waar dit evenement wordt georganiseerd."
           }
         }
       },

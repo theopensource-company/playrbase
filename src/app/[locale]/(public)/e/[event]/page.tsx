@@ -24,8 +24,9 @@ import {
 import { linkToProfile } from '@/schema/resources/profile';
 import { useQuery } from '@tanstack/react-query';
 import { Share } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import { useParams } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { z } from 'zod';
 
 export default function Page() {
@@ -33,6 +34,7 @@ export default function Page() {
     const slug = Array.isArray(params.event) ? params.event[0] : params.event;
     const share = useShare();
 
+    const locale = useLocale();
     const order = useState<'desc' | 'asc'>('desc');
     const pagination = usePagination({ defaultPageSize: 4 });
     const { isPending, data } = useData({
@@ -40,6 +42,24 @@ export default function Page() {
         order: order[0],
         pagination,
     });
+
+    const location = useMemo(() => {
+        console.log(data?.event.computed.location);
+        if (!data?.event.computed.location) return;
+
+        const search = new URLSearchParams({
+            width: '100%',
+            height: '600',
+            hl: locale,
+            q: data?.event.computed.location.coordinates.join(','),
+            z: '16',
+            ie: 'UTF8',
+            iwloc: 'B',
+            output: 'embed',
+        });
+
+        return `https://maps.google.com/maps?${search.toString()}`;
+    }, [data?.event.computed.location, locale]);
 
     if (isPending) return <LoaderOverlay />;
 
@@ -193,6 +213,19 @@ export default function Page() {
                                     noSub
                                     renderBadge={false}
                                     clickable
+                                />
+                            </div>
+                        </div>
+                    )}
+                    {location && (
+                        <div className="space-y-3">
+                            <h3 className="text-md font-semibold">Location</h3>
+                            <div className="w-full rounded-lg border p-2">
+                                <iframe
+                                    width="100%"
+                                    height="400"
+                                    src={location}
+                                    className="rounded-md"
                                 />
                             </div>
                         </div>

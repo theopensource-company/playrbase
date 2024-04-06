@@ -1,3 +1,4 @@
+import { LocationSelector } from '@/components/logic/LocationSelector';
 import Editor from '@/components/miscellaneous/Editor';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -12,6 +13,7 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { point } from '@/lib/zod';
 import { Event } from '@/schema/resources/event';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
@@ -24,6 +26,7 @@ export const EventEditorSchema = Event.pick({
     name: true,
     description: true,
     outcome: true,
+    location: true,
     start: true,
     end: true,
     discoverable: true,
@@ -35,6 +38,7 @@ export type EventEditorSchema = z.infer<typeof EventEditorSchema>;
 
 export const EventEditorSchemaNoUndefined = Event.extend({
     outcome: z.union([z.literal(''), z.string()]),
+    location: z.union([z.literal(''), point]),
     start: z.union([z.date(), z.literal('')]),
     end: z.union([z.date(), z.literal('')]),
     options: Event.shape.options.extend({
@@ -63,6 +67,7 @@ export function useEventEditor({
         defaultValues: {
             ...defaultValues,
             outcome: defaultValues.outcome ?? '',
+            location: defaultValues.location ?? '',
             start: defaultValues.start ?? '',
             end: defaultValues.end ?? '',
             options: {
@@ -91,10 +96,11 @@ export function EventEditor({
     return (
         <Form {...form}>
             <form
-                onSubmit={form.handleSubmit((changes) => {
-                    onSubmit({
+                onSubmit={form.handleSubmit(async (changes) => {
+                    await onSubmit({
                         ...changes,
                         outcome: changes.outcome || undefined,
+                        location: changes.location || undefined,
                         start: changes.start || undefined,
                         end: changes.end || undefined,
                         options: {
@@ -576,6 +582,52 @@ export function EventEditor({
                                 />
                             </div>
                         </div>
+
+                        <FormField
+                            control={form.control}
+                            name="location"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>
+                                        {t('fields.location.title')}
+                                    </FormLabel>
+                                    <FormDescription>
+                                        {t('fields.location.description')}
+                                    </FormDescription>
+                                    <FormControl>
+                                        <LocationSelector
+                                            location={
+                                                field.value === ''
+                                                    ? undefined
+                                                    : field.value.coordinates
+                                            }
+                                            setLocation={(coordinates) => {
+                                                const v =
+                                                    typeof coordinates ==
+                                                    'function'
+                                                        ? coordinates(
+                                                              field.value === ''
+                                                                  ? undefined
+                                                                  : field.value
+                                                                        .coordinates
+                                                          )
+                                                        : coordinates;
+                                                form.setValue(
+                                                    'location',
+                                                    v
+                                                        ? {
+                                                              type: 'Point',
+                                                              coordinates: v,
+                                                          }
+                                                        : ''
+                                                );
+                                            }}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                     </div>
                 </div>
                 <FormField
@@ -602,10 +654,10 @@ export function EventEditor({
                             form.formState.isSubmitting
                         }
                     >
-                        {form.formState.isSubmitting && (
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        )}
                         {t('button.save')}
+                        {form.formState.isSubmitting && (
+                            <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                        )}
                     </Button>
                 </div>
             </form>

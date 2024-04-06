@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { record } from '../../lib/zod.ts';
+import { point, record } from '../../lib/zod.ts';
 
 const event = /* surrealql */ `
     DEFINE TABLE event SCHEMAFULL
@@ -16,6 +16,7 @@ const event = /* surrealql */ `
     DEFINE FIELD logo                       ON event TYPE option<string> PERMISSIONS FOR update NONE;
     DEFINE FIELD banner                     ON event TYPE option<string> PERMISSIONS FOR update NONE;
     DEFINE FIELD outcome                    ON event TYPE option<string>;
+    DEFINE FIELD location                   ON event TYPE option<geometry<point>>;
 
     DEFINE FIELD start                      ON event TYPE option<datetime>;
     DEFINE FIELD end                        ON event TYPE option<datetime>;
@@ -45,6 +46,7 @@ const event = /* surrealql */ `
             banner: "",
             tournament: none,
             outcome: none,
+            location: none,
         } 
         PERMISSIONS FOR update NONE;
 
@@ -73,6 +75,7 @@ export const Event = z.object({
     logo: z.string().optional(),
     banner: z.string().optional(),
     outcome: z.string().optional(),
+    location: point.optional(),
 
     start: z.coerce.date().optional(),
     end: z.coerce.date().optional(),
@@ -90,6 +93,7 @@ export const Event = z.object({
         banner: z.string().nullable(),
         tournament: record('event').nullable(),
         outcome: z.string().nullable().optional(),
+        location: point.nullable().optional(),
     }),
 
     options: z.object({
@@ -135,6 +139,7 @@ const update_computed_self = /* surrealql */ `
     DEFINE EVENT update_computed_self ON event WHEN $event = "UPDATE" AND (
         $before.description != $after.description ||
         $before.outcome != $after.outcome ||
+        $before.location != $after.location ||
         $before.banner != $after.banner ||
         $before.logo != $after.logo
     ) THEN {

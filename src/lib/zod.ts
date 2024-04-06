@@ -49,3 +49,8 @@ export const role = z.union([
     z.literal('event_manager'),
     z.literal('event_viewer'),
 ]);
+
+export const point = z.object({
+    type: z.literal('Point'),
+    coordinates: z.tuple([z.number(), z.number()]),
+});

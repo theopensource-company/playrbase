@@ -105,6 +105,17 @@
         }
       }
     },
+    "location-selector": {
+      "placeholder": "Enter an address",
+      "selected": {
+        "button": {
+          "clear": "Clear"
+        }
+      },
+      "unselected": {
+        "select": "Select"
+      }
+    },
     "upload-image": {
       "trigger": "Change",
       "empty": {
@@ -396,6 +407,10 @@
                 "clear": "Clear"
               }
             }
+          },
+          "location": {
+            "title": "Location",
+            "description": "Show a map on the public page for this event, showing the location where this event is held."
           }
         },
         "button": {

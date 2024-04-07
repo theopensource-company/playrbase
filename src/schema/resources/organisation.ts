@@ -5,7 +5,11 @@ const organisation = /* surrealql */ `
     DEFINE TABLE organisation SCHEMAFULL
         PERMISSIONS
             FOR select FULL
-            FOR create WHERE $scope = 'user'
+            FOR create WHERE 
+                $scope = 'user' AND (
+                    $auth.platform OR
+                    !!part_of.id
+                )
             FOR update WHERE 
                 managers[WHERE role IN ["owner", "administrator"]].user CONTAINS $auth.id
             FOR delete WHERE 

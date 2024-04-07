@@ -29,6 +29,10 @@ const user = /* surrealql */ `
         PERMISSIONS
             FOR update NONE
             FOR select WHERE id = $auth;
+    DEFINE FIELD platform           ON user DEFAULT false
+        PERMISSIONS
+            FOR update NONE
+            FOR select WHERE id = $auth;
 
     DEFINE FIELD profile_picture    ON user TYPE option<string>
         PERMISSIONS FOR update NONE;
@@ -49,6 +53,7 @@ export const User = z.object({
     birthdate: z.coerce.date(),
     type: z.literal('user'),
     api_access: z.boolean().default(false),
+    platform: z.boolean().default(false),
     profile_picture: z.string().optional(),
     created: z.coerce.date(),
     updated: z.coerce.date(),
@@ -60,6 +65,7 @@ export type User = z.infer<typeof User>;
 export const UserAnonymous = User.omit({
     email: true,
     api_access: true,
+    platform: true,
     updated: true,
 });
 
@@ -69,6 +75,7 @@ export type UserAnonymous = z.infer<typeof UserAnonymous>;
 // - Managers in organisations from which the user is participating in one of their events
 export const UserAsRelatedUser = User.omit({
     api_access: true,
+    platform: true,
     updated: true,
 });
 

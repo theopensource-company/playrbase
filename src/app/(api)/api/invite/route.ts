@@ -2,6 +2,7 @@ import { surreal } from '@/app/(api)/lib/surreal';
 import { extractUserTokenFromRequest } from '@/app/(api)/lib/token';
 import OrganisationInviteEmail from '@/emails/organisation-invite';
 import TeamInviteEmail from '@/emails/team-invite';
+import { brand_name } from '@/lib/branding';
 import { Invite } from '@/schema/resources/invite';
 import { Organisation } from '@/schema/resources/organisation';
 import { Team } from '@/schema/resources/team';
@@ -11,7 +12,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { email_from } from '../../config/env';
 import { sendEmail } from '../../lib/email';
-import { brand_name } from '@/lib/branding';
 
 const Body = Invite.pick({
     origin: true,

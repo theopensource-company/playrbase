@@ -28,10 +28,10 @@ export default function ConsoleLayout({ children }: { children: ReactNode }) {
                         </NavbarSubLink>
                     )}
                     <NavbarSubLink link="teams">
-                    {t('teams.title')}
+                        {t('teams.title')}
                     </NavbarSubLink>
                     <NavbarSubLink link="registrations">
-                    {t('registrations.title')}
+                        {t('registrations.title')}
                     </NavbarSubLink>
                     <NavbarSubLink link="organisations">
                         {t('organisations.title')}

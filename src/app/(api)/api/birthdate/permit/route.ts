@@ -2,6 +2,7 @@ import { email_from } from '@/app/(api)/config/env';
 import { sendEmail } from '@/app/(api)/lib/email';
 import { extractUserTokenFromRequest } from '@/app/(api)/lib/token';
 import BirthdatePermitEmail from '@/emails/birthdate-permit-email';
+import { brand_name } from '@/lib/branding';
 import { BirthdatePermit } from '@/schema/resources/birthdate_permit';
 import { User } from '@/schema/resources/user';
 import { surreal } from '@api/lib/surreal';
@@ -10,7 +11,6 @@ import dayjs from 'dayjs';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { verifyEmailVerificationToken } from '../../auth/magic-link/route';
-import { brand_name } from '@/lib/branding';
 
 async function getSubject(req: NextRequest, body: Record<string, unknown>) {
     const { decoded: token } = extractUserTokenFromRequest(req);

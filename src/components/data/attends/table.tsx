@@ -44,14 +44,24 @@ export function AttendsTable({
         <Table>
             <TableHeader>
                 <TableRow>
-                    {doRenderCol('in') && <TableHead>{t("columns.registrant")}</TableHead>}
-                    {doRenderCol('out') && <TableHead>{t("columns.event")}</TableHead>}
-                    {doRenderCol('players') && <TableHead>{t("columns.players")}</TableHead>}
-                    {doRenderCol('confirmed') && (
-                        <TableHead>{t("columns.confirmed")}</TableHead>
+                    {doRenderCol('in') && (
+                        <TableHead>{t('columns.registrant')}</TableHead>
                     )}
-                    {doRenderCol('created') && <TableHead>{t("columns.created")}</TableHead>}
-                    {doRenderCol('updated') && <TableHead>{t("columns.updated")}</TableHead>}
+                    {doRenderCol('out') && (
+                        <TableHead>{t('columns.event')}</TableHead>
+                    )}
+                    {doRenderCol('players') && (
+                        <TableHead>{t('columns.players')}</TableHead>
+                    )}
+                    {doRenderCol('confirmed') && (
+                        <TableHead>{t('columns.confirmed')}</TableHead>
+                    )}
+                    {doRenderCol('created') && (
+                        <TableHead>{t('columns.created')}</TableHead>
+                    )}
+                    {doRenderCol('updated') && (
+                        <TableHead>{t('columns.updated')}</TableHead>
+                    )}
                     {doRenderCol('actions') && <TableHead />}
                 </TableRow>
             </TableHeader>
@@ -167,7 +177,8 @@ export function AttendsTable({
             {registrations?.length == 0 ? (
                 <TableCaption className="my-12">
                     <div className="flex items-center justify-center gap-1">
-                        <FileSearch className="h-4 w-4" />{t("empty")}
+                        <FileSearch className="h-4 w-4" />
+                        {t('empty')}
                     </div>
                 </TableCaption>
             ) : (

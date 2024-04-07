@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTeam, useUpdateTeam } from '@/lib/Queries/Team';
 import { useSurreal } from '@/lib/Surreal';
+import { brand_name } from '@/lib/branding';
 import { useRouter } from '@/locales/navigation';
 import { Team } from '@/schema/resources/team';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,7 +22,6 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { PageTitle } from '../../components/PageTitle';
-import { brand_name } from '@/lib/branding';
 
 export default function Account() {
     const params = useParams();

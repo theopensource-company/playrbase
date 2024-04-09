@@ -16,10 +16,13 @@ const birthdate_permit = /* surrealql */ `
         DEFAULT '';
 
     DEFINE FIELD subject        ON birthdate_permit TYPE string | record<user> READONLY
+        VALUE IF type::is::string($value) THEN string::lowercase($value) ELSE $value END
         ASSERT IF type::is::string($value) THEN string::is::email($value) ELSE true END;
 
     DEFINE FIELD birthdate      ON birthdate_permit TYPE datetime READONLY;
-    DEFINE FIELD parent_email   ON birthdate_permit TYPE string READONLY ASSERT string::is::email($value);
+    DEFINE FIELD parent_email   ON birthdate_permit TYPE string READONLY
+        VALUE string::lowercase($value)
+        ASSERT string::is::email($value);
     DEFINE FIELD created        ON birthdate_permit TYPE datetime READONLY VALUE time::now();
 
     DEFINE INDEX compound_user ON birthdate_permit FIELDS user;

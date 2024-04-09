@@ -19,7 +19,8 @@ const organisation = /* surrealql */ `
         ASSERT string::len($value) > 0 && string::len($value) <= 32;
     DEFINE FIELD description        ON organisation TYPE option<string>;
     DEFINE FIELD website            ON organisation TYPE option<string>;
-    DEFINE FIELD email              ON organisation TYPE string           
+    DEFINE FIELD email              ON organisation TYPE string
+        VALUE string::lowercase($value)    
         ASSERT string::is::email($value);
     DEFINE FIELD type               ON organisation VALUE meta::tb(id) DEFAULT meta::tb(id);
 

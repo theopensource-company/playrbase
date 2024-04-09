@@ -14,7 +14,7 @@ const user = /* surrealql */ `
                 );
 
     DEFINE FIELD origin         ON invite TYPE string | record<user> 
-        VALUE (SELECT VALUE id FROM ONLY user WHERE email = $value LIMIT 1) OR $before OR $value
+        VALUE (SELECT VALUE id FROM ONLY user WHERE email = $value LIMIT 1) OR $before OR (IF type::is::string($value) THEN string::lowercase($value) ELSE $value END)
         ASSERT type::is::record($value) OR string::is::email($value);
     DEFINE FIELD target         ON invite TYPE record<organisation> | record<team>
         VALUE $before OR $value; 

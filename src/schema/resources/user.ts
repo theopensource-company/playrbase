@@ -8,7 +8,9 @@ const user = /* surrealql */ `
             FOR update, delete WHERE $scope = 'user' AND id = $auth.id;
 
     DEFINE FIELD name               ON user TYPE string ASSERT array::len(string::words($value)) > 1;
-    DEFINE FIELD email              ON user TYPE string ASSERT string::is::email($value)
+    DEFINE FIELD email              ON user TYPE string 
+        VALUE string::lowercase($value) 
+        ASSERT string::is::email($value)
         PERMISSIONS
             FOR update NONE
             FOR select 

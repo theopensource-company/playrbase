@@ -36,7 +36,7 @@ export default function Page() {
 
     const locale = useLocale();
     const order = useState<'desc' | 'asc'>('desc');
-    const pagination = usePagination({ defaultPageSize: 4 });
+    const pagination = usePagination({ defaultPageSize: 10 });
     const { isPending, data } = useData({
         slug,
         order: order[0],
@@ -338,7 +338,6 @@ function useData({
             );
 
             if (!result?.[1] || !result?.[2] || !result?.[3]) return null;
-            console.log(result[6]);
 
             return {
                 event: EventCanManage.parse(result[3]),

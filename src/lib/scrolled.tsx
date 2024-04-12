@@ -6,6 +6,7 @@ import React, {
     useRef,
     useState,
 } from 'react';
+import { remToPx } from './remToPx';
 
 export const ScrolledStateContext = createContext({
     mobile: false,
@@ -21,7 +22,7 @@ function useCreateState() {
             const updated = {
                 scrolled:
                     (window.pageYOffset || document.documentElement.scrollTop) >
-                    0,
+                    remToPx(2),
                 mobile: window.innerWidth < 768,
             };
 

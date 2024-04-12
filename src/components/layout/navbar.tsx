@@ -13,7 +13,7 @@ import { useSurreal } from '@/lib/Surreal.tsx';
 import { useAuth } from '@/lib/auth';
 import { brand_name } from '@/lib/branding.ts';
 import { useFeatureFlags } from '@/lib/featureFlags.tsx';
-import { useScrolledContext, useScrolledState } from '@/lib/scrolled.tsx';
+import { useIsMobileState, useScrolledState } from '@/lib/scrolled.tsx';
 import { cn } from '@/lib/utils.ts';
 import { Language, languageEntries } from '@/locales/languages.ts';
 import { Link, usePathname } from '@/locales/navigation.ts';
@@ -522,13 +522,8 @@ export function NavbarSubLink({
 }
 
 export function NavbarHeightOffset() {
-    const { scrolled, mobile } = useScrolledContext();
+    const mobile = useIsMobileState();
     return (
-        <div
-            className={cn(
-                'transition-height',
-                mobile ? 'h-28' : scrolled ? 'h-24' : 'h-36'
-            )}
-        />
+        <div className={cn('transition-height', mobile ? 'h-28' : 'h-36')} />
     );
 }

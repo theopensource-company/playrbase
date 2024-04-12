@@ -14,14 +14,20 @@ dayjs.extend(duration);
 dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
 
-export function DateTooltip({ date }: { date: Date }) {
+export function DateTooltip({
+    date,
+    forceTime,
+}: {
+    date: Date;
+    forceTime?: boolean;
+}) {
     return (
         <TooltipProvider>
             <Tooltip delayDuration={200}>
                 <TooltipTrigger asChild>
                     <span>
                         {date.getTime() > new Date().getTime()
-                            ? dayjs(date).format('ll')
+                            ? dayjs(date).format(forceTime ? 'lll' : 'll')
                             : dayjs.duration(dayjs(date).diff()).humanize(true)}
                     </span>
                 </TooltipTrigger>

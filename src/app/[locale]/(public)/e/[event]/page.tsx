@@ -186,7 +186,7 @@ export default function Page() {
                                 Start of event
                             </h3>
                             <p className="text-sm text-foreground/75">
-                                <DateTooltip date={event.start} />
+                                <DateTooltip date={event.start} forceTime />
                             </p>
                         </div>
                     )}
@@ -196,7 +196,7 @@ export default function Page() {
                                 End of event
                             </h3>
                             <p className="text-sm text-foreground/75">
-                                <DateTooltip date={event.end} />
+                                <DateTooltip date={event.end} forceTime />
                             </p>
                         </div>
                     )}

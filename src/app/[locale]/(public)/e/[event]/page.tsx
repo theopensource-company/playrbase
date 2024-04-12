@@ -22,6 +22,7 @@ import {
 import { linkToProfile } from '@/schema/resources/profile';
 import { useQuery } from '@tanstack/react-query';
 import { Share } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { z } from 'zod';
@@ -33,6 +34,8 @@ export default function Page() {
 
     const order = useState<'desc' | 'asc'>('desc');
     const pagination = usePagination({ defaultPageSize: 4 });
+    
+    const t = useTranslations('pages.e.index');
     const { isPending, data } = useData({
         slug,
         order: order[0],
@@ -193,7 +196,7 @@ export default function Page() {
                 </div>
                 <div className="space-y-6 md:col-span-2">
                     <h2 className="pb-2 text-2xl font-semibold">
-                        About the organiser
+                        {t('about-organiser')}
                     </h2>
                     <Profile
                         profile={organiser}
@@ -209,7 +212,7 @@ export default function Page() {
                         </p>
                     )}
                     <div className="space-y-1">
-                        <h3 className="text-md font-semibold">Email address</h3>
+                        <h3 className="text-md font-semibold">{t('email')}</h3>
                         <p className="text-sm text-foreground/75">
                             {organiser.email}
                         </p>

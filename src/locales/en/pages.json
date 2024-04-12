@@ -534,5 +534,11 @@
         "trigger": "Save name"
       }
     }
+  },
+  "e": {
+    "index": {
+      "about-organiser": "About the organiser",
+      "email": "Email address"
+    }
   }
 }

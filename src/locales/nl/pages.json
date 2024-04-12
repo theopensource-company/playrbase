@@ -534,5 +534,11 @@
       },
       "title": "Maak een Passkey"
     }
+  },
+  "e": {
+    "index": {
+      "about-organiser": "Over de organisator",
+      "email": "E-mailadres"
+    }
   }
 }

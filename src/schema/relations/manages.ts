@@ -59,7 +59,7 @@ const cleanup_invite = /* surrealql */ `
 
 const update_organisation_managers = /* surrealql */ `
     DEFINE EVENT update_organisation_managers ON manages THEN {
-        UPDATE $value.out SET managers = fn::recursion::organisation::managers(id, part_of);
+        UPDATE ($after ?? $before).out SET managers = fn::recursion::organisation::managers(id, part_of);
     };
 `;
 

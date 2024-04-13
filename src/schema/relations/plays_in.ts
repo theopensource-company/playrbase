@@ -65,7 +65,7 @@ const cleanup_invite = /* surrealql */ `
 
 const update_team_players = /* surrealql */ `
     DEFINE EVENT update_team_players ON plays_in THEN {
-        UPDATE $value.out SET players = fn::recursion::team::players($value.out);
+        UPDATE ($after ?? $before).out SET players = fn::recursion::team::players($value.out);
     };
 `;
 

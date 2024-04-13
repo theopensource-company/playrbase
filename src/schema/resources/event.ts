@@ -131,7 +131,7 @@ const removal_cleanup = /* surrealql */ `
 
 const update_tournament_status = /* surrealql */ `
     DEFINE EVENT update_tournament_status ON event WHEN $event IN ["CREATE", "DELETE"] AND $value.tournament THEN {
-        UPDATE $value.tournament;
+        UPDATE ($after ?? $before).tournament;
     };
 `;
 

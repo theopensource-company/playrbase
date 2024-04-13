@@ -314,7 +314,7 @@ function useData({
 
                     SELECT * FROM event 
                         WHERE tournament = $event.id
-                        ORDER BY start ${order == 'asc' ? 'ASC' : 'DESC'}
+                        ORDER BY start, name ${order == 'asc' ? 'ASC' : 'DESC'}
                         START $start
                         LIMIT $limit;
 

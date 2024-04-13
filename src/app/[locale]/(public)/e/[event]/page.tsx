@@ -35,7 +35,7 @@ export default function Page() {
     const share = useShare();
 
     const locale = useLocale();
-    const order = useState<'desc' | 'asc'>('desc');
+    const order = useState<'desc' | 'asc'>('asc');
     const pagination = usePagination({ defaultPageSize: 10 });
     const { isPending, data } = useData({
         slug,

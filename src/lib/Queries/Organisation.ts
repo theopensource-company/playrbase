@@ -81,6 +81,7 @@ export const useUpdateOrganisation = (id: Organisation['id']) => {
                 >
             >
         ) => {
+            if (changes.email) changes.email = changes.email.toLowerCase();
             const result = await surreal.merge<Organisation, typeof changes>(
                 id,
                 changes

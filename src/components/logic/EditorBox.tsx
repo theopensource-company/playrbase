@@ -1,4 +1,4 @@
-import { promiseTimeout } from '@/lib/utils';
+import { cn, promiseTimeout } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import React, { useId } from 'react';
@@ -23,6 +23,7 @@ export function EditorBox<T extends z.AnyZodObject = z.AnyZodObject>({
     Schema,
     field,
     fieldType,
+    fieldClassName,
 }: {
     title: string;
     description: string;
@@ -34,6 +35,7 @@ export function EditorBox<T extends z.AnyZodObject = z.AnyZodObject>({
     Schema: T;
     field: Path<z.TypeOf<T>>;
     fieldType?: 'input' | 'textarea' | 'richtext' | 'checkbox';
+    fieldClassName?: string;
 }) {
     const id = useId();
     type Schema = z.infer<typeof Schema>;
@@ -72,7 +74,7 @@ export function EditorBox<T extends z.AnyZodObject = z.AnyZodObject>({
                     defaultValue={defaultValue}
                     placeholder={placeholder}
                     {...register(field)}
-                    className="max-w-sm"
+                    className={cn('max-w-sm', fieldClassName)}
                     maxLength={Schema.shape[field].maxLength ?? undefined}
                 />
             ) : fieldType == 'textarea' ? (
@@ -80,7 +82,7 @@ export function EditorBox<T extends z.AnyZodObject = z.AnyZodObject>({
                     defaultValue={defaultValue}
                     placeholder={placeholder}
                     {...register(field)}
-                    className="max-w-sm"
+                    className={cn('max-w-sm', fieldClassName)}
                     maxLength={Schema.shape[field].maxLength ?? undefined}
                     rows={8}
                 />
@@ -90,6 +92,7 @@ export function EditorBox<T extends z.AnyZodObject = z.AnyZodObject>({
                     placeholder={placeholder}
                     onChange={(v) => setValue(field, v as Schema[typeof field])}
                     maxLength={Schema.shape[field].maxLength ?? undefined}
+                    className={fieldClassName}
                 />
             ) : (
                 <div className="flex items-center gap-2">
@@ -101,6 +104,7 @@ export function EditorBox<T extends z.AnyZodObject = z.AnyZodObject>({
                                 id={id}
                                 defaultChecked={defaultChecked}
                                 onCheckedChange={field.onChange}
+                                className={fieldClassName}
                                 {...field}
                             />
                         )}

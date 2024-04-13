@@ -56,7 +56,7 @@ export function UserSelector({
                     /* surql */ `
                         SELECT * FROM user WHERE id != $auth && $email && email ~ $email LIMIT $limit
                     `,
-                    { email: input, limit }
+                    { email: input.toLowerCase(), limit }
                 )
                 .then(([result]) => {
                     setMatches(result ?? []);
@@ -91,6 +91,7 @@ export function UserSelector({
                 onInput={(e) => setInput(e.currentTarget.value)}
                 autoFocus={autoFocus}
                 autoComplete={autoComplete}
+                className="lowercase"
             />
             {matches && (
                 <div>

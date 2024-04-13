@@ -263,7 +263,7 @@ function AddMember({
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    origin: user,
+                    origin: user?.toLowerCase(),
                     target: team,
                 }),
             });

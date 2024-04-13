@@ -106,7 +106,7 @@ export function useBirthdateSelector({
             body: JSON.stringify({
                 birthdate,
                 token,
-                parent_email: parentEmail,
+                parent_email: parentEmail?.toLowerCase(),
             }),
         });
 
@@ -266,6 +266,7 @@ export function BirthdateSelector({
                                 {t('dialog-email.description')}
                             </DDDescription>
                             <Input
+                                className="lowercase"
                                 placeholder={t('dialog-email.placeholder')}
                                 value={parentEmail}
                                 onChange={({ target: { value } }) =>

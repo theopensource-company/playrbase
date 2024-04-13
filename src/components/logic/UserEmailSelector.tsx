@@ -48,6 +48,8 @@ export function UserEmailSelector({
         queryKey: ['user', user],
         async queryFn() {
             if (!user) return null;
+            user = user.toLowerCase();
+
             if (isEmail(user))
                 return EmailProfile.parse({
                     email: user,
@@ -66,7 +68,7 @@ export function UserEmailSelector({
                     /* surql */ `
                         SELECT * FROM user WHERE id != $auth && $email && email ~ $email LIMIT $limit
                     `,
-                    { email: input, limit }
+                    { email: input.toLowerCase(), limit }
                 )
                 .then(([result]) => {
                     if (
@@ -78,7 +80,7 @@ export function UserEmailSelector({
                     ) {
                         result.unshift(
                             EmailProfile.parse({
-                                email: input,
+                                email: input.toLowerCase(),
                                 type: 'email',
                             })
                         );
@@ -116,6 +118,7 @@ export function UserEmailSelector({
                 onInput={(e) => setInput(e.currentTarget.value)}
                 autoFocus={autoFocus}
                 autoComplete={autoComplete}
+                className="lowercase"
             />
             {matches && (
                 <div>

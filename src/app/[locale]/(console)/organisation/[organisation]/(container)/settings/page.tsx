@@ -86,6 +86,7 @@ export default function Account() {
                 mutate={mutate}
                 Schema={Organisation.pick({ email: true })}
                 field="email"
+                fieldClassName="lowercase"
             />
             <EditorBox
                 title={t('website.title')}

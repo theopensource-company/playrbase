@@ -47,6 +47,7 @@ export function CreateOrganisation({
 
     const handler = handleSubmit(async ({ name, email }) => {
         const result = (async () => {
+            email = email.toLowerCase()
             const [org] = await surreal.query<[Organisation]>(
                 /* surql */ `
                 CREATE ONLY organisation CONTENT {
@@ -122,6 +123,7 @@ export function CreateOrganisation({
                                 {...register('email')}
                                 placeholder={t('fields.email.placeholder')}
                                 autoComplete="off"
+                                className="lowercase"
                             />
                             {errors?.email && !isSubmitSuccessful && (
                                 <p className="text-red-600">

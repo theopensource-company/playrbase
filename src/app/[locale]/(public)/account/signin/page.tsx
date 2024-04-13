@@ -125,7 +125,10 @@ export default function Signin() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ identifier, followup }),
+            body: JSON.stringify({
+                identifier: identifier.toLowerCase(),
+                followup,
+            }),
         });
 
         const res = await raw.json().catch((_e) => ({
@@ -165,7 +168,7 @@ export default function Signin() {
                         <CardContent>
                             {!passkey ? (
                                 <Input
-                                    className="mt-2"
+                                    className="mt-2 lowercase"
                                     placeholder={t('input.email.placeholder')}
                                     defaultValue={defaultEmail ?? undefined}
                                     disabled={!!passkey || passkeyLoading}

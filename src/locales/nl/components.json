@@ -549,6 +549,31 @@
             "deny": "Uitnodiging weigeren"
           }
         }
+      },
+      "create": {
+        "trigger": "Team maken",
+        "step-create": {
+          "title": "Kies een team naam",
+          "description": "Kies een teamnaam die jouw team goed beschrijft en je door de competitie leidt",
+          "fields": {
+            "name": {
+              "label": "Team naam"
+            }
+          },
+          "submit": "Doorgaan"
+        },
+        "step-invite": {
+          "title": "Spelers uitnodigen",
+          "description": "Nodig spelers uit in je team, ze worden pas toegevoegd zodra ze hun deelname bevestigen",
+          "sent-invites": "Verstuurde uitnodigingen",
+          "button-invite": "Uitnodigen",
+          "button-continue": "Doorgaan"
+        },
+        "step-finished": {
+          "title": "🎉 Team aangemaakt!",
+          "description": "Je team is nu aangemaakt! Houd er rekening mee dat spelers pas deel uitmaken van je team zodra ze je uitnodiging accepteren, en dat ze niet als teamleden tellen totdat ze dat doen, wanneer je je aanmeldt voor evenementen.",
+          "button-finish": "Afronden"
+        }
       }
     },
     "attends": {

@@ -1,6 +1,7 @@
 'use client';
 
 import { Profile } from '@/components/cards/profile';
+import { CreateTeamDialog } from '@/components/data/teams/create';
 import { TeamTable } from '@/components/data/teams/table';
 import {
     DD,
@@ -9,25 +10,19 @@ import {
     DDFooter,
     DDHeader,
     DDTitle,
-    DDTrigger,
 } from '@/components/ui-custom/dd';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { useSurreal } from '@/lib/Surreal';
-import { useRouter } from '@/locales/navigation';
 import { Team, TeamAnonymous } from '@/schema/resources/team';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 export default function Teams() {
+    const [createTeamOpen, setCreateTeamOpen] = useState(false);
     const { data: teams, isPending, refetch } = useData();
     const t = useTranslations('pages.console.account.teams');
     const searchParams = useSearchParams();
@@ -89,7 +84,11 @@ export default function Teams() {
         <div className="flex flex-grow flex-col gap-12 pt-6">
             <div className="flex items-center justify-between pb-6">
                 <h1 className="text-3xl font-bold">{t('title')}</h1>
-                <CreateTeam refetch={refetch} />
+                <CreateTeamDialog
+                    open={createTeamOpen}
+                    setOpen={setCreateTeamOpen}
+                    refetch={refetch}
+                />
             </div>
             <TeamTable
                 isLoading={isPending}
@@ -150,105 +149,6 @@ function InvitePopup({
                         {t('deny')}
                     </Button>
                 </DDFooter>
-            </DDContent>
-        </DD>
-    );
-}
-
-function CreateTeam({ refetch }: { refetch: () => unknown }) {
-    const surreal = useSurreal();
-    const router = useRouter();
-    const [open, setOpen] = useState(false);
-    const t = useTranslations('pages.console.account.teams.new');
-
-    const Schema = Team.pick({
-        name: true,
-    });
-
-    type Schema = z.infer<typeof Schema>;
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitSuccessful, isValid },
-    } = useForm<Schema>({
-        resolver: zodResolver(Schema),
-    });
-
-    const handler = handleSubmit(async ({ name }) => {
-        const result = (async () => {
-            const [team] = await surreal.query<[Team]>(
-                /* surql */ `
-                CREATE ONLY team CONTENT {
-                    name: $name,
-                };
-            `,
-                { name }
-            );
-
-            await refetch();
-            setOpen(false);
-            return team;
-        })();
-
-        await toast.promise(result, {
-            loading: t('toast.creating-team'),
-            success: t('toast.created-team'),
-            error: (e) => t('errors.create-team-failed', { error: e.message }),
-            action: {
-                label: t('toast.buttons.view'),
-                onClick: () =>
-                    result.then(({ slug }) =>
-                        router.push(`/team/${slug}/overview`)
-                    ),
-            },
-        });
-    });
-
-    return (
-        <DD open={open} onOpenChange={setOpen}>
-            <DDTrigger asChild>
-                <Button>
-                    {t('trigger')}
-                    <Plus className="ml-2 h-6 w-6" />
-                </Button>
-            </DDTrigger>
-            <DDContent>
-                <form onSubmit={handler}>
-                    <h3 className="mb-4 text-2xl font-bold">{t('title')}</h3>
-                    <div className="mt-6 space-y-4">
-                        <div className="space-y-3">
-                            <Label htmlFor="name">
-                                {t('fields.name.label')}
-                            </Label>
-                            <Input
-                                id="name"
-                                {...register('name')}
-                                maxLength={
-                                    Team.shape.name.maxLength ?? undefined
-                                }
-                                autoFocus
-                                autoComplete="off"
-                            />
-                            {errors?.name && !isSubmitSuccessful && (
-                                <p className="text-red-600">
-                                    {errors.name.message}
-                                </p>
-                            )}
-                        </div>
-                    </div>
-                    <DDFooter>
-                        <Button disabled={!isValid}>
-                            <Plus className="mr-2 h-4 w-4" />
-                            {t('submit')}
-                        </Button>
-                        {errors?.root && !isSubmitSuccessful && (
-                            <p className="text-red-600">
-                                {errors.root.message}
-                            </p>
-                        )}
-                    </DDFooter>
-                </form>
             </DDContent>
         </DD>
     );

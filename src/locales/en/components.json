@@ -522,6 +522,31 @@
             "badge-no-actions": "Invitation not yet accepted"
           }
         }
+      },
+      "create": {
+        "trigger": "Create team",
+        "step-create": {
+          "title": "Choose team name",
+          "description": "Choose a team name which well describes your team, leading you through the competition",
+          "fields": {
+            "name": {
+              "label": "Team name"
+            }
+          },
+          "submit": "Continue"
+        },
+        "step-invite": {
+          "title": "Invite players",
+          "description": "Invite players into your team, they will only be added once they confirm their participation",
+          "sent-invites": "Sent invites",
+          "button-invite": "Invite",
+          "button-continue": "Continue"
+        },
+        "step-finished": {
+          "title": "🎉 Team created!",
+          "description": "Your team is now created! Please note that players will only be part of your team once they accept your invitation, and they do not count as team members before they do so when signin up to events.",
+          "button-finish": "Finish"
+        }
       }
     },
     "organisations": {

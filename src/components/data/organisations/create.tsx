@@ -47,7 +47,7 @@ export function CreateOrganisation({
 
     const handler = handleSubmit(async ({ name, email }) => {
         const result = (async () => {
-            email = email.toLowerCase()
+            email = email.toLowerCase();
             const [org] = await surreal.query<[Organisation]>(
                 /* surql */ `
                 CREATE ONLY organisation CONTENT {

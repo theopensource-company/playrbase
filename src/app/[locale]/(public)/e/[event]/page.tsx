@@ -9,6 +9,14 @@ import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
 import { Pagination, usePagination } from '@/components/logic/Pagination';
 import { DateTooltip } from '@/components/miscellaneous/DateTooltip';
 import { Markdown } from '@/components/miscellaneous/Markdown';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { useSurreal } from '@/lib/Surreal';
 import { brand_name } from '@/lib/branding';
@@ -26,7 +34,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Share } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { useParams } from 'next/navigation';
-import React, { useMemo, useState } from 'react';
+import React, { Fragment, useMemo, useState } from 'react';
 import { z } from 'zod';
 
 export default function Page() {
@@ -72,7 +80,7 @@ export default function Page() {
         events,
         tournament,
         registration,
-        main_tournament,
+        tournament_path,
     } = data;
 
     return (
@@ -83,16 +91,44 @@ export default function Page() {
                     loading={isPending}
                     className="absolute z-0 aspect-auto h-full w-full rounded-xl"
                 />
-                {main_tournament && (
-                    <div className="absolute left-0 top-0 z-[2] m-5 rounded-lg bg-white/5 px-2 py-1 backdrop-blur transition-colors hover:bg-white/10">
-                        <Profile
-                            profile={main_tournament}
-                            size="extra-tiny"
-                            noSub
-                            renderBadge={false}
-                            clickable
-                            noUnderline
-                        />
+                {tournament_path.length > 1 && (
+                    <div className="absolute left-0 top-0 z-[2] m-5 rounded-lg bg-white/5 px-2 py-1 backdrop-blur">
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                {tournament_path.map((item, i) =>
+                                    item.id == event.id ? (
+                                        <BreadcrumbItem key={item.id}>
+                                            <BreadcrumbPage>
+                                                {item.name}
+                                            </BreadcrumbPage>
+                                        </BreadcrumbItem>
+                                    ) : (
+                                        <Fragment key={item.id}>
+                                            <BreadcrumbItem>
+                                                <BreadcrumbLink
+                                                    className="flex items-center gap-2"
+                                                    href={
+                                                        linkToProfile(
+                                                            item,
+                                                            'public'
+                                                        ) ?? ''
+                                                    }
+                                                >
+                                                    {i == 0 && (
+                                                        <Avatar
+                                                            profile={item}
+                                                            size="extra-tiny"
+                                                        />
+                                                    )}
+                                                    {item.name}
+                                                </BreadcrumbLink>
+                                            </BreadcrumbItem>
+                                            <BreadcrumbSeparator />
+                                        </Fragment>
+                                    )
+                                )}
+                            </BreadcrumbList>
+                        </Breadcrumb>
                     </div>
                 )}
                 <div className="relative z-[1] flex w-full flex-wrap items-center justify-between gap-8 bg-gradient-to-t from-black to-transparent p-6 pb-8 pt-36">
@@ -275,6 +311,9 @@ const EventCanManage = Event.extend({
 
 type EventCanManage = z.infer<typeof EventCanManage>;
 
+const TournamentPath = z.array(Event);
+type TournamentPath = z.infer<typeof TournamentPath>;
+
 function useData({
     slug,
     order,
@@ -301,8 +340,8 @@ function useData({
                     EventCanManage,
                     OrganisationSafeParse,
                     Event,
-                    Event,
                     Attends | null,
+                    TournamentPath,
                 ]
             >(
                 /* surql */ `
@@ -325,8 +364,8 @@ function useData({
                     $event;
                     SELECT * FROM ONLY $event.organiser;
                     SELECT * FROM ONLY $event.tournament;
-                    SELECT * FROM ONLY $event.computed.tournament;
                     IF $event && $auth THEN fn::team::find_actor_registration($auth, $event.id) ELSE none END;
+                    SELECT * FROM $event.tournament_path ?? [];
                 `,
                 {
                     slug,
@@ -343,10 +382,10 @@ function useData({
                 event: EventCanManage.parse(result[3]),
                 organiser: OrganisationSafeParse.parse(result[4]),
                 tournament: Event.optional().parse(result[5] ?? undefined),
-                main_tournament: Event.optional().parse(result[6] ?? undefined),
                 count: z.number().parse(result[2][0]?.count ?? 0),
                 events: z.array(Event).parse(result[1]),
-                registration: Attends.optional().parse(result[7] ?? undefined),
+                registration: Attends.optional().parse(result[6] ?? undefined),
+                tournament_path: TournamentPath.parse(result[7]),
             };
         },
     });

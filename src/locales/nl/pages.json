@@ -559,6 +559,47 @@
         },
         "user-not-found": "Gebruiker niet gevonden"
       }
+    },
+    "team": {
+      "overview": {
+        "member-count": {
+          "multiple": "Bekijk alle {player_count} leden",
+          "single": "Bekijk leden"
+        },
+        "members": "Leden",
+        "registration-count": {
+          "multiple": "Bekijk alle {registration_count} registraties",
+          "single": "Bekijk registraties"
+        },
+        "registrations": "Registraties",
+        "title": "Overzicht"
+      },
+      "members": {
+        "not_found": "Team niet gevonden",
+        "title": "Leden"
+      },
+      "registration": {
+        "title": "Registraties"
+      },
+      "settings": {
+        "description": {
+          "description": "Dit is de openbare beschrijving van je team, die overal in {brand_name} wordt weergegeven.",
+          "submit": "Beschrijving opslaan",
+          "title": "Teambeschrijving"
+        },
+        "logo": {
+          "change": "logo wijzigen",
+          "description": "Dit is het openbare logo van je team, dat overal in {brand_name} wordt weergegeven.",
+          "title": "Teamlogo"
+        },
+        "name": {
+          "description": "Dit is de openbare naam van je team, die overal in {brand_name} wordt weergegeven.",
+          "submit": "Naam opslaan",
+          "title": "Teamnaam"
+        },
+        "not_found": "Team niet gevonden",
+        "title": "Instellingen"
+      }
     }
   },
   "account": {

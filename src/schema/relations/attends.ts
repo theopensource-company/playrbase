@@ -33,6 +33,11 @@ const attends = /* surrealql */ `
         };
     DEFINE FIELD players.*  ON attends TYPE record<user>;
 
+    DEFINE FIELD tournament_path ON attends TYPE array<record<event>>
+        READONLY
+        VALUE out.tournament_path
+        DEFAULT out.tournament_path;
+
     DEFINE FIELD created    ON attends TYPE datetime    VALUE $before OR time::now()  DEFAULT time::now();
     DEFINE FIELD updated    ON attends TYPE datetime    VALUE time::now()             DEFAULT time::now();
 
@@ -80,6 +85,7 @@ export const Attends = z.object({
     out: record('event'),
     confirmed: z.boolean(),
     players: z.array(record('user')),
+    tournament_path: z.array(record('event')),
     created: z.coerce.date(),
     updated: z.coerce.date(),
 });

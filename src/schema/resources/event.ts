@@ -26,6 +26,7 @@ const event = /* surrealql */ `
     DEFINE FIELD discoverable               ON event TYPE bool DEFAULT true;
     DEFINE FIELD published                  ON event TYPE bool DEFAULT false;
     DEFINE FIELD tournament                 ON event TYPE option<record<event>>;
+    DEFINE FIELD tournament_path            ON event TYPE array<record<event>> DEFAULT [] PERMISSIONS FOR update NONE;
     DEFINE FIELD is_tournament              ON event VALUE {
         RETURN IF id {
             LET $id = meta::id(id);
@@ -84,6 +85,7 @@ export const Event = z.object({
     discoverable: z.boolean(),
     published: z.boolean(),
     tournament: record('event').optional(),
+    tournament_path: z.array(record('event')),
     root_for_org: z.boolean(),
     is_tournament: z.boolean(),
 
@@ -159,6 +161,12 @@ const populate_initial_computed = /* surrealql */ `
     };
 `;
 
+const populate_tournament_path = /* surrealql */ `
+    DEFINE EVENT populate_tournament_path ON event WHEN $event = "CREATE" THEN {
+        UPDATE $value.id SET computed = array::append(($value.tournament.tournament_path ?? []), $value.id);
+    };
+`;
+
 export default [
     event,
     log,
@@ -167,4 +175,5 @@ export default [
     update_computed_self,
     update_computed_nested,
     populate_initial_computed,
+    populate_tournament_path,
 ].join('\n\n');

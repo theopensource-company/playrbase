@@ -14,6 +14,14 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from '@/components/ui/accordion';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
     Table,
@@ -38,7 +46,13 @@ import { Baby, Clock, Plus, Users } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+    Fragment,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from 'react';
 import { z } from 'zod';
 
 export default function Page() {
@@ -73,7 +87,7 @@ function Render({
 }) {
     const t = useTranslations('pages.console.flow.event-signup');
     const [createTeamOpen, setCreateTeamOpen] = useState(false);
-    const { event, tournament, registration, self_eligable } = data;
+    const { event, tournament_path, registration, self_eligable } = data;
     const router = useRouter();
     const { user } = useAuth({ authRequired: true });
 
@@ -251,15 +265,44 @@ function Render({
                         profile={event}
                         className="absolute z-0 aspect-auto h-full w-full rounded-xl"
                     />
-                    {tournament && (
-                        <div className="absolute left-0 top-0 z-[2] m-5 rounded-lg p-1 pl-2 backdrop-blur-lg">
-                            <Profile
-                                profile={tournament}
-                                size="extra-tiny"
-                                noSub
-                                renderBadge={false}
-                                clickable
-                            />
+                    {tournament_path.length > 1 && (
+                        <div className="absolute left-0 top-0 z-[2] m-5 rounded-lg bg-white/5 px-2 py-1 backdrop-blur">
+                            <Breadcrumb>
+                                <BreadcrumbList>
+                                    {tournament_path.map((item, i) =>
+                                        item.id == event.id ? (
+                                            <BreadcrumbItem key={item.id}>
+                                                <BreadcrumbPage>
+                                                    {item.name}
+                                                </BreadcrumbPage>
+                                            </BreadcrumbItem>
+                                        ) : (
+                                            <Fragment key={item.id}>
+                                                <BreadcrumbItem>
+                                                    <BreadcrumbLink
+                                                        className="flex items-center gap-2"
+                                                        href={
+                                                            linkToProfile(
+                                                                item,
+                                                                'public'
+                                                            ) ?? ''
+                                                        }
+                                                    >
+                                                        {i == 0 && (
+                                                            <Avatar
+                                                                profile={item}
+                                                                size="extra-tiny"
+                                                            />
+                                                        )}
+                                                        {item.name}
+                                                    </BreadcrumbLink>
+                                                </BreadcrumbItem>
+                                                <BreadcrumbSeparator />
+                                            </Fragment>
+                                        )
+                                    )}
+                                </BreadcrumbList>
+                            </Breadcrumb>
                         </div>
                     )}
                     <div className="relative z-[1] w-full bg-gradient-to-t from-black to-transparent p-6 pb-8 pt-32">
@@ -770,6 +813,9 @@ function Render({
     );
 }
 
+const TournamentPath = z.array(Event);
+type TournamentPath = z.infer<typeof TournamentPath>;
+
 function useData({ slug }: { slug: string }) {
     const surreal = useSurreal();
     return useQuery({
@@ -781,24 +827,22 @@ function useData({ slug }: { slug: string }) {
                 [
                     null,
                     null,
-                    null,
                     Event,
-                    Event | null,
                     Team[],
                     RichAttends | null,
                     boolean,
+                    TournamentPath,
                 ]
             >(
                 /* surql */ `
                     LET $event = SELECT * FROM ONLY type::thing('event', $slug);
-                    LET $tournament = $event.tournament.*;
                     LET $teams = SELECT * FROM $auth->plays_in->team WHERE fn::team::eligable_to_play(id, $event.id);
                 
                     $event;
-                    $tournament;
                     $teams;
                     SELECT * FROM ONLY fn::team::find_actor_registration($auth, $event.id) FETCH in, out, players.*;
                     fn::team::eligable_to_play($auth, $event.id);
+                    SELECT * FROM $event.tournament_path ?? [];
                 `,
                 {
                     slug,
@@ -806,14 +850,14 @@ function useData({ slug }: { slug: string }) {
             );
 
             return {
-                event: Event.parse(result[3]),
-                tournament: Event.optional().parse(result[4] ?? undefined),
-                teams: z.array(Team).parse(result[5]),
+                event: Event.parse(result[2]),
+                teams: z.array(Team).parse(result[3]),
                 registration: RichAttends.optional().parse(
-                    result[6] ?? undefined
+                    result[4] ?? undefined
                 ),
-                self_eligable: !!result[7],
+                self_eligable: !!result[5],
                 event_id: event,
+                tournament_path: TournamentPath.parse(result[6]),
             };
         },
     });

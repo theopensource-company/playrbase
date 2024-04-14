@@ -14,6 +14,14 @@ import {
     DDTitle,
     DDTrigger,
 } from '@/components/ui-custom/dd';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { useSurreal } from '@/lib/Surreal';
 import { cn } from '@/lib/utils';
@@ -21,10 +29,12 @@ import { Link } from '@/locales/navigation';
 import { Attends, RichAttends } from '@/schema/relations/attends';
 import { Event } from '@/schema/resources/event';
 import { Organisation } from '@/schema/resources/organisation';
+import { linkToProfile } from '@/schema/resources/profile';
 import { User } from '@/schema/resources/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useCallback, useMemo } from 'react';
+import React, { Fragment, useCallback, useMemo } from 'react';
+import { z } from 'zod';
 
 export default function Page() {
     const router = useRouter();
@@ -103,7 +113,7 @@ export default function Page() {
     if (isPending) return <LoaderOverlay />;
     if (!data) return <NotFoundScreen text="Registration not found" />;
 
-    const { registration, main_tournament, is_player, can_manage } = data;
+    const { registration, tournament_path, is_player, can_manage } = data;
     const { out: event, in: registrant, players } = registration;
 
     return (
@@ -114,15 +124,44 @@ export default function Page() {
                     loading={isPending}
                     className="absolute z-0 aspect-auto h-full w-full rounded-xl"
                 />
-                {main_tournament && (
-                    <div className="absolute left-0 top-0 z-[2] m-5 rounded-lg p-1 pl-2 backdrop-blur-lg">
-                        <Profile
-                            profile={main_tournament}
-                            size="extra-tiny"
-                            noSub
-                            renderBadge={false}
-                            clickable
-                        />
+                {tournament_path.length > 1 && (
+                    <div className="absolute left-0 top-0 z-[2] m-5 rounded-lg bg-white/5 px-2 py-1 backdrop-blur">
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                {tournament_path.map((item, i) =>
+                                    item.id == event.id ? (
+                                        <BreadcrumbItem key={item.id}>
+                                            <BreadcrumbPage>
+                                                {item.name}
+                                            </BreadcrumbPage>
+                                        </BreadcrumbItem>
+                                    ) : (
+                                        <Fragment key={item.id}>
+                                            <BreadcrumbItem>
+                                                <BreadcrumbLink
+                                                    className="flex items-center gap-2"
+                                                    href={
+                                                        linkToProfile(
+                                                            item,
+                                                            'public'
+                                                        ) ?? ''
+                                                    }
+                                                >
+                                                    {i == 0 && (
+                                                        <Avatar
+                                                            profile={item}
+                                                            size="extra-tiny"
+                                                        />
+                                                    )}
+                                                    {item.name}
+                                                </BreadcrumbLink>
+                                            </BreadcrumbItem>
+                                            <BreadcrumbSeparator />
+                                        </Fragment>
+                                    )
+                                )}
+                            </BreadcrumbList>
+                        </Breadcrumb>
                     </div>
                 )}
                 <div className="relative z-[1] flex w-full flex-wrap items-center justify-between gap-8 bg-gradient-to-t from-black to-transparent p-6 pb-8 pt-36">
@@ -272,6 +311,9 @@ export default function Page() {
     );
 }
 
+const TournamentPath = z.array(Event);
+type TournamentPath = z.infer<typeof TournamentPath>;
+
 function useData({
     slug,
     regId,
@@ -286,7 +328,7 @@ function useData({
         throwOnError: true,
         queryFn: async () => {
             const result = await surreal.query<
-                [null, RichAttends | null, Event, boolean, boolean]
+                [null, RichAttends | null, TournamentPath, boolean, boolean]
             >(
                 /* surql */ `
                     LET $registration = SELECT * FROM ONLY type::thing('attends', $regId) 
@@ -294,7 +336,7 @@ function useData({
                         FETCH in, out, players.*;
 
                     $registration;
-                    $registration.out.computed.tournament.*;
+                    SELECT * FROM $registration.out.tournament_path ?? [];
                     $auth IN $registration.players.id;
                     $auth IN $registration.out.organiser.managers[?role IN ['owner', 'administrator', 'event_manager']].user;
                 `,
@@ -309,7 +351,7 @@ function useData({
 
             return {
                 registration: RichAttends.parse(result[1]),
-                main_tournament: Event.optional().parse(result[2] ?? undefined),
+                tournament_path: TournamentPath.parse(result[2]),
                 is_player: !!result[3],
                 can_manage: !!result[4],
             };

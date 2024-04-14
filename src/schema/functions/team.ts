@@ -22,8 +22,8 @@ const team = /* surrealql */ `
         -- Otherwise, if there is no age, then invalid
         -- Now both are a number, so then check based on min/max age
         -- Lastly, filter out players who previously signed up to this event
-        LET $players = $players[WHERE !$min_age OR (birthdate AND duration::years(time::now() - birthdate) < $min_age)];
-        LET $players = $players[WHERE !$max_age OR (birthdate AND duration::years(time::now() - birthdate) > $max_age)];
+        LET $players = $players[WHERE !$min_age OR (birthdate AND duration::years(time::now() - birthdate) >= $min_age)];
+        LET $players = $players[WHERE !$max_age OR (birthdate AND duration::years(time::now() - birthdate) <= $max_age)];
         LET $players = $players[WHERE !fn::team::find_actor_registration(id, $event)];
 
         RETURN $players
@@ -46,7 +46,6 @@ const team = /* surrealql */ `
             // Not eligable if any of the checks do not pass
             LET $not_eligable = array::any([
                 ($min_pool_size && array::len($eligable) < $min_pool_size),
-                ($max_pool_size && array::len($eligable) > $max_pool_size),
                 ($min_team_size && array::len($players) < $min_team_size),
                 ($max_team_size && array::len($players) > $max_team_size),
             ]);

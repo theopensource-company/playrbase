@@ -67,11 +67,11 @@ const players_validation = /* surrealql */ `
             THROW "Too many players for registration " + <string> $value.id;
         };
 
-        IF $min_age && array::len($value.players[?age && age < $min_age]) > 0 {
+        IF $min_age && array::len($value.players[WHERE !birthdate OR duration::years(time::now() - birthdate) < $min_age]) > 0 {
             THROW "Some players are too young in registration " + <string> $value.id;
         };
 
-        IF $max_age && array::len($value.players[?age && age > $max_age]) > 0 {
+        IF $max_age && array::len($value.players[WHERE !birthdate OR duration::years(time::now() - birthdate) > $max_age]) > 0 {
             THROW "Some players are too old in registration " + <string> $value.id;
         };
     };

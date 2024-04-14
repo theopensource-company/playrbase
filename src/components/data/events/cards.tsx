@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 import { Link } from '@/locales/navigation';
 import { Event } from '@/schema/resources/event';
 import { Baby, CalendarDays, Users } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 
 export function EventGrid({
@@ -126,6 +127,7 @@ export function EventCard({
     viewButton?: boolean;
     manageButton?: boolean;
 }) {
+    const t = useTranslations('components.data.events.cards.card');
     return (
         <div className="flex flex-col overflow-hidden rounded border">
             <Banner
@@ -234,7 +236,7 @@ export function EventCard({
                                     href={`/e/${event.id.slice(6)}`}
                                     className={buttonVariants({ size: 'sm' })}
                                 >
-                                    View
+                                    {t('view')}
                                 </Link>
                             )}
                             {manageButton && (
@@ -247,7 +249,7 @@ export function EventCard({
                                         variant: 'outline',
                                     })}
                                 >
-                                    Manage
+                                    {t('manage')}
                                 </Link>
                             )}
                         </>

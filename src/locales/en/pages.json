@@ -342,6 +342,30 @@
             }
           },
           "submit": "Create event"
+        },
+        "page": {
+          "overview": {
+            "title": "Overview"
+          },
+          "attendees": {
+            "title": "Attendees"
+          },
+          "events": {
+            "title": "Events"
+          },
+          "settings": {
+            "title": "Settings",
+            "change-logo": {
+              "title": "Change logo",
+              "description": "Upload a logo which will be shown publicly throughout {brand_name}",
+              "trigger": "Change logo"
+            },
+            "change-banner": {
+              "title": "Change banner",
+              "description": "Upload a banner which will be shown publicly throughout {brand_name}",
+              "trigger": "Change banner"
+            }
+          }
         }
       },
       "members": {
@@ -647,7 +671,8 @@
       },
       "button": {
         "continue": "Continue"
-      }
+      },
+      "privacy-policy": "By creating an account with {brand_name}, you agree to <link>our privacy policy</link>."
     },
     "create-passkey": {
       "title": "Create a Passkey",
@@ -660,6 +685,86 @@
       "created": {
         "label": "Passkey Name",
         "trigger": "Save name"
+      }
+    }
+  },
+  "e": {
+    "index": {
+      "not-found": "Event not found",
+      "banner": {
+        "manage": "Manage",
+        "registration": {
+          "manage": "Manage registration",
+          "register": "Register"
+        }
+      },
+      "details": {
+        "title": "Events",
+        "about": {
+          "title-tournament": "About the tournament",
+          "title-event": "About the event",
+          "start": "Start of event",
+          "end": "End of event",
+          "tournament": "Tournament",
+          "location": "Location"
+        },
+        "organiser": {
+          "title": "About the organiser",
+          "email": "Email address",
+          "website": "Website"
+        },
+        "outcome": "Outcome"
+      }
+    },
+    "registration": {
+      "title": "Registration",
+      "not-found": "Registration not found",
+      "banner": {
+        "view": "View event",
+        "unregister": {
+          "trigger": "Unregister",
+          "dialog": {
+            "title": "Are you sure?",
+            "description": "If you decide you still want to play after unregistering, you might need to wait for approval by the organiser.",
+            "submit": "I no longer want to participate"
+          }
+        }
+      },
+      "details": {
+        "confirmed": {
+          "label": "Confirmed",
+          "yes": "Yes",
+          "no": "No"
+        },
+        "registered-as": "Registered as",
+        "players": {
+          "label": "Players",
+          "remove": "Remove",
+          "add": "Add"
+        },
+        "about": {
+          "label": "About the event",
+          "start": "Start of event",
+          "end": "End of event"
+        }
+      }
+    }
+  },
+  "o": {
+    "index": {
+      "not-found": "Organisation not found",
+      "manage": "Manage",
+      "events": {
+        "title": "Events",
+        "empty": "No events found"
+      },
+      "about": {
+        "title": "About",
+        "email": "Email address",
+        "website": "Website",
+        "description": "Description",
+        "part-of": "Part of",
+        "members": "Members"
       }
     }
   }

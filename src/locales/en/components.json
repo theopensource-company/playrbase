@@ -495,6 +495,12 @@
         "button": {
           "save": "Create event"
         }
+      },
+      "cards": {
+        "card": {
+          "view": "View",
+          "manage": "Manage"
+        }
       }
     },
     "teams": {

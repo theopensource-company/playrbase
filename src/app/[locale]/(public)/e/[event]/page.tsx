@@ -32,7 +32,7 @@ import {
 import { linkToProfile } from '@/schema/resources/profile';
 import { useQuery } from '@tanstack/react-query';
 import { Share } from 'lucide-react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, { Fragment, useMemo, useState } from 'react';
 import { z } from 'zod';
@@ -41,6 +41,7 @@ export default function Page() {
     const params = useParams();
     const slug = Array.isArray(params.event) ? params.event[0] : params.event;
     const share = useShare();
+    const t = useTranslations('pages.e.index');
 
     const locale = useLocale();
     const order = useState<'desc' | 'asc'>('asc');
@@ -71,7 +72,7 @@ export default function Page() {
 
     if (isPending) return <LoaderOverlay />;
 
-    if (!data || !data.event) return <NotFoundScreen text="Event not found" />;
+    if (!data || !data.event) return <NotFoundScreen text={t('not-found')} />;
 
     const {
         event,
@@ -164,7 +165,7 @@ export default function Page() {
                                     'bg-white/10 backdrop-blur hover:bg-white/20'
                                 )}
                             >
-                                Manage
+                                {t('banner.manage')}
                             </Link>
                         )}
                         {!event.is_tournament && (
@@ -181,8 +182,8 @@ export default function Page() {
                                 className={buttonVariants()}
                             >
                                 {registration
-                                    ? 'Manage registration'
-                                    : 'Register'}
+                                    ? t('banner.registration.manage')
+                                    : t('banner.registration.register')}
                             </Link>
                         )}
                     </div>
@@ -192,7 +193,9 @@ export default function Page() {
                 {events.length > 0 && (
                     <div className="space-y-6 md:col-span-2 xl:col-span-3">
                         <div className="flex items-center justify-between pb-2">
-                            <h2 className="text-2xl font-semibold">Events</h2>
+                            <h2 className="text-2xl font-semibold">
+                                {t('details.title')}
+                            </h2>
                             <Pagination
                                 count={count}
                                 pagination={pagination}
@@ -205,8 +208,11 @@ export default function Page() {
                 <div className="space-y-6 md:col-span-2">
                     <div className="space-y-2">
                         <h2 className="pb-2 text-2xl font-semibold">
-                            About the{' '}
-                            {event.is_tournament ? 'tournament' : 'event'}
+                            {t(
+                                event.is_tournament
+                                    ? 'details.about.title-tournament'
+                                    : 'details.about.title-event'
+                            )}
                         </h2>
                         {event.computed.description && (
                             <div className="pb-2 text-foreground/75">
@@ -219,7 +225,7 @@ export default function Page() {
                     {event.start && (
                         <div className="space-y-1">
                             <h3 className="text-md font-semibold">
-                                Start of event
+                                {t('details.about.start')}
                             </h3>
                             <p className="text-sm text-foreground/75">
                                 <DateTooltip date={event.start} forceTime />
@@ -229,7 +235,7 @@ export default function Page() {
                     {event.end && (
                         <div className="space-y-1">
                             <h3 className="text-md font-semibold">
-                                End of event
+                                {t('details.about.end')}
                             </h3>
                             <p className="text-sm text-foreground/75">
                                 <DateTooltip date={event.end} forceTime />
@@ -239,7 +245,7 @@ export default function Page() {
                     {tournament && (
                         <div className="space-y-3">
                             <h3 className="text-md font-semibold">
-                                Tournament
+                                {t('details.about.tournament')}
                             </h3>
                             <div className="flex flex-col gap-3">
                                 <Profile
@@ -255,7 +261,9 @@ export default function Page() {
                     )}
                     {location && (
                         <div className="space-y-3">
-                            <h3 className="text-md font-semibold">Location</h3>
+                            <h3 className="text-md font-semibold">
+                                {t('details.about.location')}
+                            </h3>
                             <div className="w-full rounded-lg border p-2">
                                 <iframe
                                     width="100%"
@@ -269,7 +277,7 @@ export default function Page() {
                 </div>
                 <div className="space-y-6 md:col-span-2">
                     <h2 className="pb-2 text-2xl font-semibold">
-                        About the organiser
+                        {t('details.organiser.title')}
                     </h2>
                     <Profile
                         profile={organiser}
@@ -285,15 +293,19 @@ export default function Page() {
                         </p>
                     )}
                     <div className="space-y-1">
-                        <h3 className="text-md font-semibold">Email address</h3>
+                        <h3 className="text-md font-semibold">
+                            {t('details.organiser.email')}
+                        </h3>
                         <p className="text-sm text-foreground/75">
                             {organiser.email}
                         </p>
                     </div>
                     {organiser.website && (
                         <div className="space-y-1">
-                            <h3 className="text-md font-semibold">Website</h3>
-                            <p className="text-sm text-foreground/75">
+                            <h3 className="text-md font-semibold">
+                                {t('details.organiser.website')}
+                            </h3>
+                            <p className="text-sm text-foreground/75 hover:underline">
                                 <Link href={organiser.website} target="_blank">
                                     {organiser.website}
                                 </Link>

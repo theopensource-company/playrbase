@@ -15,6 +15,7 @@ import { Actor } from '@/schema/resources/actor';
 import { Event } from '@/schema/resources/event';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertOctagon, Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
@@ -28,6 +29,9 @@ export function EventSettingsTab({
     event: Event;
     refetch: () => unknown;
 }) {
+    const t = useTranslations(
+        'pages.console.organisation.events.page.settings'
+    );
     const { mutateAsync } = useUpdateEvent(event.id);
     const onSubmit = useCallback(
         async (payload: Partial<Event>) => {
@@ -76,30 +80,30 @@ export function EventSettingsTab({
                             <UploadImage
                                 intent="logo"
                                 actor={event as unknown as Actor}
-                                title="Upload Logo"
-                                description="Upload Logo"
+                                title={t('change-logo.title')}
+                                description={t('change-logo.description')}
                                 triggerRefresh={refetch}
                                 trigger={
                                     <Button
                                         variant="ghost"
                                         className="bg-white/10 backdrop-blur-lg hover:bg-white/20"
                                     >
-                                        Change logo
+                                        {t('change-logo.trigger')}
                                     </Button>
                                 }
                             />
                             <UploadImage
                                 intent="banner"
                                 actor={event as unknown as Actor}
-                                title="Upload Banner"
-                                description="Upload banner"
+                                title={t('change-banner.title')}
+                                description={t('change-banner.description')}
                                 triggerRefresh={refetch}
                                 trigger={
                                     <Button
                                         variant="ghost"
                                         className="bg-white/10 backdrop-blur-lg hover:bg-white/20"
                                     >
-                                        Change banner
+                                        {t('change-banner.trigger')}
                                     </Button>
                                 }
                             />

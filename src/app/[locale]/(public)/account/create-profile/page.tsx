@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useSurreal } from '@/lib/Surreal';
 import { useAuth } from '@/lib/auth';
+import { privacy_policy } from '@/lib/branding';
 import { useFeatureFlags } from '@/lib/featureFlags';
 import { cn } from '@/lib/utils';
 import { useWebAuthnAvailable } from '@/lib/webauthn';
@@ -27,6 +28,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import jwt from 'jsonwebtoken';
 import { Info, Loader2, XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -209,13 +211,27 @@ export default function CreateProfile() {
                             )}
                         </div>
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className="flex flex-col gap-2">
                         <Button
                             disabled={!isValid || !isBirthdateReady}
                             type="submit"
                         >
                             {t('button.continue')}
                         </Button>
+                        {privacy_policy && (
+                            <p>
+                                {t.rich('privacy-policy', {
+                                    link: (children) => (
+                                        <Link
+                                            href={privacy_policy ?? '#'}
+                                            target="_blank"
+                                        >
+                                            {children}
+                                        </Link>
+                                    ),
+                                })}
+                            </p>
+                        )}
                     </CardFooter>
                 </Card>
             </form>

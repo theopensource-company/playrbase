@@ -32,6 +32,7 @@ import { Organisation } from '@/schema/resources/organisation';
 import { linkToProfile } from '@/schema/resources/profile';
 import { User } from '@/schema/resources/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import React, { Fragment, useCallback, useMemo } from 'react';
 import { z } from 'zod';
@@ -41,6 +42,7 @@ export default function Page() {
     const params = useParams();
     const slug = Array.isArray(params.event) ? params.event[0] : params.event;
     const regId = Array.isArray(params.id) ? params.id[0] : params.id;
+    const t = useTranslations('pages.e.registration');
 
     const { isPending, isLoading, data, refetch } = useData({
         slug,
@@ -111,7 +113,7 @@ export default function Page() {
     );
 
     if (isPending) return <LoaderOverlay />;
-    if (!data) return <NotFoundScreen text="Registration not found" />;
+    if (!data) return <NotFoundScreen text={t('not-found')} />;
 
     const { registration, tournament_path, is_player, can_manage } = data;
     const { out: event, in: registrant, players } = registration;
@@ -183,21 +185,23 @@ export default function Page() {
                                 'bg-white/10 backdrop-blur hover:bg-white/20'
                             )}
                         >
-                            View event
+                            {t('banner.view')}
                         </Link>
                         {(is_player || can_manage) && (
                             <DD>
                                 <DDTrigger asChild>
                                     <Button variant="destructive">
-                                        Unregister
+                                        {t('banner.unregister.trigger')}
                                     </Button>
                                 </DDTrigger>
                                 <DDContent>
-                                    <DDTitle>Are you sure?</DDTitle>
+                                    <DDTitle>
+                                        {t('banner.unregister.dialog.title')}
+                                    </DDTitle>
                                     <DDDescription>
-                                        If you decide you still want to play
-                                        after unregistering, you might need to
-                                        wait for approval by the organiser.
+                                        {t(
+                                            'banner.unregister.dialog.description'
+                                        )}
                                     </DDDescription>
                                     <DDFooter>
                                         <Button
@@ -205,7 +209,9 @@ export default function Page() {
                                             onClick={() => deleteRegistration()}
                                             disabled={isDeletingRegistration}
                                         >
-                                            I no longer want to participate
+                                            {t(
+                                                'banner.unregister.dialog.submit'
+                                            )}
                                         </Button>
                                     </DDFooter>
                                 </DDContent>
@@ -217,20 +223,28 @@ export default function Page() {
             <div className="grid gap-16 md:grid-cols-2">
                 <div className="space-y-8">
                     <h2 className="pb-2 text-2xl font-semibold">
-                        Registration
+                        {t('title')}
                     </h2>
                     <div className="space-y-1">
-                        <h3 className="text-md font-semibold">Confirmed</h3>
+                        <h3 className="text-md font-semibold">
+                            {t('details.confirmed.label')}
+                        </h3>
                         <p className="text-sm text-foreground/75">
-                            {registration.confirmed ? 'Yes' : 'No'}
+                            {registration.confirmed
+                                ? t('details.confirmed.yes')
+                                : t('details.confirmed.no')}
                         </p>
                     </div>
                     <div className="space-y-3">
-                        <h3 className="text-md font-semibold">Registered as</h3>
+                        <h3 className="text-md font-semibold">
+                            {t('details.registered-as')}
+                        </h3>
                         <Profile profile={registrant} size="tiny" />
                     </div>
                     <div className="space-y-3">
-                        <h3 className="text-md font-semibold">Players</h3>
+                        <h3 className="text-md font-semibold">
+                            {t('details.players.label')}
+                        </h3>
                         <div className="flex flex-col gap-2">
                             {players.map((player) => (
                                 <div
@@ -254,7 +268,7 @@ export default function Page() {
                                                 variant="destructive"
                                                 size="sm"
                                             >
-                                                Remove
+                                                {t('details.players.remove')}
                                             </Button>
                                         ) : (
                                             <Button
@@ -268,7 +282,7 @@ export default function Page() {
                                                 }
                                                 size="sm"
                                             >
-                                                Add
+                                                {t('details.players.add')}
                                             </Button>
                                         ))}
                                 </div>
@@ -278,7 +292,7 @@ export default function Page() {
                 </div>
                 <div className="space-y-6">
                     <h2 className="pb-2 text-2xl font-semibold">
-                        About the event
+                        {t('details.about.label')}
                     </h2>
                     {event.computed.description && (
                         <p className="text-foreground/75">
@@ -288,7 +302,7 @@ export default function Page() {
                     {event.start && (
                         <div className="space-y-1">
                             <h3 className="text-md font-semibold">
-                                Start of event
+                                {t('details.about.start')}
                             </h3>
                             <p className="text-sm text-foreground/75">
                                 <DateTooltip date={event.start} />
@@ -298,7 +312,7 @@ export default function Page() {
                     {event.end && (
                         <div className="space-y-1">
                             <h3 className="text-md font-semibold">
-                                End of event
+                                {t('details.about.end')}
                             </h3>
                             <p className="text-sm text-foreground/75">
                                 <DateTooltip date={event.end} />

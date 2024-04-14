@@ -19,11 +19,13 @@ import {
 import { linkToProfile } from '@/schema/resources/profile';
 import { User } from '@/schema/resources/user';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { z } from 'zod';
 
 export default function Page() {
+    const t = useTranslations('pages.o.index');
     const params = useParams();
     const slug = Array.isArray(params.organisation)
         ? params.organisation[0]
@@ -40,7 +42,7 @@ export default function Page() {
     if (isPending) return <LoaderOverlay />;
 
     if (!data || !data.organisation)
-        return <NotFoundScreen text="Organisation not found" />;
+        return <NotFoundScreen text={t('not-found')} />;
 
     const { organisation, count, events, managers, part_of } = data;
 
@@ -62,14 +64,16 @@ export default function Page() {
                         href={linkToProfile(organisation, 'manage') ?? ''}
                         className={buttonVariants()}
                     >
-                        Manage
+                        {t('manage')}
                     </Link>
                 )}
             </div>
             <div className="flex flex-col-reverse gap-12 md:flex-row md:gap-16">
                 <div className="flex-[3] space-y-6">
                     <div className="flex items-center justify-between pb-2">
-                        <h2 className="text-2xl font-semibold">Events</h2>
+                        <h2 className="text-2xl font-semibold">
+                            {t('events.title')}
+                        </h2>
                         {events.length > 0 && (
                             <Pagination
                                 count={count}
@@ -81,20 +85,28 @@ export default function Page() {
                     {events.length > 0 ? (
                         <EventGrid events={events} viewButton narrow />
                     ) : (
-                        <p className="text-foreground/75">No events found</p>
+                        <p className="text-foreground/75">
+                            {t('events.empty')}
+                        </p>
                     )}
                 </div>
                 <div className="flex-[2] space-y-6">
-                    <h2 className="pb-2 text-2xl font-semibold">About</h2>
+                    <h2 className="pb-2 text-2xl font-semibold">
+                        {t('about.title')}
+                    </h2>
                     <div className="space-y-1">
-                        <h3 className="text-md font-semibold">Email</h3>
+                        <h3 className="text-md font-semibold">
+                            {t('about.email')}
+                        </h3>
                         <p className="text-sm text-foreground/75">
                             {organisation.email}
                         </p>
                     </div>
                     {organisation.website && (
                         <div className="space-y-1">
-                            <h3 className="text-md font-semibold">Website</h3>
+                            <h3 className="text-md font-semibold">
+                                {t('about.website')}
+                            </h3>
                             <Link
                                 href={organisation.website}
                                 target="_blank"
@@ -107,7 +119,7 @@ export default function Page() {
                     {organisation.description && (
                         <div className="space-y-1">
                             <h3 className="text-md font-semibold">
-                                Description
+                                {t('about.description')}
                             </h3>
                             <p className="text-sm text-foreground/75">
                                 <Markdown>{organisation.description}</Markdown>
@@ -116,7 +128,9 @@ export default function Page() {
                     )}
                     {part_of && (
                         <div className="space-y-3">
-                            <h3 className="text-md font-semibold">Part of</h3>
+                            <h3 className="text-md font-semibold">
+                                {t('about.part-of')}
+                            </h3>
                             <div className="flex flex-col gap-3">
                                 <Profile
                                     key={part_of.id}
@@ -131,7 +145,9 @@ export default function Page() {
                     )}
                     {managers.length > 0 && (
                         <div className="space-y-3">
-                            <h3 className="text-md font-semibold">Members</h3>
+                            <h3 className="text-md font-semibold">
+                                {t('about.members')}
+                            </h3>
                             <div className="flex flex-col gap-3">
                                 {managers.map((manager) => {
                                     const user = manager as unknown as User;

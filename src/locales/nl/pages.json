@@ -476,6 +476,30 @@
             "creating-event": "Evenement aan het maken"
           },
           "trigger": "Nieuw evenement"
+        },
+        "page": {
+          "attendees": {
+            "title": "Deelnemers"
+          },
+          "events": {
+            "title": "Evenementen"
+          },
+          "overview": {
+            "title": "Overzicht"
+          },
+          "settings": {
+            "change-banner": {
+              "description": "Upload een banner die overal in {brand_name} openbaar wordt getoond",
+              "title": "Verander banner",
+              "trigger": "Verander banner"
+            },
+            "change-logo": {
+              "description": "Upload een logo dat overal in {brand_name} openbaar wordt getoond",
+              "title": "Verander logo",
+              "trigger": "Verander logo"
+            },
+            "title": "Instellingen"
+          }
         }
       },
       "organisations": {
@@ -647,7 +671,8 @@
         }
       },
       "tagline": "om inschrijving te voltooien",
-      "title": "Profiel aanmaken"
+      "title": "Profiel aanmaken",
+      "privacy-policy": "Door een account te maken bij {brand_name}, ga je akkoord met <link>onze privacy voorwaarden</link>."
     },
     "create-passkey": {
       "created": {
@@ -661,6 +686,86 @@
         "trigger": "Passkey maken"
       },
       "title": "Maak een Passkey"
+    }
+  },
+  "e": {
+    "index": {
+      "banner": {
+        "manage": "Beheren",
+        "registration": {
+          "manage": "Registratie beheren",
+          "register": "Registreren"
+        }
+      },
+      "details": {
+        "about": {
+          "end": "Einde van evenement",
+          "location": "Locatie",
+          "start": "Start van evenement",
+          "title-event": "Over het evenement",
+          "title-tournament": "Over het tournament",
+          "tournament": "Tournament"
+        },
+        "organiser": {
+          "email": "E-mailadres",
+          "title": "Over de organisator",
+          "website": "Website"
+        },
+        "outcome": "Uitslag",
+        "title": "Evenementen"
+      },
+      "not-found": "Evenement niet gevonden"
+    },
+    "registration": {
+      "banner": {
+        "unregister": {
+          "dialog": {
+            "description": "Als je na het uitschrijven besluit dat je toch wilt spelen, moet je mogelijk wachten op goedkeuring van de organisator.",
+            "submit": "Ik wil niet langer deelnemen",
+            "title": "Weet je het zeker?"
+          },
+          "trigger": "Uitschrijven"
+        },
+        "view": "Bekijk evenement"
+      },
+      "details": {
+        "about": {
+          "end": "Einde van evenement",
+          "label": "Over het evenement",
+          "start": "Start van evenement"
+        },
+        "confirmed": {
+          "label": "Bevestigd",
+          "no": "Nee",
+          "yes": "Ja"
+        },
+        "players": {
+          "add": "Toevoegen",
+          "label": "Spelers",
+          "remove": "Verwijderen"
+        },
+        "registered-as": "Geregistreerd als"
+      },
+      "not-found": "Registratie niet gevonden",
+      "title": "Registratie"
+    }
+  },
+  "o": {
+    "index": {
+      "about": {
+        "description": "Beschrijving",
+        "email": "E-mailadres",
+        "members": "Leden",
+        "part-of": "Onderdeel van",
+        "title": "Over",
+        "website": "Website"
+      },
+      "events": {
+        "empty": "Geen evenementen gevonden",
+        "title": "Evenementen"
+      },
+      "manage": "Beheren",
+      "not-found": "Organisatie niet gevonden"
     }
   }
 }

@@ -111,15 +111,19 @@ export default function Account() {
                                     />
                                 </Link>
                             </div>
-                            <Tab value="overview">Overview</Tab>
-                            <Tab value="attendees">Attendees</Tab>
-                            <Tab value="events">Events</Tab>
+                            <Tab value="overview">
+                                {t('page.overview.title')}
+                            </Tab>
+                            <Tab value="attendees">
+                                {t('page.attendees.title')}
+                            </Tab>
+                            <Tab value="events">{t('page.events.title')}</Tab>
                             {organisation.can_manage && (
                                 <Tab
                                     value="settings"
                                     className="bg-transparent"
                                 >
-                                    Settings
+                                    {t('page.settings.title')}
                                 </Tab>
                             )}
                         </Container>

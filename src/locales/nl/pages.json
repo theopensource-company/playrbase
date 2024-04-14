@@ -487,6 +487,78 @@
           }
         }
       }
+    },
+    "flow": {
+      "event-signup": {
+        "banner": {
+          "title": "Registeer je voor {event_name}",
+          "view-event": "Bekijk evenement"
+        },
+        "confirmation": {
+          "awaiting": {
+            "description": "Wij wachten tot de organisator jouw inschrijving bevestigt. Bewaar in de tussentijd de gegevens hieronder",
+            "title": "Wachtend op bevestiging"
+          },
+          "confirmed": {
+            "description": "Je inschrijving is bevestigd door de organisator. Zorg ervoor dat je de gegevens hieronder opslaat",
+            "title": "Je bent binnen! 🎉"
+          },
+          "manage": "Registratie beheren",
+          "playing-as": "Speelt als",
+          "playing-with": "Speelt met"
+        },
+        "event-not-found": "Evenement niet gevonden",
+        "step1": {
+          "continue": "Doorgaan",
+          "create-team": "Maak een team",
+          "not-eligable": {
+            "description": "Jij, of een van je teams, komt niet in aanmerking om zich aan te melden voor dit evenement. Dit kan zijn omdat jij of je teamleden mogelijk niet voldoen aan de leeftijdsvereisten of aan het aantal mensen dat zich moet inschrijven voor dit evenement. Houd er rekening mee dat spelers die nog geen teamuitnodiging hebben geaccepteerd, niet meetellen voor het aantal mensen in je team.",
+            "new-team": "Als je een nieuw team wilt aanmaken om je aan te melden voor dit evenement, kan je dat hieronder doen."
+          },
+          "table-eligable": {
+            "actions": {
+              "continue": "Doorgaan",
+              "selected": "Geselecteerd"
+            },
+            "caption": "Als je account of je team hier niet verschijnt, betekent dit dat zij niet in aanmerking komen om zich in te schrijven voor dit evenement, mogelijk vanwege leeftijds- of poulegroottebeperkingen opgelegd door de organisator. Houd er rekening mee dat spelers die nog geen uitnodiging voor een team hebben geaccepteerd, niet meetellen voor de totale teamgrootte.",
+            "column": {
+              "actions": "Acties",
+              "kind": "Soort",
+              "name": "Naam"
+            },
+            "kind": {
+              "team": "Team",
+              "your-account": "Jouw account"
+            }
+          },
+          "title": "1. Wie meldt zich aan?"
+        },
+        "step2": {
+          "continue": "Doorgaan",
+          "table": {
+            "actions": {
+              "add": "Toevoegen",
+              "remove": "Verwijderen"
+            },
+            "column": {
+              "actions": "Acties",
+              "email": "E-mailadres",
+              "name": "Naam"
+            }
+          },
+          "title": "2. Wie speelt er?"
+        },
+        "step3": {
+          "confirm": "Bevestig registratie",
+          "confirmed": "Registratie bevestigd!",
+          "description": "Bevestig dat de gegevens voor je registratie allemaal correct zijn om je registratie te bevestigen",
+          "failed": "Registreren is mislukt",
+          "playing-as": "Speelt als",
+          "playing-with": "Speelt met",
+          "title": "3. Bevestig registratie"
+        },
+        "user-not-found": "Gebruiker niet gevonden"
+      }
     }
   },
   "account": {

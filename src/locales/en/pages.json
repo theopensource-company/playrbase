@@ -487,6 +487,78 @@
           }
         }
       }
+    },
+    "flow": {
+      "event-signup": {
+        "user-not-found": "User not found",
+        "event-not-found": "Event not found",
+        "banner": {
+          "title": "Register for {event_name}",
+          "view-event": "View event"
+        },
+        "confirmation": {
+          "confirmed": {
+            "title": "You're in! 🎉",
+            "description": "Your registration is confirmed by the organiser. Make sure to save the details down below"
+          },
+          "awaiting": {
+            "title": "Awaiting confirmation",
+            "description": "We are waiting for the organiser to confirm your registration. In the meantime, save the details down below"
+          },
+          "playing-as": "Playing as",
+          "playing-with": "Playing with",
+          "manage": "Manage registration"
+        },
+        "step1": {
+          "title": "1. Who is signin up?",
+          "not-eligable": {
+            "description": "You, or any of your teams, are not eligable to sign up to this event. This may be because you or your team members may not meet the age requirements, or the amount of people that need to sign up to this event. Kindly note that players who have not yet accepted a team invite, do not count towards the number of people inside your team.",
+            "new-team": "If you wish to create a new team to signup to this event, you can do so too."
+          },
+          "table-eligable": {
+            "column": {
+              "name": "Name",
+              "kind": "Kind",
+              "actions": "Actions"
+            },
+            "kind": {
+              "team": "Team",
+              "your-account": "Your account"
+            },
+            "actions": {
+              "selected": "Selected",
+              "continue": "Continue"
+            },
+            "caption": "If your account or your team does not show up here, this means that they are not eligable to sign up for this event, possibly due to age or pool size constraints set by the organiser. Kindly note that players who have not yet accepted an invite to a team do not count up to the total team size."
+          },
+          "continue": "Continue",
+          "create-team": "Create team"
+        },
+        "step2": {
+          "title": "2. Who is playing?",
+          "table": {
+            "column": {
+              "name": "Name",
+              "email": "Email",
+              "actions": "Actions"
+            },
+            "actions": {
+              "remove": "Remove",
+              "add": "Add"
+            }
+          },
+          "continue": "Continue"
+        },
+        "step3": {
+          "title": "3. Confirm registration",
+          "description": "Confirm that the details for your registration are all correct to confirm your registration",
+          "playing-as": "Playing as",
+          "playing-with": "Playing with",
+          "confirm": "Confirm registration",
+          "failed": "Failed to register",
+          "confirmed": "Registration confirmed!"
+        }
+      }
     }
   },
   "account": {

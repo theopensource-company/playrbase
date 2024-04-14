@@ -39,7 +39,7 @@ export default function EventAttendeesTab({ event }: { event: Event }) {
             <div className="rounded-md border">
                 <AttendsTable
                     registrations={attendees ?? []}
-                    columns={{ out: false }}
+                    columns={{ out: event.is_tournament }}
                 />
             </div>
             <div className="flex items-center justify-end gap-10 pt-2">

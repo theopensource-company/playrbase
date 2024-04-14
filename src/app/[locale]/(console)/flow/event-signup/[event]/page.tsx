@@ -272,7 +272,7 @@ function Render({
                                     {tournament_path.map((item, i) =>
                                         item.id == event.id ? (
                                             <BreadcrumbItem key={item.id}>
-                                                <BreadcrumbPage>
+                                                <BreadcrumbPage className="text-white">
                                                     {item.name}
                                                 </BreadcrumbPage>
                                             </BreadcrumbItem>
@@ -280,7 +280,7 @@ function Render({
                                             <Fragment key={item.id}>
                                                 <BreadcrumbItem>
                                                     <BreadcrumbLink
-                                                        className="flex items-center gap-2"
+                                                        className="flex items-center gap-2 text-white/60 hover:text-white"
                                                         href={
                                                             linkToProfile(
                                                                 item,

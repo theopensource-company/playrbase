@@ -559,6 +559,47 @@
           "confirmed": "Registration confirmed!"
         }
       }
+    },
+    "team": {
+      "overview": {
+        "title": "Overview",
+        "registrations": "Registrations",
+        "members": "Members",
+        "registration-count": {
+          "single": "View registrations",
+          "multiple": "View all {registration_count} registrations"
+        },
+        "member-count": {
+          "single": "View members",
+          "multiple": "View all {player_count} members"
+        }
+      },
+      "registration": {
+        "title": "Registrations"
+      },
+      "members": {
+        "title": "Members",
+        "not_found": "Team not found"
+      },
+      "settings": {
+        "title": "Settings",
+        "not_found": "Team not found",
+        "logo": {
+          "title": "Team Logo",
+          "description": "This is the public logo of your team, shown all throughout {brand_name}.",
+          "change": "change logo"
+        },
+        "name": {
+          "title": "Team name",
+          "description": "This is the public name of your team, shown all throughout {brand_name}.",
+          "submit": "Save name"
+        },
+        "description": {
+          "title": "Team description",
+          "description": "This is the public description of your team, shown all throughout {brand_name}.",
+          "submit": "Save description"
+        }
+      }
     }
   },
   "account": {

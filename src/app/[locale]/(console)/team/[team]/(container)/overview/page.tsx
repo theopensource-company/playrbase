@@ -12,12 +12,14 @@ import { Team } from '@/schema/resources/team';
 import { User } from '@/schema/resources/user';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React from 'react';
 import { z } from 'zod';
 import { PageTitle } from '../../components/PageTitle';
 
 export default function Account() {
+    const t = useTranslations('pages.console.team.overview');
     const params = useParams();
     const slug = Array.isArray(params.team) ? params.team[0] : params.team;
 
@@ -33,13 +35,13 @@ export default function Account() {
 
     return (
         <div className="flex flex-grow flex-col gap-6 pt-6">
-            <PageTitle team={team} title="Overview" />
+            <PageTitle team={team} title={t('title')} />
             <div className="grid grid-cols-1 gap-16 xl:grid-cols-3">
                 <div className="space-y-12 xl:col-span-2">
                     <div className="space-y-6">
                         <div className="flex justify-between gap-8">
                             <h2 className="text-xl font-semibold">
-                                Registrations
+                                {t('registrations')}
                             </h2>
                             <Link
                                 href={`/team/${slug}/registrations`}
@@ -48,8 +50,10 @@ export default function Account() {
                                 })}
                             >
                                 {registration_count >= 6
-                                    ? `View all ${registration_count} registrations`
-                                    : 'View all registrations'}
+                                    ? t('registration-count.multiple', {
+                                          registration_count,
+                                      })
+                                    : t('registration-count.single')}
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
                         </div>
@@ -66,7 +70,9 @@ export default function Account() {
                 <div className="space-y-12">
                     <div className="space-y-6">
                         <div className="flex items-center justify-between gap-8">
-                            <h2 className="text-xl font-semibold">Members</h2>
+                            <h2 className="text-xl font-semibold">
+                                {t('members')}
+                            </h2>
                             <Link
                                 href={`/team/${slug}/members`}
                                 className={buttonVariants({
@@ -74,8 +80,8 @@ export default function Account() {
                                 })}
                             >
                                 {player_count >= 6
-                                    ? `View all ${player_count} members`
-                                    : 'View all members'}
+                                    ? t('member-count.multiple')
+                                    : t('member-count.single')}
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
                         </div>

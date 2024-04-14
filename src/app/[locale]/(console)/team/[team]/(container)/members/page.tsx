@@ -38,7 +38,7 @@ export default function Account() {
     const params = useParams();
     const slug = Array.isArray(params.team) ? params.team[0] : params.team;
     const { isPending, data, refetch } = useData(slug);
-    const t = useTranslations('pages.console.organisation.members');
+    const t = useTranslations('pages.console.team.members');
 
     if (!data?.team) return <NotFoundScreen text={t('not_found')} />;
     const team = data.team;

@@ -11,10 +11,12 @@ import { useAuth } from '@/lib/auth';
 import { useRouter } from '@/locales/navigation';
 import { User } from '@/schema/resources/user';
 import { ArrowLeft } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, { ReactNode, useEffect } from 'react';
 
 export default function TeamLayout({ children }: { children: ReactNode }) {
+    const t = useTranslations('pages.console.team');
     const router = useRouter();
     const params = useParams();
     const slug = Array.isArray(params.team) ? params.team[0] : params.team;
@@ -41,12 +43,18 @@ export default function TeamLayout({ children }: { children: ReactNode }) {
                     <NavbarSubLink>
                         <ArrowLeft />
                     </NavbarSubLink>
-                    <NavbarSubLink link="overview">Overview</NavbarSubLink>
-                    <NavbarSubLink link="registrations">
-                        Registrations
+                    <NavbarSubLink link="overview">
+                        {t('overview.title')}
                     </NavbarSubLink>
-                    <NavbarSubLink link="members">Members</NavbarSubLink>
-                    <NavbarSubLink link="settings">Settings</NavbarSubLink>
+                    <NavbarSubLink link="registrations">
+                        {t('registration.title')}
+                    </NavbarSubLink>
+                    <NavbarSubLink link="members">
+                        {t('members.title')}
+                    </NavbarSubLink>
+                    <NavbarSubLink link="settings">
+                        {t('settings.title')}
+                    </NavbarSubLink>
                 </NavbarSubLinks>
             </Navbar>
             <div className="flex flex-grow flex-col pb-24 pt-8">

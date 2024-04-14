@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTeam, useUpdateTeam } from '@/lib/Queries/Team';
 import { useSurreal } from '@/lib/Surreal';
-import { brand_name } from '@/lib/branding';
 import { useRouter } from '@/locales/navigation';
 import { Team } from '@/schema/resources/team';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,9 +23,7 @@ import { z } from 'zod';
 import { PageTitle } from '../../components/PageTitle';
 
 export default function Account() {
-    const t = useTranslations(
-        'pages.console.team.settings'
-    );
+    const t = useTranslations('pages.console.team.settings');
     const params = useParams();
     const slug = Array.isArray(params.team) ? params.team[0] : params.team;
     const { isPending, data: team, refetch } = useTeam<Team>({ slug });
@@ -37,38 +34,36 @@ export default function Account() {
         <LoaderOverlay />
     ) : team ? (
         <div className="flex max-w-2xl flex-grow flex-col gap-6 pt-6">
-            <PageTitle team={team} title= {t("title")} />
+            <PageTitle team={team} title={t('title')} />
             <div className="flex w-full items-center justify-between gap-16 rounded-lg border p-6">
                 <div className="flex flex-col gap-6">
                     <div className="space-y-2">
-                        <h2 className="text-xl font-bold">{t("logo.title")}</h2>
-                        <p>
-                            {t("logo.description")}
-                        </p>
+                        <h2 className="text-xl font-bold">{t('logo.title')}</h2>
+                        <p>{t('logo.description')}</p>
                     </div>
                     <UploadImage
                         intent="logo"
                         actor={team}
                         triggerRefresh={refetch}
-                        title={t("logo.change")}
-                        description={t("logo.description")}
+                        title={t('logo.change')}
+                        description={t('logo.description')}
                     />
                 </div>
                 <Avatar profile={team} renderBadge={false} size="huge" />
             </div>
             <EditorBox
-                title={t("name.title")}
-                description={t("name.description")}
-                submit={t("name.submit")}
+                title={t('name.title')}
+                description={t('name.description')}
+                submit={t('name.submit')}
                 defaultValue={team.name}
                 mutate={mutate}
                 Schema={Team.pick({ name: true })}
                 field="name"
             />
             <EditorBox
-                title={t("description.title")}
-                description={t("description.description")}
-                submit={t("description.submit")}
+                title={t('description.title')}
+                description={t('description.description')}
+                submit={t('description.submit')}
                 defaultValue={team.description}
                 mutate={mutate}
                 Schema={Team.pick({ description: true })}
@@ -78,7 +73,7 @@ export default function Account() {
             <DangerZone team={team} />
         </div>
     ) : (
-        <NotFoundScreen text={t("not_found")} />
+        <NotFoundScreen text={t('not_found')} />
     );
 }
 

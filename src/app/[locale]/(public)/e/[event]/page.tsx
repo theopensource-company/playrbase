@@ -290,6 +290,16 @@ export default function Page() {
                             {organiser.email}
                         </p>
                     </div>
+                    {organiser.website && (
+                        <div className="space-y-1">
+                            <h3 className="text-md font-semibold">Website</h3>
+                            <p className="text-sm text-foreground/75">
+                                <Link href={organiser.website} target="_blank">
+                                    {organiser.website}
+                                </Link>
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
 

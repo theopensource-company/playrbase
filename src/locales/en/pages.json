@@ -672,7 +672,7 @@
       "button": {
         "continue": "Continue"
       },
-      "privacy-policy": "By creating an account with {brand_name}, you agree to <link>our privacy policy</link>."
+      "privacy-policy": "By creating an account with {brand_name}, you agree to our <link>privacy policy</link>."
     },
     "create-passkey": {
       "title": "Create a Passkey",

@@ -211,7 +211,7 @@ export default function CreateProfile() {
                             )}
                         </div>
                     </CardContent>
-                    <CardFooter className="flex flex-col gap-2">
+                    <CardFooter className="flex flex-col gap-4">
                         <Button
                             disabled={!isValid || !isBirthdateReady}
                             type="submit"
@@ -219,12 +219,13 @@ export default function CreateProfile() {
                             {t('button.continue')}
                         </Button>
                         {privacy_policy && (
-                            <p>
+                            <p className="text-xs text-muted-foreground">
                                 {t.rich('privacy-policy', {
                                     link: (children) => (
                                         <Link
                                             href={privacy_policy ?? '#'}
                                             target="_blank"
+                                            className="text-foreground hover:underline"
                                         >
                                             {children}
                                         </Link>

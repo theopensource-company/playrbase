@@ -672,7 +672,7 @@
       },
       "tagline": "om inschrijving te voltooien",
       "title": "Profiel aanmaken",
-      "privacy-policy": "Door een account te maken bij {brand_name}, ga je akkoord met <link>onze privacy voorwaarden</link>."
+      "privacy-policy": "Door een account te maken bij {brand_name}, ga je akkoord met onze <link>privacy voorwaarden</link>."
     },
     "create-passkey": {
       "created": {

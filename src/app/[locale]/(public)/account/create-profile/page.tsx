@@ -211,7 +211,7 @@ export default function CreateProfile() {
                             )}
                         </div>
                     </CardContent>
-                    <CardFooter className="flex flex-col gap-4">
+                    <CardFooter className="flex flex-col gap-6">
                         <Button
                             disabled={!isValid || !isBirthdateReady}
                             type="submit"

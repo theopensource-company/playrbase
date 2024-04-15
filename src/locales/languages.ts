@@ -7,6 +7,10 @@ export const languages = {
         native: 'Nederlands',
         flag: 'nl',
     },
+    de: {
+        native: 'German',
+        flag: 'de',
+    }
 } satisfies Record<
     string,
     {

@@ -66,7 +66,7 @@ export function UserEmailSelector({
             surreal
                 .query<[(User | EmailProfile)[]]>(
                     /* surql */ `
-                        SELECT * FROM user WHERE id != $auth && $email && email ~ $email LIMIT $limit
+                        SELECT * FROM user WHERE id != $auth && $email && (email ~ $email OR name ~ $email) LIMIT $limit
                     `,
                     { email: input.toLowerCase(), limit }
                 )

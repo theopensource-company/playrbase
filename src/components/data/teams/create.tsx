@@ -20,8 +20,7 @@ import { EmailProfile } from '@/schema/resources/profile';
 import { Team } from '@/schema/resources/team';
 import { UserAnonymous } from '@/schema/resources/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { Mail, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -169,21 +168,18 @@ function StepInvitePlayers({
     );
     const t = useTranslations('components.data.teams.create.step-invite');
 
-    const { mutateAsync, error } = useMutation({
-        mutationKey: ['team', 'invite-member'],
-        async mutationFn() {
-            if (user) {
-                await fetch('/api/invite', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        origin: user.toLowerCase(),
-                        target: team,
-                    }),
-                });
-
+    useEffect(() => {
+        if (user) {
+            fetch('/api/invite', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    origin: user.toLowerCase(),
+                    target: team,
+                }),
+            }).then(async () => {
                 if (z.string().email().safeParse(user).success) {
                     setInvited([{ email: user, type: 'email' }, ...invited]);
                 } else {
@@ -194,11 +190,11 @@ function StepInvitePlayers({
                         }
                     });
                 }
+            });
 
-                setUser(undefined);
-            }
-        },
-    });
+            setUser(undefined);
+        }
+    }, [user, setUser, invited, setInvited, surreal, team]);
 
     return (
         <>
@@ -212,14 +208,9 @@ function StepInvitePlayers({
                     setUser={setUser}
                     autoFocus
                     autoComplete="off"
-                />
-                <div>
-                    <Button disabled={!user} onClick={() => mutateAsync()}>
-                        <Mail className="mr-2 h-4 w-4" />
-                        {t('button-invite')}
-                    </Button>
-                    {!!error && <p>{(error as Error).message}</p>}
-                </div>
+                >
+                    {t('button-invite')}
+                </UserEmailSelector>
                 {invited.length > 0 && (
                     <div className="space-y-3">
                         <h3 className="text-lg font-semibold">

@@ -75,7 +75,12 @@ export default function Page() {
     } = useMutation({
         mutationKey: ['registration', 'delete-registration', slug, regId],
         async mutationFn() {
-            await surreal.delete(`attends:${slug}`);
+            await surreal.query(
+                /* surql */ `delete type::thing("attends", $regId)`,
+                {
+                    regId,
+                }
+            );
             router.push(`/e/${slug}`);
         },
     });

@@ -163,7 +163,7 @@ const populate_initial_computed = /* surrealql */ `
 
 const populate_tournament_path = /* surrealql */ `
     DEFINE EVENT populate_tournament_path ON event WHEN $event = "CREATE" THEN {
-        UPDATE $value.id SET computed = array::append(($value.tournament.tournament_path ?? []), $value.id);
+        UPDATE $value.id SET tournament_path = array::append(($value.tournament.tournament_path ?? []), $value.id);
     };
 `;
 

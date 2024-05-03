@@ -173,7 +173,7 @@ function useData() {
 
                 object::from_entries((
                     SELECT VALUE [<string> id, target.*]
-                        FROM invite WHERE origin = $auth AND meta::tb(target) == 'organisation'
+                        FROM invite WHERE origin = $auth AND meta::tb(target) == 'organisation' AND target.id
                 ));
             `);
 

@@ -533,6 +533,23 @@
           "playing-with": "Playing with",
           "manage": "Manage registration"
         },
+        "team-guide": {
+          "title": "Three steps to register for this event",
+          "step1": {
+            "title": "Choose or create a team",
+            "description": "⁠Create a team or register your existing team. If you don't have a team yet, create a team first. Choose a team name and send {min_others, plural, =0 {} other {at least #}} { uncomputed, select, false {and} other {}} {max_others, plural, =-1 {} other {at most #}} {uncomputed, select, false {other} other {}} teammates an invite (NOTE: These teammates may not be younger or older than the event for which you are registering.) Only when they have accepted your invite can you proceed to step 2. If you have already created your team and your teammates have already accepted your invite, you can continue immediately to step 2."
+          },
+          "step2": {
+            "title": "Choose your players",
+            "description-none": "⁠Select the players for this stop.",
+            "description-team-max": "⁠Select the players for this stop. From the maximum {team_max} players that your team can has, choose {min, plural, =0 {} other {at least #}} {both, select, true {and} other {}} {max, plural, =-1 {} other {at most #}} players for this stop.",
+            "description-no-team-max": "⁠Select the players for this stop. Of the players in your team, choose {min, plural, =0 {} other {at least #}} {both, select , true {and} other {}} {max, plural, =-1 {} other {at most #}} players for this stop."
+          },
+          "step3": {
+            "title": "Confirm your participation in this stop.",
+            "description": "Check that all information is correct and confirm your participation. If you also want to register for other stops, you must do so separately."
+          }
+        },
         "step1": {
           "title": "1. Who is signin up?",
           "not-eligable": {
@@ -543,6 +560,7 @@
             "column": {
               "name": "Name",
               "kind": "Kind",
+              "eligable": "Eligable",
               "actions": "Actions"
             },
             "kind": {
@@ -550,8 +568,13 @@
               "your-account": "Your account"
             },
             "actions": {
+              "manage-team": "Manage team",
               "selected": "Selected",
               "continue": "Continue"
+            },
+            "explanation": {
+              "why-team": "Why is this team not eligable?",
+              "why-user": "Why is my account not eligable?"
             },
             "caption": "If your account or your team does not show up here, this means that they are not eligable to sign up for this event, possibly due to age or pool size constraints set by the organiser. Kindly note that players who have not yet accepted an invite to a team do not count up to the total team size."
           },
@@ -581,6 +604,17 @@
           "confirm": "Confirm registration",
           "failed": "Failed to register",
           "confirmed": "Registration confirmed!"
+        },
+        "eligability-report": {
+          "pending-invites": " There {invites, plural, =1 {is} other {are}} still {invites} more pending {invites, plural, =1 {invite} other {invites}}.",
+          "eligable-and-players-lacking": "You need {num_missing} more {num_missing, plural, =1 {player} other {players}} in your team.",
+          "eligable-lacking": "Only {num_eligable} out of {num_players} {num_players, plural, =1 {player} other {players}} in your team {num_eligable, plural, =1 {is} other {are}} eligable. You need {num_missing} more {num_missing, plural, =1 {player} other {players}}.",
+          "players-lacking": "You need {num_lacking} more {num_missing, plural, =1 {player} other {players}} in your team.",
+          "min-pool-personal": "You need at least {min_pool_size} players to register for this event, which means you need to register with a team.",
+          "min-team-personal": "You need at least {min_team_size} players in a team to register for this event, which means you need to register with a team.",
+          "player-overflow": "There {num_overflow, plural, =1 {is} other {are}} ${num_overflow} too many {num_overflow, plural, =1 {player} other {players}} in your team.",
+          "num-under-age": "There {num_under_age, plural, =1 {is} other {are}} {num_under_age} {num_under_age, plural, =1 {player} other {players}} in your team that are not eligable to play, because they are too young.",
+          "num-over-age": "There {num_over_age, plural, =1 {is} other {are}} {num_over_age} {num_over_age, plural, =1 {player} other {players}} in your team that are not eligable to play, because they are too old."
         }
       }
     },

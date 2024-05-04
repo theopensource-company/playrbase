@@ -532,6 +532,23 @@
           "playing-with": "Speelt met"
         },
         "event-not-found": "Evenement niet gevonden",
+        "team-guide": {
+          "title": "Drie stappen om je voor dit event te registeren",
+          "step1": {
+            "title": "Kies of maak een team",
+            "description": "⁠Maak een team of meldt je bestaande team aan. Als je nog geen team hebt maak je eerst een team aan. Kies een teamnaam en stuur {min_others, plural, =0 {} other {minimaal #}} {uncomputed, select, false {en} other {}} {max_others, plural, =-1 {} other {maximaal #}} {uncomputed, select, false {andere} other {}} teamgenoten een invite. (LET OP: Deze teamgenoten mogen niet jonger of ouder zijn dan het event waarvoor je je aanmeld.) Pas als zij jou invite hebben geaccepteerd kan je verder naar stap 2. Heb je al eerder je team aangemaakt en hebben jou teamgenoten je aanvraag al geaccepteerd dan kan je gelijk door naar stap 2."
+          },
+          "step2": {
+            "title": "Kies je spelers",
+            "description-none": "⁠Selecteer de spelers voor deze stop.",
+            "description-team-max": "⁠Selecteer de spelers voor deze stop. Van de maximaal {team_max} spelers die jouw team mag hebben kies je er voor deze stop {min, plural, =0 {} other {minimaal #}} {both, select, true {en} other {}} {max, plural, =-1 {} other {maximaal #}}.",
+            "description-no-team-max": "⁠Selecteer de spelers voor deze stop. Van de spelers in jouw team kies je er voor deze stop {min, plural, =0 {} other {minimaal #}} {both, select, true {en} other {}} {max, plural, =-1 {} other {maximaal #}}."
+          },
+          "step3": {
+            "title": "Bevestig je deelname aan deze stop.",
+            "description": "Controleer of alle gegevens kloppen en bevestig je deelname. Als je je ook voor andere stops wilt inschrijven moet je dat los doen."
+          }
+        },
         "step1": {
           "continue": "Doorgaan",
           "create-team": "Maak een team",
@@ -541,6 +558,7 @@
           },
           "table-eligable": {
             "actions": {
+              "manage-team": "Beheer team",
               "continue": "Doorgaan",
               "selected": "Geselecteerd"
             },
@@ -548,11 +566,16 @@
             "column": {
               "actions": "Acties",
               "kind": "Soort",
+              "eligable": "Komt in aanmerking",
               "name": "Naam"
             },
             "kind": {
               "team": "Team",
               "your-account": "Jouw account"
+            },
+            "explanation": {
+              "why-team": "Waarom komt dit team niet in aanmerking?",
+              "why-user": "Waarom komt mijn account niet in aanmerking?"
             }
           },
           "title": "1. Wie meldt zich aan?"
@@ -580,6 +603,17 @@
           "playing-as": "Speelt als",
           "playing-with": "Speelt met",
           "title": "3. Bevestig registratie"
+        },
+        "eligability-report": {
+          "pending-invites": " Er {invites, plural, =1 {is} other {zijn}} nog {invites} open {invites, plural, =1 {uitnodiging} other {uitnodigingen}}.",
+          "eligable-and-players-lacking": "Je hebt nog {num_missing} extra {num_missing, plural, =1 {speler} other {spelers}} nodig in je team.",
+          "eligable-lacking": "Enkel {num_eligable} van de {num_players} {num_players, plural, =1 {speler} other {spelers}} in je team {num_eligable, plural, =1 {komt} other {komen}} in aanmerking. Je hebt nog {num_missing} extra {num_missing, plural, =1 {speler} other {spelers}} nodig.",
+          "players-lacking": "Je hebt nog {num_lacking} extra {num_missing, plural, =1 {speler} other {spelers}} nodig in je team.",
+          "min-pool-personal": "Je hebt tenminste {min_pool_size} spelers nodig om je te registeren voor dit evenement, wat betekend dat je je moet registreren als een team.",
+          "min-team-personal": "Je hebt tenminste {min_pool_size} spelers nodig in je team om je te registeren voor dit evenement, wat betekend dat je je moet registreren als een team.",
+          "player-overflow": "Er {num_overflow, plural, =1 {is} other {zijn}} ${num_overflow} {num_overflow, plural, =1 {speler} other {spelers}} teveel in je team.",
+          "num-under-age": "Er {num_under_age, plural, =1 {is} other {zijn}} {num_under_age} {num_under_age, plural, =1 {speler} other {spelers}} in je team die niet in aanmerking {num_under_age, plural, =1 {komt} other {komen}}, omdat ze te jong zijn.",
+          "num-over-age": "Er {num_over_age, plural, =1 {is} other {zijn}} {num_over_age} {num_over_age, plural, =1 {speler} other {spelers}} in je team die niet in aanmerking {num_over_age, plural, =1 {komt} other {komen}}, omdat ze te oud zijn."
         },
         "user-not-found": "Gebruiker niet gevonden"
       }

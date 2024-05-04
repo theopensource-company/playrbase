@@ -55,7 +55,7 @@ const enfore_unique_index = /* surrealql */ `
 `;
 
 const prevent_duplicate_relation = /* surrealql */ `
-    DEFINE EVENT prevent_duplicate_relation ON invite THEN {
+    DEFINE EVENT prevent_duplicate_relation ON invite WHEN $event = "CREATE" THEN {
         LET $edge = SELECT VALUE id FROM ONLY $value.origin->manages, $value.origin->plays_in WHERE out = $value.target LIMIT 1;
         IF $edge {
             THROW "Relation which this invite represents already exists.";

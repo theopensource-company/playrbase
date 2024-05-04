@@ -26,7 +26,6 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
@@ -38,11 +37,13 @@ import { cn } from '@/lib/utils';
 import { Link, useRouter } from '@/locales/navigation';
 import { RichAttends } from '@/schema/relations/attends';
 import { Event } from '@/schema/resources/event';
+import { Invite } from '@/schema/resources/invite';
 import { linkToProfile } from '@/schema/resources/profile';
 import { Team } from '@/schema/resources/team';
 import { User, UserAsRelatedUser } from '@/schema/resources/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Baby, Clock, Plus, Users } from 'lucide-react';
+import dayjs from 'dayjs';
+import { Baby, Check, Clock, Plus, Users, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs';
@@ -87,33 +88,32 @@ function Render({
 }) {
     const t = useTranslations('pages.console.flow.event-signup');
     const [createTeamOpen, setCreateTeamOpen] = useState(false);
-    const { event, tournament_path, registration, self_eligable } = data;
+    const { event, tournament_path, registration } = data;
+    const eligabilityReport = useEligabilityReportGenerator(event);
     const router = useRouter();
-    const { user } = useAuth({ authRequired: true });
 
-    const eligable = useMemo(
-        () =>
-            [self_eligable && user, ...data.teams].filter(
-                (a): a is Team | (User & { scope: 'user' }) => !!a
-            ),
-        [self_eligable, user, data.teams]
+    const eligableActors = useMemo(
+        () => data.actors.filter(({ eligable }) => eligable),
+        [data.actors]
     );
 
-    const [actor, setActorInternal] = useQueryState('actor', parseAsString);
+    const [actorId, setActorInternal] = useQueryState('actor', parseAsString);
     const [players, setPlayers] = useQueryState(
         'players',
         parseAsArrayOf(parseAsString).withDefault([])
     );
 
-    const { data: eligableTeamPlayers } = useEligablePlayers({
-        event: event.id,
-        actor: actor as User['id'] | Team['id'],
-    });
+    const eligableTeamPlayers = useMemo(
+        () =>
+            data.actors.find(({ actor: { id } }) => id == actorId)
+                ?.eligable_players,
+        [actorId, data.actors]
+    );
 
     const setActor = useCallback(
-        (actor: string) => {
+        (actor: string | null) => {
             setActorInternal(actor);
-            setPlayers([]);
+            setPlayers(!actor ? null : []);
             setSection(
                 eligableTeamPlayers?.length == event.options.min_pool_size
                     ? 'confirm'
@@ -135,11 +135,11 @@ function Render({
 
     const sectionsDone = useMemo(
         () => ({
-            actor: !!actor,
+            actor: !!actorId,
             players: playersValid,
             confirm: false,
         }),
-        [actor, playersValid]
+        [actorId, playersValid]
     );
 
     const sectionsAvailable = useMemo(
@@ -175,18 +175,6 @@ function Render({
     }, [event, router]);
 
     useEffect(() => {
-        if (eligable.length == 1) {
-            setActor(eligable[0].id);
-        }
-    }, [eligable, setActor]);
-
-    useEffect(() => {
-        if (!actor && eligable.length == 1) {
-            setActor(eligable[0].id);
-        }
-    }, [actor, eligable, setActor]);
-
-    useEffect(() => {
         if (players?.length == 0 && eligableTeamPlayers) {
             if (eligableTeamPlayers.length == 1) {
                 setPlayers([eligableTeamPlayers[0].id]);
@@ -197,16 +185,26 @@ function Render({
             } else {
                 return;
             }
-
-            setSection('confirm');
         }
     }, [players, event, eligableTeamPlayers, setPlayers]);
 
-    const actorProfile = eligable.find(({ id }) => id == actor) ?? undefined;
+    const actorProfile = eligableActors.find(
+        ({ actor: { id } }) => id == actorId
+    )?.actor;
+
     const playerProfiles =
         players?.map(
             (p) => eligableTeamPlayers?.find(({ id }) => p == id) ?? undefined
         ) ?? [];
+
+    useEffect(() => {
+        if (
+            actorId &&
+            !eligableActors.find(({ actor: { id } }) => id == actorId)
+        ) {
+            setActor(null);
+        }
+    }, [actorId, eligableActors, setActor]);
 
     const surreal = useSurreal();
     const { mutateAsync, data: confirmation } = useMutation({
@@ -215,7 +213,7 @@ function Render({
             'register-event',
             'signup',
             event.id,
-            actor,
+            actorId,
             players,
         ],
         async mutationFn() {
@@ -232,7 +230,7 @@ function Render({
                     `,
                     {
                         event: event.id,
-                        actor,
+                        actor: actorId,
                         players,
                     }
                 );
@@ -241,7 +239,7 @@ function Render({
             } catch (e) {
                 console.log(e, {
                     event: event.id,
-                    actor,
+                    actor: actorId,
                     players,
                 });
                 return false;
@@ -250,6 +248,109 @@ function Render({
     });
 
     const showedConfirmation = registration ?? confirmation ?? false;
+
+    const min_team_size = event.options.min_team_size;
+    const max_team_size = event.options.max_team_size;
+    const min_pool_size = event.options.min_pool_size;
+    const max_pool_size = event.options.max_pool_size;
+
+    const computed_min_players =
+        [min_team_size, min_pool_size]
+            .filter((a): a is number => !!a)
+            .sort((a, b) => a - b)
+            .at(-1) ?? 0;
+
+    const renderActorEntry = ({
+        actor,
+        eligable,
+        eligable_players,
+        players,
+        invites,
+    }: RegistrationActor) => (
+        <Fragment key={actor.id}>
+            <TableRow
+                className={cn(
+                    'hover:bg-transparent',
+                    !eligable && 'border-b-0'
+                )}
+            >
+                <TableCell>
+                    <Avatar profile={actor} size="small" />
+                </TableCell>
+                <TableCell>{actor.name}</TableCell>
+                <TableCell>
+                    {actor.type == 'team'
+                        ? t('step1.table-eligable.kind.team')
+                        : t('step1.table-eligable.kind.your-account')}
+                </TableCell>
+                <TableCell>
+                    {eligable ? (
+                        <Check className="w-4" />
+                    ) : (
+                        <X className="w-4" />
+                    )}
+                </TableCell>
+                <TableCell>
+                    {eligable ? (
+                        <Button
+                            size="sm"
+                            disabled={!eligable || actor.id == actorId}
+                            variant={
+                                actor.id == actorId ? 'secondary' : 'default'
+                            }
+                            onClick={() => setActor(actor.id)}
+                        >
+                            {actor.id == actorId
+                                ? t('step1.table-eligable.actions.selected')
+                                : t('step1.table-eligable.actions.continue')}
+                        </Button>
+                    ) : actor.type == 'team' ? (
+                        <Link
+                            className={buttonVariants({
+                                variant: 'outline',
+                            })}
+                            href={linkToProfile(actor, 'manage') ?? ''}
+                        >
+                            {t('step1.table-eligable.actions.manage-team')}
+                        </Link>
+                    ) : null}
+                </TableCell>
+            </TableRow>
+            {!eligable && (
+                <TableRow className="hover:bg-transparent">
+                    <TableCell className="pb-8 pt-2" colSpan={5}>
+                        <div className="rounded-md bg-muted/75 px-7 py-3">
+                            <h4 className="mb-1 font-semibold">
+                                {actor.id.startsWith('team:')
+                                    ? t(
+                                          'step1.table-eligable.explanation.why-team'
+                                      )
+                                    : t(
+                                          'step1.table-eligable.explanation.why-user'
+                                      )}
+                            </h4>
+                            <ol className="list-decimal">
+                                {eligabilityReport({
+                                    actor,
+                                    eligable,
+                                    eligable_players,
+                                    players,
+                                    invites,
+                                }).map((reason, i) => (
+                                    <li
+                                        key={i}
+                                        className="text-muted-foreground"
+                                    >
+                                        {reason}
+                                    </li>
+                                ))}
+                            </ol>
+                        </div>
+                    </TableCell>
+                </TableRow>
+            )}
+        </Fragment>
+    );
 
     return (
         <>
@@ -482,44 +583,119 @@ function Render({
                         </div>
                     </>
                 ) : (
-                    <Accordion
-                        type="single"
-                        value={section}
-                        onValueChange={attemptSection}
-                        className="sm:px-6"
-                    >
-                        <AccordionItem
-                            value="actor"
-                            disabled={!sectionsAvailable.actor}
+                    <>
+                        {computed_min_players > 1 ? (
+                            <div className="space-y-3 rounded-md bg-muted/75 px-7 py-4">
+                                <h3 className="text-xl font-semibold text-white">
+                                    {t('team-guide.title')}
+                                </h3>
+                                <ol className="list-decimal space-y-2">
+                                    <li className="text-sm">
+                                        <h4 className="font-semibold">
+                                            {t('team-guide.step1.title')}
+                                        </h4>
+                                        <span className="text-muted-foreground">
+                                            {t('team-guide.step1.description', {
+                                                uncomputed:
+                                                    computed_min_players == 0 &&
+                                                    max_team_size == undefined
+                                                        ? 'true'
+                                                        : 'false',
+                                                min_others:
+                                                    computed_min_players <= 1
+                                                        ? 0
+                                                        : computed_min_players -
+                                                          1,
+                                                max_others:
+                                                    max_team_size == undefined
+                                                        ? -1
+                                                        : max_team_size - 1,
+                                            })}
+                                        </span>
+                                    </li>
+                                    <li className="text-sm">
+                                        <h4 className="font-semibold">
+                                            {t('team-guide.step2.title')}
+                                        </h4>
+                                        <span className="text-muted-foreground">
+                                            {!min_pool_size && !max_pool_size
+                                                ? t(
+                                                      'team-guide.step2.description-none'
+                                                  )
+                                                : max_team_size
+                                                  ? t(
+                                                        'team-guide.step2.description-team-max',
+                                                        {
+                                                            team_max:
+                                                                max_team_size,
+                                                            both:
+                                                                min_pool_size &&
+                                                                max_pool_size,
+                                                            min:
+                                                                min_pool_size ??
+                                                                0,
+                                                            max:
+                                                                max_pool_size ==
+                                                                undefined
+                                                                    ? -1
+                                                                    : max_pool_size,
+                                                        }
+                                                    )
+                                                  : t(
+                                                        'team-guide.step2.description-no-team-max',
+                                                        {
+                                                            both:
+                                                                min_pool_size &&
+                                                                max_pool_size,
+                                                            min:
+                                                                min_pool_size ??
+                                                                0,
+                                                            max:
+                                                                max_pool_size ==
+                                                                undefined
+                                                                    ? -1
+                                                                    : max_pool_size,
+                                                        }
+                                                    )}
+                                        </span>
+                                    </li>
+                                    <li className="text-sm">
+                                        <h4 className="font-semibold">
+                                            {t('team-guide.step3.title')}
+                                        </h4>
+                                        <span className="text-muted-foreground">
+                                            {t('team-guide.step3.description')}
+                                        </span>
+                                    </li>
+                                </ol>
+                            </div>
+                        ) : null}
+                        <Accordion
+                            type="single"
+                            value={section}
+                            onValueChange={attemptSection}
+                            className="sm:px-6"
                         >
-                            <AccordionTrigger>
-                                <div className="flex items-center gap-4">
-                                    {t('step1.title')}
-                                    {actor && (
-                                        <div className="rounded-md p-1">
-                                            <Profile
-                                                size="extra-tiny"
-                                                renderBadge={false}
-                                                profile={actorProfile}
-                                                noSub
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-                            </AccordionTrigger>
-                            <AccordionContent className="space-y-6">
-                                {eligable.length == 0 ? (
-                                    <div className="space-y-3">
-                                        <p>
-                                            {t(
-                                                'step1.not-eligable.description'
-                                            )}
-                                        </p>
-                                        <p>
-                                            {t('step1.not-eligable.new-team')}
-                                        </p>
+                            <AccordionItem
+                                value="actor"
+                                disabled={!sectionsAvailable.actor}
+                            >
+                                <AccordionTrigger>
+                                    <div className="flex items-center gap-4">
+                                        {t('step1.title')}
+                                        {actorId && (
+                                            <div className="rounded-md p-1">
+                                                <Profile
+                                                    size="extra-tiny"
+                                                    renderBadge={false}
+                                                    profile={actorProfile}
+                                                    noSub
+                                                />
+                                            </div>
+                                        )}
                                     </div>
-                                ) : (
+                                </AccordionTrigger>
+                                <AccordionContent className="space-y-6">
                                     <Table>
                                         <TableHeader>
                                             <TableRow>
@@ -536,119 +712,228 @@ function Render({
                                                 </TableHead>
                                                 <TableHead>
                                                     {t(
+                                                        'step1.table-eligable.column.eligable'
+                                                    )}
+                                                </TableHead>
+                                                <TableHead>
+                                                    {t(
                                                         'step1.table-eligable.column.actions'
                                                     )}
                                                 </TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
-                                            {eligable.map((profile) => (
-                                                <TableRow key={profile.id}>
-                                                    <TableCell>
-                                                        <Avatar
-                                                            profile={profile}
-                                                            size="small"
-                                                        />
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {profile.name}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {profile.type == 'team'
-                                                            ? t(
-                                                                  'step1.table-eligable.kind.team'
-                                                              )
-                                                            : t(
-                                                                  'step1.table-eligable.kind.your-account'
-                                                              )}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Button
-                                                            size="sm"
-                                                            disabled={
-                                                                profile.id ==
-                                                                actor
-                                                            }
-                                                            variant={
-                                                                profile.id ==
-                                                                actor
-                                                                    ? 'secondary'
-                                                                    : 'default'
-                                                            }
-                                                            onClick={() =>
-                                                                setActor(
-                                                                    profile.id
-                                                                )
-                                                            }
-                                                        >
-                                                            {profile.id == actor
-                                                                ? t(
-                                                                      'step1.table-eligable.actions.selected'
-                                                                  )
-                                                                : t(
-                                                                      'step1.table-eligable.actions.continue'
-                                                                  )}
-                                                        </Button>
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
+                                            {data.actors
+                                                .filter(
+                                                    ({ eligable }) => eligable
+                                                )
+                                                .map(renderActorEntry)}
+                                            {data.actors
+                                                .filter(
+                                                    ({ eligable }) => !eligable
+                                                )
+                                                .map(renderActorEntry)}
                                         </TableBody>
-                                        <TableCaption>
-                                            <p>
-                                                {t(
-                                                    'step1.table-eligable.caption'
-                                                )}
-                                            </p>
-                                        </TableCaption>
                                     </Table>
-                                )}
-                                <div className="flex gap-4">
+                                    <div className="flex gap-4">
+                                        <Button
+                                            size="sm"
+                                            disabled={!actorId}
+                                            onClick={() =>
+                                                setSection(
+                                                    eligableTeamPlayers?.length ==
+                                                        event.options
+                                                            .min_pool_size
+                                                        ? 'confirm'
+                                                        : 'players'
+                                                )
+                                            }
+                                        >
+                                            {t('step1.continue')}
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            onClick={() =>
+                                                setCreateTeamOpen(true)
+                                            }
+                                            variant="outline"
+                                        >
+                                            <Plus className="mr-2 h-4 w-4" />
+                                            {t('step1.create-team')}
+                                        </Button>
+                                    </div>
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem
+                                value="players"
+                                disabled={!sectionsAvailable.players}
+                            >
+                                <AccordionTrigger>
+                                    <div className="flex select-none items-center gap-4">
+                                        {t('step2.title')}
+                                        {(playerProfiles?.length ?? 0) > 0 && (
+                                            <div className="rounded-md p-1">
+                                                {playerProfiles?.length == 1 ? (
+                                                    <Profile
+                                                        size="extra-tiny"
+                                                        renderBadge={false}
+                                                        profile={
+                                                            playerProfiles[0]
+                                                        }
+                                                        noSub
+                                                    />
+                                                ) : (
+                                                    <div className="flex -space-x-2">
+                                                        {playerProfiles?.map(
+                                                            (profile, i) => (
+                                                                <Avatar
+                                                                    key={
+                                                                        profile?.id ??
+                                                                        i
+                                                                    }
+                                                                    profile={
+                                                                        profile
+                                                                    }
+                                                                    className="inline-block"
+                                                                    size="extra-tiny"
+                                                                />
+                                                            )
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent className="space-y-6">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead />
+                                                <TableHead>
+                                                    {t(
+                                                        'step2.table.column.name'
+                                                    )}
+                                                </TableHead>
+                                                <TableHead>
+                                                    {t(
+                                                        'step2.table.column.email'
+                                                    )}
+                                                </TableHead>
+                                                <TableHead>
+                                                    {t(
+                                                        'step2.table.column.actions'
+                                                    )}
+                                                </TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {eligableTeamPlayers?.map(
+                                                (profile) => {
+                                                    const selected =
+                                                        !!players?.find(
+                                                            (id) =>
+                                                                id == profile.id
+                                                        );
+
+                                                    const onClick = () =>
+                                                        setPlayers(
+                                                            selected
+                                                                ? players?.filter(
+                                                                      (id) =>
+                                                                          id !=
+                                                                          profile.id
+                                                                  ) ?? []
+                                                                : [
+                                                                      ...(players ??
+                                                                          []),
+                                                                      profile.id,
+                                                                  ]
+                                                        );
+
+                                                    return (
+                                                        <TableRow
+                                                            key={profile.id}
+                                                        >
+                                                            <TableCell>
+                                                                <Avatar
+                                                                    profile={
+                                                                        profile
+                                                                    }
+                                                                    size="small"
+                                                                />
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {profile.name}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {profile.email}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                <Button
+                                                                    size="sm"
+                                                                    variant={
+                                                                        selected
+                                                                            ? 'destructive'
+                                                                            : 'default'
+                                                                    }
+                                                                    onClick={
+                                                                        onClick
+                                                                    }
+                                                                >
+                                                                    {selected
+                                                                        ? t(
+                                                                              'step2.table.actions.remove'
+                                                                          )
+                                                                        : t(
+                                                                              'step2.table.actions.add'
+                                                                          )}
+                                                                </Button>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    );
+                                                }
+                                            )}
+                                        </TableBody>
+                                    </Table>
                                     <Button
                                         size="sm"
-                                        disabled={!actor}
-                                        onClick={() =>
-                                            setSection(
-                                                eligableTeamPlayers?.length ==
-                                                    event.options.min_pool_size
-                                                    ? 'confirm'
-                                                    : 'players'
-                                            )
-                                        }
+                                        disabled={!playersValid}
+                                        onClick={() => setSection('confirm')}
                                     >
-                                        {t('step1.continue')}
+                                        {t('step2.continue')}
                                     </Button>
-                                    <Button
-                                        size="sm"
-                                        onClick={() => setCreateTeamOpen(true)}
-                                        variant="outline"
-                                    >
-                                        <Plus className="mr-2 h-4 w-4" />
-                                        {t('step1.create-team')}
-                                    </Button>
-                                </div>
-                            </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem
-                            value="players"
-                            disabled={!sectionsAvailable.players}
-                        >
-                            <AccordionTrigger>
-                                <div className="flex select-none items-center gap-4">
-                                    {t('step2.title')}
-                                    {(playerProfiles?.length ?? 0) > 0 && (
-                                        <div className="rounded-md p-1">
-                                            {playerProfiles?.length == 1 ? (
-                                                <Profile
-                                                    size="extra-tiny"
-                                                    renderBadge={false}
-                                                    profile={playerProfiles[0]}
-                                                    noSub
-                                                />
-                                            ) : (
-                                                <div className="flex -space-x-2">
-                                                    {playerProfiles?.map(
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem
+                                value="confirm"
+                                className="border-b-0"
+                                disabled={!sectionsAvailable.confirm}
+                            >
+                                <AccordionTrigger>
+                                    {t('step3.title')}
+                                </AccordionTrigger>
+                                <AccordionContent className="space-y-6">
+                                    <p>{t('step3.description')}</p>
+                                    <div className="space-y-8">
+                                        <div className="space-y-4">
+                                            <h2 className="text-1xl font-semibold">
+                                                {t('step3.playing-as')}
+                                            </h2>
+                                            <Profile
+                                                profile={actorProfile}
+                                                size="small"
+                                            />
+                                        </div>
+                                        {!actorId?.startsWith('user:') && (
+                                            <div className="space-y-4">
+                                                <h2 className="text-1xl font-semibold">
+                                                    {t('step3.playing-with')}
+                                                </h2>
+                                                <div className="space-y-2">
+                                                    {playerProfiles.map(
                                                         (profile, i) => (
-                                                            <Avatar
+                                                            <Profile
                                                                 key={
                                                                     profile?.id ??
                                                                     i
@@ -656,157 +941,28 @@ function Render({
                                                                 profile={
                                                                     profile
                                                                 }
-                                                                className="inline-block"
-                                                                size="extra-tiny"
+                                                                size="small"
                                                             />
                                                         )
                                                     )}
                                                 </div>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            </AccordionTrigger>
-                            <AccordionContent className="space-y-6">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead />
-                                            <TableHead>
-                                                {t('step2.table.column.name')}
-                                            </TableHead>
-                                            <TableHead>
-                                                {t('step2.table.column.email')}
-                                            </TableHead>
-                                            <TableHead>
-                                                {t(
-                                                    'step2.table.column.actions'
-                                                )}
-                                            </TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {eligableTeamPlayers?.map((profile) => {
-                                            const selected = !!players?.find(
-                                                (id) => id == profile.id
-                                            );
-
-                                            const onClick = () =>
-                                                setPlayers(
-                                                    selected
-                                                        ? players?.filter(
-                                                              (id) =>
-                                                                  id !=
-                                                                  profile.id
-                                                          ) ?? []
-                                                        : [
-                                                              ...(players ??
-                                                                  []),
-                                                              profile.id,
-                                                          ]
-                                                );
-
-                                            return (
-                                                <TableRow key={profile.id}>
-                                                    <TableCell>
-                                                        <Avatar
-                                                            profile={profile}
-                                                            size="small"
-                                                        />
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {profile.name}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {profile.email}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Button
-                                                            size="sm"
-                                                            variant={
-                                                                selected
-                                                                    ? 'destructive'
-                                                                    : 'default'
-                                                            }
-                                                            onClick={onClick}
-                                                        >
-                                                            {selected
-                                                                ? t(
-                                                                      'step2.table.actions.remove'
-                                                                  )
-                                                                : t(
-                                                                      'step2.table.actions.add'
-                                                                  )}
-                                                        </Button>
-                                                    </TableCell>
-                                                </TableRow>
-                                            );
-                                        })}
-                                    </TableBody>
-                                </Table>
-                                <Button
-                                    size="sm"
-                                    disabled={!playersValid}
-                                    onClick={() => setSection('confirm')}
-                                >
-                                    {t('step2.continue')}
-                                </Button>
-                            </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem
-                            value="confirm"
-                            className="border-b-0"
-                            disabled={!sectionsAvailable.confirm}
-                        >
-                            <AccordionTrigger>
-                                {t('step3.title')}
-                            </AccordionTrigger>
-                            <AccordionContent className="space-y-6">
-                                <p>{t('step3.description')}</p>
-                                <div className="space-y-8">
-                                    <div className="space-y-4">
-                                        <h2 className="text-1xl font-semibold">
-                                            {t('step3.playing-as')}
-                                        </h2>
-                                        <Profile
-                                            profile={actorProfile}
-                                            size="small"
-                                        />
-                                    </div>
-                                    {!actor?.startsWith('user:') && (
-                                        <div className="space-y-4">
-                                            <h2 className="text-1xl font-semibold">
-                                                {t('step3.playing-with')}
-                                            </h2>
-                                            <div className="space-y-2">
-                                                {playerProfiles.map(
-                                                    (profile, i) => (
-                                                        <Profile
-                                                            key={
-                                                                profile?.id ?? i
-                                                            }
-                                                            profile={profile}
-                                                            size="small"
-                                                        />
-                                                    )
-                                                )}
                                             </div>
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="pt-4">
-                                    <Button onClick={() => mutateAsync()}>
-                                        {t('step3.confirm')}
-                                    </Button>
-                                    {confirmation === false
-                                        ? t('step3.failed')
-                                        : confirmation
-                                          ? t('step3.confirmed')
-                                          : null}
-                                </div>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
+                                        )}
+                                    </div>
+                                    <div className="pt-4">
+                                        <Button onClick={() => mutateAsync()}>
+                                            {t('step3.confirm')}
+                                        </Button>
+                                        {confirmation === false
+                                            ? t('step3.failed')
+                                            : confirmation
+                                              ? t('step3.confirmed')
+                                              : null}
+                                    </div>
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                    </>
                 )}
             </div>
         </>
@@ -815,6 +971,15 @@ function Render({
 
 const TournamentPath = z.array(Event);
 type TournamentPath = z.infer<typeof TournamentPath>;
+
+const RegistrationActor = z.object({
+    actor: z.union([User, Team]),
+    eligable: z.boolean(),
+    eligable_players: z.array(UserAsRelatedUser),
+    players: z.array(UserAsRelatedUser),
+    invites: z.array(Invite),
+});
+type RegistrationActor = z.infer<typeof RegistrationActor>;
 
 function useData({ slug }: { slug: string }) {
     const surreal = useSurreal();
@@ -828,20 +993,24 @@ function useData({ slug }: { slug: string }) {
                     null,
                     null,
                     Event,
-                    Team[],
+                    RegistrationActor[],
                     RichAttends | null,
-                    boolean,
                     TournamentPath,
                 ]
             >(
                 /* surql */ `
                     LET $event = SELECT * FROM ONLY type::thing('event', $slug);
-                    LET $teams = SELECT * FROM $auth->plays_in->team WHERE fn::team::eligable_to_play(id, $event.id);
+                    LET $actors = SELECT VALUE {
+                        actor: $this,
+                        eligable: fn::team::eligable_to_play(id, $event.id),
+                        eligable_players: (SELECT * FROM fn::team::compute_eligable_players(id, $event.id)),
+                        players: (SELECT * FROM fn::team::compute_players(id)),
+                        invites: (SELECT * FROM invite WHERE target = $parent.id)
+                    } FROM $auth, $auth->plays_in->team;
                 
                     $event;
-                    $teams;
+                    $actors;
                     SELECT * FROM ONLY fn::team::find_actor_registration($auth, $event.id) FETCH in, out, players.*;
-                    fn::team::eligable_to_play($auth, $event.id);
                     SELECT * FROM $event.tournament_path ?? [];
                 `,
                 {
@@ -849,51 +1018,106 @@ function useData({ slug }: { slug: string }) {
                 }
             );
 
+            console.log(result[3]);
+
             return {
                 event: Event.parse(result[2]),
-                teams: z.array(Team).parse(result[3]),
+                actors: z.array(RegistrationActor).parse(result[3]),
                 registration: RichAttends.optional().parse(
                     result[4] ?? undefined
                 ),
-                self_eligable: !!result[5],
                 event_id: event,
-                tournament_path: TournamentPath.parse(result[6]),
+                tournament_path: TournamentPath.parse(result[5]),
             };
         },
     });
 }
 
-function useEligablePlayers({
-    actor,
-    event,
-}: {
-    actor: Team['id'] | User['id'] | undefined;
-    event: Event['id'] | undefined;
-}) {
-    const surreal = useSurreal();
-    return useQuery({
-        queryKey: ['flow', 'register-event', 'eligable-players', event, actor],
-        retry: false,
-        throwOnError: true,
-        queryFn: async () => {
-            if (!actor || !event) return [];
+function useEligabilityReportGenerator(event: Event) {
+    const t = useTranslations(
+        'pages.console.flow.event-signup.eligability-report'
+    );
 
-            const result = await surreal.query<
-                [null, null, UserAsRelatedUser[]]
-            >(
-                /* surql */ `
-                    LET $actor = <record<team | user>> $actor;
-                    LET $event = <record<event>> $event;
-                    SELECT * FROM fn::team::compute_eligable_players($actor, $event);
-                `,
-                {
-                    actor,
-                    event,
-                    event_id: event,
-                }
-            );
+    const min_pool_size = event.options.min_pool_size;
+    const min_team_size = event.options.min_team_size;
+    const max_team_size = event.options.max_team_size;
+    const min_age = event.options.min_age;
+    const max_age = event.options.max_age;
 
-            return z.array(UserAsRelatedUser).parse(result[2]);
-        },
-    });
+    return function ({
+        actor,
+        eligable_players,
+        players,
+        invites,
+    }: RegistrationActor) {
+        const playerAges = players.map(({ birthdate }) =>
+            dayjs().diff(birthdate, 'years')
+        );
+
+        const num_under_age =
+            min_age && playerAges.filter((age) => age < min_age).length;
+        const num_over_age =
+            max_age && playerAges.filter((age) => age > max_age).length;
+
+        const pendingInvites =
+            invites.length > 0
+                ? t('pending-invites', { invites: invites.length })
+                : '';
+
+        const isTeam = actor.id.startsWith('team:');
+
+        return [
+            // min_pool_size (team)
+            isTeam &&
+                min_pool_size &&
+                eligable_players.length < min_pool_size &&
+                (players.length < min_pool_size
+                    ? t('eligable-and-players-lacking', {
+                          num_missing:
+                              (min_pool_size ?? 0) - eligable_players.length,
+                          invites: invites.length,
+                      }) + pendingInvites
+                    : t('eligable-lacking', {
+                          num_eligable: eligable_players.length,
+                          num_players: players.length,
+                          num_missing:
+                              (min_pool_size ?? 0) - eligable_players.length,
+                          invites: invites.length,
+                      }) + pendingInvites),
+
+            // min_team_size (team)
+            isTeam &&
+                min_team_size &&
+                players.length < min_team_size &&
+                t('players-lacking', {
+                    num_lacking: players.length - (min_team_size ?? 0),
+                    invites: invites.length,
+                }) + pendingInvites,
+
+            // min_pool_size (personal account)
+            !isTeam &&
+                min_pool_size &&
+                min_pool_size > 1 &&
+                t('min-pool-personal', { min_pool_size }),
+
+            // min_pool_size (personal account)
+            !isTeam &&
+                min_team_size &&
+                min_team_size > 1 &&
+                t('min-team-personal', { min_team_size }),
+
+            // max_team_size
+            max_team_size &&
+                players.length > max_team_size &&
+                t('player-overflow', {
+                    num_overflow: (max_team_size ?? 0) - players.length,
+                }),
+
+            // min_age
+            num_under_age && t('num-under-age', { num_under_age }),
+
+            // max_age
+            num_over_age && t('num-over-age', { num_over_age }),
+        ].filter((a): a is string => !!a);
+    };
 }

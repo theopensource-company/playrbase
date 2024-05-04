@@ -1,1 +1,771 @@
-{}
+{
+  "account": {
+    "create-passkey": {
+      "created": {
+        "label": "Passkey Name",
+        "trigger": "Name speichern"
+      },
+      "pre": {
+        "back": "Zurück",
+        "skip": "Überspringen",
+        "trigger": "Passkey erstellen"
+      },
+      "description": "Verwendung eines Passkeys, um dich einfach und sicher zu authentifizieren",
+      "title": "Einen Passkey erstellen"
+    },
+    "create-profile": {
+      "button": {
+        "continue": "Weiter"
+      },
+      "input": {
+        "birthdate": {
+          "label": "Geburtsdatum",
+          "description": "Dein Alter kann erforderlich sein, um festzustellen, ob du an einer Veranstaltung teilnehmen kannst, wie es von einem Organisator festgelegt wurde."
+        },
+        "email": {
+          "label": "E-Mail Adresse",
+          "placeholder": "E-Mail Adresse"
+        },
+        "name": {
+          "label": "Name",
+          "placeholder": "Vorname und Nachname"
+        }
+      },
+      "privacy-policy": "Indem du ein Konto bei {brand_name} erstellst, erklärst du dich mit unserer <link>Datenschutz</link> einverstanden.",
+      "title": "Profil erstellen",
+      "tagline": "um die Registrierung abzuschließen"
+    },
+    "signin": {
+      "button": {
+        "continue": "Weiter",
+        "passkey": "Passkey"
+      },
+      "input": {
+        "email": {
+          "placeholder": "E-Mail Adresse"
+        },
+        "passkey": {
+          "label": "Benutzter Passkey"
+        }
+      },
+      "options": {
+        "label": "Optionen",
+        "passkey-auto-poke": {
+          "false": "Niemals nach dem Passkey fragen",
+          "label": "Aufforderung zur Eingabe des Passkey",
+          "true": "Immer nach Passkey fragen",
+          "undefined": "Automatisch aktivieren, sobald verwendet"
+        }
+      },
+      "tagline": "zu {brand_name}",
+      "title": "Anmelden"
+    }
+  },
+  "console": {
+    "account": {
+      "api_access": {
+        "button": {
+          "copy": "In die Zwischenablage kopieren",
+          "generate": "API-Schlüssel generieren"
+        },
+        "errors": {
+          "no_access": "Du hast keinen Zugang, um einen API-Schlüssel zu generieren.",
+          "request_failed": "API-Schlüsselanforderung fehlgeschlagen: {error}"
+        },
+        "title": "API-Zugang",
+        "toast": {
+          "copied": "Kopiere den Token in deine Zwischenablage",
+          "submitting": "API-Schlüssel generieren",
+          "success": "eneriert"
+        },
+        "token-kind": "SurrealDB Token",
+        "warning": "API-Schlüssel ermöglichen den Zugriff auf die Verwaltung von Organisationen und Ereignissen entsprechend den Berechtigungen des Benutzers, der sie erstellt hat. Sie verfallen 30 Tage nach der Generation. <br></br><br></br>  Derzeit ist es <b>NICHT MÖGLICH</b>  einen Schlüssel zu drehen, nachdem er generiert wurde, da er zustandslos ist. Um eine unerwünschte Nutzung nach einem möglichen Diebstahl zu verhindern, muss das Konto des Eigentümers derzeit gelöscht werden"
+      },
+      "registrations": {
+        "title": "Registrierungen"
+      },
+      "teams": {
+        "toast": {
+          "denying-invite": "Einladung ablehnen",
+          "denied-invite": "Abgelehnte Einladung",
+          "accepting-invite": "Einladung akzeptieren",
+          "accepted-invite": "Akzeptierte Einladung"
+        },
+        "title": "Teams",
+        "table": {
+          "columns": {
+            "name": "Name",
+            "actions": "Aktionen"
+          },
+          "caption": {
+            "count": "Anzahl"
+          },
+          "body": {
+            "confirmed": "Bestätigt",
+            "invitations": "Einladungen"
+          }
+        },
+        "new": {
+          "trigger": "Neues Team",
+          "toast": {
+            "creating-team": "Team bilden",
+            "created-team": "Erstelltes Team",
+            "buttons": {
+              "view": "Ansehen"
+            }
+          },
+          "title": "Neues Team",
+          "submit": "Erstellen ",
+          "fields": {
+            "name": {
+              "label": "Name"
+            }
+          },
+          "errors": {
+            "create-team-failed": "Team konnte nicht erstellt werden: {error}"
+          }
+        },
+        "invite-popup": {
+          "accept": "Einladung annehmen",
+          "close": "Schließen",
+          "deny": "Einladung ablehnen",
+          "description": "Du bist zu einem Team eingeladen worden",
+          "title": "Einladung des Teams"
+        },
+        "errors": {
+          "accept-failed": "Die Einladung konnte nicht angenommen werden: {Fehler}",
+          "deny-failed": "Einladung konnte nicht verweigert werden: {Fehler}",
+          "no-unconfirmed-edge": "Konnte keine unbestätigte Kante finden"
+        }
+      },
+      "passkeys": {
+        "create": "Passkey erstellen",
+        "title": "Passkeys",
+        "table": {
+          "columns": {
+            "updated": "Aktualisiert",
+            "name": "Name",
+            "created": "Erstellt"
+          },
+          "caption": {
+            "count": "Anzahl"
+          }
+        },
+        "empty": "Es sind keine Passkeys mit deinem Konto verknüpft. Erstelle einen, wenn du den Knopf oben drückst!",
+        "edit": {
+          "toast": {
+            "updating-passkey": "Passkey aktualisieren",
+            "updated-passkey": "Aktualisierter Passkey"
+          },
+          "title": "Passkey bearbeiten",
+          "submit": "Name speichern",
+          "fields": {
+            "name": {
+              "label": "Passkey Name"
+            }
+          },
+          "errors": {
+            "failed-updating-passkey": "Aktualisierung des Passkeys fehlgeschlagen: {error}"
+          },
+          "description": "Ändern den Namen deines Passkeys"
+        },
+        "delete": {
+          "cancel": "Abbrechen",
+          "toast": {
+            "deleting-passkey": "Passkey löschen",
+            "deleted-passkey": "Gelöschter Passkey"
+          },
+          "title": "Passkey löschen",
+          "submit": "Dauerhaft löschen",
+          "repeat": "Wiederholen",
+          "errors": {
+            "failed-deleting-passkey": "Passkey kann nicht gelöscht werden: {error}"
+          },
+          "description": "Das <b>Löschen </b> dieses Passkeys führt dazu, dass der Zugang zu {brand_name} über diesen Passkey dauerhaft gesperrt wird.. <br></br><br></br> Um die Löschung zu bestätigen, wiederhole bitte den Namen des Passkeys."
+        }
+      },
+      "organisations": {
+        "toast": {
+          "denying-invite": "Einladung ablehnen",
+          "denied-invite": "Abgelehnte Einladung",
+          "accepting-invite": "Einladung akzeptieren",
+          "accepted-invite": "Akzeptierte Einladung"
+        },
+        "title": "Organisationen",
+        "table": {
+          "columns": {
+            "name": "Name",
+            "email": "E-Mail-Adresse",
+            "actions": "Aktionen"
+          },
+          "caption": {
+            "count": "Anzahl"
+          },
+          "body": {
+            "invitations": "Einladungen",
+            "confirmed": "Bestätigt"
+          }
+        },
+        "new": {
+          "trigger": "Neue Organisation",
+          "toast": {
+            "creating-organisation": "Organisation erstellen",
+            "created-organisation": "Erstellte Organisation",
+            "buttons": {
+              "view": "Ansehen"
+            }
+          },
+          "title": "Neue Organisation",
+          "submit": "Erstellen",
+          "fields": {
+            "selector": {
+              "placeholder": "Name oder E-Mail-Adresse",
+              "label": "Teil der Organisation"
+            },
+            "name": {
+              "label": "Name"
+            },
+            "email": {
+              "label": "E-Mail Adresse",
+              "placeholder": "hello@foo.bar"
+            }
+          },
+          "errors": {
+            "create-organisation-failed": "Organisation konnte nicht erstellt werden: {Fehler}"
+          }
+        },
+        "invite-popup": {
+          "title": "Einladung der Organisation",
+          "description": "Du wurdest zu einer Organisation eingeladen",
+          "deny": "Einladung ablehnen",
+          "close": "Schließen",
+          "accept": "Einladung akzeptieren"
+        },
+        "errors": {
+          "accept-failed": "Die Einladung konnte nicht akzeptiert werden: {Fehler}",
+          "deny-failed": "Einladung konnte nicht abgelehnt werden: {Fehler}",
+          "no-unconfirmed-edge": "Konnte unbestätigte Kante nicht finden"
+        }
+      },
+      "index": {
+        "title": "Account",
+        "picture": {
+          "title": "Profilfoto",
+          "uploader": {
+            "description": "Lade ein neues Bild hoch, um dein Profilbild zu ändern",
+            "title": "Ändere dein Profilbild"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "dialog": {
+            "trigger": "Verändern ",
+            "title": "Ändere deinen Namen",
+            "submit": "Änderungen speichern",
+            "label": "Name",
+            "description": "Gib deinen Namen in das Feld unten ein und klicke auf Speichern, um die Änderungen zu übernehmen."
+          }
+        },
+        "email": {
+          "title": "E-Mail-Adresse",
+          "dialog": {
+            "trigger": "Verändern ",
+            "sent": {
+              "title": "E-Mail gesendet",
+              "description": "Wir haben eine Bestätigung an deine alte und neue Email-Adresse geschickt. Bitte bestätigen die Änderung innerhalb von 30 Minuten!",
+              "close": "Schließen "
+            },
+            "form": {
+              "title": "Ändere deine E-Mail",
+              "submit": "Änderungen speichern",
+              "label": "E-Mail-Adresse",
+              "description": "Gib deine E-Mail-Adresse in das unten stehende Feld ein und klicke auf \"Änderungen speichern\", um die Änderungen zu übernehmen."
+            }
+          }
+        },
+        "birthdate": {
+          "title": "Geburtsdatum",
+          "dialog": {
+            "error": "Etwas ist schief gelaufen",
+            "trigger": "Verändern ",
+            "form": {
+              "title": "Dein Geburtsdatum ändern",
+              "submit": "Änderungen speichern",
+              "label": "Geburtsdatum",
+              "description": "Gib dein Geburtsdatum in das untenstehende Feld ein und klicke auf \"Änderungen speichern\", um die Änderungen zu übernehmen."
+            }
+          }
+        }
+      }
+    },
+    "index": {
+      "button": "Weiter",
+      "manager": "Manager",
+      "title": "Weiter als",
+      "user": "Benutzer"
+    },
+    "team": {
+      "members": {
+        "not_found": "Team nicht gefunden",
+        "title": "Mitglieder"
+      },
+      "overview": {
+        "member-count": {
+          "multiple": "Alle {player_count} Mitglieder anzeigen",
+          "single": "Mitglieder anzeigen"
+        },
+        "members": "Mitglieder",
+        "registration-count": {
+          "multiple": "Alle {registration_count} Registrierungen anzeigen",
+          "single": "Registrierungen anzeigen"
+        },
+        "registrations": "Registrierungen",
+        "title": "Übersicht"
+      },
+      "registration": {
+        "title": "Registrierungen"
+      },
+      "settings": {
+        "description": {
+          "description": "Dies ist die öffentliche Beschreibung deines Teams, die überall in {brand_name} angezeigt wird.",
+          "submit": "Beschreibung speichern",
+          "title": "Beschreibung des Teams"
+        },
+        "logo": {
+          "change": "logo ändern",
+          "description": "Dies ist das öffentliche Logo deines Teams, das überall auf {brand_name} zu sehen ist.",
+          "title": "Team-Logo"
+        },
+        "not_found": "Team nicht gefunden",
+        "title": "Einstellungen",
+        "name": {
+          "description": "Dies ist der öffentliche Name deines Teams, der überall in {brand_name} angezeigt wird.",
+          "submit": "Name speichern",
+          "title": "Team-Name"
+        }
+      }
+    },
+    "flow": {
+      "event-signup": {
+        "banner": {
+          "title": "Register für {event_name}",
+          "view-event": "Veranstaltung ansehen"
+        },
+        "confirmation": {
+          "awaiting": {
+            "description": "Wir warten darauf, dass der Organisator deine Anmeldung bestätigt. In der Zwischenzeit speichern bitte die nachstehenden Angaben",
+            "title": "Warten auf Bestätigung"
+          },
+          "confirmed": {
+            "description": "Deine Anmeldung wird vom Organisator bestätigt. Achten darauf, die Details unten zu speichern",
+            "title": "Du bist dabei! 🎉"
+          },
+          "manage": "Registrierung verwalten",
+          "playing-as": "Spielen als",
+          "playing-with": "Spielen mit"
+        },
+        "event-not-found": "Veranstaltung nicht gefunden",
+        "step1": {
+          "continue": "Weiter",
+          "create-team": "Team erstellen",
+          "not-eligable": {
+            "description": "Du oder eines deiner Teams sind nicht berechtigt, an dieser Veranstaltung teilzunehmen. Dies könnte daran liegen, dass du oder deine Teammitglieder die Altersanforderungen oder die Anzahl der Personen, die für diese Veranstaltung angemeldet werden müssen, nicht erfüllen. Bitte beachtet, dass Spieler, die noch keine Teameinladung angenommen haben, nicht zur Anzahl der Personen in eurem Team zählen.",
+            "new-team": "Wenn du ein neues Team gründen möchtest, um dich für diese Veranstaltung anzumelden, kannst du das ebenfalls tun"
+          },
+          "table-eligable": {
+            "actions": {
+              "continue": "Weiter",
+              "selected": "Ausgewählte"
+            },
+            "caption": "Wenn dein Konto oder dein Team hier nicht auftaucht, bedeutet dies, dass sie nicht berechtigt sind, dich für diese Veranstaltung anzumelden, möglicherweise aufgrund von Alters- oder Poolgrößenbeschränkungen des Veranstalters. Bitte beachtet, dass Spieler, die noch keine Einladung zu einem Team angenommen haben, nicht zur Gesamtteamgröße gezählt werden.",
+            "column": {
+              "actions": "Aktionen",
+              "kind": "Typ",
+              "name": "Name"
+            },
+            "kind": {
+              "team": "Team",
+              "your-account": "Dein Konto"
+            }
+          },
+          "title": "1. Wer meldet sich an?"
+        },
+        "step2": {
+          "continue": "Weiter",
+          "table": {
+            "actions": {
+              "add": "Hinzufügen",
+              "remove": "Entfernen"
+            },
+            "column": {
+              "actions": "Aktionen",
+              "email": "E-Mail",
+              "name": "Name"
+            }
+          },
+          "title": "2. Wer spielt mit?"
+        },
+        "step3": {
+          "confirm": "Bestätigung der Registrierung",
+          "confirmed": "Registrierung bestätigt!",
+          "description": "Bestätigen, dass alle Angaben für deine Anmeldung korrekt sind, um deine Anmeldung zu bestätigen",
+          "failed": "Registrierung fehlgeschlagen",
+          "playing-as": "Spielen als",
+          "playing-with": "Playing with",
+          "title": "3. Bestätigung der Registrierung"
+        },
+        "user-not-found": "Benutzer nicht gefunden"
+      }
+    },
+    "organisation": {
+      "organisations": {
+        "not_found": "Organisation nicht gefunden",
+        "title": "Organisationen",
+        "table": {
+          "caption": {
+            "count": "Anzahl"
+          }
+        }
+      },
+      "overview": {
+        "not_found": "Organisation nicht gefunden",
+        "title": "Übersicht",
+        "section": {
+          "partof": {
+            "title": "Teil von",
+            "visit": "Besuchen {org}"
+          },
+          "nested": {
+            "go-to": "Zu Organisationen gehen",
+            "title": "Verschachtelte Organisationen",
+            "view-all": "Alle {count} Organisationen ansehen"
+          },
+          "members": {
+            "go-to": "Zu Mitgliedern gehen",
+            "title": "Mitglieder",
+            "view-all": "Alle {count} Mitglieder ansehen"
+          },
+          "events": {
+            "go-to": "Zu den Veranstaltungen gehen",
+            "title": "Veranstaltungen",
+            "view-all": "Alle {count} Veranstaltungen ansehen"
+          }
+        }
+      },
+      "settings": {
+        "website": {
+          "title": "Website",
+          "submit": "Änderungen speichern",
+          "placeholder": "https://www.foo.bar",
+          "description": "Dies ist die öffentliche Website deiner Organisation, die überall auf {brand_name} zu sehen ist."
+        },
+        "title": "Einstellungen",
+        "not_found": "Keine Organisation gefunden",
+        "name": {
+          "description": "Dies ist der öffentliche Name deiner Organisation, der überall in {brand_name} angezeigt wird.",
+          "submit": "Änderungen speichern",
+          "title": "Name der Organisation"
+        },
+        "logo": {
+          "description": "Dies ist das öffentliche Logo deiner Organisation, das überall auf {brand_name} zu sehen ist.",
+          "title": "Logo der Organisation"
+        },
+        "email": {
+          "description": "Dies ist die öffentliche E-Mail Adresse deiner Organisation, die überall in {brand_name} angezeigt wird.",
+          "placeholder": "hello@foo.bar",
+          "submit": "Änderungen speichern",
+          "title": "Organisation E-Mail-Adresse"
+        },
+        "description": {
+          "title": "Beschreibung",
+          "submit": "Änderungen speichern",
+          "placeholder": "Gib deiner Organisation eine schöne Beschreibung, um anderen einen Eindruck davon zu vermitteln, wie du vorgehst.",
+          "description": "Dies ist die öffentliche Beschreibung deiner Organisation, die überall in {brand_name} angezeigt wird."
+        },
+        "danger-zone": {
+          "description": "Das  <b>Löschen</b> dieser Organisation führt dazu, dass alle Details über diese Organisation, alle Ereignisse und andere zugehörige Daten dauerhaft entfernt werden. Diese Aktion <b>kann nicht rückgängig gemacht werden!</b>",
+          "dialog": {
+            "cancel": "Abbrechen",
+            "repeat": "Wiederholung",
+            "submit": "Dauerhaft löschen",
+            "title": "Löschen {org}",
+            "trigger": "Organisation löschen",
+            "description": "Das  <b>Löschen</b> dieser Organisation führt dazu, dass alle Details über diese Organisation, alle Ereignisse und andere zugehörige Daten dauerhaft entfernt werden. Dieser Vorgang <b>kann nicht rückgängig gemacht werden!</b> <br></br><br></br> Um die Löschung zu bestätigen, wiederhole bitte den Namen und die E-Mail Adresse der Organisation"
+          },
+          "title": "Gefahrenzone"
+        }
+      },
+      "members": {
+        "title": "Mitglieder",
+        "not_found": "Keine Organisation gefunden",
+        "list_managers": {
+          "title": "Von {org}",
+          "table": {
+            "columns": {
+              "role": "Rolle",
+              "name": "Name",
+              "email": "E-Mail-Adresse"
+            },
+            "caption": {
+              "count": "Anzahl"
+            }
+          }
+        },
+        "list_manager": {
+          "toast": {
+            "updating-role": "Aktualisierung der Rolle",
+            "updated-role": "Aktualisierte Rolle",
+            "removing-member": "Entfernen eines Mitglieds",
+            "removed-member": "Mitglied entfernt"
+          },
+          "role": {
+            "placeholder": "Rolle",
+            "roles": {
+              "owner": "Besitzer",
+              "event_manager": "Veranstaltungsleiter",
+              "administrator": "Administrator",
+              "event_viewer": "Veranstaltungbetrachter"
+            }
+          },
+          "errors": {
+            "failed-update-role": "Aktualisierung der Rolle fehlgeschlagen: {error}",
+            "failed-remove-member": "Mitglied kann nicht entfernt werden: {error}"
+          },
+          "actions": {
+            "via": "Über {org}",
+            "remove-dialog": {
+              "title": "{Name} entfernen",
+              "submit": "Entfernen",
+              "description": "Bist du sicher, dass du diesen Leiter entfernen möchtest?",
+              "cancel": "Abbrechen"
+            }
+          }
+        },
+        "invited_manager": {
+          "toast": {
+            "updating-role": "Aktualisieren der Rolle",
+            "updated-role": "Aktualisierte Rolle",
+            "revoking-invite": "Einladung widerrufen",
+            "revoked-invite": "Widerrufliche Einladung"
+          },
+          "role": {
+            "placeholder": "Rolle",
+            "roles": {
+              "owner": "Besitzer",
+              "event_viewer": "Veranstaltungbetrachter",
+              "event_manager": "Veranstaltungsleiter",
+              "administrator": "Administrator"
+            }
+          },
+          "pending-invite": "Ausstehende Einladung",
+          "errors": {
+            "failed-revoke-invite": "Einladung konnte nicht widerrufen werden: {Fehler}",
+            "failed-update-role": "Aktualisierung der Rolle fehlgeschlagen: {error}"
+          }
+        },
+        "add_member": {
+          "trigger": "Mitglied hinzufügen",
+          "toast": {
+            "adding-member": "Einladung verschicken",
+            "added-member": "Eingeladenes Mitglied"
+          },
+          "title": "Benutzer einladen",
+          "submit": "Einladung verschicken",
+          "role": {
+            "roles": {
+              "owner": "Besitzer",
+              "event_viewer": "Veranstaltungbetrachter",
+              "event_manager": "Veranstaltungsleiter",
+              "administrator": "Administrator"
+            },
+            "placeholder": "Rolle",
+            "label": "Rolle"
+          },
+          "errors": {
+            "failed-add-member": "Mitglied konnte nicht eingeladen werden: {error}"
+          }
+        }
+      },
+      "events": {
+        "title": "Veranstaltungen",
+        "page": {
+          "settings": {
+            "title": "Einstellungen",
+            "change-logo": {
+              "trigger": "Logo ändern",
+              "title": "Logo ändern",
+              "description": "Lade ein Logo hoch, das in {brand_name} öffentlich gezeigt werden soll."
+            },
+            "change-banner": {
+              "trigger": "Banner ändern",
+              "title": "Banner ändern",
+              "description": "Lade ein Banner hoch, das öffentlich in {brand_name} gezeigt wird."
+            }
+          },
+          "overview": {
+            "title": "Übersicht"
+          },
+          "events": {
+            "title": "Veranstaltungen"
+          },
+          "attendees": {
+            "title": "Teilnehmer"
+          }
+        },
+        "not_found": "Keine Organisation gefunden",
+        "new": {
+          "trigger": "Neue Veranstaltung",
+          "toast": {
+            "creating-event": "Veranstaltung erstellen",
+            "created-event": "Erstelltes Veranstaltung",
+            "buttons": {
+              "view": "Ansehen"
+            }
+          },
+          "title": "Neue Veranstaltung",
+          "submit": "Veranstaltung erstellen",
+          "fields": {
+            "tournament": {
+              "placeholder": "Name des Turniers",
+              "label": "Teil des Turniers"
+            },
+            "published": {
+              "label": "Publiziert"
+            },
+            "name": {
+              "label": "Name"
+            },
+            "discoverable": {
+              "label": "Entdeckbar"
+            },
+            "description": {
+              "label": "Beschreibung"
+            }
+          },
+          "errors": {
+            "failed-create-event": "Veranstaltung konnte nicht erstellt werden: {Fehler}"
+          }
+        },
+        "filters": {
+          "trigger": "Filter",
+          "published": {
+            "title": "Publiziert",
+            "options": {
+              "undefined": "Keine Präferenz",
+              "true": "Publiziert",
+              "false": "Nicht publiziert"
+            }
+          },
+          "menu-label": "Filter",
+          "hosted-by": {
+            "title": "Gehostet durch",
+            "options": {
+              "undefined": "Jede Organisation",
+              "true": "Diese Organisation",
+              "false": "Andere Organisation"
+            }
+          },
+          "discoverable": {
+            "title": "Entdeckbar",
+            "options": {
+              "undefined": "Keine Präferenz",
+              "true": "Entdeckbar",
+              "false": "Nicht entdeckbar"
+            }
+          }
+        }
+      }
+    }
+  },
+  "o": {
+    "index": {
+      "about": {
+        "email": "E-Mail Adresse",
+        "members": "Mitglieder",
+        "part-of": "Teil von",
+        "title": "Über",
+        "description": "Beschreibung",
+        "website": "Website"
+      },
+      "events": {
+        "empty": "Keine Veranstaltungen gefunden",
+        "title": "Veranstaltungen"
+      },
+      "manage": "Verwalte",
+      "not-found": "Keine Organisation gefunden"
+    }
+  },
+  "home": {
+    "button": {
+      "get-started": "Los geht's",
+      "releasing-soon": "Bald verfügbar"
+    },
+    "headline": [
+      "Spiel mit <tint>Leichtigkeit</tint>",
+      "Schaffe <tint>Freude</tint>, die <tint>dauerhaft</tint> ist",
+      "Time to ditch the sheets 📚"
+    ]
+  },
+  "e": {
+    "index": {
+      "banner": {
+        "manage": "Verwalte",
+        "registration": {
+          "manage": "Registrierung verwalten",
+          "register": "Registrieren"
+        }
+      },
+      "details": {
+        "about": {
+          "end": "Ende der Veranstaltung",
+          "location": "Standort",
+          "start": "Beginn der Veranstaltung",
+          "title-event": "Über die Veranstaltung",
+          "title-tournament": "Über das Turnier",
+          "tournament": "Turnier"
+        },
+        "organiser": {
+          "email": "E-Mail Adresse",
+          "title": "Über den Organisator",
+          "website": "Website"
+        },
+        "outcome": "Ergebnis",
+        "title": "Veranstaltungen"
+      },
+      "not-found": "Veranstaltung nicht gefunden"
+    },
+    "registration": {
+      "banner": {
+        "unregister": {
+          "dialog": {
+            "description": "Wenn du nach der Abmeldung immer noch mitspielen willst, musst du möglicherweise auf die Genehmigung des Veranstalters warten.",
+            "submit": "Ich möchte nicht mehr teilnehmen",
+            "title": "Bist du dir sicher?"
+          },
+          "trigger": "Unregistrieren"
+        },
+        "view": "Veranstaltung ansehen"
+      },
+      "details": {
+        "about": {
+          "end": "Ende der Veranstaltung",
+          "start": "Beginn der Veranstaltung",
+          "label": "Über die Veranstaltung"
+        },
+        "confirmed": {
+          "label": "Bestätigt",
+          "no": "Nein",
+          "yes": "Ja"
+        },
+        "players": {
+          "add": "Hinzufügen",
+          "label": "Spieler",
+          "remove": "Entfernen"
+        },
+        "registered-as": "Registriert als"
+      },
+      "not-found": "Registrierung nicht gefunden",
+      "title": "Registrierung"
+    }
+  }
+}

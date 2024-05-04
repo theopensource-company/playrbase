@@ -192,7 +192,7 @@
         }
       },
       "page": "Page {page} - {total}",
-      "size": "Size: {size}",
+      "size": "Rows: {size}",
       "sizes": {
         "s-5": "5",
         "s-10": "10",
@@ -265,7 +265,7 @@
           },
           "discoverable": {
             "label": "Discoverable",
-            "description": "Is this event is publicly listed throughout {brand_name}"
+            "description": "This event is publicly listed throughout {brand_name}"
           },
           "published": {
             "label": "Published",
@@ -342,11 +342,11 @@
           },
           "discoverable": {
             "label": "Discoverable",
-            "description": "Is this event is publicly listed throughout {brand_name}"
+            "description": "This event is publicly listed throughout {brand_name}"
           },
           "published": {
             "label": "Published",
-            "description": "Is this event is published for non-organisational members"
+            "description": "This event is published for non-organisational members"
           },
           "manual-approval": {
             "label": "Manual approval",
@@ -438,7 +438,7 @@
           },
           "published": {
             "label": "Published",
-            "description": "Is this event is published for non-organisational members"
+            "description": "This event is published for non-organisational members"
           },
           "manual-approval": {
             "label": "Manual approval",
@@ -465,7 +465,7 @@
           },
           "player-count": {
             "label": "Number of players",
-            "description": "Controls the minimum and maximum amount of players per signup",
+            "description": "Control the minimum and maximum amount of players per signup",
             "fields": {
               "minimum": {
                 "label": "Minimum",
@@ -479,7 +479,7 @@
           },
           "player-age": {
             "label": "Player age",
-            "description": "Controls the minimum and maximum age that players need to be to join the event",
+            "description": "Control the minimum and maximum age that players need to be to join the event",
             "fields": {
               "minimum": {
                 "label": "Minimum",

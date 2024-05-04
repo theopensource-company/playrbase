@@ -1,0 +1,606 @@
+{
+  "data": {
+    "attends": {
+      "table": {
+        "columns": {
+          "confirmed": "Bestätigt",
+          "created": "Erstellt",
+          "event": "Veranstaltung",
+          "players": "Spieler",
+          "registrant": "Anmelder",
+          "updated": "Aktualisiert"
+        },
+        "empty": "Keine Registrierungen gefunden"
+      }
+    },
+    "events": {
+      "cards": {
+        "card": {
+          "manage": "Verwalte",
+          "view": "Ansehen"
+        }
+      },
+      "create": {
+        "errors": {
+          "failed-create-event": "Veranstaltung konnte nicht erstellt werden: {error}"
+        },
+        "fields": {
+          "description": {
+            "description": "Die Beschreibung des Events, wirddie in {brand_name} angezeigt wird",
+            "label": "Beschreibung"
+          },
+          "discoverable": {
+            "description": "Diese Veranstaltung ist {brand_name} öffentlich gelistet",
+            "label": "Entdeckbar"
+          },
+          "name": {
+            "description": "Der Name des Events, der in {brand_name} angezeigt wird",
+            "label": "Name"
+          },
+          "published": {
+            "description": "Wird diese Veranstaltung für Nicht-Organisationsmitglieder veröffentlicht",
+            "label": "Veröffentlicht"
+          },
+          "tournament": {
+            "label": "Teil des Turniers",
+            "placeholder": "Name des Turniers"
+          }
+        },
+        "submit": "Veranstaltung erstellen",
+        "title": "Neue Veranstaltung",
+        "toast": {
+          "created-event": "Erstelltes Event",
+          "creating-event": "Veranstaltung erstellen",
+          "buttons": {
+            "view": "Ansehen"
+          }
+        },
+        "trigger": "Neue Veranstaltung"
+      },
+      "creator": {
+        "button": {
+          "save": "Veranstaltung erstellen"
+        },
+        "fields": {
+          "__category": {
+            "optional-settings": "Optionale Einstellungen",
+            "required-settings": "Erforderliche Einstellungen"
+          },
+          "description": {
+            "description": "Die Beschreibung des Events, die in {brand_name} angezeigt wird",
+            "label": "Beschreibung"
+          },
+          "discoverable": {
+            "label": "Entdeckbar",
+            "description": "Ist diese Veranstaltung in {brand_name} öffentlich gelistet"
+          },
+          "duration": {
+            "description": "Wann beginnt und endet die Veranstaltung?",
+            "fields": {
+              "end": {
+                "label": "Ende",
+                "clear": "Löschen"
+              },
+              "start": {
+                "label": "Start",
+                "clear": "Löschen"
+              }
+            },
+            "label": "Dauer der Veranstaltung"
+          },
+          "manual-approval": {
+            "description": "Alle Spieler, die dich für diese Veranstaltung anmelden, müssen manuell bestätigt werden.",
+            "label": "Manuelle Freigabe"
+          },
+          "name": {
+            "description": "Der Name des Events, der in {brand_name} angezeigt wird",
+            "label": "Name"
+          },
+          "player-age": {
+            "description": "Kontrolle des Mindest- und Höchstalters, das Spieler haben müssen, um an der Veranstaltung teilnehmen zu können",
+            "fields": {
+              "maximum": {
+                "label": "Maximum",
+                "clear": "Löschen"
+              },
+              "minimum": {
+                "label": "Minimum",
+                "clear": "Löschen"
+              }
+            },
+            "label": "Alter der Spieler"
+          },
+          "player-count": {
+            "description": "Kontrollieren der Mindest- und Höchstzahl von Spielern pro Anmeldung",
+            "fields": {
+              "maximum": {
+                "clear": "Löschen",
+                "label": "Maximum"
+              },
+              "minimum": {
+                "clear": "Löschen",
+                "label": "Minimum"
+              }
+            },
+            "label": "Anzahl der Spieler"
+          },
+          "published": {
+            "description": "Diese Veranstaltung wird für Nicht-Organisationsmitglieder veröffentlicht",
+            "label": "Publiziert"
+          },
+          "tournament": {
+            "description": "Wenn diese Veranstaltung Teil eines Turniers ist, konfiguriere es hier. Kann nicht nachträglich geändert werden",
+            "label": "Turnier",
+            "placeholder": "Suche nach einem Turnier"
+          }
+        },
+        "title": "Veranstaltung erstellen"
+      },
+      "editor": {
+        "button": {
+          "save": "Änderungen speichern"
+        },
+        "fields": {
+          "__category": {
+            "optional-settings": "Optionale Einstellungen"
+          },
+          "description": {
+            "description": "Die Beschreibung des Events, die in {brand_name} angezeigt wird",
+            "label": "Beschreibung"
+          },
+          "discoverable": {
+            "description": "Dieses Event wird in {brand_name} öffentlich aufgeführt.",
+            "label": "Entdeckbar"
+          },
+          "duration": {
+            "description": "Wann beginnt und endet diese Veranstaltung?",
+            "fields": {
+              "end": {
+                "clear": "Löschen",
+                "label": "Ende"
+              },
+              "start": {
+                "clear": "Löschen",
+                "label": "Start"
+              }
+            },
+            "label": "Dauer der Veranstaltung"
+          },
+          "location": {
+            "description": "Zeigt auf der öffentlichen Seite für diese Veranstaltung eine Karte an, auf der der Veranstaltungsort verzeichnet ist.",
+            "title": "Standort"
+          },
+          "manual-approval": {
+            "description": "Alle Spieler, die dich für diese Veranstaltung anmelden, müssen manuell bestätigt werden.",
+            "label": "Manuelle Freigabe"
+          },
+          "name": {
+            "description": "Der Name des Events, der in {brand_name} angezeigt wird",
+            "label": "Name"
+          },
+          "outcome": {
+            "description": "Benutze dieses Feld, um die Ergebnisse der Veranstaltung für Spieler anzuzeigen",
+            "label": "Ergebnis"
+          },
+          "player-age": {
+            "description": "Legt das Mindest- und Höchstalter fest, das Spieler haben müssen, um an der Veranstaltung teilnehmen zu können",
+            "fields": {
+              "maximum": {
+                "clear": "Löschen",
+                "label": "Maximum"
+              },
+              "minimum": {
+                "clear": "Löschen",
+                "label": "Minimum"
+              }
+            },
+            "label": "Alter der Spieler"
+          },
+          "player-count": {
+            "description": "Kontrolliert die minimale und maximale Anzahl von Spielern pro Anmeldung",
+            "label": "Anzahl der Spieler",
+            "fields": {
+              "maximum": {
+                "clear": "Löschen",
+                "label": "Maximum"
+              },
+              "minimum": {
+                "clear": "Löschen",
+                "label": "Minimum"
+              }
+            }
+          },
+          "published": {
+            "description": "Diese Veranstaltung wird für Nicht-Organisationsmitglieder veröffentlicht",
+            "label": "Publiziert"
+          },
+          "team-size": {
+            "description": "Legt fest, wie viele Spieler ein Team insgesamt haben muss, bevor es sich anmelden kann",
+            "fields": {
+              "maximum": {
+                "clear": "Löschen",
+                "label": "Maximum"
+              },
+              "minimum": {
+                "clear": "Löschen",
+                "label": "Minimum"
+              }
+            },
+            "label": "Größe des Teams"
+          }
+        }
+      },
+      "filters": {
+        "discoverable": {
+          "options": {
+            "false": "Nicht entdeckbar",
+            "true": "Entdeckbar",
+            "undefined": "Keine Präferenz"
+          },
+          "title": "Entdeckbar"
+        },
+        "hosted-by": {
+          "options": {
+            "false": "Andere Organisation",
+            "true": "Diese Organisation",
+            "undefined": "Keine Präferenz"
+          },
+          "title": "Organisiert durch"
+        },
+        "menu-label": "Filter",
+        "published": {
+          "options": {
+            "false": "Nicht publiziert",
+            "true": "Publiziert",
+            "undefined": "Keine Präferenz"
+          },
+          "title": "Publiziert"
+        },
+        "trigger": "Filter"
+      },
+      "table": {
+        "columns": {
+          "created": "Erstellt",
+          "discoverable": "Entdeckbar",
+          "end": "Ende",
+          "name": "Name",
+          "published": "Publiziert",
+          "start": "Start",
+          "updated": "Aktualisiert"
+        },
+        "empty": "Keine Veranstaltungen gefunden",
+        "row": {
+          "actions": {
+            "manage": "Verwalte",
+            "more-options": {
+              "label": "Mehr Optionen",
+              "settings": "Einstellungen"
+            }
+          }
+        }
+      }
+    },
+    "organisations": {
+      "table": {
+        "columns": {
+          "created": "Erstellt",
+          "email": "E-Mail",
+          "name": "Name",
+          "updated": "Aktualisiert"
+        },
+        "confirmed": {
+          "actions": {
+            "manage": "Verwalte",
+            "more-options": {
+              "label": "Mehr Optionen",
+              "settings": "Einstellungen"
+            }
+          }
+        },
+        "empty": "Keine Organisationen gefunden",
+        "unconfirmed": {
+          "actions": {
+            "accept": "Einladung akzeptieren",
+            "badge-no-actions": "Einladung noch nicht akzeptiert",
+            "deny": "Einladung absagen"
+          }
+        }
+      }
+    },
+    "teams": {
+      "create": {
+        "step-create": {
+          "description": "Wähle einen Teamnamen, der dein Team gut beschreibt und dich durch den Wettbewerb führt",
+          "fields": {
+            "name": {
+              "label": "Name der Mannschaft"
+            }
+          },
+          "submit": "Weiter",
+          "title": "Teamname wählen"
+        },
+        "step-finished": {
+          "button-finish": "Aufrunden",
+          "description": "Bitte beachte, dass Spieler erst dann Teil deines Teams werden, wenn sie deine Einladung akzeptieren, und dass sie erst dann als Teammitglieder zählen, wenn du sie zu den Events einlädst.",
+          "title": "🎉 Team gegründet!"
+        },
+        "step-invite": {
+          "button-continue": "Weiter",
+          "button-invite": "Einladen",
+          "description": "Lade Spieler in dein Team ein. Die Spieler werden erst dann hinzugefügt, wenn du deine Teilnahme bestätigt hast.",
+          "sent-invites": "Gesendete Einladungen",
+          "title": "Spieler einladen"
+        },
+        "trigger": "Team erstellen"
+      },
+      "table": {
+        "columns": {
+          "created": "Erstellt",
+          "description": "Beschreibung",
+          "name": "Name",
+          "updated": "Aktualisiert"
+        },
+        "confirmed": {
+          "actions": {
+            "manage": "Verwalte",
+            "more-options": {
+              "label": "Mehr Optionen",
+              "settings": "Einstellungen"
+            }
+          }
+        },
+        "empty": "Keine Teams gefunden",
+        "unconfirmed": {
+          "actions": {
+            "accept": "Einladung akzeptieren",
+            "badge-no-actions": "Einladung noch nicht akzeptiert",
+            "deny": "Einladung ablehnen"
+          }
+        }
+      }
+    }
+  },
+  "ui-custom": {
+    "dd": {
+      "footer": {
+        "button-close": "Abbrechen"
+      }
+    }
+  },
+  "miscellaneous": {
+    "role": {
+      "description": {
+        "administrator": "Kann jede Ressource innerhalb einer Organisation verwalten, mit Ausnahme des Löschens der Stammorganisation und der Verwaltung ihrer Mitglieder.",
+        "event_manager": "Kann alle Ereignisse in einer Organisation verwalten.",
+        "event_viewer": "Kann Ereignisse in einer Organisation anzeigen.",
+        "owner": "Kann alle Ressourcen innerhalb einer Organisation verwalten."
+      },
+      "name": {
+        "administrator": "Administrator",
+        "event_manager": "Veranstaltungsleiter",
+        "owner": "Besitzer",
+        "event_viewer": "Veranstaltungbetrachter"
+      },
+      "select": {
+        "placeholder": "Eine Rolle auswählen"
+      }
+    }
+  },
+  "layout": {
+    "navbar": {
+      "account-options": {
+        "signout": "Abmeldung"
+      },
+      "links": {
+        "account": "Account",
+        "language": "Sprache"
+      }
+    },
+    "not-found-screen": {
+      "text": "Ressource nicht gefunden"
+    }
+  },
+  "logic": {
+    "birthdate-selector": {
+      "dialog-confirm": {
+        "cancel": "Abbrechen",
+        "description": "Deine Eltern sollten in Kürze eine E-Mail mit einem Bestätigungscode erhalten. Bitte gib den Code unten ein, um deine Zustimmung zu bestätigen.",
+        "invalid-permit": "Der Code ist ungültig oder ausgelaufen",
+        "title": "Bestätigungscode eingeben",
+        "submit": "Validieren"
+      },
+      "placeholder": "Wähle dein Geburtsdatum",
+      "validated": "Dein Geburtsdatum wurde validiert",
+      "dialog-email": {
+        "description": "Weil du 16 Jahre alt oder jünger bist, benötigen wir die Zustimmung eines Elternteils, damit du dein Konto erstellen kannst. Bitte geben die E-Mail-Adresse deiner Eltern weiter unten an, um den Verifizierungsprozess zu starten.",
+        "invalid-email": "Ungültige E-Mail-Adresse",
+        "placeholder": "E-Mail Adresse der Eltern",
+        "submit": "Anfrage senden",
+        "title": "Elterliche Überprüfung"
+      }
+    },
+    "event-selector": {
+      "selected": {
+        "button": {
+          "clear": "Löschen"
+        }
+      },
+      "unselected": {
+        "badge": {
+          "no-permissions": "Keine Rechte"
+        }
+      }
+    },
+    "location-selector": {
+      "placeholder": "Geben eine Adresse ein",
+      "selected": {
+        "button": {
+          "clear": "Löschen"
+        }
+      },
+      "unselected": {
+        "select": "Auswählen"
+      }
+    },
+    "pagination": {
+      "buttons": {
+        "first": {
+          "popover": "Erste Seite"
+        },
+        "last": {
+          "popover": "Letzte Seite"
+        },
+        "next": {
+          "popover": "Nächste Seite"
+        },
+        "previous": {
+          "popover": "Vorherige Seite"
+        }
+      },
+      "page": "Seite {page} - {total}",
+      "size": "Zeilen: {Größe}",
+      "sizes": {
+        "s-10": "10",
+        "s-100": "100",
+        "s-25": "25",
+        "s-5": "5",
+        "s-50": "50"
+      }
+    },
+    "upload-image": {
+      "cropper": {
+        "img-alt": "Ausgewähltes Bild"
+      },
+      "dialog": {
+        "remove": "Entfernen",
+        "save": "Speichern ",
+        "change": "Verändern"
+      },
+      "empty": {
+        "drop": "Ziehen ein Foto hierher"
+      },
+      "error": {
+        "no-image": "Du hast kein Foto ausgewählt",
+        "server": "Es ist ein Fehler aufgetreten"
+      },
+      "trigger": "Verändern "
+    },
+    "user-selector": {
+      "selected": {
+        "button": {
+          "clear": "Löschen"
+        }
+      },
+      "unselected": {
+        "label": "E-Mail Adresse",
+        "placeholder": "john@doe.org",
+        "select": "Auswählen"
+      }
+    },
+    "organisation-selector": {
+      "selected": {
+        "button": {
+          "clear": "Löschen"
+        }
+      },
+      "unselected": {
+        "badge": {
+          "no-permissions": "Keine Rechte"
+        }
+      }
+    }
+  },
+  "devtools": {
+    "emails": {
+      "table": {
+        "emails": {
+          "actions": {
+            "view": "Ansehen"
+          },
+          "caption": {
+            "total": "Insgesamt gesendet"
+          },
+          "column": {
+            "actions": "Aktionen",
+            "recipient": "Empfänger",
+            "sent": "Gesendet",
+            "subject": "Betreff"
+          }
+        }
+      },
+      "title": "E-Mails"
+    },
+    "environment": {
+      "table": {
+        "authentication": {
+          "caption": {
+            "authenticated": "Authentifiziert",
+            "no": "nein",
+            "yes": "ja"
+          },
+          "column": {
+            "property": "Artikel",
+            "value": "Wert"
+          },
+          "row": {
+            "created": "Erstellt",
+            "email": "E-Mail",
+            "id": "ID",
+            "name": "Name",
+            "scope": "Scope",
+            "updated": "Aktualisiert"
+          },
+          "title": "Authentifizierung"
+        },
+        "feature-flags": {
+          "caption": {
+            "deployed": "Deployed",
+            "environment": "Environment",
+            "no": "no",
+            "preview": "Preview",
+            "yes": "yes"
+          },
+          "column": {
+            "flag": "Flagge",
+            "type": "Typ",
+            "value": "Wert"
+          },
+          "title": "Merkmal Flaggen"
+        },
+        "surrealdb-connection": {
+          "caption": {
+            "connected": "verbunden",
+            "disconnected": "unterbrochen",
+            "reconnecting": "wieder verbindend",
+            "status": "Status"
+          },
+          "column": {
+            "property": "Artikel",
+            "value": "Wert"
+          },
+          "row": {
+            "database": "Database",
+            "endpoint": "Endpoint",
+            "namespace": "Namespace"
+          },
+          "title": "SurrealDB verbinding"
+        }
+      },
+      "title": "Environment"
+    },
+    "migrate-database": {
+      "button": "Migrationen durchführen",
+      "title": "Datenbank migrieren",
+      "warning": "<b>Warnung!</b> Dies ist ein Werkzeug nur für Entwicklungszwecke!"
+    },
+    "query": {
+      "alert": {
+        "no-query": "Es wurde keine Abfrage eingegeben!"
+      },
+      "button": "Ausführen!",
+      "input-placeholder": "Geben eine Anfrage hier ein",
+      "title": "Query",
+      "warning": "<b>Warnung!</b> Deine Abfragen werden direkt gegen die Datenbank ausgeführt! Du kannst sehr leicht deinen eigenen Account beschädigen!"
+    }
+  }
+}

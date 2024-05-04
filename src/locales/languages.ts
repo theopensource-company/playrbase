@@ -10,7 +10,7 @@ export const languages = {
     de: {
         native: 'German',
         flag: 'de',
-    }
+    },
 } satisfies Record<
     string,
     {

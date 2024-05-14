@@ -369,9 +369,9 @@ function useData({
 
                     $registration;
                     SELECT * FROM $registration.out.tournament_path ?? [];
-                    $auth IN $registration.players.id;
+                    $auth IN $registration.in.players;
                     $auth IN $registration.out.organiser.managers[?role IN ['owner', 'administrator', 'event_manager']].user;
-                    SELECT * FROM fn::team::compute_eligable_players($registration.in.id, type::thing('event', $slug), true);
+                    SELECT * FROM fn::team::compute_eligable_players($registration.in.players, type::thing('event', $slug), true);
                 `,
                 {
                     slug,

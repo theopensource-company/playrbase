@@ -12,6 +12,7 @@ const team = /* surrealql */ `
     DEFINE FUNCTION fn::team::compute_eligable_players(
         $team: record<team | user> | array<record<user>>,
         $event: record<event>,
+        $ignore_existing_registrations: option<bool>
     ) {
         LET $min_age = $event.options.min_age;
         LET $max_age = $event.options.max_age;
@@ -24,7 +25,7 @@ const team = /* surrealql */ `
         -- Lastly, filter out players who previously signed up to this event
         LET $players = $players[WHERE !$min_age OR (birthdate AND (duration::years(time::now() - birthdate) >= $min_age))];
         LET $players = $players[WHERE !$max_age OR (birthdate AND (duration::years(time::now() - birthdate) <= $max_age))];
-        LET $players = $players[WHERE !fn::team::find_actor_registration(id, $event)];
+        LET $players = $players[WHERE $ignore_existing_registrations OR !fn::team::find_actor_registration(id, $event)];
 
         RETURN $players
     };

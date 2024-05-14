@@ -30,7 +30,7 @@ import { Attends, RichAttends } from '@/schema/relations/attends';
 import { Event } from '@/schema/resources/event';
 import { Organisation } from '@/schema/resources/organisation';
 import { linkToProfile } from '@/schema/resources/profile';
-import { User } from '@/schema/resources/user';
+import { User, UserAsRelatedUser } from '@/schema/resources/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
@@ -89,7 +89,7 @@ export default function Page() {
         useMutation({
             mutationKey: ['registration', 'update-player', slug, regId],
             async mutationFn(players: Attends['players']) {
-                await surreal.merge(`attends:${slug}`, { players });
+                await surreal.merge(`attends:${regId}`, { players });
                 await refetch();
             },
         });
@@ -120,7 +120,13 @@ export default function Page() {
     if (isPending) return <LoaderOverlay />;
     if (!data) return <NotFoundScreen text={t('not-found')} />;
 
-    const { registration, tournament_path, is_player, can_manage } = data;
+    const {
+        registration,
+        tournament_path,
+        is_player,
+        can_manage,
+        all_team_players,
+    } = data;
     const { out: event, in: registrant, players } = registration;
 
     return (
@@ -251,7 +257,7 @@ export default function Page() {
                             {t('details.players.label')}
                         </h3>
                         <div className="flex flex-col gap-2">
-                            {players.map((player) => (
+                            {all_team_players.map((player) => (
                                 <div
                                     key={player.id}
                                     className="flex items-center justify-between gap-4"
@@ -347,7 +353,14 @@ function useData({
         throwOnError: true,
         queryFn: async () => {
             const result = await surreal.query<
-                [null, RichAttends | null, TournamentPath, boolean, boolean]
+                [
+                    null,
+                    RichAttends | null,
+                    TournamentPath,
+                    boolean,
+                    boolean,
+                    UserAsRelatedUser[],
+                ]
             >(
                 /* surql */ `
                     LET $registration = SELECT * FROM ONLY type::thing('attends', $regId) 
@@ -358,6 +371,7 @@ function useData({
                     SELECT * FROM $registration.out.tournament_path ?? [];
                     $auth IN $registration.players.id;
                     $auth IN $registration.out.organiser.managers[?role IN ['owner', 'administrator', 'event_manager']].user;
+                    SELECT * FROM fn::team::compute_eligable_players($registration.in.id, type::thing('event', $slug), true);
                 `,
                 {
                     slug,
@@ -366,13 +380,13 @@ function useData({
             );
 
             if (!result?.[1]) return null;
-            console.log(result[2]);
 
             return {
                 registration: RichAttends.parse(result[1]),
                 tournament_path: TournamentPath.parse(result[2]),
                 is_player: !!result[3],
                 can_manage: !!result[4],
+                all_team_players: z.array(UserAsRelatedUser).parse(result[5]),
             };
         },
     });

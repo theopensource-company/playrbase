@@ -129,6 +129,7 @@ function useData({
                     LET $team = type::thing('team', $slug);
 
                     SELECT * FROM $team->attends 
+                        ORDER BY out.start
                         START $start
                         LIMIT $limit
                         FETCH in, out, players.*;

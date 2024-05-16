@@ -79,7 +79,7 @@ function useData({
                 /* surql */ `
                     LET $event = <record<event>> $event;
 
-                    SELECT *, out.*, out.start, in.*, in.name, players.* FROM attends
+                    SELECT *, out.*, out.start, in.*, in.name, (SELECT * FROM $parent.players) as players FROM attends
                         WHERE $event IN tournament_path
                         ORDER BY out.start, in.name
                         START $start

@@ -130,7 +130,7 @@ function useData({
                 /* surql */ `
                     LET $team = type::thing('team', $slug);
 
-                    SELECT *, out.*, out.start, in.*, players.* FROM $team->attends 
+                    SELECT *, out.*, out.start, in.*, (SELECT * FROM $parent.players) as players FROM $team->attends 
                         ORDER BY out.start
                         START $start
                         LIMIT $limit;

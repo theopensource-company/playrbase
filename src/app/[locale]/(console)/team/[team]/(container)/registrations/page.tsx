@@ -130,11 +130,10 @@ function useData({
                 /* surql */ `
                     LET $team = type::thing('team', $slug);
 
-                    SELECT *, out.start FROM $team->attends 
+                    SELECT *, out.*, out.start, in.*, players.* FROM $team->attends 
                         ORDER BY out.start
                         START $start
-                        LIMIT $limit
-                        FETCH in, out, players.*;
+                        LIMIT $limit;
 
                     SELECT count() FROM $team->attends 
                         GROUP ALL;

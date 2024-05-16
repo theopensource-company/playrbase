@@ -79,12 +79,11 @@ function useData({
                 /* surql */ `
                     LET $event = <record<event>> $event;
 
-                    SELECT *, out.start, in.name FROM attends
+                    SELECT *, out.*, out.start, in.*, in.name, players.* FROM attends
                         WHERE $event IN tournament_path
                         ORDER BY out.start, in.name
                         START $start
-                        LIMIT $limit
-                        FETCH in, out, players.*;
+                        LIMIT $limit;
 
                     SELECT count() FROM attends 
                         WHERE $event IN tournament_path

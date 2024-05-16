@@ -79,7 +79,7 @@ function useData({
                 /* surql */ `
                     LET $event = <record<event>> $event;
 
-                    SELECT * FROM attends
+                    SELECT *, out.start, in.name FROM attends
                         WHERE $event IN tournament_path
                         ORDER BY out.start, in.name
                         START $start

@@ -124,7 +124,7 @@ function useData({
                 [RichAttends[], { count: number }[], (User | Team)[]]
             >(
                 /* surql */ `
-                    SELECT * FROM $auth->attends
+                    SELECT *, out.start FROM $auth->attends
                         ORDER BY out.start
                         START $start
                         LIMIT $limit

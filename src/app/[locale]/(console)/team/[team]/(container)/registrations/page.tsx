@@ -93,6 +93,8 @@ export default function AccountRegistrations() {
                     registrations={registrations ?? []}
                     columns={{
                         in: false,
+                        end: false,
+                        updated: false,
                     }}
                 />
             </div>

@@ -589,6 +589,8 @@
           "event": "Event",
           "players": "Players",
           "confirmed": "Confirmed",
+          "start": "Start",
+          "end": "End",
           "created": "Created",
           "updated": "Updated"
         },

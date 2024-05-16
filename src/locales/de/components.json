@@ -8,7 +8,9 @@
           "event": "Veranstaltung",
           "players": "Spieler",
           "registrant": "Anmelder",
-          "updated": "Aktualisiert"
+          "updated": "Aktualisiert",
+          "start": "Start",
+          "end": "Ende"
         },
         "empty": "Keine Registrierungen gefunden"
       }

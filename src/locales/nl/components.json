@@ -590,6 +590,8 @@
           "registrant": "Registrant",
           "players": "Spelers",
           "event": "Evenement",
+          "start": "Begin",
+          "end": "Einde",
           "created": "Aangemaakt",
           "confirmed": "Bevestigd"
         }

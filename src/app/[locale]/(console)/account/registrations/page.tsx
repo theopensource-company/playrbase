@@ -91,6 +91,8 @@ export default function AccountRegistrations() {
                     columns={{
                         in: false,
                         players: false,
+                        end: false,
+                        updated: false,
                     }}
                 />
             </div>

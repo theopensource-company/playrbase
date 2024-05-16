@@ -23,6 +23,8 @@ export type AttendsTableColumns = {
     players?: boolean;
     confirmed?: boolean;
     created?: boolean;
+    start?: boolean;
+    end?: boolean;
     updated?: boolean;
     actions?: boolean;
 };
@@ -55,6 +57,12 @@ export function AttendsTable({
                     )}
                     {doRenderCol('confirmed') && (
                         <TableHead>{t('columns.confirmed')}</TableHead>
+                    )}
+                    {doRenderCol('start') && (
+                        <TableHead>{t('columns.start')}</TableHead>
+                    )}
+                    {doRenderCol('end') && (
+                        <TableHead>{t('columns.end')}</TableHead>
                     )}
                     {doRenderCol('created') && (
                         <TableHead>{t('columns.created')}</TableHead>
@@ -111,6 +119,24 @@ export function AttendsTable({
                                         <Check size={20} />
                                     ) : (
                                         <X size={20} />
+                                    )}
+                                </TableCell>
+                            )}
+                            {doRenderCol('start') && (
+                                <TableCell>
+                                    {registration.out.start && (
+                                        <DateTooltip
+                                            date={registration.out.start}
+                                        />
+                                    )}
+                                </TableCell>
+                            )}
+                            {doRenderCol('end') && (
+                                <TableCell>
+                                    {registration.out.end && (
+                                        <DateTooltip
+                                            date={registration.out.end}
+                                        />
                                     )}
                                 </TableCell>
                             )}

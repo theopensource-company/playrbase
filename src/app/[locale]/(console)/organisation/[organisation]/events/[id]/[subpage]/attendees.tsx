@@ -77,6 +77,7 @@ function useData({
 
                     SELECT * FROM attends
                         WHERE $event IN tournament_path
+                        ORDER BY out.start, in.name
                         START $start
                         LIMIT $limit
                         FETCH in, out, players.*;

@@ -53,7 +53,7 @@ export const BirthdatePermitEmail = ({
                     </Heading>
                     <Text style={paragraph}>
                         Your child has requested to open an account on
-                        {brand_name}. Because they are under the age of 16, we
+                        {brand_name}. Because they are 16 years or younger, we
                         are required to verify with a parent if this action is
                         permitted. Let your child enter the following code on
                         their device to confirm your approval.

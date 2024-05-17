@@ -1,7 +1,6 @@
 'use client';
 
 import { NavbarProvider } from '@/components/layout/navbar';
-import { Deployed, Environment } from '@/config/Environment';
 import { SurrealProvider } from '@/lib/Surreal';
 import { AuthProvider } from '@/lib/auth';
 import { FeatureFlagsProvider } from '@/lib/featureFlags';
@@ -9,17 +8,16 @@ import { ScrolledStateProvider } from '@/lib/scrolled';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { ReactNode } from 'react';
 
-const throwOnError = Environment == 'prod' && !Deployed;
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
             retry: false,
-            throwOnError,
+            throwOnError: true,
             refetchInterval: false,
             refetchOnWindowFocus: false,
         },
         mutations: {
-            throwOnError,
+            throwOnError: true,
         },
     },
 });

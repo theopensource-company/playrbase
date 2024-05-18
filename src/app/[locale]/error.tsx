@@ -11,6 +11,10 @@ export default function Error({
     reset: () => void;
 }) {
     const [_, copy] = useCopyToClipboard();
+    const report = {
+        location: location,
+        error,
+    };
 
     return (
         <div className="p-8">
@@ -23,7 +27,7 @@ export default function Error({
                 <div className="space-x-2">
                     <button
                         className="rounded-md bg-white px-3 py-1 text-black"
-                        onClick={() => copy(JSON.stringify(error))}
+                        onClick={() => copy(JSON.stringify(report))}
                     >
                         Copy report
                     </button>

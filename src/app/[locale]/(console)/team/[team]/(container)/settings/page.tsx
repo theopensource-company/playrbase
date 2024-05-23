@@ -99,7 +99,9 @@ function DangerZone({ team }: { team: Team }) {
     });
 
     const handler = handleSubmit(async () => {
-        await surreal.query(/* surql */ `DELETE $id`, { id: team.id });
+        await surreal.query(/* surql */ `DELETE $id->attends; DELETE $id`, {
+            id: team.id,
+        });
         router.push('/account/teams');
     });
 
